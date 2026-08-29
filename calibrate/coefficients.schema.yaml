@@ -1,0 +1,54 @@
+# Provenance schema for per-metric coefficients.
+# Values in coefficients.yaml MUST stay null until a measurement_sha exists.
+#
+# A coefficients change without a new measurement_sha is rejected (CI).
+# Fit is per-metric only. There is no composite-score field on purpose.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+title: cwm-bench coefficients provenance
+type: object
+additionalProperties: false
+required:
+  - measurement_sha
+  - fit_split
+  - holdout_deltas
+  - created_at
+  - metrics
+properties:
+  measurement_sha:
+    description: Git SHA of the campaign whose fit-split runs produced these coefficients. Null until v1 exists.
+    type: ["string", "null"]
+  fit_split:
+    description: Run ids used for the per-metric least-squares fit. Must not include Burst.
+    type: ["object", "null"]
+    properties:
+      run_ids:
+        type: array
+        items:
+          type: string
+    required: [run_ids]
+  holdout_deltas:
+    description: Per-metric deltas on holdout runs (Burst, later day, second region). Null until reported.
+    type: ["object", "null"]
+  created_at:
+    type: ["string", "null"]
+  metrics:
+    description: Per-metric coefficient objects. Each metric is fit independently. No composite.
+    type: object
+    additionalProperties: false
+    properties:
+      cpu: { type: ["object", "null"] }
+      p50: { type: ["object", "null"] }
+      p95: { type: ["object", "null"] }
+      p99: { type: ["object", "null"] }
+      goodput: { type: ["object", "null"] }
+      error_by_class: { type: ["object", "null"] }
+      connections: { type: ["object", "null"] }
+    required:
+      - cpu
+      - p50
+      - p95
+      - p99
+      - goodput
+      - error_by_class
+      - connections
