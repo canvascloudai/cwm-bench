@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canvascloudai.github.io/cwm-bench/schema/run.schema.json",
+  "title": "cwm-bench single run",
+  "description": "One k6+CloudWatch run of the CWM measurement program. EXAMPLE fixtures must set isExample=true. Real runs (isExample=false) must not be committed until a v1 campaign exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "isExample",
+    "campaign_id",
+    "run_id",
+    "split",
+    "diagnostic",
+    "gitSha",
+    "terraform",
+    "topology",
+    "os",
+    "runtime",
+    "application",
+    "database",
+    "dataset",
+    "requestMix",
+    "concurrency",
+    "warmup",
+    "duration",
+    "repetitions",
+    "perNode",
+    "latency",
+    "errorCategories",
+    "databaseConnections",
+    "burstBalanceMin",
+    "cost",
+    "timestamp"
+  ],
+  "properties": {
+    "isExample": {
+      "type": "boolean",
+      "description": "true for schema fixtures only. CI rejects any file under results/ with isExample=false."
+    },
+    "campaign_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "split": { "type": "string", "enum": ["fit", "holdout"] },
+    "diagnostic": {
+      "type": "string",
+      "enum": ["canonical", "pool-bound", "app-bound", "cpu-only", "none"]
+    },
+    "scenario": {
+      "type": "string",
+      "enum": ["idle", "normal", "peak", "burst", "diagnostic"],
+      "description": "Traffic rung. Diagnostics at 1000 RPS still set this (usually burst)."
+    },
+    "notes": { "type": "string" },
+    "gitSha": {
+      "type": "string",
+      "description": "Git SHA of this cwm-bench repo as run.",
+      "minLength": 7
+    },
+    "terraform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applySha", "amiIds", "region"],
+      "properties": {
+        "applySha": {
+          "type": "string",
+          "description": "Git SHA applied (terraform configuration + app/load embedded or cloned)."
+        },
+        "amiIds": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Resolved AMI ids keyed by role (app, generator). Do not leave as the SSM parameter name."
+        },
+        "region": { "type": "string" }
+      }
+    },
+    "topology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region", "alb", "app", "database", "generator"],
+      "properties": {
+        "region": { "type": "string" },
+        "alb": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": { "type": "string", "const": "application" }
+          }
+        },
+        "app": {
+          "type": "object",
+          "required": ["instanceType", "count", "rootVolumeType", "rootVolumeGiB"],
+          "properties": {
+            "instanceType": { "type": "string" },
+            "count": { "type": "integer", "minimum": 1 },
+            "rootVolumeType": { "type": "string" },
+            "rootVolumeGiB": { "type": "integer" }
+          }
+        },
+        "database": {
+          "type": "object",
+          "required": ["instanceClass", "engine", "engineVersion", "multiAz", "storageType", "allocatedStorageGiB"],
+          "properties": {
+            "instanceClass": { "type": "string" },
+            "engine": { "type": "string" },
+            "engineVersion": { "type": "string" },
+            "multiAz": { "type": "boolean" },
+            "storageType": { "type": "string" },
+            "allocatedStorageGiB": { "type": "integer" }
+          }
+        },
+        "generator": {
+          "type": "object",
+          "required": ["instanceType"],
+          "properties": {
+            "instanceType": { "type": "string" }
+          }
+        }
+      }
+    },
+    "os": {
+      "type": "object",
+      "required": ["name", "amiId"],
+      "properties": {
+        "name": { "type": "string" },
+        "amiId": { "type": "string" }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["language", "version"],
+      "properties": {
+        "language": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "application": {
+      "type": "object",
+      "required": ["name", "poolSize"],
+      "properties": {
+        "name": { "type": "string" },
+        "poolSize": { "type": "integer" },
+        "queueLimit": { "type": "integer" }
+      }
+    },
+    "database": {
+      "type": "object",
+      "required": ["engine", "maxConnectionsDeclared"],
+      "properties": {
+        "engine": { "type": "string" },
+        "maxConnectionsDeclared": {
+          "type": "integer",
+          "description": "Parameter-group value applied. Not a CloudWatch observation of the engine default."
+        }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "required": ["name", "categories", "products", "ordersAtSeed"],
+      "properties": {
+        "name": { "type": "string" },
+        "categories": { "type": "integer" },
+        "products": { "type": "integer" },
+        "ordersAtSeed": { "type": "integer" }
+      }
+    },
+    "requestMix": {
+      "type": "object",
+      "required": ["getProductPct", "listPct", "writePct"],
+      "properties": {
+        "getProductPct": { "type": "number" },
+        "listPct": { "type": "number" },
+        "writePct": { "type": "number" },
+        "notes": { "type": "string" }
+      }
+    },
+    "concurrency": {
+      "type": "object",
+      "required": ["targetRps", "executor"],
+      "properties": {
+        "targetRps": { "type": "number" },
+        "executor": { "type": "string" },
+        "preAllocatedVUs": { "type": ["integer", "null"] },
+        "maxVUs": { "type": ["integer", "null"] }
+      }
+    },
+    "warmup": {
+      "type": "string",
+      "description": "k6 duration string, default 5m."
+    },
+    "duration": {
+      "type": "string",
+      "description": "Steady-state duration string, default 15m."
+    },
+    "repetitions": {
+      "type": "object",
+      "required": ["count", "varianceNotes"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "varianceNotes": { "type": "string" }
+      }
+    },
+    "perNode": {
+      "type": "array",
+      "description": "Per-node CPU and offered/achieved RPS. Nulls until a real campaign.",
+      "items": {
+        "type": "object",
+        "required": ["instanceId", "role", "cpuAvgPct", "rps"],
+        "properties": {
+          "instanceId": { "type": "string" },
+          "role": { "type": "string", "enum": ["app", "generator", "database"] },
+          "cpuAvgPct": { "type": ["number", "null"] },
+          "rps": { "type": ["number", "null"] }
+        }
+      }
+    },
+    "latency": {
+      "type": "object",
+      "required": ["p50Ms", "p95Ms", "p99Ms"],
+      "properties": {
+        "p50Ms": { "type": ["number", "null"] },
+        "p95Ms": { "type": ["number", "null"] },
+        "p99Ms": { "type": ["number", "null"] },
+        "source": { "type": "string", "enum": ["k6", "alb", "unmeasured", "example"] }
+      }
+    },
+    "goodputRps": {
+      "type": ["number", "null"],
+      "description": "Successful requests per second during steady state."
+    },
+    "errorCategories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "db_timeout",
+        "too_many_connections",
+        "queue_full",
+        "cpu_overload",
+        "internal",
+        "iops_throttle",
+        "unclassified"
+      ],
+      "properties": {
+        "db_timeout": { "type": ["integer", "null"] },
+        "too_many_connections": { "type": ["integer", "null"] },
+        "queue_full": { "type": ["integer", "null"] },
+        "cpu_overload": { "type": ["integer", "null"] },
+        "internal": { "type": ["integer", "null"] },
+        "iops_throttle": {
+          "type": ["integer", "null"],
+          "description": "CloudWatch-derived. Count of errors (or saturated seconds) coincident with BurstBalance=0. Never fold into CPU or DB connection classes."
+        },
+        "unclassified": { "type": ["integer", "null"] }
+      }
+    },
+    "databaseConnections": {
+      "type": "object",
+      "required": ["avg", "max", "saturation"],
+      "properties": {
+        "avg": { "type": ["number", "null"] },
+        "max": { "type": ["number", "null"] },
+        "saturation": {
+          "type": ["string", "null"],
+          "description": "Qualitative: below_cap | at_cap | unknown. Not a coefficient."
+        }
+      }
+    },
+    "burstBalanceMin": {
+      "type": "object",
+      "required": ["rds", "appVolumes"],
+      "properties": {
+        "rds": { "type": ["number", "null"] },
+        "appVolumes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["volumeId", "min"],
+            "properties": {
+              "volumeId": { "type": "string" },
+              "min": { "type": ["number", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "required": ["source", "currency", "hourlyUsd", "timestamp"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["price_list", "cost_explorer", "unmeasured", "example"],
+          "description": "Price-list cost may be filled without a campaign. Latency/CPU/throughput/error may not be labeled measured until v1 exists."
+        },
+        "currency": { "type": "string" },
+        "hourlyUsd": {
+          "type": ["number", "null"],
+          "description": "Null until computed from a price list or bill. Do not invent."
+        },
+        "timestamp": { "type": ["string", "null"] }
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO-8601 start of the run, or EXAMPLE placeholder."
+    }
+  }
+}
