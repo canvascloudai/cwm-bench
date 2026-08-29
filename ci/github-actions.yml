@@ -1,0 +1,38 @@
+# Copy this file to .github/workflows/ci.yml (this token lacks the workflow scope).
+# Honesty rules: never optimize the composite accuracy score. No terraform apply.
+
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+          terraform_wrapper: false
+
+      - name: Install k6 v0.54.0
+        run: |
+          curl -fsSL -o /tmp/k6.tgz \
+            https://github.com/grafana/k6/releases/download/v0.54.0/k6-v0.54.0-linux-amd64.tar.gz
+          tar -C /tmp -xzf /tmp/k6.tgz
+          sudo install -m 0755 /tmp/k6-v0.54.0-linux-amd64/k6 /usr/local/bin/k6
+          k6 version
+
+      - name: Run local CI script
+        run: bash scripts/ci.sh
