@@ -1,0 +1,113 @@
+#!/bin/bash
+set -euo pipefail
+
+# cwm-bench app node. Installs Node 20 and the reference app.
+# APP_POOL_SIZE comes from terraform var.app_pool_size.
+
+exec > /var/log/cwm-bench-app-userdata.log 2>&1
+
+dnf -y update
+dnf -y install git python3 mariadb105 awscli-2
+
+# Node 20 (major pin). NodeSource first; AL2023 nodejs20 as fallback.
+if curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -; then
+  dnf -y install nodejs
+else
+  dnf -y install nodejs20 || dnf -y install nodejs
+fi
+if ! command -v node >/dev/null 2>&1; then
+  if command -v node-20 >/dev/null 2>&1; then
+    ln -sf "$(command -v node-20)" /usr/local/bin/node
+  fi
+fi
+if ! command -v npm >/dev/null 2>&1; then
+  if command -v npm-20 >/dev/null 2>&1; then
+    ln -sf "$(command -v npm-20)" /usr/local/bin/npm
+  fi
+fi
+node --version | grep -E '^v20\.' >/dev/null || {
+  echo "Node 20.x required on measured instances; got $(node --version 2>/dev/null || echo none)"
+  exit 1
+}
+
+install -d -m 0755 /opt/cwm-bench-app/src /opt/cwm-bench-app/seed
+
+python3 - <<'PY'
+import base64, pathlib
+files = {
+    "/opt/cwm-bench-app/src/server.js": """${server_js_b64}""",
+    "/opt/cwm-bench-app/package.json": """${package_json_b64}""",
+    "/opt/cwm-bench-app/seed/seed.sql": """${seed_sql_b64}""",
+}
+for path, b64 in files.items():
+    pathlib.Path(path).write_bytes(base64.b64decode(b64))
+PY
+
+GIT_REF="${git_ref}"
+GIT_URL="${git_url}"
+if [ -n "$GIT_REF" ] && [ -n "$GIT_URL" ]; then
+  rm -rf /opt/cwm-bench-src
+  git clone --depth 1 --branch "$GIT_REF" "$GIT_URL" /opt/cwm-bench-src || \
+    git clone --depth 1 "$GIT_URL" /opt/cwm-bench-src
+  if [ -d /opt/cwm-bench-src/app ]; then
+    cp -a /opt/cwm-bench-src/app/. /opt/cwm-bench-app/
+  fi
+fi
+
+cd /opt/cwm-bench-app
+npm install --omit=dev
+
+# Wait for RDS, then seed. Re-seed is idempotent (DROP/CREATE).
+export AWS_DEFAULT_REGION="${region}"
+DB_PASSWORD="$(aws ssm get-parameter --name "${db_password_param}" --with-decryption --query Parameter.Value --output text)"
+export MYSQL_PWD="$DB_PASSWORD"
+
+for i in $(seq 1 90); do
+  if mysqladmin ping -h "${mysql_host}" --silent; then
+    break
+  fi
+  sleep 10
+done
+
+mysql -h "${mysql_host}" -u "${mysql_user}" < /opt/cwm-bench-app/seed/seed.sql
+
+APP_GIT_SHA="embedded"
+if [ -n "$GIT_REF" ]; then
+  APP_GIT_SHA="$GIT_REF"
+fi
+printf 'node=%s\npool=%s\ngit=%s\n' "$(node --version)" "${app_pool_size}" "$APP_GIT_SHA" > /opt/cwm-bench-app/RUNTIME.txt
+
+cat > /etc/systemd/system/cwm-bench-app.service <<EOF
+[Unit]
+Description=cwm-bench reference app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/cwm-bench-app
+Environment=PORT=8080
+Environment=APP_POOL_SIZE=${app_pool_size}
+Environment=APP_QUEUE_LIMIT=${app_queue_limit}
+Environment=MYSQL_HOST=${mysql_host}
+Environment=MYSQL_PORT=3306
+Environment=MYSQL_USER=${mysql_user}
+Environment=MYSQL_DATABASE=${mysql_database}
+Environment=MYSQL_PASSWORD=$DB_PASSWORD
+Environment=APP_GIT_SHA=$APP_GIT_SHA
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+RestartSec=2
+User=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# node may live at /usr/bin/node or the shim we created.
+if [ -x /usr/local/bin/node ] && [ ! -x /usr/bin/node ]; then
+  sed -i 's|/usr/bin/node|/usr/local/bin/node|' /etc/systemd/system/cwm-bench-app.service
+fi
+
+systemctl daemon-reload
+systemctl enable --now cwm-bench-app
