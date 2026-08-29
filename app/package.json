@@ -1,0 +1,18 @@
+{
+  "name": "cwm-bench-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tiny reference CRUD service for the CWM canonical topology. Workload definition, not a TPC clone.",
+  "engines": {
+    "node": ">=20 <21"
+  },
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node --check src/server.js"
+  },
+  "dependencies": {
+    "express": "4.21.2",
+    "mysql2": "3.14.1"
+  }
+}
