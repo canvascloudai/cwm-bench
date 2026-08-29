@@ -1,0 +1,13 @@
+# Empty coefficients. Not a fit. Do not invent numbers here.
+measurement_sha: null
+fit_split: null
+holdout_deltas: null
+created_at: null
+metrics:
+  cpu: null
+  p50: null
+  p95: null
+  p99: null
+  goodput: null
+  error_by_class: null
+  connections: null
