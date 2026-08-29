@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canvascloudai.github.io/cwm-bench/schema/campaign.schema.json",
+  "title": "cwm-bench campaign",
+  "description": "A campaign is a set of schema-valid runs that share a campaign_id and a measurement git SHA. EXAMPLE campaigns must set isExample=true and must not look like a completed v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "isExample",
+    "campaign_id",
+    "gitSha",
+    "created_at",
+    "fit_split",
+    "holdout",
+    "runs"
+  ],
+  "properties": {
+    "isExample": { "type": "boolean" },
+    "campaign_id": { "type": "string", "minLength": 1 },
+    "gitSha": { "type": "string", "minLength": 7 },
+    "created_at": { "type": "string" },
+    "notes": { "type": "string" },
+    "fit_split": {
+      "type": "object",
+      "required": ["run_ids"],
+      "properties": {
+        "run_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Runs used for per-metric fit. Must not include Burst."
+        }
+      }
+    },
+    "holdout": {
+      "type": "object",
+      "required": ["burst", "later_day", "second_region"],
+      "properties": {
+        "burst": { "type": "array", "items": { "type": "string" } },
+        "later_day": { "type": "array", "items": { "type": "string" } },
+        "second_region": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "runs": {
+      "type": "array",
+      "description": "Each item must also validate against run.schema.json (checked per-file in CI when present).",
+      "items": { "type": "object" }
+    }
+  }
+}
