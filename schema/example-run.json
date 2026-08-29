@@ -1,0 +1,120 @@
+{
+  "isExample": true,
+  "campaign_id": "EXAMPLE_NOT_A_MEASUREMENT",
+  "run_id": "EXAMPLE_idle_placeholder",
+  "split": "fit",
+  "diagnostic": "none",
+  "scenario": "idle",
+  "notes": "EXAMPLE fixture for schema validation only. Values are placeholders. This is not a campaign, not CloudWatch, and not a CWM score. Do not cite. Do not copy these numbers onto the accuracy page.",
+  "gitSha": "EXAMPLE00000000000000000000000000000000",
+  "terraform": {
+    "applySha": "EXAMPLE00000000000000000000000000000000",
+    "amiIds": {
+      "app": "ami-EXAMPLE0000",
+      "generator": "ami-EXAMPLE0000"
+    },
+    "region": "us-east-1"
+  },
+  "topology": {
+    "region": "us-east-1",
+    "alb": { "type": "application" },
+    "app": {
+      "instanceType": "m5.large",
+      "count": 2,
+      "rootVolumeType": "gp2",
+      "rootVolumeGiB": 30
+    },
+    "database": {
+      "instanceClass": "db.r5.large",
+      "engine": "mysql",
+      "engineVersion": "8.0",
+      "multiAz": false,
+      "storageType": "gp2",
+      "allocatedStorageGiB": 100
+    },
+    "generator": { "instanceType": "c6i.xlarge" }
+  },
+  "os": {
+    "name": "Amazon Linux 2023",
+    "amiId": "ami-EXAMPLE0000"
+  },
+  "runtime": {
+    "language": "nodejs",
+    "version": "20.EXAMPLE"
+  },
+  "application": {
+    "name": "cwm-bench-app",
+    "poolSize": 0,
+    "queueLimit": 0
+  },
+  "database": {
+    "engine": "mysql-8.0",
+    "maxConnectionsDeclared": 0
+  },
+  "dataset": {
+    "name": "EXAMPLE_seed_not_applied",
+    "categories": 0,
+    "products": 0,
+    "ordersAtSeed": 0
+  },
+  "requestMix": {
+    "getProductPct": 0,
+    "listPct": 0,
+    "writePct": 0,
+    "notes": "EXAMPLE — not the live mix"
+  },
+  "concurrency": {
+    "targetRps": 0,
+    "executor": "example",
+    "preAllocatedVUs": null,
+    "maxVUs": null
+  },
+  "warmup": "0s",
+  "duration": "0s",
+  "repetitions": {
+    "count": 0,
+    "varianceNotes": "EXAMPLE — no repetitions"
+  },
+  "perNode": [
+    {
+      "instanceId": "i-EXAMPLE",
+      "role": "app",
+      "cpuAvgPct": null,
+      "rps": null
+    }
+  ],
+  "latency": {
+    "p50Ms": null,
+    "p95Ms": null,
+    "p99Ms": null,
+    "source": "example"
+  },
+  "goodputRps": null,
+  "errorCategories": {
+    "db_timeout": null,
+    "too_many_connections": null,
+    "queue_full": null,
+    "cpu_overload": null,
+    "internal": null,
+    "iops_throttle": null,
+    "unclassified": null
+  },
+  "databaseConnections": {
+    "avg": null,
+    "max": null,
+    "saturation": null
+  },
+  "burstBalanceMin": {
+    "rds": null,
+    "appVolumes": [
+      { "volumeId": "vol-EXAMPLE", "min": null }
+    ]
+  },
+  "cost": {
+    "source": "example",
+    "currency": "USD",
+    "hourlyUsd": null,
+    "timestamp": null
+  },
+  "timestamp": "EXAMPLE"
+}
