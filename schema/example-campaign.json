@@ -1,0 +1,16 @@
+{
+  "isExample": true,
+  "campaign_id": "EXAMPLE_NOT_A_MEASUREMENT",
+  "gitSha": "EXAMPLE00000000000000000000000000000000",
+  "created_at": "EXAMPLE",
+  "notes": "EXAMPLE campaign wrapper. Contains only the example-run fixture. Not a v1 campaign. Empty holdout lists are intentional.",
+  "fit_split": {
+    "run_ids": []
+  },
+  "holdout": {
+    "burst": [],
+    "later_day": [],
+    "second_region": []
+  },
+  "runs": []
+}
