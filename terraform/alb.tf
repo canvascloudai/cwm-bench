@@ -1,9 +1,12 @@
 resource "aws_lb" "main" {
   name               = "${local.name}-alb"
   load_balancer_type = "application"
-  internal           = false
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = aws_subnet.public[*].id
+  # Keep generator -> ALB traffic on VPC-local addresses. The ALB ingress
+  # rule references the generator security group, which does not match a
+  # generator connection routed through an internet-facing ALB public address.
+  internal        = true
+  security_groups = [aws_security_group.alb.id]
+  subnets         = aws_subnet.private[*].id
 
   idle_timeout = 60
 
