@@ -10,6 +10,14 @@ resource "aws_ssm_parameter" "db_password" {
   value       = random_password.db.result
 }
 
+# Destroy order (AWS eventual consistency — do not invert):
+#   1. aws_db_instance.main          (timeouts.delete 60m)
+#   2. aws_db_subnet_group.main
+#   3. aws_security_group.rds / remaining SGs / VPC
+#
+# RDS-managed ENIs are AWS-managed. Do not DetachNetworkInterface and do
+# not broaden IAM for that call. Wait for RDS deletion to release them,
+# then retry destroy (scripts/terraform-destroy-retry.sh).
 resource "aws_db_subnet_group" "main" {
   name       = "${local.name}-${local.id_slug}"
   subnet_ids = aws_subnet.private[*].id
@@ -80,6 +88,28 @@ resource "aws_db_instance" "main" {
   port     = 3306
 
   performance_insights_enabled = false
+
+  # skip_final_snapshot / deletion_protection stay as-is so cleanup can
+  # destroy. deletion_protection must remain false.
+  #
+  # Create/update match AWS provider defaults. Delete is explicit so
+  # terraform waits for the instance (and its ENI) to finish disappearing
+  # before the subnet group / SGs are processed.
+  timeouts {
+    create = "40m"
+    update = "80m"
+    delete = "60m"
+  }
+
+  # Implicit edges already encode this (db_subnet_group_name,
+  # parameter_group_name, vpc_security_group_ids). Listed so destroy
+  # order stays: instance first, then subnet group, then SGs / VPC.
+  # Addresses are unchanged.
+  depends_on = [
+    aws_db_subnet_group.main,
+    aws_db_parameter_group.main,
+    aws_security_group.rds,
+  ]
 
   tags = {
     Name = "${local.name}-mysql"

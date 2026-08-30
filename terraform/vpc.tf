@@ -1,3 +1,6 @@
+# Destroy last among the RDS path: instance → db subnet group → SGs → VPC.
+# Private subnets stay until aws_db_subnet_group.main is gone. Do not add
+# time_sleep; retries after RDS deletion live in scripts/terraform-destroy-retry.sh.
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true

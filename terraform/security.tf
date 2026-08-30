@@ -3,6 +3,11 @@
 #   ALB       -> app :8080
 #   app       -> RDS :3306
 # Optional extra CIDRs may reach the ALB; default is generator-only.
+#
+# Destroy: aws_db_instance.main first (it references aws_security_group.rds),
+# then this file's SGs, then the VPC. RDS-managed ENIs keep the RDS SG in
+# use until AWS releases them after instance deletion. Wait and retry
+# destroy — do not DetachNetworkInterface. See terraform/README.md.
 
 resource "aws_security_group" "alb" {
   name        = "${local.name}-alb"

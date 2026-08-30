@@ -85,4 +85,17 @@ Changing `app_instance_type`, `db_instance_class`, `app_count`, or `region` is a
 terraform destroy -var='test_id=YYYYMMDD-campaign'
 ```
 
-RDS has `skip_final_snapshot = true` so a bench does not leave snapshots behind. Do not point this at a production account.
+RDS has `skip_final_snapshot = true` and `deletion_protection = false` so a bench can tear down. `aws_db_instance.main` waits up to **60 minutes** on delete. Destroy order is the instance first, then the DB subnet group, then security groups / VPC. Do not point this at a production account.
+
+RDS-managed ENIs are AWS-managed. Terraform in this repo does **not** call `DetachNetworkInterface` and IAM is **not** broadened for that. If destroy races AWS eventual consistency (subnet group / SG / ENI still in use while RDS is deleting), wait for RDS to release the ENI and retry:
+
+```bash
+# From the repo root. Cleanup only — not a campaign result.
+./scripts/terraform-destroy-retry.sh -var='test_id=YYYYMMDD-campaign' -auto-approve
+```
+
+The script runs `terraform init -reconfigure`, then destroy. On subnet-group / ENI / SG still-in-use failures it refreshes state, waits with bounded backoff, and retries destroy until the instance is gone or the deadline is hit. Success means the stack was destroyed. It does **not** mean a campaign completed.
+
+An interrupted `terraform apply` should default to **cleanup**, not resume measurement. That policy belongs to the Admin Benchmarks worker, not this script.
+
+**Work-directory isolation** is also a worker responsibility. The worker must isolate campaign working directories by claim. This repository does **not** fix the lost-checkout race where a shared campaign directory disappeared mid-apply.
