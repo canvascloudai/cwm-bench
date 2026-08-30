@@ -110,6 +110,8 @@ Environment (optional):
   CWM_RUN_ID            Run id (default: <scenario>-<utc-stamp>)
   CWM_WARMUP            k6 warmup (default 5m)
   CWM_DURATION          k6 steady duration (default 15m)
+  CWM_READINESS_TIMEOUT_MS  Overall post-provision readiness timeout (default 20m)
+  CWM_READINESS_POLL_MS     Delay between readiness probes (default 10s)
   AWS_REGION            Fallback AWS region if Terraform outputs are absent
 `;
 }
