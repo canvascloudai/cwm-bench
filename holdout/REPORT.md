@@ -36,6 +36,8 @@ The three diagnostics **classify** saturation. They do not assert a root cause o
 
 Same topology, same git SHA if possible, a later UTC day than the fit set.
 
+The worker adapter scenario key is `later-day` (`SCENARIO=later-day` at 100 RPS). It is not a rename of `normal` and it will not run on the same UTC day as the fit campaign. This table stays empty until a real later-day run exists.
+
 | campaign_id | run_id | date (UTC) | scenario | metric | fit prediction | held-out measured | delta | notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | awaiting v1 campaign | — | — | — | — | — | — | — | — |
@@ -44,7 +46,9 @@ Same topology, same git SHA if possible, a later UTC day than the fit set.
 
 ## Second-region holdout
 
-Same topology shape in a region other than `us-east-1`. That apply is a holdout, not a silent default change.
+Same topology shape in **us-west-2**. That apply is a holdout, not a silent default change.
+
+The worker adapter scenario key is `second-region` (`SCENARIO=second-region` at 100 RPS). It is not a rename of the us-east-1 run and it will not execute against a primary-region apply. This table stays empty until a real second-region run exists.
 
 | campaign_id | run_id | region | scenario | metric | fit prediction | held-out measured | delta | notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

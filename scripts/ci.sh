@@ -37,9 +37,17 @@ python3 scripts/validate_schema.py
 
 echo "==> app syntax (Node)"
 if command -v node >/dev/null 2>&1; then
-  node --check app/src/server.js
+  (cd app && npm ci --ignore-scripts && npm run check)
 else
   echo "node not installed; skip app syntax" >&2
+fi
+
+echo "==> worker adapter unit tests (AWS mocked)"
+if command -v node >/dev/null 2>&1; then
+  node --test tests/adapter/*.test.mjs
+else
+  echo "node not installed; skip adapter tests" >&2
+  exit 1
 fi
 
 echo "==> k6 script syntax"

@@ -88,13 +88,38 @@ If generator CPU exceeds ~70% in the steady window, discard the run.
 
 ```
 app/          Node 20 reference CRUD + seed SQL (8 categories, 200 products, 0 orders)
-load/         k6 scenarios + diagnostics
+load/         k6 scenarios + diagnostics + later-day / second-region holdout keys
 terraform/    Canonical topology (AWS provider 5.x). fmt/validate in CI; no apply.
 schema/       draft 2020-12. EXAMPLE fixtures only (isExample: true).
 results/      README + .gitkeep. No runs.
 calibrate/    Stub: prints "no measurements yet". Refuses composite scores.
 holdout/      REPORT.md with empty tables (awaiting v1 campaign).
-scripts/ci.sh Local + Actions entrypoint.
+scripts/      ci.sh + worker-adapter.mjs (Admin Benchmarks worker contract)
+```
+
+## Worker adapter
+
+The Admin Benchmarks worker capability-checks a pinned revision, then
+calls this contract. Unknown commands and unknown scenarios fail.
+
+```bash
+node scripts/worker-adapter.mjs wait-ready --json
+node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
+node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
+```
+
+`wait-ready` returns `adapterVersion` and the full `supportedScenarios`
+list (`idle`, `normal`, `peak`, `burst`, `pool-bound`, `app-bound`,
+`cpu-only`, `later-day`, `second-region`). `later-day` is a real later-UTC-day
+holdout, not an alias of `normal`. `second-region` is a real **us-west-2**
+holdout, not a rename of the us-east-1 run. Burst stays a known gap:
+the adapter can run it; it will not invent CloudWatch. See
+`scripts/README.md`.
+
+App check used by the worker and CI:
+
+```bash
+cd app && npm ci --ignore-scripts && npm run check
 ```
 
 ## Apply terraform
@@ -111,7 +136,7 @@ terraform apply tfplan
 terraform output
 ```
 
-Set `ami_id` and `app_source_git_ref` (this SHA) for a campaign you intend to keep. Copy `alb_dns`, `generator_ip`, `dashboard_url`, `resolved_ami_id` into the campaign record.
+Set `ami_id` and `app_source_git_ref` to **this commit SHA** for a campaign you intend to keep. App and generator user_data check out that exact URL and SHA. They do not fall back to `main`, `master`, `HEAD`, or another repository. Copy `alb_dns`, `generator_ip`, `dashboard_url`, `resolved_ami_id` into the campaign record.
 
 Destroy when finished: `terraform destroy -var='test_id=YYYYMMDD-your-campaign'`.
 
@@ -177,6 +202,7 @@ GitHub Actions (`.github/workflows/ci.yml`) and `bash scripts/ci.sh`:
 - `k6 inspect` on load scripts
 - calibrate stub + refuse composite score
 - reject `results/` files that claim `isExample: false`
+- worker-adapter unit tests (AWS mocked; no fabricated campaign)
 
 ## Local checks
 

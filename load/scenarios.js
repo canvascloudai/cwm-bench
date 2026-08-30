@@ -1,5 +1,6 @@
 /**
  * Canonical rungs: idle 10, normal 100, peak 500, burst 1000 RPS.
+ * Holdouts (first-class keys, not aliases): later-day 100, second-region 100.
  *
  * Protocol: warmup, then 15 min steady.
  *   WARMUP default 5m, DURATION default 15m.

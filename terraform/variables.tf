@@ -126,12 +126,22 @@ variable "allowed_ingress_cidrs" {
 
 variable "app_source_git_url" {
   type        = string
-  description = "Git URL the app user_data clones for app/ sources. Default is the public GitHub repo. user_data also embeds the in-tree files as a fallback."
+  description = "Exact git URL the app and generator user_data fetch. Required at boot. There is no fallback to a different repository."
   default     = "https://github.com/canvascloudai/cwm-bench.git"
+
+  validation {
+    condition     = var.app_source_git_url != ""
+    error_message = "app_source_git_url must be the campaign repository URL. user_data will not fall back to another URL."
+  }
 }
 
 variable "app_source_git_ref" {
   type        = string
-  description = "Git ref to check out on the app and generator nodes. Empty uses the embedded copy only. Set this to the campaign's measurement SHA."
+  description = "Exact commit SHA the app and generator user_data check out. Empty or a branch name (main/master/HEAD) fails user_data loudly. Set this to the campaign's measurement SHA."
   default     = ""
+
+  validation {
+    condition     = var.app_source_git_ref == "" || can(regex("^[0-9a-fA-F]{7,40}$", var.app_source_git_ref))
+    error_message = "app_source_git_ref must be a git commit SHA (7-40 hex chars). Branch names including main, master, and HEAD are rejected."
+  }
 }
