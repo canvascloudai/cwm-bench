@@ -9,7 +9,7 @@ AWS provider **5.x**. No account IDs are stored in this directory. `terraform va
 | Piece | Pin / default | Notes |
 | --- | --- | --- |
 | Region | `us-east-1` | A second region is a holdout, not a default change. |
-| ALB | application, internet-facing, HTTP:80 | HTTPS:443 only if `acm_certificate_arn` is set. |
+| ALB | application, internal, HTTP:80 | Private-subnet DNS keeps generator traffic VPC-local so source-SG ingress applies. HTTPS:443 only if `acm_certificate_arn` is set. |
 | App | **2 × m5.large** | gp2 root, default **30 GiB** (90 baseline IOPS, 3000 burst). |
 | Database | **1 × db.r5.large** MySQL **8.0** Single-AZ | gp2 default **100 GiB** (300 baseline IOPS, 3000 burst). |
 | Generator | **c6i.xlarge** | 4 vCPU compute-optimized so k6 can drive 1000 RPS. If generator CPU > ~70%, discard the run. |
