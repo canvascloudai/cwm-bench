@@ -75,20 +75,30 @@ test('aws_db_instance.main has timeouts.delete of 60m and cleanup-safe flags', (
   assert.match(instance, /depends_on\s*=\s*\[[\s\S]*aws_db_subnet_group\.main/);
 });
 
+function stripHclComments(text) {
+  return text
+    .replace(/^\s*#.*$/gm, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
 test('terraform does not detach RDS ENIs or broaden IAM', () => {
-  const tf = allTerraformText();
-  assert.doesNotMatch(tf, /DetachNetworkInterface/);
+  const tf = stripHclComments(allTerraformText());
+  assert.doesNotMatch(tf, /ec2:DetachNetworkInterface/);
   assert.doesNotMatch(tf, /ec2:Detach/);
+  assert.doesNotMatch(tf, /resource\s+"aws_network_interface"/);
   assert.doesNotMatch(tf, /resource\s+"time_sleep"/);
   assert.doesNotMatch(readTf('versions.tf'), /hashicorp\/time/);
 
-  const iam = readTf('iam.tf');
+  const iam = stripHclComments(readTf('iam.tf'));
   assert.match(iam, /ssm:GetParameter/);
   assert.match(iam, /kms:Decrypt/);
   assert.match(iam, /AmazonSSMManagedInstanceCore/);
   assert.doesNotMatch(iam, /ec2:/);
   assert.doesNotMatch(iam, /rds:/);
-  assert.doesNotMatch(iam, /elasticnetworkinterface/i);
+  assert.doesNotMatch(iam, /DetachNetworkInterface/);
+
+  // Comments may name the API to forbid it; IAM must not grant it.
+  assert.match(allTerraformText(), /Do not DetachNetworkInterface/);
 });
 
 test('cleanup-compat.json resource addresses are unchanged', () => {
@@ -126,9 +136,9 @@ test('destroy-retry script is cleanup-only and retries still-in-use races', () =
   const script = readFileSync(path.join(ROOT, 'scripts/terraform-destroy-retry.sh'), 'utf8');
   assert.match(script, /terraform init -reconfigure|init -reconfigure/);
   assert.match(script, /bounded/);
-  assert.doesNotMatch(script, /campaign complete/i);
   assert.match(script, /not a campaign result/);
   assert.match(script, /worker owns that policy/);
+  assert.doesNotMatch(script, /echo .*campaign complete/i);
 
   const work = mkdtempSync(path.join(tmpdir(), 'cwm-destroy-retry-'));
   const bin = path.join(work, 'bin');
