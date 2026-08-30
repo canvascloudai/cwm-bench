@@ -69,6 +69,12 @@ SCENARIO=idle    k6 run --out json="$RESULTS_DIR/k6.json" --out csv="$RESULTS_DI
 SCENARIO=normal  k6 run --out json="$RESULTS_DIR/k6.json" --out csv="$RESULTS_DIR/k6.csv" load/scenarios.js
 SCENARIO=peak    k6 run --out json="$RESULTS_DIR/k6.json" --out csv="$RESULTS_DIR/k6.csv" load/scenarios.js
 SCENARIO=burst   k6 run --out json="$RESULTS_DIR/k6.json" --out csv="$RESULTS_DIR/k6.csv" load/scenarios.js
+
+# Holdouts (first-class keys; not aliases of normal)
+# later-day: only valid on a later UTC day than the fit set (adapter enforces).
+SCENARIO=later-day      k6 run load/scenarios.js
+# second-region: only valid when this apply is us-west-2 (adapter enforces).
+SCENARIO=second-region  k6 run load/scenarios.js
 ```
 
 Diagnostics at 1000 RPS (Burst holdout). **Re-apply** terraform before app-bound so the nodes actually have `APP_POOL_SIZE=40`.

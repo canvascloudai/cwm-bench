@@ -43,19 +43,58 @@ for path, b64 in files.items():
     pathlib.Path(path).write_bytes(base64.b64decode(b64))
 PY
 
+# Campaign pin: exact repository URL + commit SHA. No main/master/HEAD
+# fallback, no unpinned clone, no different repository URL.
 GIT_REF="${git_ref}"
 GIT_URL="${git_url}"
-if [ -n "$GIT_REF" ] && [ -n "$GIT_URL" ]; then
-  rm -rf /opt/cwm-bench-src
-  git clone --depth 1 --branch "$GIT_REF" "$GIT_URL" /opt/cwm-bench-src || \
-    git clone --depth 1 "$GIT_URL" /opt/cwm-bench-src
-  if [ -d /opt/cwm-bench-src/app ]; then
-    cp -a /opt/cwm-bench-src/app/. /opt/cwm-bench-app/
-  fi
+if [ -z "$GIT_URL" ] || [ -z "$GIT_REF" ]; then
+  echo "FATAL: app_source_git_url and app_source_git_ref (exact commit SHA) are required"
+  echo "FATAL: refusing to fall back to main, master, HEAD, or embedded-only sources"
+  exit 1
+fi
+case "$GIT_REF" in
+  main|master|HEAD|origin/main|origin/master|refs/heads/*|refs/tags/*)
+    echo "FATAL: git ref must be an exact commit SHA, not a branch or symbolic ref: $GIT_REF"
+    exit 1
+    ;;
+esac
+if ! printf '%s' "$GIT_REF" | grep -Eq '^[0-9a-fA-F]{7,40}$'; then
+  echo "FATAL: git ref is not a valid commit SHA: $GIT_REF"
+  exit 1
 fi
 
+rm -rf /opt/cwm-bench-src
+mkdir -p /opt/cwm-bench-src
+git init /opt/cwm-bench-src
+git -C /opt/cwm-bench-src remote add origin "$GIT_URL"
+if ! git -C /opt/cwm-bench-src fetch --depth 1 origin "$GIT_REF"; then
+  echo "FATAL: failed to fetch commit $GIT_REF from $GIT_URL"
+  echo "FATAL: no fallback to default branch"
+  exit 1
+fi
+git -C /opt/cwm-bench-src checkout --detach FETCH_HEAD
+ACTUAL_SHA="$(git -C /opt/cwm-bench-src rev-parse HEAD)"
+GIT_REF_LC="$(printf '%s' "$GIT_REF" | tr 'A-F' 'a-f')"
+ACTUAL_SHA_LC="$(printf '%s' "$ACTUAL_SHA" | tr 'A-F' 'a-f')"
+case "$ACTUAL_SHA_LC" in
+  "$GIT_REF_LC"*) ;;
+  *)
+    echo "FATAL: checked out $ACTUAL_SHA but campaign required $GIT_REF"
+    exit 1
+    ;;
+esac
+if [ ! -d /opt/cwm-bench-src/app ]; then
+  echo "FATAL: checked-out commit $ACTUAL_SHA has no app/ directory"
+  exit 1
+fi
+cp -a /opt/cwm-bench-src/app/. /opt/cwm-bench-app/
+
 cd /opt/cwm-bench-app
-npm install --omit=dev
+if [ -f package-lock.json ]; then
+  npm ci --omit=dev --ignore-scripts
+else
+  npm install --omit=dev --ignore-scripts
+fi
 
 # Wait for RDS, then seed. Re-seed is idempotent (DROP/CREATE).
 export AWS_DEFAULT_REGION="${region}"
@@ -71,10 +110,7 @@ done
 
 mysql -h "${mysql_host}" -u "${mysql_user}" < /opt/cwm-bench-app/seed/seed.sql
 
-APP_GIT_SHA="embedded"
-if [ -n "$GIT_REF" ]; then
-  APP_GIT_SHA="$GIT_REF"
-fi
+APP_GIT_SHA="$ACTUAL_SHA"
 printf 'node=%s\npool=%s\ngit=%s\n' "$(node --version)" "${app_pool_size}" "$APP_GIT_SHA" > /opt/cwm-bench-app/RUNTIME.txt
 
 cat > /etc/systemd/system/cwm-bench-app.service <<EOF

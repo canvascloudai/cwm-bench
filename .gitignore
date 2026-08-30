@@ -44,3 +44,6 @@ results/raw/**
 
 # Agent scratch (not part of the program)
 agent-tools/
+
+# Adapter runtime state (fit-campaign date). Not a measurement.
+.cwm-adapter-state.json

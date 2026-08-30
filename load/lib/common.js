@@ -19,6 +19,13 @@ export const RPS = Object.freeze({
   normal: 100,
   peak: 500,
   burst: 1000,
+  // Holdouts are first-class keys. They are not aliases of `normal`.
+  // later-day: same mix/RPS as the normal rung, but a distinct holdout
+  // identity that the worker adapter will only run on a later UTC day.
+  'later-day': 100,
+  // second-region: same mix/RPS, distinct holdout identity that the
+  // worker adapter will only run in us-west-2.
+  'second-region': 100,
 });
 
 export const DEFAULT_WARMUP = '5m';

@@ -73,7 +73,9 @@ After apply, record outputs: `alb_dns`, `rds_endpoint`, `generator_ip`, `dashboa
 - `mysql_max_connections` — default 500
 - `extra_tags` — map
 - `ami_id` — pin for a campaign
-- `app_source_git_ref` — measurement SHA so nodes run that tree
+- `app_source_git_ref` — **exact measurement SHA**. user_data fails if this is empty or a branch name (`main` / `master` / `HEAD`). There is no unpinned clone.
+
+A second-region holdout is a **separate apply** with `-var='region=us-west-2'`. That is not a silent default change and not a rename of the us-east-1 run. See `CLEANUP-COMPAT.md` before touching resource addresses.
 
 Changing `app_instance_type`, `db_instance_class`, `app_count`, or `region` is a **new topology**.
 

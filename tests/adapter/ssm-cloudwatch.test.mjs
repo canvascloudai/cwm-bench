@@ -1,0 +1,134 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { main } from '../../scripts/lib/adapter/main.mjs';
+import {
+  MemoryStream,
+  createAwsMock,
+  ssmOnlineHandlers,
+  terraformOutputFixture,
+} from '../helpers.mjs';
+
+async function runWith(argv, options) {
+  const stdout = new MemoryStream();
+  const stderr = new MemoryStream();
+  const code = await main(argv, { stdout, stderr, ...options });
+  return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString() };
+}
+
+test('SSM send-command failure is a nonzero JSON error', async () => {
+  const aws = createAwsMock({
+    ...ssmOnlineHandlers({ poolSize: 250 }),
+    'ssm.send-command': async () => ({
+      code: 1,
+      stdout: '',
+      stderr: 'An error occurred (AccessDenied) when calling SendCommand',
+    }),
+  });
+  const result = await runWith(['run', '--scenario', 'normal', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.ok(
+    result.payload.error.code === 'AWS_CLI_FAILED' || result.payload.error.code === 'SSM_SEND_FAILED'
+  );
+  assert.match(result.payload.error.message, /AccessDenied|SendCommand|SSM/i);
+});
+
+test('SSM invocation Failed status is SSM_EXECUTION_FAILED', async () => {
+  const aws = createAwsMock({
+    ...ssmOnlineHandlers({ poolSize: 250 }),
+    'ssm.get-command-invocation': async () => ({
+      code: 0,
+      stdout: JSON.stringify({
+        Status: 'Failed',
+        StandardOutputContent: '',
+        StandardErrorContent: 'k6: command failed',
+        StatusDetails: 'Exit 99',
+      }),
+      stderr: '',
+    }),
+  });
+  const result = await runWith(['run', '--scenario', 'peak', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.error.code, 'SSM_EXECUTION_FAILED');
+});
+
+test('CloudWatch collection failure is nonzero and not a fabricated metric', async () => {
+  const aws = createAwsMock({
+    ...ssmOnlineHandlers(),
+    'cloudwatch.get-metric-statistics': async () => ({
+      code: 1,
+      stdout: '',
+      stderr: 'An error occurred (Throttling) when calling GetMetricStatistics',
+    }),
+  });
+  const result = await runWith(['collect', '--scenario', 'normal', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: { CWM_RUN_ID: 'normal-1' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.ok(
+    result.payload.error.code === 'CLOUDWATCH_COLLECT_FAILED' ||
+      result.payload.error.code === 'AWS_CLI_FAILED'
+  );
+  assert.equal(result.payload.ok, false);
+  assert.equal(result.payload.cloudwatch, undefined);
+});
+
+test('collect success reports empty CloudWatch datapoints as unmeasured, not invented', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers());
+  const result = await runWith(['collect', '--scenario', 'idle', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: { CWM_RUN_ID: 'idle-1', CWM_CAMPAIGN_ID: 'test-campaign' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.invented, false);
+  assert.equal(result.payload.cloudwatch.status, 'collected');
+  const cpu = result.payload.cloudwatch.metrics['app_cpu_i-app1'];
+  assert.equal(cpu.summary.available, false);
+  assert.equal(cpu.summary.value, null);
+  assert.ok(result.payload.resolvedAmis.amiId.startsWith('ami-'));
+  assert.equal(result.payload.terraformOutputs.generator_instance_id, 'i-generator1');
+});
+
+test('wait-ready fails when generator SSM is offline', async () => {
+  const aws = createAwsMock({
+    'ssm.describe-instance-information': async (args) => {
+      const filter = args[args.indexOf('--filters') + 1];
+      const online = !filter.includes('i-generator1');
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          InstanceInformationList: online ? [{ PingStatus: 'Online' }] : [{ PingStatus: 'ConnectionLost' }],
+        }),
+        stderr: '',
+      };
+    },
+  });
+  const result = await runWith(['wait-ready', '--json'], {
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.error.code, 'GENERATOR_NOT_READY');
+});

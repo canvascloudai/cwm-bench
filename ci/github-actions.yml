@@ -36,3 +36,5 @@ jobs:
 
       - name: Run local CI script
         run: bash scripts/ci.sh
+        # ci.sh: honesty, schema, app `npm ci --ignore-scripts && npm run check`,
+        # worker-adapter unit tests (AWS mocked), k6 inspect, terraform validate.

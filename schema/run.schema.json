@@ -46,8 +46,8 @@
     },
     "scenario": {
       "type": "string",
-      "enum": ["idle", "normal", "peak", "burst", "diagnostic"],
-      "description": "Traffic rung. Diagnostics at 1000 RPS still set this (usually burst)."
+      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic"],
+      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal."
     },
     "notes": { "type": "string" },
     "gitSha": {
