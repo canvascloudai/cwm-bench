@@ -31,6 +31,7 @@ output "dashboard_url" {
 output "resolved_ami_id" {
   description = "AMI actually used. Copy this into campaign terraform.amiIds. The SSM parameter is not a pin."
   value       = local.ami_id
+  sensitive   = true
 }
 
 output "ami_source" {
