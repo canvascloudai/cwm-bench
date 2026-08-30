@@ -3,6 +3,16 @@ output "alb_dns" {
   value       = aws_lb.main.dns_name
 }
 
+output "alb_arn" {
+  description = "ALB ARN. CloudWatch AWS/ApplicationELB LoadBalancer dimension is the suffix after loadbalancer/."
+  value       = aws_lb.main.arn
+}
+
+output "target_group_arn" {
+  description = "App target group ARN. CloudWatch TargetGroup dimension is the suffix including targetgroup/."
+  value       = aws_lb_target_group.app.arn
+}
+
 output "rds_endpoint" {
   description = "RDS MySQL endpoint hostname"
   value       = aws_db_instance.main.address

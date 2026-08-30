@@ -49,6 +49,10 @@ test('every listed scenario has distinct setup constraints and its own k6 key', 
   assert.equal(second.requiredRegion, 'us-west-2');
   assert.equal(later.split, 'holdout');
   assert.equal(second.split, 'holdout');
+  const burst = getScenario('burst');
+  assert.equal(burst.completeness, 'collected');
+  assert.equal(burst.requiresCompleteCollect, true);
+  assert.equal(burst.knownGap, undefined);
 });
 
 test('later-day is not an alias of normal on the same UTC day', () => {
@@ -268,7 +272,9 @@ for (const key of ALL_RUNNABLE) {
     assert.equal(result.payload.scenario, key);
     assert.equal(result.payload.aliasOf, null);
     if (key === 'burst') {
-      assert.equal(result.payload.knownGap, true);
+      assert.equal(result.payload.requiresCompleteCollect, true);
+      assert.equal(result.payload.completeness, 'collected');
+      assert.equal(result.payload.knownGap, undefined);
     }
   });
 }

@@ -18,10 +18,27 @@ If Terraform state exists, it also verifies app health and SSM
 reachability (no inbound SSH). If state is absent, it still succeeds so
 the worker can capability-check before provisioning.
 
-`run` executes the requested workload on the generator through AWS SSM.
-`collect` reads Terraform outputs, the resolved AMI, CloudWatch
-GetMetricStatistics, and generator artifacts. Empty CloudWatch
-datapoints stay null. Nothing is invented.
+`run` executes the requested workload on the generator through AWS SSM
+and persists `lastRun` (scenario, runId, campaignId) in adapter state
+so `collect` can find artifacts without `CWM_RUN_ID`.
+
+`collect` reads Terraform outputs (including `alb_arn` /
+`target_group_arn`), the resolved AMI, CloudWatch GetMetricStatistics
+(app/generator/RDS CPU, DatabaseConnections, RDS and app-EBS
+BurstBalance, plus ALB RequestCount, target/ELB HTTP codes, and
+TargetResponseTime p50/p95/p99), and the generator `summary.json`.
+It stitches those into run-schema fields: `latency` (prefer k6; ALB
+is also recorded), `errorCategories` (k6 tags plus `iops_throttle`
+when BurstBalance min is 0), `perNode` CPU, `goodputRps`,
+`databaseConnections`, `burstBalanceMin`. Empty CloudWatch datapoints
+stay null. Nothing is invented. The public CWM 2% / 9.55% cell is
+never copied into results.
+
+If a scenario claims `completeness: collected` (burst) and any required
+CloudWatch datapoint or k6 summary field is missing, collect sets
+`complete: false` and fails with `COLLECT_INCOMPLETE` (nonzero /
+`ok: false`) so the worker cannot ingest an incomplete burst as
+measured.
 
 ### Scenario keys
 
@@ -37,9 +54,12 @@ burst only. later-day and second-region come from this repo's campaign
 schema and honesty rules. No other CWM-internal keys were found in
 public docs; none were guessed.
 
-Burst is a **known gap** until a real campaign exists. The adapter will
-run the burst workload if asked. It will not write fake CloudWatch into
-`results/`.
+Burst is a **supported** scenario that **requires a complete collect**.
+It is not a `knownGaps` capability skip. The remaining operational
+step is the Admin Benchmarks burst campaign (1000 RPS, 5m warmup +
+15m, then the three 1000 RPS diagnostics). The adapter will not call
+burst complete until that collect is complete. It will not write fake
+CloudWatch into `results/`.
 
 `app-bound` expects `APP_POOL_SIZE=40` (re-apply first). It will not
 run against the default 250-pool topology.

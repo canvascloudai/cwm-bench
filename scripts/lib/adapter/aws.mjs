@@ -157,6 +157,10 @@ function metricDatapoints(payload) {
     sum: point.Sum ?? null,
     sampleCount: point.SampleCount ?? null,
     unit: point.Unit || null,
+    extendedStatistics:
+      point.ExtendedStatistics && typeof point.ExtendedStatistics === 'object'
+        ? { ...point.ExtendedStatistics }
+        : null,
   }));
 }
 
@@ -174,13 +178,13 @@ export async function getMetricStatistics(runAws, query) {
     query.endTime,
     '--period',
     String(query.period || 60),
-    '--statistics',
-    ...(query.statistics || ['Average']),
-    '--region',
-    query.region,
-    '--output',
-    'json',
   ];
+  if (query.extendedStatistics && query.extendedStatistics.length > 0) {
+    args.push('--extended-statistics', ...query.extendedStatistics);
+  } else {
+    args.push('--statistics', ...(query.statistics || ['Average']));
+  }
+  args.push('--region', query.region, '--output', 'json');
   if (query.dimensions && query.dimensions.length > 0) {
     args.push('--dimensions', ...query.dimensions);
   }
@@ -192,6 +196,7 @@ export async function getMetricStatistics(runAws, query) {
     dimensions: query.dimensions || [],
     datapoints: metricDatapoints(payload),
     labelFromApi: payload.Label || null,
+    extendedStatistics: query.extendedStatistics || null,
   };
 }
 
@@ -217,4 +222,38 @@ export function summarizeDatapoints(datapoints, stat) {
   }
   const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
   return { available: true, value: mean, count: numbers.length };
+}
+
+export function summarizeExtendedDatapoints(datapoints, percentile) {
+  if (!datapoints || datapoints.length === 0) {
+    return { available: false, value: null, count: 0, percentile };
+  }
+  const numbers = datapoints
+    .map((point) =>
+      point.extendedStatistics && typeof point.extendedStatistics[percentile] === 'number'
+        ? point.extendedStatistics[percentile]
+        : null
+    )
+    .filter((value) => typeof value === 'number');
+  if (numbers.length === 0) {
+    return { available: false, value: null, count: datapoints.length, percentile };
+  }
+  const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+  return { available: true, value: mean, count: numbers.length, percentile };
+}
+
+/** CloudWatch LoadBalancer dimension is the ARN suffix after `loadbalancer/`. */
+export function cloudWatchAlbDimension(arn) {
+  if (!arn) return null;
+  const marker = ':loadbalancer/';
+  const idx = String(arn).indexOf(marker);
+  return idx >= 0 ? String(arn).slice(idx + marker.length) : null;
+}
+
+/** CloudWatch TargetGroup dimension is `targetgroup/` plus the ARN suffix. */
+export function cloudWatchTargetGroupDimension(arn) {
+  if (!arn) return null;
+  const marker = ':targetgroup/';
+  const idx = String(arn).indexOf(marker);
+  return idx >= 0 ? `targetgroup/${String(arn).slice(idx + marker.length)}` : null;
 }

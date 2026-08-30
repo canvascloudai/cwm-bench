@@ -35,7 +35,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'scenarios.js', envName: 'SCENARIO', envValue: 'idle' },
     expectedPoolSize: 250,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description: 'Canonical idle rung at 10 RPS (fit split, primary region).',
   },
@@ -47,7 +48,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'scenarios.js', envName: 'SCENARIO', envValue: 'normal' },
     expectedPoolSize: 250,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description: 'Canonical normal rung at 100 RPS (fit split, primary region).',
   },
@@ -59,7 +61,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'scenarios.js', envName: 'SCENARIO', envValue: 'peak' },
     expectedPoolSize: 250,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description: 'Canonical peak rung at 500 RPS (fit split, primary region).',
   },
@@ -71,10 +74,11 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'scenarios.js', envName: 'SCENARIO', envValue: 'burst' },
     expectedPoolSize: 250,
-    knownGap: true,
+    completeness: 'collected',
+    requiresCompleteCollect: true,
     aliasOf: null,
     description:
-      'Canonical burst rung at 1000 RPS (holdout). Known gap until a real campaign exists. This adapter runs the workload; it does not invent CloudWatch.',
+      'Canonical burst rung at 1000 RPS (holdout). Completeness is derived from a full CloudWatch + k6 collect. The catalog does not badge burst as measured.',
   },
   'pool-bound': {
     key: 'pool-bound',
@@ -84,7 +88,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'diagnostics.js', envName: 'DIAGNOSTIC', envValue: 'pool-bound' },
     expectedPoolSize: 250,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description: '1000 RPS diagnostic expecting APP_POOL_SIZE=250.',
   },
@@ -96,7 +101,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'diagnostics.js', envName: 'DIAGNOSTIC', envValue: 'app-bound' },
     expectedPoolSize: 40,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description:
       '1000 RPS diagnostic expecting APP_POOL_SIZE=40. Re-apply terraform with app_pool_size=40 first. Will not run against the default 250-pool topology.',
@@ -109,7 +115,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'diagnostics.js', envName: 'DIAGNOSTIC', envValue: 'cpu-only' },
     expectedPoolSize: null,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description: '1000 RPS diagnostic hitting GET /api/cpu-spin only.',
   },
@@ -121,7 +128,8 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'scenarios.js', envName: 'SCENARIO', envValue: 'later-day' },
     expectedPoolSize: 250,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     calendarConstraint: 'later-utc-day-than-fit',
     description:
@@ -137,12 +145,17 @@ const DEFINITIONS = {
     forbiddenRegion: PRIMARY_REGION,
     workload: { script: 'scenarios.js', envName: 'SCENARIO', envValue: 'second-region' },
     expectedPoolSize: 250,
-    knownGap: false,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
     aliasOf: null,
     description:
       'Second-region holdout in us-west-2. Distinct scenario key and k6 SCENARIO=second-region. Setup fails if Terraform region is us-east-1. Not a rename of the primary-region run.',
   },
 };
+
+export function scenariosRequiringCompleteCollect() {
+  return SCENARIO_KEYS.filter((key) => DEFINITIONS[key].requiresCompleteCollect);
+}
 
 export function listScenarioKeys() {
   return [...SCENARIO_KEYS];

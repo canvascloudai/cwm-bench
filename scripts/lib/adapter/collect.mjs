@@ -1,7 +1,20 @@
 import { ADAPTER_VERSION, PRIMARY_REGION } from './version.mjs';
 import { getScenario } from './scenarios.mjs';
+import { lastRunFrom, loadState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
-import { getMetricStatistics, runRemoteShell, summarizeDatapoints } from './aws.mjs';
+import {
+  cloudWatchAlbDimension,
+  cloudWatchTargetGroupDimension,
+  getMetricStatistics,
+  runRemoteShell,
+  summarizeDatapoints,
+} from './aws.mjs';
+import {
+  assembleRunFields,
+  attachAlbPercentiles,
+  evaluateCompleteness,
+  parseK6Summary,
+} from './assemble.mjs';
 
 function collectionWindow(now, env) {
   const end = now;
@@ -43,7 +56,75 @@ function parseArtifactListing(stdout) {
       summary = null;
     }
   }
+  if (dir) {
+    for (const line of text.split('\n')) {
+      const trimmed = line.trim();
+      if (
+        !trimmed ||
+        trimmed.startsWith('ARTIFACT_DIR=') ||
+        trimmed.startsWith('---') ||
+        trimmed === 'ARTIFACT_DIR_MISSING'
+      ) {
+        continue;
+      }
+      if (trimmed.includes('{') || trimmed.startsWith('"')) continue;
+      files.push(trimmed);
+    }
+  }
   return { dir, files, summary, present: Boolean(dir), rawListing: text.split('\n').slice(0, 40) };
+}
+
+function albQueries(outputs) {
+  const albDim = cloudWatchAlbDimension(outputs.albArn);
+  const tgDim = cloudWatchTargetGroupDimension(outputs.targetGroupArn);
+  if (!albDim) return [];
+
+  const loadBalancer = [`Name=LoadBalancer,Value=${albDim}`];
+  const loadBalancerAndTarget = tgDim
+    ? [`Name=LoadBalancer,Value=${albDim}`, `Name=TargetGroup,Value=${tgDim}`]
+    : loadBalancer;
+
+  return [
+    {
+      label: 'alb_request_count',
+      namespace: 'AWS/ApplicationELB',
+      metricName: 'RequestCount',
+      dimensions: loadBalancer,
+      statistics: ['Sum'],
+      summarize: 'sum',
+    },
+    {
+      label: 'alb_http_target_2xx',
+      namespace: 'AWS/ApplicationELB',
+      metricName: 'HTTPCode_Target_2XX_Count',
+      dimensions: loadBalancerAndTarget,
+      statistics: ['Sum'],
+      summarize: 'sum',
+    },
+    {
+      label: 'alb_http_target_5xx',
+      namespace: 'AWS/ApplicationELB',
+      metricName: 'HTTPCode_Target_5XX_Count',
+      dimensions: loadBalancerAndTarget,
+      statistics: ['Sum'],
+      summarize: 'sum',
+    },
+    {
+      label: 'alb_http_elb_5xx',
+      namespace: 'AWS/ApplicationELB',
+      metricName: 'HTTPCode_ELB_5XX_Count',
+      dimensions: loadBalancer,
+      statistics: ['Sum'],
+      summarize: 'sum',
+    },
+    {
+      label: 'alb_target_response_time',
+      namespace: 'AWS/ApplicationELB',
+      metricName: 'TargetResponseTime',
+      dimensions: loadBalancerAndTarget,
+      extendedStatistics: ['p50', 'p95', 'p99'],
+    },
+  ];
 }
 
 export async function collectCloudWatch(runAws, outputs, region, window) {
@@ -100,6 +181,7 @@ export async function collectCloudWatch(runAws, outputs, region, window) {
       summarize: 'minimum',
     });
   }
+  queries.push(...albQueries(outputs));
 
   const metrics = {};
   for (const query of queries) {
@@ -110,10 +192,14 @@ export async function collectCloudWatch(runAws, outputs, region, window) {
       period: 60,
       region,
     });
-    metrics[query.label] = {
-      ...raw,
-      summary: summarizeDatapoints(raw.datapoints, query.summarize),
-    };
+    if (query.extendedStatistics) {
+      metrics[query.label] = attachAlbPercentiles(raw);
+    } else {
+      metrics[query.label] = {
+        ...raw,
+        summary: summarizeDatapoints(raw.datapoints, query.summarize),
+      };
+    }
   }
   return metrics;
 }
@@ -129,8 +215,14 @@ export async function collectScenario(ctx, scenarioKey) {
     throw err;
   }
 
-  const campaignId = ctx.env.CWM_CAMPAIGN_ID || (outputs.topology && outputs.topology.test_id) || 'unset-campaign';
-  const runId = ctx.env.CWM_RUN_ID || null;
+  const state = await loadState(ctx.statePath, ctx.deps.fs || {});
+  const persisted = lastRunFrom(state, ctx.env, spec.key);
+  const campaignId =
+    ctx.env.CWM_CAMPAIGN_ID ||
+    (persisted && persisted.campaignId) ||
+    (outputs.topology && outputs.topology.test_id) ||
+    'unset-campaign';
+  const runId = persisted ? persisted.runId : null;
 
   let cloudwatch;
   try {
@@ -158,18 +250,30 @@ export async function collectScenario(ctx, scenarioKey) {
     artifacts = parseArtifactListing(invocation.stdout);
   }
 
-  return {
+  const k6 = parseK6Summary(artifacts.summary);
+  const runFields = assembleRunFields({ spec, outputs, cloudwatch, k6 });
+  const completeness = evaluateCompleteness({ outputs, cloudwatch, k6 });
+  const knownGap = spec.requiresCompleteCollect ? !completeness.complete : false;
+
+  const payload = {
     ok: true,
     adapterVersion: ADAPTER_VERSION,
     scenario: spec.key,
     aliasOf: spec.aliasOf,
-    knownGap: spec.knownGap,
+    completeness: spec.completeness,
+    requiresCompleteCollect: Boolean(spec.requiresCompleteCollect),
+    complete: completeness.complete,
+    knownGap,
     invented: false,
     campaignId,
     runId,
+    runIdSource: persisted ? persisted.source : null,
     region,
+    missing: completeness.missing,
     terraformOutputs: {
       alb_dns: outputs.albDns,
+      alb_arn: outputs.albArn,
+      target_group_arn: outputs.targetGroupArn,
       generator_instance_id: outputs.generatorInstanceId,
       app_instance_ids: outputs.appInstanceIds,
       rds_identifier: outputs.rdsIdentifier,
@@ -191,6 +295,31 @@ export async function collectScenario(ctx, scenarioKey) {
       note: 'Values are CloudWatch GetMetricStatistics datapoints. Null/empty means the API returned no datapoints. Nothing here is invented or copied from the public CWM score.',
       metrics: cloudwatch,
     },
-    artifacts,
+    artifacts: {
+      present: artifacts.present,
+      dir: artifacts.dir,
+      files: artifacts.files,
+      summaryPresent: Boolean(artifacts.summary),
+      k6,
+    },
+    latency: runFields.latency,
+    albLatency: runFields.albLatency,
+    goodputRps: runFields.goodputRps,
+    errorCategories: runFields.errorCategories,
+    perNode: runFields.perNode,
+    databaseConnections: runFields.databaseConnections,
+    burstBalanceMin: runFields.burstBalanceMin,
+    concurrency: runFields.concurrency,
+    iopsThrottle: runFields.iopsThrottle,
   };
+
+  if (spec.requiresCompleteCollect && !completeness.complete) {
+    payload.ok = false;
+    payload.error = {
+      code: 'COLLECT_INCOMPLETE',
+      message: `collect for ${spec.key} is incomplete: ${completeness.missing.join(', ') || 'required evidence missing'}. Refusing to treat this as a measured run.`,
+    };
+  }
+
+  return payload;
 }

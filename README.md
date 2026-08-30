@@ -4,7 +4,7 @@ Versioned, reproducible **measurement program** for [Cloud World Model](https://
 
 The public accuracy page (`GET https://www.cloudworldmodel.ai/api/accuracy-benchmark`) **consumes this dataset. It does not get to vote on it.**
 
-**v1 measurements do not exist yet.** `results/` is empty of runs. Burst remains a **known gap**. Do not retune coefficients to raise the public score.
+**v1 measurements do not exist yet.** `results/` is empty of runs. Burst is a supported adapter scenario; it is **not measured** until a complete k6 + CloudWatch collect exists. Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell into `results/`.
 
 Public source of this program: [github.com/canvascloudai/cwm-bench](https://github.com/canvascloudai/cwm-bench). Origin namespace: `cloudworldmodel` (name the repo `cwm-bench`).
 
@@ -108,13 +108,21 @@ node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 ```
 
-`wait-ready` returns `adapterVersion` and the full `supportedScenarios`
-list (`idle`, `normal`, `peak`, `burst`, `pool-bound`, `app-bound`,
-`cpu-only`, `later-day`, `second-region`). `later-day` is a real later-UTC-day
-holdout, not an alias of `normal`. `second-region` is a real **us-west-2**
-holdout, not a rename of the us-east-1 run. Burst stays a known gap:
-the adapter can run it; it will not invent CloudWatch. See
-`scripts/README.md`.
+`wait-ready` returns `adapterVersion` (`1.1.0`) and the full
+`supportedScenarios` list (`idle`, `normal`, `peak`, `burst`,
+`pool-bound`, `app-bound`, `cpu-only`, `later-day`, `second-region`).
+`later-day` is a real later-UTC-day holdout, not an alias of `normal`.
+`second-region` is a real **us-west-2** holdout, not a rename of the
+us-east-1 run. Burst is **not** a capability skip. `collect` must
+return a complete run (required CloudWatch datapoints, including ALB,
+plus k6 `summary.json` with latency percentiles and error-class
+counts) or it fails with `COLLECT_INCOMPLETE`. Empty CloudWatch stays
+null. Nothing is invented. See `scripts/README.md`.
+
+The remaining operational step is to run the Admin Benchmarks burst
+campaign: **1000 RPS**, **5m warmup + 15m** steady, then the three
+1000 RPS diagnostics (`pool-bound`, `app-bound`, `cpu-only`). The
+adapter will not call burst complete until that collect is complete.
 
 App check used by the worker and CI:
 
@@ -191,7 +199,7 @@ Today `python3 calibrate/calibrate.py` prints `no measurements yet` and exits 0.
 | Raw results | **None** |
 | Coefficients | All `null` |
 | Holdout tables | Empty — awaiting v1 campaign |
-| Burst gap | **Still the known gap** |
+| Burst gap | **Unmeasured until a complete collect** (adapter will not badge it done) |
 
 ## CI
 

@@ -27,6 +27,7 @@ import {
   randomProductId,
   recordErrorClass,
   handleRunSummary,
+  SUMMARY_TREND_STATS,
 } from './lib/common.js';
 
 const DIAGNOSTICS = {
@@ -49,6 +50,7 @@ const rps = 1000;
 
 export const options = {
   discardResponseBodies: false,
+  summaryTrendStats: SUMMARY_TREND_STATS,
   scenarios: arrivalScenarios(rps, warmup, duration),
   tags: {
     campaign_id: envOr('CAMPAIGN_ID', 'unset-campaign'),

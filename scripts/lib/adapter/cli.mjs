@@ -97,9 +97,11 @@ Holdouts:
   second-region  Distinct holdout. Runs in us-west-2. Not an alias of the
                  primary-region (us-east-1) run.
 
-Burst remains a known gap until a real campaign lands. This adapter will
-run the burst workload if asked; it will not write fake CloudWatch into
-results/.
+Burst is a supported scenario. collect must assemble required CloudWatch
+datapoints plus k6 summary.json (latency percentiles and error-class
+counts) before burst is treated as measured. Incomplete burst collect
+fails with COLLECT_INCOMPLETE. This adapter will not invent CloudWatch
+or copy the public CWM 2% / 9.55% cell.
 
 Environment (optional):
   CWM_TERRAFORM_DIR     Terraform directory (default: <repo>/terraform)

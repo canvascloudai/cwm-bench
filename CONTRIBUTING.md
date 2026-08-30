@@ -33,7 +33,7 @@ These rules are also in `README.md` and in comments on `.github/workflows/ci.yml
 ## PR checklist
 
 - [ ] `bash scripts/ci.sh` passes (terraform fmt/validate, schema EXAMPLE, k6 inspect, calibrate stub, results honesty, worker-adapter tests).
-- [ ] Burst remains a known gap unless this PR lands a real v1 campaign.
+- [ ] Burst is not catalog-badged as measured. Completeness comes from a real collect (required CloudWatch + k6 summary). Do not invent a campaign.
 - [ ] No composite-score work.
 - [ ] New coefficients ⇒ new `measurement_sha` + holdout deltas + Burst not in fit.
 

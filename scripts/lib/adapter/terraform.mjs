@@ -51,6 +51,8 @@ export function extractOutputs(values) {
     appRootVolumeIds: Array.isArray(values.app_root_volume_ids)
       ? values.app_root_volume_ids
       : [],
+    albArn: values.alb_arn || null,
+    targetGroupArn: values.target_group_arn || null,
     topology: values.topology_declaration || {},
     region: (values.topology_declaration && values.topology_declaration.region) || null,
     missing,

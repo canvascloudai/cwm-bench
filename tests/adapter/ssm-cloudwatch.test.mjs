@@ -101,12 +101,27 @@ test('collect success reports empty CloudWatch datapoints as unmeasured, not inv
   });
   assert.equal(result.code, 0, result.stdout);
   assert.equal(result.payload.invented, false);
+  assert.equal(result.payload.complete, false);
+  assert.equal(result.payload.knownGap, false);
   assert.equal(result.payload.cloudwatch.status, 'collected');
   const cpu = result.payload.cloudwatch.metrics['app_cpu_i-app1'];
   assert.equal(cpu.summary.available, false);
   assert.equal(cpu.summary.value, null);
+  assert.equal(result.payload.latency.p50Ms, null);
+  assert.equal(result.payload.errorCategories.iops_throttle, null);
   assert.ok(result.payload.resolvedAmis.amiId.startsWith('ami-'));
   assert.equal(result.payload.terraformOutputs.generator_instance_id, 'i-generator1');
+  const joined = aws.calls.map((args) => args.join(' ')).join('\n');
+  assert.match(joined, /AWS\/ApplicationELB.*RequestCount|RequestCount.*AWS\/ApplicationELB/);
+  assert.ok(aws.calls.some((args) => args.includes('AWS/ApplicationELB') && args.includes('RequestCount')));
+  assert.ok(aws.calls.some((args) => args.includes('HTTPCode_Target_2XX_Count')));
+  assert.ok(aws.calls.some((args) => args.includes('HTTPCode_Target_5XX_Count')));
+  assert.ok(aws.calls.some((args) => args.includes('HTTPCode_ELB_5XX_Count')));
+  assert.ok(
+    aws.calls.some((args) => args.includes('TargetResponseTime') && args.includes('--extended-statistics'))
+  );
+  assert.doesNotMatch(result.stdout, /9\.55/);
+  assert.doesNotMatch(result.stdout, /\b2\.00\b/);
 });
 
 test('wait-ready fails when generator SSM is offline', async () => {
