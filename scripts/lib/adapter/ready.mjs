@@ -3,6 +3,56 @@ import { listScenarioKeys, scenarioCatalog, scenariosRequiringCompleteCollect } 
 import { readTerraformOutputs } from './terraform.mjs';
 import { describeSsmInstance, runRemoteShell } from './aws.mjs';
 
+export const DEFAULT_READY_TIMEOUT_MS = 15 * 60 * 1000;
+export const DEFAULT_READY_POLL_MS = 10 * 1000;
+
+const RETRYABLE_READY_CODES = new Set([
+  'GENERATOR_NOT_READY',
+  'APP_NOT_READY',
+  'SSM_EXECUTION_FAILED',
+  'SSM_TIMEOUT',
+]);
+
+function clock(ctx) {
+  return typeof ctx.deps.nowMs === 'function' ? ctx.deps.nowMs : Date.now;
+}
+
+function wait(ctx, ms) {
+  if (typeof ctx.deps.wait === 'function') return ctx.deps.wait(ms);
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function retryReadiness(ctx, label, check) {
+  const timeoutMs = ctx.deps.readinessTimeoutMs ?? DEFAULT_READY_TIMEOUT_MS;
+  const pollMs = ctx.deps.readinessPollMs ?? DEFAULT_READY_POLL_MS;
+  const now = clock(ctx);
+  const startedAt = now();
+  let attempts = 0;
+  let lastError;
+
+  for (;;) {
+    attempts += 1;
+    try {
+      return await check();
+    } catch (err) {
+      lastError = err;
+      if (!err || !RETRYABLE_READY_CODES.has(err.code)) throw err;
+
+      const elapsedMs = now() - startedAt;
+      if (elapsedMs >= timeoutMs) {
+        const timeout = new Error(
+          `${label} did not become ready within ${timeoutMs}ms after ${attempts} attempt(s): ${err.message}`
+        );
+        timeout.code = 'READINESS_TIMEOUT';
+        timeout.cause = err;
+        timeout.attempts = attempts;
+        throw timeout;
+      }
+      await wait(ctx, Math.min(pollMs, timeoutMs - elapsedMs));
+    }
+  }
+}
+
 function capabilityPayload() {
   return {
     adapterVersion: ADAPTER_VERSION,
@@ -110,53 +160,64 @@ export async function waitReady(ctx) {
     throw err;
   }
 
-  const generatorSsm = await describeSsmInstance(runAws, outputs.generatorInstanceId, region);
+  const generatorSsm = await retryReadiness(ctx, 'benchmark generator SSM', async () => {
+    const info = await describeSsmInstance(runAws, outputs.generatorInstanceId, region);
+    if (!info.reachable) {
+      const err = new Error(
+        `generator ${outputs.generatorInstanceId} is not SSM-reachable (ping=${info.pingStatus})`
+      );
+      err.code = 'GENERATOR_NOT_READY';
+      throw err;
+    }
+    return info;
+  });
   payload.ready.generatorSsm = generatorSsm.reachable;
-  if (!generatorSsm.reachable) {
-    const err = new Error(
-      `generator ${outputs.generatorInstanceId} is not SSM-reachable (ping=${generatorSsm.pingStatus})`
-    );
-    err.code = 'GENERATOR_NOT_READY';
-    throw err;
-  }
 
   const appSsm = [];
   for (const instanceId of outputs.appInstanceIds) {
-    const info = await describeSsmInstance(runAws, instanceId, region);
+    const info = await retryReadiness(ctx, `benchmark app ${instanceId} SSM`, async () => {
+      const result = await describeSsmInstance(runAws, instanceId, region);
+      if (!result.reachable) {
+        const err = new Error(
+          `app ${instanceId} is not SSM-reachable (ping=${result.pingStatus})`
+        );
+        err.code = 'APP_NOT_READY';
+        throw err;
+      }
+      return result;
+    });
     appSsm.push(info);
   }
   payload.ready.appSsm = appSsm.every((info) => info.reachable);
-  if (!payload.ready.appSsm) {
-    const err = new Error('one or more app instances are not SSM-reachable');
-    err.code = 'APP_NOT_READY';
-    err.details = appSsm;
-    throw err;
-  }
 
-  await runRemoteShell(runAws, {
-    instanceId: outputs.generatorInstanceId,
-    region,
-    commands: [generatorReadyCommand()],
-    timeoutSeconds: 120,
-    waitTimeoutMs: ctx.deps.ssmWaitMs || 120_000,
-    pollMs: ctx.deps.ssmPollMs || 1000,
-    comment: 'cwm-bench wait-ready generator',
-    now: ctx.deps.nowMs,
-    wait: ctx.deps.wait,
-  });
-
-  for (const instanceId of outputs.appInstanceIds) {
-    await runRemoteShell(runAws, {
-      instanceId,
+  await retryReadiness(ctx, 'benchmark generator health', () =>
+    runRemoteShell(runAws, {
+      instanceId: outputs.generatorInstanceId,
       region,
-      commands: [healthCommand()],
-      timeoutSeconds: 60,
-      waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+      commands: [generatorReadyCommand()],
+      timeoutSeconds: 120,
+      waitTimeoutMs: ctx.deps.ssmWaitMs || 120_000,
       pollMs: ctx.deps.ssmPollMs || 1000,
-      comment: 'cwm-bench wait-ready app health',
+      comment: 'cwm-bench wait-ready generator',
       now: ctx.deps.nowMs,
       wait: ctx.deps.wait,
-    });
+    })
+  );
+
+  for (const instanceId of outputs.appInstanceIds) {
+    await retryReadiness(ctx, `benchmark app ${instanceId} health`, () =>
+      runRemoteShell(runAws, {
+        instanceId,
+        region,
+        commands: [healthCommand()],
+        timeoutSeconds: 60,
+        waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+        pollMs: ctx.deps.ssmPollMs || 1000,
+        comment: 'cwm-bench wait-ready app health',
+        now: ctx.deps.nowMs,
+        wait: ctx.deps.wait,
+      })
+    );
   }
 
   payload.ready.appHealth = true;
