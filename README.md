@@ -146,7 +146,9 @@ terraform output
 
 Set `ami_id` and `app_source_git_ref` to **this commit SHA** for a campaign you intend to keep. App and generator user_data check out that exact URL and SHA. They do not fall back to `main`, `master`, `HEAD`, or another repository. Copy `alb_dns`, `generator_ip`, `dashboard_url`, `resolved_ami_id` into the campaign record.
 
-Destroy when finished: `terraform destroy -var='test_id=YYYYMMDD-your-campaign'`.
+Destroy when finished: `terraform destroy -var='test_id=YYYYMMDD-your-campaign'`. RDS delete waits up to 60 minutes. If subnet-group / ENI / SG destroy races RDS deletion, use `scripts/terraform-destroy-retry.sh` (cleanup only; not a campaign result). An interrupted apply should default to cleanup, not resume measurement — the worker owns that policy.
+
+The worker must isolate campaign working directories **by claim**. This repository does not fix the lost-checkout race of a shared campaign directory disappearing mid-apply.
 
 Full notes: `terraform/README.md`.
 

@@ -22,4 +22,10 @@ and leave this one fetchable.
 
 Adding files and scripts is fine. Changing `user_data` contents is
 fine (instances are replaced on apply; destroy still targets the same
-addresses).
+addresses). Additive timeouts on existing resources and
+`scripts/terraform-destroy-retry.sh` do not rename addresses.
+
+Destroy order for the RDS path is instance first, then
+`aws_db_subnet_group.main`, then security groups / VPC. RDS-managed
+ENIs are released by waiting for instance deletion, not by
+`DetachNetworkInterface`.

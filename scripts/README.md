@@ -84,3 +84,4 @@ listed in `scripts/cleanup-compat.json` and `terraform/CLEANUP-COMPAT.md`.
 | `ci.sh` | Local + Actions entrypoint (honesty, schema, adapter tests, terraform validate) |
 | `validate_schema.py` | EXAMPLE fixtures only |
 | `check_results_honesty.py` | Reject `results/` files that claim `isExample: false` |
+| `terraform-destroy-retry.sh` | Cleanup-only destroy with bounded retries for RDS ENI / subnet-group / SG eventual consistency. Not a campaign result. |
