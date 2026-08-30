@@ -2,56 +2,10 @@ import { ADAPTER_VERSION, PRIMARY_REGION, SECOND_REGION } from './version.mjs';
 import { listScenarioKeys, scenarioCatalog, scenariosRequiringCompleteCollect } from './scenarios.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { describeSsmInstance, runRemoteShell } from './aws.mjs';
+import { redact } from './redact.mjs';
 
-export const DEFAULT_READY_TIMEOUT_MS = 15 * 60 * 1000;
-export const DEFAULT_READY_POLL_MS = 10 * 1000;
-
-const RETRYABLE_READY_CODES = new Set([
-  'GENERATOR_NOT_READY',
-  'APP_NOT_READY',
-  'SSM_EXECUTION_FAILED',
-  'SSM_TIMEOUT',
-]);
-
-function clock(ctx) {
-  return typeof ctx.deps.nowMs === 'function' ? ctx.deps.nowMs : Date.now;
-}
-
-function wait(ctx, ms) {
-  if (typeof ctx.deps.wait === 'function') return ctx.deps.wait(ms);
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export async function retryReadiness(ctx, label, check) {
-  const timeoutMs = ctx.deps.readinessTimeoutMs ?? DEFAULT_READY_TIMEOUT_MS;
-  const pollMs = ctx.deps.readinessPollMs ?? DEFAULT_READY_POLL_MS;
-  const now = clock(ctx);
-  const startedAt = now();
-  let attempts = 0;
-  let lastError;
-
-  for (;;) {
-    attempts += 1;
-    try {
-      return await check();
-    } catch (err) {
-      lastError = err;
-      if (!err || !RETRYABLE_READY_CODES.has(err.code)) throw err;
-
-      const elapsedMs = now() - startedAt;
-      if (elapsedMs >= timeoutMs) {
-        const timeout = new Error(
-          `${label} did not become ready within ${timeoutMs}ms after ${attempts} attempt(s): ${err.message}`
-        );
-        timeout.code = 'READINESS_TIMEOUT';
-        timeout.cause = err;
-        timeout.attempts = attempts;
-        throw timeout;
-      }
-      await wait(ctx, Math.min(pollMs, timeoutMs - elapsedMs));
-    }
-  }
-}
+const DEFAULT_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
+const DEFAULT_READINESS_POLL_MS = 10 * 1000;
 
 function capabilityPayload() {
   return {
@@ -108,6 +62,91 @@ function generatorReadyCommand() {
   ].join('\n');
 }
 
+function positiveNumber(value, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : fallback;
+}
+
+function readinessConfig(ctx) {
+  return {
+    timeoutMs: positiveNumber(
+      ctx.deps.readinessTimeoutMs ?? ctx.env.CWM_READINESS_TIMEOUT_MS,
+      DEFAULT_READINESS_TIMEOUT_MS,
+    ),
+    pollMs: positiveNumber(
+      ctx.deps.readinessPollMs ?? ctx.env.CWM_READINESS_POLL_MS,
+      DEFAULT_READINESS_POLL_MS,
+    ),
+  };
+}
+
+function diagnosticFor(error) {
+  return redact(
+    [
+      error?.message,
+      error?.stderr ? `stderr: ${error.stderr}` : null,
+      error?.stdout ? `stdout: ${error.stdout}` : null,
+      error?.details ? `details: ${JSON.stringify(error.details)}` : null,
+    ]
+      .filter(Boolean)
+      .join(' | ')
+      .slice(-2000),
+  );
+}
+
+function pendingReadiness(label, details) {
+  const error = new Error(`${label} is still starting`);
+  error.code = 'READINESS_PENDING';
+  error.retryable = true;
+  error.details = details;
+  return error;
+}
+
+function isRetryableReadinessError(error) {
+  return error?.code === 'READINESS_PENDING' ||
+    (error?.code === 'SSM_EXECUTION_FAILED' && error?.ssmStatus === 'Failed');
+}
+
+function readinessTimeout(label, timeoutMs, attempts, started, clock, lastError) {
+  const elapsedMs = Math.max(0, clock() - started);
+  const error = new Error(
+    `${label} did not become ready within ${timeoutMs}ms after ${attempts} attempt(s) ` +
+      `(${elapsedMs}ms elapsed): ${diagnosticFor(lastError) || 'no diagnostic available'}`,
+  );
+  error.code = 'READINESS_TIMEOUT';
+  error.phase = label;
+  error.attempts = attempts;
+  error.elapsedMs = elapsedMs;
+  error.lastFailure = diagnosticFor(lastError);
+  return error;
+}
+
+async function retryReadiness(label, probe, controller) {
+  let attempts = 0;
+  let lastError;
+  for (;;) {
+    attempts += 1;
+    try {
+      return await probe();
+    } catch (error) {
+      if (!isRetryableReadinessError(error)) throw error;
+      lastError = error;
+      const remainingMs = controller.deadline - controller.clock();
+      if (remainingMs <= 0) {
+        throw readinessTimeout(
+          label,
+          controller.timeoutMs,
+          attempts,
+          controller.started,
+          controller.clock,
+          lastError,
+        );
+      }
+      await controller.wait(Math.min(controller.pollMs, remainingMs));
+    }
+  }
+}
+
 export async function waitReady(ctx) {
   const capability = capabilityPayload();
   const payload = {
@@ -160,63 +199,87 @@ export async function waitReady(ctx) {
     throw err;
   }
 
-  const generatorSsm = await retryReadiness(ctx, 'benchmark generator SSM', async () => {
-    const info = await describeSsmInstance(runAws, outputs.generatorInstanceId, region);
-    if (!info.reachable) {
-      const err = new Error(
-        `generator ${outputs.generatorInstanceId} is not SSM-reachable (ping=${info.pingStatus})`
-      );
-      err.code = 'GENERATOR_NOT_READY';
-      throw err;
-    }
-    return info;
-  });
+  const config = readinessConfig(ctx);
+  const clock = ctx.deps.nowMs || Date.now;
+  const wait = ctx.deps.wait || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const controller = {
+    timeoutMs: config.timeoutMs,
+    pollMs: config.pollMs,
+    started: clock(),
+    clock,
+    deadline: clock() + config.timeoutMs,
+    wait,
+  };
+
+  const generatorSsm = await retryReadiness(
+    'generator SSM',
+    async () => {
+      const info = await describeSsmInstance(runAws, outputs.generatorInstanceId, region);
+      if (!info.reachable) {
+        throw pendingReadiness(
+          `generator ${outputs.generatorInstanceId} SSM`,
+          { instanceId: outputs.generatorInstanceId, ...info },
+        );
+      }
+      return info;
+    },
+    controller,
+  );
   payload.ready.generatorSsm = generatorSsm.reachable;
 
-  const appSsm = [];
-  for (const instanceId of outputs.appInstanceIds) {
-    const info = await retryReadiness(ctx, `benchmark app ${instanceId} SSM`, async () => {
-      const result = await describeSsmInstance(runAws, instanceId, region);
-      if (!result.reachable) {
-        const err = new Error(
-          `app ${instanceId} is not SSM-reachable (ping=${result.pingStatus})`
-        );
-        err.code = 'APP_NOT_READY';
-        throw err;
+  const appSsm = await retryReadiness(
+    'app SSM',
+    async () => {
+      const infos = [];
+      for (const instanceId of outputs.appInstanceIds) {
+        infos.push(await describeSsmInstance(runAws, instanceId, region));
       }
-      return result;
-    });
-    appSsm.push(info);
-  }
+      if (!infos.every((info) => info.reachable)) {
+        throw pendingReadiness('one or more app instances SSM', {
+          instances: infos,
+        });
+      }
+      return infos;
+    },
+    controller,
+  );
   payload.ready.appSsm = appSsm.every((info) => info.reachable);
 
-  await retryReadiness(ctx, 'benchmark generator health', () =>
-    runRemoteShell(runAws, {
+  const remainingSsmWaitMs = () => Math.max(
+    1,
+    Math.min(ctx.deps.ssmWaitMs || 120_000, controller.deadline - controller.clock()),
+  );
+  await retryReadiness(
+    'generator bootstrap',
+    () => runRemoteShell(runAws, {
       instanceId: outputs.generatorInstanceId,
       region,
       commands: [generatorReadyCommand()],
       timeoutSeconds: 120,
-      waitTimeoutMs: ctx.deps.ssmWaitMs || 120_000,
+      waitTimeoutMs: remainingSsmWaitMs(),
       pollMs: ctx.deps.ssmPollMs || 1000,
       comment: 'cwm-bench wait-ready generator',
       now: ctx.deps.nowMs,
       wait: ctx.deps.wait,
-    })
+    }),
+    controller,
   );
 
   for (const instanceId of outputs.appInstanceIds) {
-    await retryReadiness(ctx, `benchmark app ${instanceId} health`, () =>
-      runRemoteShell(runAws, {
+    await retryReadiness(
+      `app ${instanceId} health`,
+      () => runRemoteShell(runAws, {
         instanceId,
         region,
         commands: [healthCommand()],
         timeoutSeconds: 60,
-        waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+        waitTimeoutMs: Math.min(ctx.deps.ssmWaitMs || 60_000, remainingSsmWaitMs()),
         pollMs: ctx.deps.ssmPollMs || 1000,
         comment: 'cwm-bench wait-ready app health',
         now: ctx.deps.nowMs,
         wait: ctx.deps.wait,
-      })
+      }),
+      controller,
     );
   }
 
