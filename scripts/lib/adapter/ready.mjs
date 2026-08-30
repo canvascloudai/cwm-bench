@@ -1,5 +1,5 @@
 import { ADAPTER_VERSION, PRIMARY_REGION, SECOND_REGION } from './version.mjs';
-import { listScenarioKeys, scenarioCatalog } from './scenarios.mjs';
+import { listScenarioKeys, scenarioCatalog, scenariosRequiringCompleteCollect } from './scenarios.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { describeSsmInstance, runRemoteShell } from './aws.mjs';
 
@@ -14,19 +14,21 @@ function capabilityPayload() {
       split: spec.split,
       regionRole: spec.regionRole,
       requiredRegion: spec.requiredRegion || null,
-      knownGap: spec.knownGap,
+      completeness: spec.completeness,
+      requiresCompleteCollect: Boolean(spec.requiresCompleteCollect),
       aliasOf: spec.aliasOf,
       calendarConstraint: spec.calendarConstraint || null,
       description: spec.description,
     })),
     matrixNote:
-      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added.',
+      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst is a supported scenario; collect must be complete before it is treated as measured.',
     primaryRegion: PRIMARY_REGION,
     secondRegion: SECOND_REGION,
-    knownGaps: ['burst'],
+    knownGaps: [],
+    requiresCompleteCollect: scenariosRequiringCompleteCollect(),
     honesty: {
       inventedMeasurements: false,
-      burstIsKnownGap: true,
+      burstRequiresCompleteCollect: true,
       laterDayIsAliasOfNormal: false,
       secondRegionIsAliasOfPrimary: false,
     },

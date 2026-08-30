@@ -31,6 +31,9 @@ export const RPS = Object.freeze({
 export const DEFAULT_WARMUP = '5m';
 export const DEFAULT_DURATION = '15m';
 
+/** Include p99 so collect can stitch schema latency without inventing it. */
+export const SUMMARY_TREND_STATS = ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'];
+
 export function envOr(name, fallback) {
   const value = __ENV[name];
   return value === undefined || value === '' ? fallback : value;

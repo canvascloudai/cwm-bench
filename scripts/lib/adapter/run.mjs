@@ -8,7 +8,7 @@ import {
   isFitScenario,
   utcDateString,
 } from './scenarios.mjs';
-import { fitDateFrom, loadState, recordFitDate } from './state.mjs';
+import { fitDateFrom, loadState, updateAdapterState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { runRemoteShell } from './aws.mjs';
 
@@ -136,9 +136,25 @@ export async function runScenario(ctx, scenarioKey) {
     }
   }
 
-  if (isFitScenario(spec.key)) {
-    await recordFitDate(ctx.statePath, today, ctx.deps.fs || {});
-  }
+  await updateAdapterState(
+    ctx.statePath,
+    (next) => {
+      if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
+        next.fitCampaignDateUtc = today;
+      }
+      next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
+      const lastRun = {
+        scenario: spec.key,
+        runId,
+        campaignId,
+        at: now.toISOString(),
+      };
+      next.lastRun = lastRun;
+      next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
+      next.lastRuns[spec.key] = lastRun;
+    },
+    ctx.deps.fs || {}
+  );
 
   return {
     ok: true,
@@ -148,7 +164,8 @@ export async function runScenario(ctx, scenarioKey) {
     kind: spec.kind,
     rps: spec.rps,
     split: spec.split,
-    knownGap: spec.knownGap,
+    requiresCompleteCollect: Boolean(spec.requiresCompleteCollect),
+    completeness: spec.completeness,
     region,
     regionRole: spec.regionRole,
     calendarDateUtc: today,

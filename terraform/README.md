@@ -64,7 +64,7 @@ terraform apply tfplan
 
 Required AWS credentials are yours. This repo does not ship them.
 
-After apply, record outputs: `alb_dns`, `rds_endpoint`, `generator_ip`, `dashboard_url`, `resolved_ami_id`, instance ids, volume ids.
+After apply, record outputs: `alb_dns`, `alb_arn`, `target_group_arn`, `rds_endpoint`, `generator_ip`, `dashboard_url`, `resolved_ami_id`, instance ids, volume ids. `alb_arn` and `target_group_arn` are additive (same `aws_lb.main` / `aws_lb_target_group.app` addresses) so collect can query AWS/ApplicationELB.
 
 ## Variables you will actually set
 

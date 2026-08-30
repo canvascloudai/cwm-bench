@@ -97,7 +97,11 @@ export async function main(argv, options = {}) {
       stdout.write(`${result.text}\n`);
       return 0;
     }
-    writeJson(stdout, result.help ? { ok: true, adapterVersion: ADAPTER_VERSION, help: result.text } : result);
+    const payload = result.help ? { ok: true, adapterVersion: ADAPTER_VERSION, help: result.text } : result;
+    writeJson(stdout, payload);
+    if (payload && payload.ok === false) {
+      return 1;
+    }
     return 0;
   } catch (err) {
     const payload = failPayload(err, parsed.scenario ? { scenario: parsed.scenario } : {});
