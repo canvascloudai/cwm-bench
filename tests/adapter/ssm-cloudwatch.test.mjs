@@ -125,6 +125,7 @@ test('collect success reports empty CloudWatch datapoints as unmeasured, not inv
 });
 
 test('wait-ready fails when generator SSM is offline', async () => {
+  let nowMs = 0;
   const aws = createAwsMock({
     'ssm.describe-instance-information': async (args) => {
       const filter = args[args.indexOf('--filters') + 1];
@@ -142,8 +143,75 @@ test('wait-ready fails when generator SSM is offline', async () => {
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      nowMs: () => nowMs,
+      wait: async (ms) => {
+        nowMs += ms;
+      },
+      readinessTimeoutMs: 20_000,
+      readinessPollMs: 10_000,
     },
   });
   assert.equal(result.code, 1);
-  assert.equal(result.payload.error.code, 'GENERATOR_NOT_READY');
+  assert.equal(result.payload.error.code, 'READINESS_TIMEOUT');
+  assert.match(result.payload.error.message, /generator.*not SSM-reachable/i);
+  assert.equal(
+    aws.calls.filter((args) => args[0] === 'ssm' && args[1] === 'describe-instance-information')
+      .length,
+    3
+  );
+});
+
+test('wait-ready retries bootstrap health failures and succeeds within the deadline', async () => {
+  let nowMs = 0;
+  let commandSequence = 0;
+  const waits = [];
+  const handlers = ssmOnlineHandlers();
+  const aws = createAwsMock({
+    ...handlers,
+    'ssm.send-command': async () => {
+      commandSequence += 1;
+      return {
+        code: 0,
+        stdout: JSON.stringify({ Command: { CommandId: `cmd-${commandSequence}` } }),
+        stderr: '',
+      };
+    },
+    'ssm.get-command-invocation': async (args) => {
+      const commandId = args[args.indexOf('--command-id') + 1];
+      const firstAttempt = commandId === 'cmd-1';
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          Status: firstAttempt ? 'Failed' : 'Success',
+          StandardOutputContent: firstAttempt ? '' : '{"status":"ok"}',
+          StandardErrorContent: firstAttempt ? 'curl: target did not become ready' : '',
+          ResponseCode: firstAttempt ? 22 : 0,
+        }),
+        stderr: '',
+      };
+    },
+  });
+
+  const result = await runWith(['wait-ready', '--json'], {
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      nowMs: () => nowMs,
+      wait: async (ms) => {
+        waits.push(ms);
+        nowMs += ms;
+      },
+      readinessTimeoutMs: 30_000,
+      readinessPollMs: 10_000,
+    },
+  });
+
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.ok, true);
+  assert.equal(result.payload.ready.appHealth, true);
+  assert.deepEqual(waits, [10_000]);
+  assert.equal(
+    aws.calls.filter((args) => args[0] === 'ssm' && args[1] === 'send-command').length,
+    4
+  );
 });
