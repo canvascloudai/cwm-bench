@@ -15,8 +15,12 @@ node scripts/worker-adapter.mjs --help
 
 `wait-ready` always returns `adapterVersion` and `supportedScenarios`.
 If Terraform state exists, it also verifies app health and SSM
-reachability (no inbound SSH). If state is absent, it still succeeds so
-the worker can capability-check before provisioning.
+reachability (no inbound SSH). Post-provision checks retry normal
+bootstrap delays for up to 20 minutes by default, while terminal AWS/SSM
+errors fail immediately. `CWM_READINESS_TIMEOUT_MS` and
+`CWM_READINESS_POLL_MS` can override the bounded wait. If state is
+absent, it still succeeds so the worker can capability-check before
+provisioning.
 
 `run` executes the requested workload on the generator through AWS SSM
 and persists `lastRun` (scenario, runId, campaignId) in adapter state

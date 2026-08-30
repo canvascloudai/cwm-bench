@@ -131,3 +131,96 @@ test('wait-ready after provision reports health and SSM when mocks succeed', asy
   assert.equal(payload.ready.appHealth, true);
   assert.ok(payload.supportedScenarios.includes('later-day'));
 });
+
+test('wait-ready retries normal bootstrap failures until all checks succeed', async () => {
+  let now = 0;
+  let describeCalls = 0;
+  let invocationCalls = 0;
+  const aws = createAwsMock({
+    'ssm.describe-instance-information': async () => {
+      describeCalls += 1;
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          InstanceInformationList: describeCalls === 1
+            ? []
+            : [{ PingStatus: 'Online', AgentVersion: '3.0.0' }],
+        }),
+        stderr: '',
+      };
+    },
+    'ssm.send-command': async () => ({
+      code: 0,
+      stdout: JSON.stringify({ Command: { CommandId: `cmd-${invocationCalls + 1}` } }),
+      stderr: '',
+    }),
+    'ssm.get-command-invocation': async () => {
+      invocationCalls += 1;
+      if (invocationCalls === 1) {
+        return {
+          code: 0,
+          stdout: JSON.stringify({
+            Status: 'Failed',
+            StandardErrorContent: 'curl: connection refused while app is starting',
+            StatusDetails: 'Exit 7',
+          }),
+          stderr: '',
+        };
+      }
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          Status: 'Success',
+          StandardOutputContent: '{"status":"ok"}',
+          StandardErrorContent: '',
+          ResponseCode: 0,
+        }),
+        stderr: '',
+      };
+    },
+  });
+  const code = await main(['wait-ready', '--json'], {
+    stdout: new MemoryStream(),
+    stderr: new MemoryStream(),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      nowMs: () => now,
+      wait: async (ms) => { now += ms; },
+      readinessTimeoutMs: 100,
+      readinessPollMs: 10,
+    },
+  });
+  assert.equal(code, 0);
+  assert.equal(describeCalls, 4);
+  assert.equal(invocationCalls, 4);
+});
+
+test('wait-ready returns bounded diagnostics when bootstrap never completes', async () => {
+  let now = 0;
+  const aws = createAwsMock({
+    'ssm.describe-instance-information': async () => ({
+      code: 0,
+      stdout: JSON.stringify({ InstanceInformationList: [] }),
+      stderr: '',
+    }),
+  });
+  const stdout = new MemoryStream();
+  const code = await main(['wait-ready', '--json'], {
+    stdout,
+    stderr: new MemoryStream(),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      nowMs: () => now,
+      wait: async (ms) => { now += ms; },
+      readinessTimeoutMs: 25,
+      readinessPollMs: 10,
+    },
+  });
+  assert.equal(code, 1);
+  const payload = JSON.parse(stdout.toString());
+  assert.equal(payload.error.code, 'READINESS_TIMEOUT');
+  assert.match(payload.error.message, /generator SSM|still starting|attempt/);
+  assert.match(payload.error.message, /InstanceInformation|generator/i);
+});
