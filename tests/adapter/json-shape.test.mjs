@@ -5,6 +5,23 @@ import { ADAPTER_VERSION } from '../../scripts/lib/adapter/version.mjs';
 import { SCENARIO_KEYS } from '../../scripts/lib/adapter/scenarios.mjs';
 import { MemoryStream, createAwsMock, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
 
+test('wait-ready succeeds when terraform output is empty JSON (init, no apply)', async () => {
+  const stdout = new MemoryStream();
+  const code = await main(['wait-ready', '--json'], {
+    stdout,
+    stderr: new MemoryStream(),
+    deps: {
+      runTerraform: async () => ({ code: 0, stdout: '{}', stderr: '' }),
+    },
+  });
+  assert.equal(code, 0);
+  const payload = JSON.parse(stdout.toString());
+  assert.equal(payload.ok, true);
+  assert.equal(payload.provisioned, false);
+  assert.equal(payload.adapterVersion, ADAPTER_VERSION);
+  assert.ok(payload.supportedScenarios.includes('second-region'));
+});
+
 test('wait-ready succeeds with capability JSON when terraform CLI is missing', async () => {
   const stdout = new MemoryStream();
   const code = await main(['wait-ready', '--json'], {

@@ -89,8 +89,18 @@ export async function readTerraformOutputs(deps) {
     err.code = 'TERRAFORM_OUTPUT_FAILED';
     throw err;
   }
-  const values = decodeTerraformOutput(result.stdout);
+  const values = decodeTerraformOutput(result.stdout || '{}');
+  if (!values || Object.keys(values).length === 0) {
+    const err = new Error('terraform state is not present (not provisioned yet)');
+    err.code = 'NOT_PROVISIONED';
+    throw err;
+  }
   const extracted = extractOutputs(values);
+  if (extracted.missing.length === REQUIRED_OUTPUTS.length) {
+    const err = new Error('terraform state is not present (not provisioned yet)');
+    err.code = 'NOT_PROVISIONED';
+    throw err;
+  }
   if (extracted.missing.length > 0) {
     const err = new Error(
       `terraform outputs missing required keys: ${extracted.missing.join(', ')}`
