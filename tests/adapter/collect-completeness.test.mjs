@@ -216,6 +216,32 @@ test('collect rejects ALB 5xx datapoints that contradict a clean k6 summary', as
   assert.equal(result.payload.cloudwatch.metrics.alb_http_elb_5xx.datapoints[0].sum, 4);
 });
 
+test('collect rejects explicit zero error counters that contradict a nonzero k6 failure rate', async () => {
+  const summary = cleanK6SummaryFixture();
+  summary.metrics.errors_by_class = {
+    type: 'counter',
+    values: { count: 0, rate: 0 },
+  };
+  summary.metrics.http_req_failed = {
+    type: 'rate',
+    values: { rate: 0.01, passes: 150, fails: 14850 },
+  };
+  const aws = createAwsMock(collectCompleteHandlers({ summary, alb5xxCount: 0 }));
+  const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: { CWM_RUN_ID: 'burst-k6-contradictory', CWM_CAMPAIGN_ID: 'test-campaign' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: memoryFs,
+    },
+  });
+
+  assert.equal(result.code, 1, result.stdout);
+  assert.equal(result.payload.complete, false);
+  assert.ok(result.payload.missing.includes('k6:errors_by_class:contradictory'));
+});
+
 test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async () => {
   const stored = { body: null };
   const runAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));

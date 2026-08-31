@@ -61,24 +61,29 @@ function sameDatapointCoverage(left, right) {
   );
 }
 
+function datapointSumsMatch(left, right) {
+  if (!sameDatapointCoverage(left, right)) return false;
+  const rightByTimestamp = new Map(
+    metricDatapoints(right).map((point) => [point.timestamp, point.sum]),
+  );
+  return metricDatapoints(left).every(
+    (point) => point.sum === rightByTimestamp.get(point.timestamp),
+  );
+}
+
 function hasRequestSuccessEvidence(cloudwatch) {
   const requestCount = cloudwatch && cloudwatch.alb_request_count;
   const target2xx = cloudwatch && cloudwatch.alb_http_target_2xx;
   const requestSum = metricSum(requestCount);
   const target2xxSum = metricSum(target2xx);
-  if (
-    requestSum == null ||
-    target2xxSum == null ||
-    requestSum <= 0 ||
-    !sameDatapointCoverage(requestCount, target2xx)
-  ) {
+  if (requestSum == null || target2xxSum == null || requestSum <= 0) {
     return { available: false, contradictory: false };
   }
   if (target2xxSum > requestSum) {
     return { available: false, contradictory: true };
   }
   return {
-    available: target2xxSum === requestSum,
+    available: datapointSumsMatch(requestCount, target2xx),
     contradictory: false,
   };
 }
@@ -130,6 +135,7 @@ export function parseK6Summary(summary) {
       errorClasses: null,
       errorClassCountsPresent: false,
       errorClassEvidence: 'missing',
+      classifiedErrorCount: null,
       goodputRps: null,
       httpReqs: null,
       httpReqFailed: null,
@@ -177,11 +183,14 @@ export function parseK6Summary(summary) {
       aggregateCount != null && taggedErrorMetricCount === 0 && aggregateCount > 0;
     const hasInvalidTaggedCount = Object.values(errorClasses).some((count) => count == null);
     const contradictsZeroFailureRate = failRate === 0 && classifiedErrorCount > 0;
+    const contradictsNonzeroFailureRate =
+      failRate != null && failRate > 0 && classifiedErrorCount === 0;
     if (
       aggregateMatchesTags &&
       !hasUnclassifiedCounter &&
       !hasInvalidTaggedCount &&
-      !contradictsZeroFailureRate
+      !contradictsZeroFailureRate &&
+      !contradictsNonzeroFailureRate
     ) {
       for (const key of K6_ERROR_CLASSES) {
         if (!(key in errorClasses)) {
@@ -217,6 +226,10 @@ export function parseK6Summary(summary) {
     errorClassCountsPresent:
       errorClassEvidence === 'classified-counter' || errorClassEvidence === 'zero-http-failure-rate',
     errorClassEvidence,
+    classifiedErrorCount:
+      errorClassEvidence === 'classified-counter' || errorClassEvidence === 'zero-http-failure-rate'
+        ? classifiedErrorCount
+        : null,
     goodputRps,
     httpReqs: reqs && reqs.values ? reqs.values : null,
     httpReqFailed: failed && failed.values ? failed.values : null,
@@ -313,7 +326,8 @@ export function evaluateCompleteness({ outputs, cloudwatch, k6 }) {
   const alb5xxEvidence = assessAlb5xxEvidence(cloudwatch);
   const alb5xxContradictsK6 =
     k6 &&
-    k6.errorClassEvidence === 'zero-http-failure-rate' &&
+    k6.errorClassCountsPresent &&
+    k6.classifiedErrorCount === 0 &&
     alb5xxEvidence.observed5xxHasErrors;
   const alb5xxContradictory = alb5xxEvidence.contradictory || alb5xxContradictsK6;
   for (const label of requiredCloudWatchLabels(outputs)) {
