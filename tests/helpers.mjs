@@ -160,6 +160,8 @@ export function artifactListingStdout(
 export function cloudWatchCompleteHandlers(options = {}) {
   const rdsBurstMin = options.rdsBurstMin == null ? 0 : options.rdsBurstMin;
   const ebsBurstMin = options.ebsBurstMin == null ? 40 : options.ebsBurstMin;
+  const requestCount = options.requestCount == null ? 900 : options.requestCount;
+  const target2xxCount = options.target2xxCount == null ? 900 : options.target2xxCount;
   const ts = options.timestamp || '2026-09-01T00:10:00Z';
   return {
     'cloudwatch.get-metric-statistics': async (args) => {
@@ -213,7 +215,20 @@ export function cloudWatchCompleteHandlers(options = {}) {
         };
       }
       if (metric === 'RequestCount' || String(metric).startsWith('HTTPCode_')) {
-        const sum = String(metric).includes('5XX') ? 4 : 900;
+        const isTarget5xx = metric === 'HTTPCode_Target_5XX_Count';
+        const isElb5xx = metric === 'HTTPCode_ELB_5XX_Count';
+        if ((isTarget5xx && options.omitTarget5xx) || (isElb5xx && options.omitElb5xx)) {
+          return {
+            code: 0,
+            stdout: JSON.stringify({ Label: metric, Datapoints: [] }),
+            stderr: '',
+          };
+        }
+        const sum = isTarget5xx || isElb5xx
+          ? (options.alb5xxCount == null ? 4 : options.alb5xxCount)
+          : metric === 'RequestCount'
+            ? requestCount
+            : target2xxCount;
         return {
           code: 0,
           stdout: JSON.stringify({

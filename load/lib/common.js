@@ -11,6 +11,9 @@ import { Counter, Rate } from 'k6/metrics';
 
 export const PRODUCT_COUNT = 200;
 
+// k6 omits this Counter entirely when no error is ever recorded. The adapter
+// may interpret that omission as zero only when http_req_failed also reports
+// a zero rate over a non-empty request sample.
 export const errorsByClass = new Counter('errors_by_class');
 export const classifiedErrorRate = new Rate('classified_error_rate');
 

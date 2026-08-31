@@ -29,6 +29,18 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
+function cleanK6SummaryFixture() {
+  const summary = k6SummaryFixture();
+  summary.metrics = Object.fromEntries(
+    Object.entries(summary.metrics).filter(([name]) => !name.startsWith('errors_by_class')),
+  );
+  summary.metrics.http_req_failed = {
+    type: 'rate',
+    values: { rate: 0, passes: 15000, fails: 0 },
+  };
+  return summary;
+}
+
 test('adapter version is 1.1.0', () => {
   assert.equal(ADAPTER_VERSION, '1.1.0');
 });
@@ -113,6 +125,43 @@ test('collect burst with mocked complete CloudWatch and k6 summary succeeds', as
   assert.ok(aws.calls.some((args) => args.includes('--extended-statistics') && args.includes('p50')));
 });
 
+test('collect accepts a clean zero-error run with sparse k6 and ALB 5xx telemetry', async () => {
+  const cleanSummary = cleanK6SummaryFixture();
+  const aws = createAwsMock(
+    collectCompleteHandlers({
+      summary: cleanSummary,
+      omitTarget5xx: true,
+      omitElb5xx: true,
+    }),
+  );
+  const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: { CWM_RUN_ID: 'burst-clean', CWM_CAMPAIGN_ID: 'test-campaign' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: memoryFs,
+    },
+  });
+
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.complete, true);
+  assert.deepEqual(result.payload.missing, []);
+  assert.deepEqual(result.payload.errorCategories, {
+    db_timeout: 0,
+    too_many_connections: 0,
+    queue_full: 0,
+    cpu_overload: 0,
+    internal: 0,
+    iops_throttle: 1,
+    unclassified: 0,
+  });
+  assert.deepEqual(result.payload.cloudwatch.metrics.alb_http_target_5xx.datapoints, []);
+  assert.deepEqual(result.payload.cloudwatch.metrics.alb_http_elb_5xx.datapoints, []);
+  assert.equal(result.payload.cloudwatch.metrics.alb_http_target_5xx.summary.available, false);
+  assert.equal(result.payload.cloudwatch.metrics.alb_http_elb_5xx.summary.available, false);
+});
+
 test('collect burst with complete CloudWatch but missing k6 summary fails', async () => {
   const aws = createAwsMock({
     ...collectCompleteHandlers(),
@@ -141,6 +190,30 @@ test('collect burst with complete CloudWatch but missing k6 summary fails', asyn
   assert.ok(result.payload.missing.includes('k6:summary.json'));
   assert.equal(result.payload.complete, false);
   assert.equal(result.payload.knownGap, true);
+});
+
+test('collect rejects ALB 5xx datapoints that contradict a clean k6 summary', async () => {
+  const cleanSummary = cleanK6SummaryFixture();
+  const aws = createAwsMock(
+    collectCompleteHandlers({
+      summary: cleanSummary,
+    }),
+  );
+  const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: { CWM_RUN_ID: 'burst-contradictory', CWM_CAMPAIGN_ID: 'test-campaign' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: memoryFs,
+    },
+  });
+
+  assert.equal(result.code, 1, result.stdout);
+  assert.equal(result.payload.complete, false);
+  assert.ok(result.payload.missing.includes('cloudwatch:alb_http_5xx:contradictory'));
+  assert.equal(result.payload.cloudwatch.metrics.alb_http_target_5xx.datapoints[0].sum, 4);
+  assert.equal(result.payload.cloudwatch.metrics.alb_http_elb_5xx.datapoints[0].sum, 4);
 });
 
 test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async () => {
