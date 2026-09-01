@@ -94,7 +94,18 @@ function k6ScriptFrom(aws) {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(argv, { stdout, stderr, ...options });
+  const scenario = argv[argv.indexOf('--scenario') + 1];
+  const code = await main(argv, {
+    stdout,
+    stderr,
+    ...options,
+    env: {
+      CWM_CAMPAIGN_ID: 'test-campaign',
+      CWM_RUN_ID: `${scenario}-1`,
+      CWM_SCENARIO: scenario,
+      ...(options.env || {}),
+    },
+  });
   let payload = null;
   try {
     payload = JSON.parse(stdout.toString());
@@ -241,7 +252,10 @@ const ALL_RUNNABLE = [
   'peak',
   'burst',
   'pool-bound',
+  'app-bound',
   'cpu-only',
+  'later-day',
+  'second-region',
 ];
 
 const memoryFs = {
@@ -258,13 +272,29 @@ for (const key of ALL_RUNNABLE) {
   test(`run ${key} is a first-class scenario (not remapped)`, async () => {
     const spec = getScenario(key);
     const aws = createAwsMock(ssmOnlineHandlers({ poolSize: spec.expectedPoolSize || 250 }));
+    const region = key === 'second-region' ? 'us-west-2' : 'us-east-1';
+    const terraform = terraformOutputFixture({
+      topology_declaration: {
+        value: {
+          region,
+          test_id: 'matrix',
+          app_pool_size: spec.expectedPoolSize || 250,
+        },
+      },
+    });
     const result = await runWith(['run', '--scenario', key, '--json'], {
       now: laterDayNow,
       statePath: '/tmp/cwm-adapter-state-matrix.json',
-      env: { CWM_CAMPAIGN_ID: 'matrix', CWM_RUN_ID: `${key}-1`, CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+      env: {
+        CWM_CAMPAIGN_ID: 'matrix',
+        CWM_RUN_ID: `${key}-1`,
+        CWM_WARMUP: '1s',
+        CWM_DURATION: '1s',
+        CWM_FIT_CAMPAIGN_DATE: '2026-09-01',
+      },
       deps: {
         runAws: aws,
-        runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+        runTerraform: async () => ({ code: 0, stdout: terraform, stderr: '' }),
         fs: memoryFs,
       },
     });
@@ -275,6 +305,10 @@ for (const key of ALL_RUNNABLE) {
       assert.equal(result.payload.requiresCompleteCollect, true);
       assert.equal(result.payload.completeness, 'collected');
       assert.equal(result.payload.knownGap, undefined);
+    }
+    if (key === 'cpu-only') {
+      assert.equal(result.payload.requiresCompleteCollect, true);
+      assert.equal(result.payload.completeness, 'collected');
     }
   });
 }

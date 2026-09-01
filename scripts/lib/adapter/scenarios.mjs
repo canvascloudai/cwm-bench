@@ -115,10 +115,11 @@ const DEFINITIONS = {
     regionRole: 'primary',
     workload: { script: 'diagnostics.js', envName: 'DIAGNOSTIC', envValue: 'cpu-only' },
     expectedPoolSize: null,
-    completeness: 'optional',
-    requiresCompleteCollect: false,
+    completeness: 'collected',
+    requiresCompleteCollect: true,
     aliasOf: null,
-    description: '1000 RPS diagnostic hitting GET /api/cpu-spin only.',
+    description:
+      '1000 RPS diagnostic hitting GET /api/cpu-spin only. Requires complete per-node, CloudWatch, and k6 evidence.',
   },
   'later-day': {
     key: 'later-day',

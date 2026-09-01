@@ -1,6 +1,12 @@
 import { ADAPTER_VERSION, PRIMARY_REGION } from './version.mjs';
-import { getScenario } from './scenarios.mjs';
-import { lastRunFrom, loadState } from './state.mjs';
+import {
+  assertExpectedPool,
+  assertLaterDay,
+  assertNotAliased,
+  assertSecondRegion,
+  getScenario,
+} from './scenarios.mjs';
+import { fitDateFrom, loadState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import {
   cloudWatchAlbDimension,
@@ -15,6 +21,7 @@ import {
   evaluateCompleteness,
   parseK6Summary,
 } from './assemble.mjs';
+import { requireRunIdentity } from './identity.mjs';
 
 function parseBoundary(value) {
   if (!value) return null;
@@ -96,6 +103,11 @@ function artifactCommand(campaignId, runId) {
     '  cat "$DIR/summary.json"',
     '  printf "\\n%s\\n" "---END_SUMMARY_JSON---"',
     'fi',
+    'if [ -f "$DIR/identity.json" ]; then',
+    '  printf "%s\\n" "---IDENTITY_JSON---"',
+    '  cat "$DIR/identity.json"',
+    '  printf "\\n%s\\n" "---END_IDENTITY_JSON---"',
+    'fi',
   ].join('\n');
 }
 
@@ -116,6 +128,15 @@ function parseArtifactListing(stdout) {
       summary = null;
     }
   }
+  const identityMatch = text.match(/---IDENTITY_JSON---\n([\s\S]*?)\n---END_IDENTITY_JSON---/);
+  let identity = null;
+  if (identityMatch) {
+    try {
+      identity = JSON.parse(identityMatch[1]);
+    } catch {
+      identity = null;
+    }
+  }
   if (dir) {
     for (const line of text.split('\n')) {
       const trimmed = line.trim();
@@ -131,7 +152,14 @@ function parseArtifactListing(stdout) {
       files.push(trimmed);
     }
   }
-  return { dir, files, summary, present: Boolean(dir), rawListing: text.split('\n').slice(0, 40) };
+  return {
+    dir,
+    files,
+    summary,
+    identity,
+    present: Boolean(dir),
+    rawListing: text.split('\n').slice(0, 40),
+  };
 }
 
 function albQueries(outputs) {
@@ -266,8 +294,16 @@ export async function collectCloudWatch(runAws, outputs, region, window) {
 
 export async function collectScenario(ctx, scenarioKey) {
   const spec = getScenario(scenarioKey);
+  assertNotAliased(spec);
+  const identity = requireRunIdentity(ctx.env, spec.key);
   const outputs = await readTerraformOutputs(ctx.deps);
   const region = outputs.region || ctx.env.AWS_REGION || PRIMARY_REGION;
+  const state = await loadState(ctx.statePath, ctx.deps.fs || {});
+  assertLaterDay(spec, ctx.now(), fitDateFrom(state, ctx.env));
+  assertSecondRegion(spec, region);
+  if (spec.expectedPoolSize != null) {
+    assertExpectedPool(spec, Number(outputs.topology && outputs.topology.app_pool_size));
+  }
   const runAws = ctx.deps.runAws;
   if (typeof runAws !== 'function') {
     const err = new Error('AWS runner is not configured; cannot collect CloudWatch or artifacts');
@@ -275,15 +311,8 @@ export async function collectScenario(ctx, scenarioKey) {
     throw err;
   }
 
-  const state = await loadState(ctx.statePath, ctx.deps.fs || {});
-  const persisted = lastRunFrom(state, ctx.env, spec.key);
-  const campaignId =
-    ctx.env.CWM_CAMPAIGN_ID ||
-    (persisted && persisted.campaignId) ||
-    (outputs.topology && outputs.topology.test_id) ||
-    'unset-campaign';
-  const runId = persisted ? persisted.runId : null;
-  const window = collectionWindow(ctx.now(), ctx.env, persisted);
+  const { campaignId, runId } = identity;
+  const window = collectionWindow(ctx.now(), ctx.env, null);
 
   let cloudwatch;
   try {
@@ -295,25 +324,31 @@ export async function collectScenario(ctx, scenarioKey) {
     throw wrapped;
   }
 
-  let artifacts = { present: false, dir: null, files: [], summary: null };
-  if (runId) {
-    const invocation = await runRemoteShell(runAws, {
-      instanceId: outputs.generatorInstanceId,
-      region,
-      commands: [artifactCommand(campaignId, runId)],
-      timeoutSeconds: 120,
-      waitTimeoutMs: ctx.deps.ssmWaitMs || 120_000,
-      pollMs: ctx.deps.ssmPollMs || 1000,
-      comment: `cwm-bench collect artifacts ${spec.key}`,
-      now: ctx.deps.nowMs,
-      wait: ctx.deps.wait,
-    });
-    artifacts = parseArtifactListing(invocation.stdout);
-  }
+  const invocation = await runRemoteShell(runAws, {
+    instanceId: outputs.generatorInstanceId,
+    region,
+    commands: [artifactCommand(campaignId, runId)],
+    timeoutSeconds: 120,
+    waitTimeoutMs: ctx.deps.ssmWaitMs || 120_000,
+    pollMs: ctx.deps.ssmPollMs || 1000,
+    comment: `cwm-bench collect artifacts ${spec.key}`,
+    now: ctx.deps.nowMs,
+    wait: ctx.deps.wait,
+  });
+  const artifacts = parseArtifactListing(invocation.stdout);
+  const artifactIdentityMatches =
+    artifacts.identity &&
+    artifacts.identity.campaignId === campaignId &&
+    artifacts.identity.runId === runId &&
+    artifacts.identity.scenario === spec.key;
 
   const k6 = parseK6Summary(artifacts.summary);
   const runFields = assembleRunFields({ spec, outputs, cloudwatch, k6 });
   const completeness = evaluateCompleteness({ outputs, cloudwatch, k6 });
+  if (!artifactIdentityMatches) {
+    completeness.complete = false;
+    completeness.missing.unshift('artifacts:identity.json');
+  }
   const knownGap = spec.requiresCompleteCollect ? !completeness.complete : false;
 
   const payload = {
@@ -328,7 +363,7 @@ export async function collectScenario(ctx, scenarioKey) {
     invented: false,
     campaignId,
     runId,
-    runIdSource: persisted ? persisted.source : null,
+    runIdSource: 'env',
     region,
     missing: completeness.missing,
     terraformOutputs: {
@@ -362,6 +397,8 @@ export async function collectScenario(ctx, scenarioKey) {
       dir: artifacts.dir,
       files: artifacts.files,
       summaryPresent: Boolean(artifacts.summary),
+      identityPresent: Boolean(artifacts.identity),
+      identityMatches: Boolean(artifactIdentityMatches),
       k6,
     },
     latency: runFields.latency,

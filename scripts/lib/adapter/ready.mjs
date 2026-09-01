@@ -25,7 +25,7 @@ function capabilityPayload() {
       description: spec.description,
     })),
     matrixNote:
-      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst is a supported scenario; collect must be complete before it is treated as measured.',
+      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured.',
     primaryRegion: PRIMARY_REGION,
     secondRegion: SECOND_REGION,
     knownGaps: [],
@@ -33,6 +33,7 @@ function capabilityPayload() {
     honesty: {
       inventedMeasurements: false,
       burstRequiresCompleteCollect: true,
+      cpuOnlyRequiresCompleteCollect: true,
       laterDayIsAliasOfNormal: false,
       secondRegionIsAliasOfPrimary: false,
     },

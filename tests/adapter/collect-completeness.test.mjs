@@ -15,7 +15,18 @@ import {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(argv, { stdout, stderr, ...options });
+  const scenario = argv[argv.indexOf('--scenario') + 1];
+  const code = await main(argv, {
+    stdout,
+    stderr,
+    ...options,
+    env: {
+      CWM_CAMPAIGN_ID: 'test-campaign',
+      CWM_RUN_ID: `${scenario}-1`,
+      CWM_SCENARIO: scenario,
+      ...(options.env || {}),
+    },
+  });
   return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString(), stderr: stderr.toString() };
 }
 
@@ -41,8 +52,8 @@ function cleanK6SummaryFixture() {
   return summary;
 }
 
-test('adapter version is 1.1.1', () => {
-  assert.equal(ADAPTER_VERSION, '1.1.1');
+test('adapter version is 1.2.0', () => {
+  assert.equal(ADAPTER_VERSION, '1.2.0');
 });
 
 test('ALB and target-group ARNs map to CloudWatch dimensions', () => {
@@ -130,6 +141,7 @@ test('collect accepts a clean zero-error run with sparse k6 and ALB 5xx telemetr
   const aws = createAwsMock(
     collectCompleteHandlers({
       summary: cleanSummary,
+      dir: '/opt/cwm-bench/results/raw/test-campaign/burst-clean',
       omitTarget5xx: true,
       omitElb5xx: true,
     }),
@@ -220,6 +232,7 @@ test('collect excludes pre-run ELB 5xx from a clean persisted run window', async
   const cleanSummary = cleanK6SummaryFixture();
   const handlers = collectCompleteHandlers({
     summary: cleanSummary,
+    dir: '/opt/cwm-bench/results/raw/test-campaign/burst-clean',
     timestamp: '2026-09-01T00:12:00Z',
     omitTarget5xx: true,
     omitElb5xx: true,
@@ -259,7 +272,12 @@ test('collect excludes pre-run ELB 5xx from a clean persisted run window', async
   });
   const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T00:30:00.000Z'),
-    env: { CWM_RUN_ID: 'burst-clean', CWM_CAMPAIGN_ID: 'test-campaign' },
+    env: {
+      CWM_RUN_ID: 'burst-clean',
+      CWM_CAMPAIGN_ID: 'test-campaign',
+      CWM_RUN_STARTED_AT: '2026-09-01T00:10:20.000Z',
+      CWM_RUN_ENDED_AT: '2026-09-01T00:25:40.000Z',
+    },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -307,7 +325,7 @@ test('collect rejects explicit zero error counters that contradict a nonzero k6 
   assert.ok(result.payload.missing.includes('k6:errors_by_class:contradictory'));
 });
 
-test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async () => {
+test('collect refuses to reuse a persisted run when CWM_RUN_ID is unset', async () => {
   const stored = { body: null };
   const runAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const runResult = await runWith(['run', '--scenario', 'burst', '--json'], {
@@ -345,10 +363,13 @@ test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async 
       dir: `/opt/cwm-bench/results/raw/persisted-campaign/${runResult.payload.runId}`,
     })
   );
-  const collectResult = await runWith(['collect', '--scenario', 'burst', '--json'], {
+  const stdout = new MemoryStream();
+  const collectCode = await main(['collect', '--scenario', 'burst', '--json'], {
+    stdout,
+    stderr: new MemoryStream(),
     now: () => new Date('2026-09-01T08:20:00.000Z'),
     statePath: '/tmp/cwm-adapter-state-lastrun.json',
-    env: { CWM_CAMPAIGN_ID: 'persisted-campaign' },
+    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: collectAws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -361,13 +382,13 @@ test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async 
       },
     },
   });
-  assert.equal(collectResult.code, 0, collectResult.stdout);
-  assert.equal(collectResult.payload.runId, runResult.payload.runId);
-  assert.equal(collectResult.payload.runIdSource, 'state.scenario');
-  assert.equal(collectResult.payload.complete, true);
-  const artifactSend = collectAws.calls.find((args) => args[0] === 'ssm' && args[1] === 'send-command');
-  const params = JSON.parse(artifactSend[artifactSend.indexOf('--parameters') + 1]);
-  assert.match(params.commands[0], new RegExp(runResult.payload.runId));
+  const collectPayload = JSON.parse(stdout.toString());
+  assert.equal(collectCode, 1);
+  assert.equal(collectPayload.error.code, 'RUN_IDENTITY_MISSING');
+  assert.equal(collectPayload.campaignId, 'persisted-campaign');
+  assert.equal(collectPayload.runId, null);
+  assert.equal(collectPayload.scenario, 'burst');
+  assert.equal(collectAws.calls.length, 0);
 });
 
 test('collect burst does not copy public CWM 2%/9.55% cells even when k6 errors exist', async () => {
@@ -388,4 +409,137 @@ test('collect burst does not copy public CWM 2%/9.55% cells even when k6 errors 
   assert.doesNotMatch(result.stdout, /9\.55/);
   assert.doesNotMatch(result.stdout, /980/);
   assert.doesNotMatch(result.stdout, /905/);
+});
+
+for (const scenario of [
+  'idle',
+  'normal',
+  'peak',
+  'burst',
+  'pool-bound',
+  'app-bound',
+  'cpu-only',
+  'later-day',
+  'second-region',
+]) {
+  test(`collect ${scenario} returns complete evidence for its exact run identity`, async () => {
+    const campaignId = 'matrix-campaign';
+    const runId = `${scenario}-measurement`;
+    const region = scenario === 'second-region' ? 'us-west-2' : 'us-east-1';
+    const appPoolSize = scenario === 'app-bound' ? 40 : 250;
+    const dir = `/opt/cwm-bench/results/raw/${campaignId}/${runId}`;
+    const aws = createAwsMock(collectCompleteHandlers({
+      dir,
+      identity: { campaignId, runId, scenario },
+    }));
+    const result = await runWith(['collect', '--scenario', scenario, '--json'], {
+      now: () => new Date('2026-09-02T12:00:00.000Z'),
+      env: {
+        CWM_CAMPAIGN_ID: campaignId,
+        CWM_RUN_ID: runId,
+        CWM_FIT_CAMPAIGN_DATE: '2026-09-01',
+      },
+      deps: {
+        runAws: aws,
+        runTerraform: async () => ({
+          code: 0,
+          stdout: terraformOutputFixture({
+            topology_declaration: {
+              value: {
+                region,
+                test_id: campaignId,
+                app_pool_size: appPoolSize,
+                mysql_max_connections: 500,
+              },
+            },
+          }),
+          stderr: '',
+        }),
+        fs: memoryFs,
+      },
+    });
+
+    assert.equal(result.code, 0, result.stdout);
+    assert.equal(result.payload.campaignId, campaignId);
+    assert.equal(result.payload.runId, runId);
+    assert.equal(result.payload.scenario, scenario);
+    assert.equal(result.payload.complete, true);
+    assert.equal(result.payload.artifacts.identityMatches, true);
+    assert.equal(result.payload.perNode.length, 4);
+    assert.ok(result.payload.perNode.every((node) => node.cpuAvgPct != null));
+  });
+}
+
+test('run and collect reject missing, malformed, and mismatched worker identity', async () => {
+  const cases = [
+    {
+      argv: ['run', '--scenario', 'idle', '--json'],
+      env: { CWM_RUN_ID: 'run-1', CWM_SCENARIO: 'idle' },
+      code: 'RUN_IDENTITY_MISSING',
+    },
+    {
+      argv: ['collect', '--scenario', 'idle', '--json'],
+      env: { CWM_CAMPAIGN_ID: 'campaign', CWM_RUN_ID: '../stale', CWM_SCENARIO: 'idle' },
+      code: 'RUN_IDENTITY_INVALID',
+    },
+    {
+      argv: ['collect', '--scenario', 'app-bound', '--json'],
+      env: { CWM_CAMPAIGN_ID: 'campaign', CWM_RUN_ID: 'run-1', CWM_SCENARIO: 'normal' },
+      code: 'RUN_IDENTITY_MISMATCH',
+    },
+  ];
+
+  for (const entry of cases) {
+    const stdout = new MemoryStream();
+    const code = await main(entry.argv, {
+      stdout,
+      stderr: new MemoryStream(),
+      env: entry.env,
+      deps: {},
+    });
+    const payload = JSON.parse(stdout.toString());
+    assert.equal(code, 1);
+    assert.equal(payload.error.code, entry.code);
+    assert.equal(payload.campaignId, entry.env.CWM_CAMPAIGN_ID || null);
+    assert.equal(payload.runId, entry.env.CWM_RUN_ID || null);
+    assert.equal(payload.scenario, entry.env.CWM_SCENARIO);
+  }
+});
+
+test('collect rejects a complete artifact envelope for a different scenario or run', async () => {
+  const aws = createAwsMock(collectCompleteHandlers({
+    identity: {
+      campaignId: 'test-campaign',
+      runId: 'normal-stale',
+      scenario: 'normal',
+    },
+  }));
+  const result = await runWith(['collect', '--scenario', 'app-bound', '--json'], {
+    env: {
+      CWM_RUN_ID: 'app-bound-current',
+    },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({
+        code: 0,
+        stdout: terraformOutputFixture({
+          topology_declaration: {
+            value: {
+              region: 'us-east-1',
+              test_id: 'test-campaign',
+              app_pool_size: 40,
+              mysql_max_connections: 500,
+            },
+          },
+        }),
+        stderr: '',
+      }),
+      fs: memoryFs,
+    },
+  });
+
+  assert.equal(result.code, 0);
+  assert.equal(result.payload.complete, false);
+  assert.ok(result.payload.missing.includes('artifacts:identity.json'));
+  assert.equal(result.payload.artifacts.identityMatches, false);
 });

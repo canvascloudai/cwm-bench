@@ -86,11 +86,14 @@ test('wait-ready capability JSON includes adapterVersion and every scenario', as
   assert.equal(payload.honesty.burstRequiresCompleteCollect, true);
   assert.equal(payload.honesty.burstIsKnownGap, undefined);
   assert.equal(payload.knownGaps.includes('burst'), false);
-  assert.deepEqual(payload.requiresCompleteCollect, ['burst']);
+  assert.deepEqual(payload.requiresCompleteCollect, ['burst', 'cpu-only']);
   const burst = payload.scenarios.find((item) => item.key === 'burst');
   assert.equal(burst.completeness, 'collected');
   assert.equal(burst.requiresCompleteCollect, true);
   assert.equal(burst.knownGap, undefined);
+  const cpuOnly = payload.scenarios.find((item) => item.key === 'cpu-only');
+  assert.equal(cpuOnly.completeness, 'collected');
+  assert.equal(cpuOnly.requiresCompleteCollect, true);
 });
 
 test('wait-ready success stdout is a single JSON object', async () => {

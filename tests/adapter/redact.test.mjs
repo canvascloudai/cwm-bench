@@ -41,6 +41,11 @@ test('adapter JSON error redacts leaked credentials from AWS stderr', async () =
     stdout,
     stderr,
     now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: {
+      CWM_CAMPAIGN_ID: 'redaction-campaign',
+      CWM_RUN_ID: 'redaction-run',
+      CWM_SCENARIO: 'normal',
+    },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -61,6 +66,11 @@ test('terraform failure with a connection string is redacted', async () => {
   const code = await main(['collect', '--scenario', 'idle', '--json'], {
     stdout,
     stderr,
+    env: {
+      CWM_CAMPAIGN_ID: 'redaction-campaign',
+      CWM_RUN_ID: 'redaction-run',
+      CWM_SCENARIO: 'idle',
+    },
     deps: {
       runTerraform: async () => ({
         code: 1,

@@ -145,15 +145,38 @@ export function k6SummaryFixture(overrides = {}) {
 
 export function artifactListingStdout(
   summary,
-  dir = '/opt/cwm-bench/results/raw/test-campaign/burst-1'
+  dir = '/opt/cwm-bench/results/raw/test-campaign/burst-1',
+  identity = null
 ) {
+  const parts = dir.split('/').filter(Boolean);
+  const runId = parts.at(-1);
+  const scenario = [
+    'second-region',
+    'pool-bound',
+    'app-bound',
+    'cpu-only',
+    'later-day',
+    'normal',
+    'burst',
+    'peak',
+    'idle',
+  ].find((key) => runId === key || String(runId).startsWith(`${key}-`));
+  const resolvedIdentity = identity || {
+    campaignId: parts.at(-2),
+    runId,
+    scenario,
+  };
   return [
     `ARTIFACT_DIR=${dir}`,
     'summary.json',
     'k6.json',
+    'identity.json',
     '---SUMMARY_JSON---',
     JSON.stringify(summary),
     '---END_SUMMARY_JSON---',
+    '---IDENTITY_JSON---',
+    JSON.stringify(resolvedIdentity),
+    '---END_IDENTITY_JSON---',
   ].join('\n');
 }
 
@@ -257,7 +280,7 @@ export function collectCompleteHandlers(options = {}) {
       code: 0,
       stdout: JSON.stringify({
         Status: 'Success',
-        StandardOutputContent: artifactListingStdout(summary, dir),
+        StandardOutputContent: artifactListingStdout(summary, dir, options.identity),
         StandardErrorContent: '',
         ResponseCode: 0,
       }),
