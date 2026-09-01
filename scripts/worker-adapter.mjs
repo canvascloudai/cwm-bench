@@ -12,9 +12,10 @@
  * Unknown command / unknown scenario: fail, never succeed.
  *
  * later-day and second-region are real holdouts, not aliases of normal
- * or of the primary-region apply. Burst is a known gap: the workload
- * can run, but this adapter will not invent CloudWatch or write fake
- * results/. Credentials are redacted in all adapter output.
+ * or of the primary-region apply. Burst and CPU-only require complete
+ * CloudWatch, per-node, and identity-bound artifact evidence; this
+ * adapter never invents missing values. Credentials are redacted in
+ * all adapter output.
  */
 
 import { main } from './lib/adapter/main.mjs';
