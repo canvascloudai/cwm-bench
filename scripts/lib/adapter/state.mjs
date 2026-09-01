@@ -66,7 +66,16 @@ export function fitDateFrom(state, env = {}) {
 
 export function lastRunFrom(state, env = {}, scenarioKey = null) {
   if (env.CWM_RUN_ID) {
+    const stateRun =
+      scenarioKey &&
+      state &&
+      state.lastRuns &&
+      state.lastRuns[scenarioKey] &&
+      String(state.lastRuns[scenarioKey].runId) === String(env.CWM_RUN_ID)
+        ? state.lastRuns[scenarioKey]
+        : null;
     return {
+      ...(stateRun || {}),
       runId: String(env.CWM_RUN_ID),
       campaignId: env.CWM_CAMPAIGN_ID ? String(env.CWM_CAMPAIGN_ID) : null,
       scenario: scenarioKey,

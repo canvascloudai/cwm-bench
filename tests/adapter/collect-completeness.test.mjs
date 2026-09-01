@@ -41,8 +41,8 @@ function cleanK6SummaryFixture() {
   return summary;
 }
 
-test('adapter version is 1.1.0', () => {
-  assert.equal(ADAPTER_VERSION, '1.1.0');
+test('adapter version is 1.1.1', () => {
+  assert.equal(ADAPTER_VERSION, '1.1.1');
 });
 
 test('ALB and target-group ARNs map to CloudWatch dimensions', () => {
@@ -214,6 +214,71 @@ test('collect rejects ALB 5xx datapoints that contradict a clean k6 summary', as
   assert.ok(result.payload.missing.includes('cloudwatch:alb_http_5xx:contradictory'));
   assert.equal(result.payload.cloudwatch.metrics.alb_http_target_5xx.datapoints[0].sum, 4);
   assert.equal(result.payload.cloudwatch.metrics.alb_http_elb_5xx.datapoints[0].sum, 4);
+});
+
+test('collect excludes pre-run ELB 5xx from a clean persisted run window', async () => {
+  const cleanSummary = cleanK6SummaryFixture();
+  const handlers = collectCompleteHandlers({
+    summary: cleanSummary,
+    timestamp: '2026-09-01T00:12:00Z',
+    omitTarget5xx: true,
+    omitElb5xx: true,
+  });
+  handlers['cloudwatch.get-metric-statistics'] = async (args) => {
+    const metric = args[args.indexOf('--metric-name') + 1];
+    if (metric === 'HTTPCode_ELB_5XX_Count') {
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          Label: metric,
+          Datapoints: [
+            { Timestamp: '2026-09-01T00:09:00Z', Sum: 1, Unit: 'Count' },
+          ],
+        }),
+        stderr: '',
+      };
+    }
+    return collectCompleteHandlers({
+      summary: cleanSummary,
+      timestamp: '2026-09-01T00:12:00Z',
+      omitTarget5xx: true,
+      omitElb5xx: true,
+    })['cloudwatch.get-metric-statistics'](args);
+  };
+  const aws = createAwsMock(handlers);
+  const stored = JSON.stringify({
+    lastRuns: {
+      burst: {
+        scenario: 'burst',
+        runId: 'burst-clean',
+        campaignId: 'test-campaign',
+        startedAt: '2026-09-01T00:10:20.000Z',
+        endedAt: '2026-09-01T00:25:40.000Z',
+      },
+    },
+  });
+  const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
+    now: () => new Date('2026-09-01T00:30:00.000Z'),
+    env: { CWM_RUN_ID: 'burst-clean', CWM_CAMPAIGN_ID: 'test-campaign' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: { ...memoryFs, readFile: async () => stored },
+    },
+  });
+
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.complete, true);
+  assert.deepEqual(result.payload.missing, []);
+  assert.deepEqual(result.payload.cloudwatch.metrics.alb_http_elb_5xx.datapoints, []);
+  assert.equal(result.payload.cloudwatch.window.source, 'persisted-run');
+  assert.equal(result.payload.cloudwatch.window.startTime, '2026-09-01T00:11:00.000Z');
+  assert.equal(result.payload.cloudwatch.window.endTime, '2026-09-01T00:25:00.000Z');
+  const metricCall = aws.calls.find(
+    (args) => args[0] === 'cloudwatch' && args[1] === 'get-metric-statistics',
+  );
+  assert.equal(metricCall[metricCall.indexOf('--start-time') + 1], '2026-09-01T00:11:00.000Z');
+  assert.equal(metricCall[metricCall.indexOf('--end-time') + 1], '2026-09-01T00:25:00.000Z');
 });
 
 test('collect rejects explicit zero error counters that contradict a nonzero k6 failure rate', async () => {

@@ -16,11 +16,71 @@ import {
   parseK6Summary,
 } from './assemble.mjs';
 
-function collectionWindow(now, env) {
+function parseBoundary(value) {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function ceilMinute(value) {
+  return new Date(Math.ceil(value.getTime() / 60_000) * 60_000);
+}
+
+function floorMinute(value) {
+  return new Date(Math.floor(value.getTime() / 60_000) * 60_000);
+}
+
+function collectionWindow(now, env, persisted) {
+  const persistedStart = persisted && persisted.startedAt;
+  const persistedEnd = persisted && persisted.endedAt;
+  const actualStart = parseBoundary(env.CWM_RUN_STARTED_AT || persistedStart);
+  const actualEnd = parseBoundary(env.CWM_RUN_ENDED_AT || persistedEnd);
+  if (actualStart && actualEnd) {
+    const start = ceilMinute(actualStart);
+    const end = floorMinute(actualEnd);
+    if (start >= end) {
+      const err = new Error('benchmark run has no complete CloudWatch minute within its persisted boundaries');
+      err.code = 'RUN_WINDOW_TOO_SHORT';
+      throw err;
+    }
+    return {
+      startTime: start.toISOString(),
+      endTime: end.toISOString(),
+      actualStartTime: actualStart.toISOString(),
+      actualEndTime: actualEnd.toISOString(),
+      source: 'persisted-run',
+    };
+  }
   const end = now;
   const minutes = Number(env.CWM_COLLECT_WINDOW_MINUTES || 40);
   const start = new Date(end.getTime() - minutes * 60 * 1000);
-  return { startTime: start.toISOString(), endTime: end.toISOString() };
+  return {
+    startTime: start.toISOString(),
+    endTime: end.toISOString(),
+    actualStartTime: null,
+    actualEndTime: null,
+    source: 'trailing-fallback',
+  };
+}
+
+function timestampMs(value) {
+  if (typeof value !== 'string') return null;
+  const normalized = /(?:Z|[+-]\d\d:\d\d)$/.test(value) ? value : `${value}Z`;
+  const parsed = Date.parse(normalized);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function constrainMetricToWindow(metric, window) {
+  if (window.source !== 'persisted-run') return metric;
+  const start = Date.parse(window.startTime);
+  const end = Date.parse(window.endTime);
+  return {
+    ...metric,
+    datapoints: (metric.datapoints || []).filter((point) => {
+      const timestamp = timestampMs(point.timestamp);
+      return timestamp != null && timestamp >= start && timestamp < end;
+    }),
+  };
 }
 
 function artifactCommand(campaignId, runId) {
@@ -185,13 +245,13 @@ export async function collectCloudWatch(runAws, outputs, region, window) {
 
   const metrics = {};
   for (const query of queries) {
-    const raw = await getMetricStatistics(runAws, {
+    const raw = constrainMetricToWindow(await getMetricStatistics(runAws, {
       ...query,
       startTime: window.startTime,
       endTime: window.endTime,
       period: 60,
       region,
-    });
+    }), window);
     if (query.extendedStatistics) {
       metrics[query.label] = attachAlbPercentiles(raw);
     } else {
@@ -223,10 +283,11 @@ export async function collectScenario(ctx, scenarioKey) {
     (outputs.topology && outputs.topology.test_id) ||
     'unset-campaign';
   const runId = persisted ? persisted.runId : null;
+  const window = collectionWindow(ctx.now(), ctx.env, persisted);
 
   let cloudwatch;
   try {
-    cloudwatch = await collectCloudWatch(runAws, outputs, region, collectionWindow(ctx.now(), ctx.env));
+    cloudwatch = await collectCloudWatch(runAws, outputs, region, window);
   } catch (err) {
     const wrapped = new Error(err.message || 'CloudWatch collection failed');
     wrapped.code = err.code || 'CLOUDWATCH_COLLECT_FAILED';
@@ -293,6 +354,7 @@ export async function collectScenario(ctx, scenarioKey) {
     cloudwatch: {
       status: 'collected',
       note: 'Values are CloudWatch GetMetricStatistics datapoints. Null/empty means the API returned no datapoints. Nothing here is invented or copied from the public CWM score.',
+      window,
       metrics: cloudwatch,
     },
     artifacts: {
