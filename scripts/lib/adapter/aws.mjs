@@ -4,6 +4,14 @@ function sleep(ms, wait = (n) => new Promise((resolve) => setTimeout(resolve, n)
   return wait(ms);
 }
 
+const DEFAULT_AWS_RETRY_ATTEMPTS = 3;
+const DEFAULT_AWS_RETRY_DELAYS_MS = [1000, 3000];
+
+function isRetryableAwsFailure(result) {
+  const text = `${result?.stderr || ''} ${result?.stdout || ''}`.toLowerCase();
+  return result?.code !== 0 && /throttl|timeout|timed out|temporar|connection reset|service unavailable|internal error|network/.test(text);
+}
+
 export function parseJsonOrThrow(text, label) {
   try {
     return JSON.parse(text);
@@ -14,14 +22,24 @@ export function parseJsonOrThrow(text, label) {
   }
 }
 
-export async function awsJson(runAws, args) {
-  const result = await runAws(args);
-  if (result.code !== 0) {
-    const err = new Error(redact(result.stderr || result.stdout || `aws ${args[0]} failed`));
-    err.code = 'AWS_CLI_FAILED';
-    err.awsArgs = args[0];
-    throw err;
+export async function awsJson(runAws, args, options = {}) {
+  const maxAttempts = Math.max(1, Number(options.maxAttempts || DEFAULT_AWS_RETRY_ATTEMPTS));
+  const retryDelays = options.retryDelays || DEFAULT_AWS_RETRY_DELAYS_MS;
+  let result;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    result = await runAws(args);
+    if (result.code === 0) break;
+    if (!isRetryableAwsFailure(result) || attempt >= maxAttempts) {
+      const err = new Error(redact(result.stderr || result.stdout || `aws ${args[0]} failed`));
+      err.code = 'AWS_CLI_FAILED';
+      err.awsArgs = args[0];
+      err.attempts = attempt;
+      err.retryCount = attempt - 1;
+      throw err;
+    }
+    await sleep(Number(retryDelays[attempt - 1] || retryDelays.at(-1) || 1000), options.wait);
   }
+  if (result.code !== 0) throw new Error(`aws ${args[0]} failed after ${maxAttempts} attempts`);
   if (!result.stdout || !String(result.stdout).trim()) {
     return {};
   }
@@ -113,21 +131,24 @@ export async function waitForInvocation(
       status === 'Cancelling' ||
       status === 'Undeliverable'
     ) {
-      const err = new Error(
-        redact(
-          `SSM command ${status}: ${payload.StandardErrorContent || payload.StatusDetails || status}`
-        )
-      );
-      err.code = 'SSM_EXECUTION_FAILED';
-      err.ssmStatus = status;
-      err.stdout = redact(payload.StandardOutputContent || '');
-      err.stderr = redact(payload.StandardErrorContent || '');
-      throw err;
+      return {
+        status,
+        ok: false,
+        stdout: redact(payload.StandardOutputContent || ''),
+        stderr: redact(payload.StandardErrorContent || payload.StatusDetails || status),
+        responseCode: payload.ResponseCode,
+        commandId,
+      };
     }
     if (clock() - started > timeoutMs) {
-      const err = new Error(`SSM command ${commandId} timed out while ${status || 'pending'}`);
-      err.code = 'SSM_TIMEOUT';
-      throw err;
+      return {
+        status: 'TimedOut',
+        ok: false,
+        stdout: redact(payload.StandardOutputContent || ''),
+        stderr: redact(payload.StandardErrorContent || `SSM command ${commandId} timed out while ${status || 'pending'}`),
+        responseCode: payload.ResponseCode,
+        commandId,
+      };
     }
     await sleep(pollMs, wait);
   }
@@ -144,7 +165,17 @@ export async function runRemoteShell(runAws, options) {
     now: options.now,
     wait: options.wait,
   });
-  return { commandId, ...invocation };
+  const result = { commandId, ...invocation, ok: invocation.status === 'Success' };
+  if (options.throwOnFailure && !result.ok) {
+    const err = new Error(redact(`SSM command ${result.status}: ${result.stderr || result.status}`));
+    err.code = 'SSM_EXECUTION_FAILED';
+    err.ssmStatus = result.status;
+    err.stdout = result.stdout;
+    err.stderr = result.stderr;
+    err.commandId = result.commandId;
+    throw err;
+  }
+  return result;
 }
 
 function metricDatapoints(payload) {
@@ -164,7 +195,7 @@ function metricDatapoints(payload) {
   }));
 }
 
-export async function getMetricStatistics(runAws, query) {
+export async function getMetricStatistics(runAws, query, options = {}) {
   const args = [
     'cloudwatch',
     'get-metric-statistics',
@@ -188,7 +219,7 @@ export async function getMetricStatistics(runAws, query) {
   if (query.dimensions && query.dimensions.length > 0) {
     args.push('--dimensions', ...query.dimensions);
   }
-  const payload = await awsJson(runAws, args);
+  const payload = await awsJson(runAws, args, options);
   return {
     label: query.label || query.metricName,
     namespace: query.namespace,
