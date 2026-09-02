@@ -11,7 +11,6 @@ import {
 import { fitDateFrom, loadState, updateAdapterState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { runRemoteShell } from './aws.mjs';
-import { requireRunIdentity } from './identity.mjs';
 
 function shellQuote(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`;
@@ -29,11 +28,7 @@ function parseMeta(text) {
 
 function buildK6Command(spec, options) {
   const resultsDir = `/opt/cwm-bench/results/raw/${options.campaignId}/${options.runId}`;
-  const identity = JSON.stringify({
-    campaignId: options.campaignId,
-    runId: options.runId,
-    scenario: spec.key,
-  });
+  const pidFile = `/tmp/cwm-k6-${options.campaignId}-${options.runId}.pid`;
   const lines = [
     'set -euo pipefail',
     '# cwm-bench adapter remote execution. Do not print secrets.',
@@ -47,9 +42,23 @@ function buildK6Command(spec, options) {
     `export RESULTS_DIR=${shellQuote(resultsDir)}`,
     `export ${spec.workload.envName}=${shellQuote(spec.workload.envValue)}`,
     'mkdir -p "$RESULTS_DIR"',
-    `printf '%s\\n' ${shellQuote(identity)} > "$RESULTS_DIR/identity.json"`,
-    'pkill -f "k6 run" >/dev/null 2>&1 || true',
-    `k6 run --out json="$RESULTS_DIR/k6.json" load/${spec.workload.script}`,
+    `PID_FILE=${shellQuote(pidFile)}`,
+    'cleanup_k6() { if [ -n "${K6_PGID:-}" ]; then kill -TERM -- "-$K6_PGID" >/dev/null 2>&1 || true; elif [ -n "${K6_PID:-}" ]; then kill -TERM "$K6_PID" >/dev/null 2>&1 || true; fi; rm -f "$PID_FILE"; }',
+    'trap cleanup_k6 EXIT INT TERM',
+    `setsid k6 run --out json="$RESULTS_DIR/k6.json" load/${spec.workload.script} &`,
+    'K6_PID=$!',
+    'K6_PGID=$(ps -o pgid= -p "$K6_PID" | tr -d " " || true)',
+    'printf "%s\\n" "$K6_PID" > "$PID_FILE"',
+    'set +e',
+    'wait "$K6_PID"',
+    'K6_EXIT=$?',
+    'set -e',
+    'trap - EXIT INT TERM',
+    'rm -f "$PID_FILE"',
+    'if [ "$K6_EXIT" -ne 0 ]; then',
+    '  printf "ADAPTER_RUN_FAILED exit=%s\\n" "$K6_EXIT"',
+    '  exit "$K6_EXIT"',
+    'fi',
     'printf "%s\\n" "ADAPTER_RUN_OK"',
     'printf "results_dir=%s\\n" "$RESULTS_DIR"',
   ];
@@ -59,8 +68,7 @@ function buildK6Command(spec, options) {
 function teardownCommand() {
   return [
     'set -euo pipefail',
-    'pkill -f "k6 run" >/dev/null 2>&1 || true',
-    'printf "%s\\n" "ADAPTER_TEARDOWN_OK"',
+    'printf "%s\\n" "ADAPTER_TEARDOWN_OK (run-scoped process group is cleaned by the run trap)"',
   ].join('\n');
 }
 
@@ -75,6 +83,7 @@ async function readAppMeta(runAws, instanceId, region, ctx) {
     comment: 'cwm-bench read app meta',
     now: ctx.deps.nowMs,
     wait: ctx.deps.wait,
+    throwOnFailure: true,
   });
   return parseMeta(invocation.stdout);
 }
@@ -82,7 +91,6 @@ async function readAppMeta(runAws, instanceId, region, ctx) {
 export async function runScenario(ctx, scenarioKey) {
   const spec = getScenario(scenarioKey);
   assertNotAliased(spec);
-  const identity = requireRunIdentity(ctx.env, spec.key);
 
   const now = ctx.now();
   const today = utcDateString(now);
@@ -108,7 +116,8 @@ export async function runScenario(ctx, scenarioKey) {
     assertExpectedPool(spec, poolSize);
   }
 
-  const { campaignId, runId } = identity;
+  const campaignId = ctx.env.CWM_CAMPAIGN_ID || (outputs.topology && outputs.topology.test_id) || 'unset-campaign';
+  const runId = ctx.env.CWM_RUN_ID || `${spec.key}-${now.toISOString().replace(/[:.]/g, '')}`;
   const warmup = ctx.env.CWM_WARMUP || '5m';
   const duration = ctx.env.CWM_DURATION || '15m';
 
@@ -143,28 +152,30 @@ export async function runScenario(ctx, scenarioKey) {
     }
   }
 
-  await updateAdapterState(
-    ctx.statePath,
-    (next) => {
-      if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
-        next.fitCampaignDateUtc = today;
-      }
-      next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
-      const lastRun = {
-        scenario: spec.key,
-        runId,
-        campaignId,
-        at: now.toISOString(),
-      };
-      next.lastRun = lastRun;
-      next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
-      next.lastRuns[spec.key] = lastRun;
-    },
-    ctx.deps.fs || {}
-  );
+  if (execution.ok) {
+    await updateAdapterState(
+      ctx.statePath,
+      (next) => {
+        if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
+          next.fitCampaignDateUtc = today;
+        }
+        next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
+        const lastRun = {
+          scenario: spec.key,
+          runId,
+          campaignId,
+          at: now.toISOString(),
+        };
+        next.lastRun = lastRun;
+        next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
+        next.lastRuns[spec.key] = lastRun;
+      },
+      ctx.deps.fs || {}
+    );
+  }
 
   return {
-    ok: true,
+    ok: execution.ok,
     adapterVersion: ADAPTER_VERSION,
     scenario: spec.key,
     aliasOf: spec.aliasOf,
@@ -180,7 +191,14 @@ export async function runScenario(ctx, scenarioKey) {
     campaignId,
     runId,
     commandId: execution.commandId,
+    commandStatus: execution.status,
+    responseCode: execution.responseCode,
     remoteStdout: execution.stdout,
+    remoteStderr: execution.stderr,
+    error: execution.ok ? null : {
+      code: 'SSM_EXECUTION_FAILED',
+      message: `benchmark command ended with ${execution.status}`,
+    },
     artifactsHint: `/opt/cwm-bench/results/raw/${campaignId}/${runId}`,
     invented: false,
     teardown: { k6Stopped: true },
