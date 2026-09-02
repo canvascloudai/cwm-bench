@@ -57,7 +57,7 @@ export const options = {
     run_id: envOr('RUN_ID', 'unset-run'),
     split: envOr('SPLIT', 'holdout'),
     diagnostic: diagnostic,
-    scenario: 'burst',
+    scenario: diagnostic,
     expected_app_pool_size: String(spec.expectedPool === null ? 'n/a' : spec.expectedPool),
   },
 };
