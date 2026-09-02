@@ -11,6 +11,7 @@ import {
 import { fitDateFrom, loadState, updateAdapterState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { runRemoteShell } from './aws.mjs';
+import { requireRunIdentity } from './identity.mjs';
 
 function shellQuote(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`;
@@ -28,6 +29,11 @@ function parseMeta(text) {
 
 function buildK6Command(spec, options) {
   const resultsDir = `/opt/cwm-bench/results/raw/${options.campaignId}/${options.runId}`;
+  const identity = JSON.stringify({
+    campaignId: options.campaignId,
+    runId: options.runId,
+    scenario: spec.key,
+  });
   const pidFile = `/tmp/cwm-k6-${options.campaignId}-${options.runId}.pid`;
   const lines = [
     'set -euo pipefail',
@@ -42,6 +48,7 @@ function buildK6Command(spec, options) {
     `export RESULTS_DIR=${shellQuote(resultsDir)}`,
     `export ${spec.workload.envName}=${shellQuote(spec.workload.envValue)}`,
     'mkdir -p "$RESULTS_DIR"',
+    `printf '%s\\n' ${shellQuote(identity)} > "$RESULTS_DIR/identity.json"`,
     `PID_FILE=${shellQuote(pidFile)}`,
     'cleanup_k6() { if [ -n "${K6_PGID:-}" ]; then kill -TERM -- "-$K6_PGID" >/dev/null 2>&1 || true; elif [ -n "${K6_PID:-}" ]; then kill -TERM "$K6_PID" >/dev/null 2>&1 || true; fi; rm -f "$PID_FILE"; }',
     'trap cleanup_k6 EXIT INT TERM',
@@ -91,6 +98,7 @@ async function readAppMeta(runAws, instanceId, region, ctx) {
 export async function runScenario(ctx, scenarioKey) {
   const spec = getScenario(scenarioKey);
   assertNotAliased(spec);
+  const identity = requireRunIdentity(ctx.env, spec.key);
 
   const now = ctx.now();
   const today = utcDateString(now);
@@ -116,8 +124,7 @@ export async function runScenario(ctx, scenarioKey) {
     assertExpectedPool(spec, poolSize);
   }
 
-  const campaignId = ctx.env.CWM_CAMPAIGN_ID || (outputs.topology && outputs.topology.test_id) || 'unset-campaign';
-  const runId = ctx.env.CWM_RUN_ID || `${spec.key}-${now.toISOString().replace(/[:.]/g, '')}`;
+  const { campaignId, runId } = identity;
   const warmup = ctx.env.CWM_WARMUP || '5m';
   const duration = ctx.env.CWM_DURATION || '15m';
 
@@ -155,21 +162,21 @@ export async function runScenario(ctx, scenarioKey) {
   if (execution.ok) {
     await updateAdapterState(
       ctx.statePath,
-      (next) => {
-        if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
-          next.fitCampaignDateUtc = today;
-        }
-        next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
-        const lastRun = {
-          scenario: spec.key,
-          runId,
-          campaignId,
-          at: now.toISOString(),
-        };
-        next.lastRun = lastRun;
-        next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
-        next.lastRuns[spec.key] = lastRun;
-      },
+    (next) => {
+      if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
+        next.fitCampaignDateUtc = today;
+      }
+      next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
+      const lastRun = {
+        scenario: spec.key,
+        runId,
+        campaignId,
+        at: now.toISOString(),
+      };
+      next.lastRun = lastRun;
+      next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
+      next.lastRuns[spec.key] = lastRun;
+    },
       ctx.deps.fs || {}
     );
   }
