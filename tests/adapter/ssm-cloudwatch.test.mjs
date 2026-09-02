@@ -11,7 +11,18 @@ import {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(argv, { stdout, stderr, ...options });
+  const scenario = argv[argv.indexOf('--scenario') + 1];
+  const code = await main(argv, {
+    stdout,
+    stderr,
+    ...options,
+    env: {
+      CWM_CAMPAIGN_ID: 'test-campaign',
+      CWM_RUN_ID: `${scenario}-1`,
+      CWM_SCENARIO: scenario,
+      ...(options.env || {}),
+    },
+  });
   return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString() };
 }
 
