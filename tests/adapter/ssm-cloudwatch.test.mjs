@@ -11,18 +11,7 @@ import {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const scenario = argv[argv.indexOf('--scenario') + 1];
-  const code = await main(argv, {
-    stdout,
-    stderr,
-    ...options,
-    env: {
-      CWM_CAMPAIGN_ID: 'test-campaign',
-      CWM_RUN_ID: `${scenario}-1`,
-      CWM_SCENARIO: scenario,
-      ...(options.env || {}),
-    },
-  });
+  const code = await main(argv, { stdout, stderr, ...options });
   return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString() };
 }
 
@@ -74,7 +63,7 @@ test('SSM invocation Failed status is SSM_EXECUTION_FAILED', async () => {
   assert.equal(result.payload.error.code, 'SSM_EXECUTION_FAILED');
 });
 
-test('CloudWatch collection failure is nonzero and not a fabricated metric', async () => {
+test('CloudWatch collection failure is nonzero, retry-bounded, and not fabricated', async () => {
   const aws = createAwsMock({
     ...ssmOnlineHandlers(),
     'cloudwatch.get-metric-statistics': async () => ({
@@ -92,12 +81,41 @@ test('CloudWatch collection failure is nonzero and not a fabricated metric', asy
     },
   });
   assert.equal(result.code, 1);
-  assert.ok(
-    result.payload.error.code === 'CLOUDWATCH_COLLECT_FAILED' ||
-      result.payload.error.code === 'AWS_CLI_FAILED'
-  );
+  assert.equal(result.payload.error.code, 'CLOUDWATCH_PARTIAL');
   assert.equal(result.payload.ok, false);
-  assert.equal(result.payload.cloudwatch, undefined);
+  assert.equal(result.payload.cloudwatch.status, 'partial');
+  assert.ok(result.payload.cloudwatch.queryFailures.length > 0);
+  assert.ok(result.payload.cloudwatch.retryCounts['app_cpu_i-app1'] >= 0);
+  assert.equal(
+    aws.calls.filter((args) => args[1] === 'get-metric-statistics').length,
+    3 * Object.keys(result.payload.cloudwatch.metrics).length,
+  );
+});
+
+test('failed SSM run preserves terminal status and remote output in JSON', async () => {
+  const aws = createAwsMock({
+    ...ssmOnlineHandlers({ poolSize: 250 }),
+    'ssm.get-command-invocation': async () => ({
+      code: 0,
+      stdout: JSON.stringify({
+        Status: 'Failed',
+        StandardOutputContent: 'k6 summary was written before exit',
+        StandardErrorContent: 'k6 exited 99',
+        ResponseCode: 99,
+      }),
+      stderr: '',
+    }),
+  });
+  const result = await runWith(['run', '--scenario', 'peak', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.error.code, 'SSM_EXECUTION_FAILED');
+  assert.match(result.payload.error.message, /SSM command Failed/);
 });
 
 test('collect success reports empty CloudWatch datapoints as unmeasured, not invented', async () => {
