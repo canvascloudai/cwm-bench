@@ -33,3 +33,18 @@ test('does not compare a warm-up aggregate with steady-window error classes', ()
   });
   assert.equal(parsed.errorClassEvidence, 'classified-counter');
 });
+
+
+test('rejects contradictory totals from the selected steady window', () => {
+  const parsed = parseK6Summary({
+    metrics: {
+      'http_reqs{phase:steady}': { values: { rate: 90, count: 900 } },
+      'http_req_failed{phase:steady}': { values: { rate: 0.1, passes: 90, fails: 810 } },
+      'errors_by_class{phase:steady}': { values: { count: 8 } },
+      'errors_by_class{error_class:db_timeout,phase:steady}': { values: { count: 3 } },
+      'errors_by_class{error_class:internal,phase:steady}': { values: { count: 2 } },
+    },
+  });
+  assert.equal(parsed.errorClassEvidence, 'contradictory');
+  assert.equal(parsed.errorClassCountsPresent, false);
+});
