@@ -37,14 +37,14 @@ test('adapter JSON error redacts leaked credentials from AWS stderr', async () =
   });
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(['run', '--scenario', 'normal', '--json'], {
+  const code = await main(['run', '--scenario', 'cpu-only', '--json'], {
     stdout,
     stderr,
     now: () => new Date('2026-09-01T00:00:00.000Z'),
     env: {
       CWM_CAMPAIGN_ID: 'redaction-campaign',
       CWM_RUN_ID: 'redaction-run',
-      CWM_SCENARIO: 'normal',
+      CWM_SCENARIO: 'cpu-only',
     },
     deps: {
       runAws: aws,
