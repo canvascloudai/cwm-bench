@@ -176,7 +176,10 @@ export function parseK6Summary(summary) {
     }
   }
   if (anyErrorMetric) {
-    const aggregateCount = countFromMetric(metrics.errors_by_class);
+    const aggregateMetric = steadyErrorEntries.length > 0
+      ? errorEntries.find(([name]) => !name.includes('error_class:') && name.includes('phase:steady'))?.[1]
+      : metrics.errors_by_class;
+    const aggregateCount = countFromMetric(aggregateMetric);
     const aggregateMatchesTags =
       aggregateCount == null ||
       (taggedErrorMetricCount > 0 && aggregateCount === classifiedErrorCount) ||
