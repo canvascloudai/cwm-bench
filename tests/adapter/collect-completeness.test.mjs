@@ -5,6 +5,7 @@ import { ADAPTER_VERSION } from '../../scripts/lib/adapter/version.mjs';
 import { cloudWatchAlbDimension, cloudWatchTargetGroupDimension } from '../../scripts/lib/adapter/aws.mjs';
 import {
   MemoryStream,
+  artifactListingStdout,
   collectCompleteHandlers,
   createAwsMock,
   k6SummaryFixture,
@@ -29,8 +30,8 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
-test('adapter version is 1.1.0', () => {
-  assert.equal(ADAPTER_VERSION, '1.1.1');
+test('adapter version is 1.2.0', () => {
+  assert.equal(ADAPTER_VERSION, '1.2.0');
 });
 
 test('ALB and target-group ARNs map to CloudWatch dimensions', () => {
@@ -49,10 +50,22 @@ test('ALB and target-group ARNs map to CloudWatch dimensions', () => {
 });
 
 test('collect burst with empty CloudWatch fails COLLECT_INCOMPLETE', async () => {
-  const aws = createAwsMock(ssmOnlineHandlers());
+  const aws = createAwsMock({
+    ...ssmOnlineHandlers(),
+    'ssm.get-command-invocation': async () => ({
+      code: 0,
+      stdout: JSON.stringify({
+        Status: 'Success',
+        StandardOutputContent: artifactListingStdout(null, '/opt/cwm-bench/results/raw/test-campaign/burst-1'),
+        StandardErrorContent: '',
+        ResponseCode: 0,
+      }),
+      stderr: '',
+    }),
+  });
   const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
-    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign' },
+    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -77,7 +90,7 @@ test('collect burst with mocked complete CloudWatch and k6 summary succeeds', as
   const aws = createAwsMock(collectCompleteHandlers());
   const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
-    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign' },
+    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -129,7 +142,7 @@ test('collect burst with complete CloudWatch but missing k6 summary fails', asyn
   });
   const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
-    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign' },
+    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -184,7 +197,7 @@ test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async 
   const collectResult = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T08:20:00.000Z'),
     statePath: '/tmp/cwm-adapter-state-lastrun.json',
-    env: { CWM_CAMPAIGN_ID: 'persisted-campaign' },
+    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: collectAws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -211,7 +224,7 @@ test('collect burst does not copy public CWM 2%/9.55% cells even when k6 errors 
   const aws = createAwsMock(collectCompleteHandlers({ summary, rdsBurstMin: 12 }));
   const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
-    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign' },
+    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
