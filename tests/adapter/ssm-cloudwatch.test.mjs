@@ -35,7 +35,7 @@ test('SSM send-command failure is a nonzero JSON error', async () => {
       stderr: 'An error occurred (AccessDenied) when calling SendCommand',
     }),
   });
-  const result = await runWith(['run', '--scenario', 'normal', '--json'], {
+  const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
     deps: {
       runAws: aws,
@@ -63,7 +63,7 @@ test('SSM invocation Failed status is SSM_EXECUTION_FAILED', async () => {
       stderr: '',
     }),
   });
-  const result = await runWith(['run', '--scenario', 'peak', '--json'], {
+  const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
     deps: {
       runAws: aws,
@@ -89,6 +89,7 @@ test('CloudWatch collection failure is nonzero, retry-bounded, and not fabricate
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      wait: async () => {},
     },
   });
   assert.equal(result.code, 1);
@@ -117,7 +118,7 @@ test('failed SSM run preserves terminal status and remote output in JSON', async
       stderr: '',
     }),
   });
-  const result = await runWith(['run', '--scenario', 'peak', '--json'], {
+  const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
     deps: {
       runAws: aws,
