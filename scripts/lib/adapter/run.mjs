@@ -11,7 +11,9 @@ import {
 import { fitDateFrom, loadState, updateAdapterState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { runRemoteShell } from './aws.mjs';
-import { requireRunIdentity } from './identity.mjs';
+
+const DEFAULT_APP_META_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
+const DEFAULT_APP_META_READINESS_POLL_MS = 5 * 1000;
 
 function shellQuote(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`;
@@ -29,11 +31,6 @@ function parseMeta(text) {
 
 function buildK6Command(spec, options) {
   const resultsDir = `/opt/cwm-bench/results/raw/${options.campaignId}/${options.runId}`;
-  const identity = JSON.stringify({
-    campaignId: options.campaignId,
-    runId: options.runId,
-    scenario: spec.key,
-  });
   const pidFile = `/tmp/cwm-k6-${options.campaignId}-${options.runId}.pid`;
   const lines = [
     'set -euo pipefail',
@@ -48,7 +45,6 @@ function buildK6Command(spec, options) {
     `export RESULTS_DIR=${shellQuote(resultsDir)}`,
     `export ${spec.workload.envName}=${shellQuote(spec.workload.envValue)}`,
     'mkdir -p "$RESULTS_DIR"',
-    `printf '%s\\n' ${shellQuote(identity)} > "$RESULTS_DIR/identity.json"`,
     `PID_FILE=${shellQuote(pidFile)}`,
     'cleanup_k6() { if [ -n "${K6_PGID:-}" ]; then kill -TERM -- "-$K6_PGID" >/dev/null 2>&1 || true; elif [ -n "${K6_PID:-}" ]; then kill -TERM "$K6_PID" >/dev/null 2>&1 || true; fi; rm -f "$PID_FILE"; }',
     'trap cleanup_k6 EXIT INT TERM',
@@ -79,26 +75,77 @@ function teardownCommand() {
   ].join('\n');
 }
 
+function positiveNumber(value, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : fallback;
+}
+
+function appMetaReadinessConfig(ctx) {
+  return {
+    timeoutMs: positiveNumber(
+      ctx.deps.appMetaReadinessTimeoutMs ?? ctx.env.CWM_READINESS_TIMEOUT_MS,
+      DEFAULT_APP_META_READINESS_TIMEOUT_MS,
+    ),
+    pollMs: positiveNumber(
+      ctx.deps.appMetaReadinessPollMs ?? ctx.env.CWM_READINESS_POLL_MS,
+      DEFAULT_APP_META_READINESS_POLL_MS,
+    ),
+  };
+}
+
 async function readAppMeta(runAws, instanceId, region, ctx) {
-  const invocation = await runRemoteShell(runAws, {
-    instanceId,
-    region,
-    commands: ['curl -fsS --max-time 5 http://127.0.0.1:8080/api/meta'],
-    timeoutSeconds: 60,
-    waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
-    pollMs: ctx.deps.ssmPollMs || 1000,
-    comment: 'cwm-bench read app meta',
-    now: ctx.deps.nowMs,
-    wait: ctx.deps.wait,
-    throwOnFailure: true,
-  });
-  return parseMeta(invocation.stdout);
+  const config = appMetaReadinessConfig(ctx);
+  const clock = ctx.deps.nowMs || Date.now;
+  const wait = ctx.deps.wait || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const started = clock();
+  const deadline = started + config.timeoutMs;
+  let attempts = 0;
+  let lastError;
+
+  for (;;) {
+    attempts += 1;
+    try {
+      const invocation = await runRemoteShell(runAws, {
+        instanceId,
+        region,
+        commands: ['curl -fsS --max-time 5 http://127.0.0.1:8080/api/meta'],
+        timeoutSeconds: 60,
+        waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+        pollMs: ctx.deps.ssmPollMs || 1000,
+        comment: 'cwm-bench read app meta',
+        now: ctx.deps.nowMs,
+        wait: ctx.deps.wait,
+        throwOnFailure: true,
+      });
+      const meta = parseMeta(invocation.stdout);
+      if (!meta) {
+        const error = new Error('app metadata response was not valid JSON');
+        error.code = 'APP_META_NOT_READY';
+        throw error;
+      }
+      return meta;
+    } catch (error) {
+      lastError = error;
+      const remainingMs = deadline - clock();
+      if (remainingMs <= 0) {
+        const timeout = new Error(
+          `app metadata did not become ready within ${config.timeoutMs}ms after ` +
+          `${attempts} attempt(s): ${lastError?.message || String(lastError)}`,
+        );
+        timeout.code = 'READINESS_TIMEOUT';
+        timeout.phase = 'app-meta';
+        timeout.attempts = attempts;
+        timeout.lastFailure = String(lastError?.message || lastError);
+        throw timeout;
+      }
+      await wait(Math.min(config.pollMs, remainingMs));
+    }
+  }
 }
 
 export async function runScenario(ctx, scenarioKey) {
   const spec = getScenario(scenarioKey);
   assertNotAliased(spec);
-  const identity = requireRunIdentity(ctx.env, spec.key);
 
   const now = ctx.now();
   const today = utcDateString(now);
@@ -124,7 +171,8 @@ export async function runScenario(ctx, scenarioKey) {
     assertExpectedPool(spec, poolSize);
   }
 
-  const { campaignId, runId } = identity;
+  const campaignId = ctx.env.CWM_CAMPAIGN_ID || (outputs.topology && outputs.topology.test_id) || 'unset-campaign';
+  const runId = ctx.env.CWM_RUN_ID || `${spec.key}-${now.toISOString().replace(/[:.]/g, '')}`;
   const warmup = ctx.env.CWM_WARMUP || '5m';
   const duration = ctx.env.CWM_DURATION || '15m';
 
@@ -162,21 +210,21 @@ export async function runScenario(ctx, scenarioKey) {
   if (execution.ok) {
     await updateAdapterState(
       ctx.statePath,
-    (next) => {
-      if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
-        next.fitCampaignDateUtc = today;
-      }
-      next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
-      const lastRun = {
-        scenario: spec.key,
-        runId,
-        campaignId,
-        at: now.toISOString(),
-      };
-      next.lastRun = lastRun;
-      next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
-      next.lastRuns[spec.key] = lastRun;
-    },
+      (next) => {
+        if (isFitScenario(spec.key) && !next.fitCampaignDateUtc) {
+          next.fitCampaignDateUtc = today;
+        }
+        next.fitScenarios = Array.isArray(next.fitScenarios) ? next.fitScenarios : [];
+        const lastRun = {
+          scenario: spec.key,
+          runId,
+          campaignId,
+          at: now.toISOString(),
+        };
+        next.lastRun = lastRun;
+        next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
+        next.lastRuns[spec.key] = lastRun;
+      },
       ctx.deps.fs || {}
     );
   }
@@ -212,4 +260,4 @@ export async function runScenario(ctx, scenarioKey) {
   };
 }
 
-export { buildK6Command, teardownCommand };
+export { buildK6Command, readAppMeta, teardownCommand };
