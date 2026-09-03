@@ -15,7 +15,18 @@ import {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(argv, { stdout, stderr, ...options });
+  const scenario = argv[argv.indexOf('--scenario') + 1];
+  const code = await main(argv, {
+    stdout,
+    stderr,
+    ...options,
+    env: {
+      CWM_CAMPAIGN_ID: 'test-campaign',
+      CWM_RUN_ID: `${scenario}-1`,
+      CWM_SCENARIO: scenario,
+      ...(options.env || {}),
+    },
+  });
   return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString(), stderr: stderr.toString() };
 }
 
@@ -143,7 +154,7 @@ test('collect burst with complete CloudWatch but missing k6 summary fails', asyn
   assert.equal(result.payload.knownGap, true);
 });
 
-test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async () => {
+test('collect refuses to reuse a persisted run when CWM_RUN_ID is unset', async () => {
   const stored = { body: null };
   const runAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const runResult = await runWith(['run', '--scenario', 'burst', '--json'], {
@@ -181,10 +192,13 @@ test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async 
       dir: `/opt/cwm-bench/results/raw/persisted-campaign/${runResult.payload.runId}`,
     })
   );
-  const collectResult = await runWith(['collect', '--scenario', 'burst', '--json'], {
+  const stdout = new MemoryStream();
+  const collectCode = await main(['collect', '--scenario', 'burst', '--json'], {
+    stdout,
+    stderr: new MemoryStream(),
     now: () => new Date('2026-09-01T08:20:00.000Z'),
     statePath: '/tmp/cwm-adapter-state-lastrun.json',
-    env: { CWM_CAMPAIGN_ID: 'persisted-campaign' },
+    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: collectAws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -197,13 +211,13 @@ test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async 
       },
     },
   });
-  assert.equal(collectResult.code, 0, collectResult.stdout);
-  assert.equal(collectResult.payload.runId, runResult.payload.runId);
-  assert.equal(collectResult.payload.runIdSource, 'state.scenario');
-  assert.equal(collectResult.payload.complete, true);
-  const artifactSend = collectAws.calls.find((args) => args[0] === 'ssm' && args[1] === 'send-command');
-  const params = JSON.parse(artifactSend[artifactSend.indexOf('--parameters') + 1]);
-  assert.match(params.commands[0], new RegExp(runResult.payload.runId));
+  const collectPayload = JSON.parse(stdout.toString());
+  assert.equal(collectCode, 1);
+  assert.equal(collectPayload.error.code, 'RUN_IDENTITY_MISSING');
+  assert.equal(collectPayload.campaignId, 'persisted-campaign');
+  assert.equal(collectPayload.runId, null);
+  assert.equal(collectPayload.scenario, 'burst');
+  assert.equal(collectAws.calls.length, 0);
 });
 
 test('collect burst does not copy public CWM 2%/9.55% cells even when k6 errors exist', async () => {
