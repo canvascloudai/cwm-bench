@@ -41,7 +41,10 @@ resource "aws_instance" "app" {
     seed_sql_b64      = filebase64("${path.module}/../app/seed/seed.sql")
   }))
 
-  depends_on = [aws_db_instance.main]
+  depends_on = [
+    aws_db_instance.main,
+    time_sleep.iam_propagation,
+  ]
 
   tags = {
     Name = "${local.name}-app-${count.index}"

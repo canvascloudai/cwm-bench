@@ -37,6 +37,8 @@ resource "aws_instance" "generator" {
     Name = "${local.name}-generator"
     Role = "generator"
   }
+
+  depends_on = [time_sleep.iam_propagation]
 }
 
 # Why c6i.xlarge (default):

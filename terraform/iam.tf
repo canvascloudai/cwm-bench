@@ -48,3 +48,11 @@ resource "aws_iam_instance_profile" "ec2" {
   name = "${local.name}-ec2-${local.id_slug}"
   role = aws_iam_role.ec2.name
 }
+
+# IAM is eventually consistent. Wait after the profile API reports success so
+# EC2 RunInstances can resolve the profile by name in every region.
+resource "time_sleep" "iam_propagation" {
+  create_duration = "30s"
+
+  depends_on = [aws_iam_instance_profile.ec2]
+}
