@@ -156,7 +156,7 @@ test('collect burst with complete CloudWatch but missing k6 summary fails', asyn
   assert.equal(result.payload.knownGap, true);
 });
 
-test('collect uses last runId persisted by run when collect CWM_RUN_ID is unset', async () => {
+test('collect accepts the explicit run identity after a successful run', async () => {
   const stored = { body: null };
   const runAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const runResult = await runWith(['run', '--scenario', 'burst', '--json'], {
@@ -197,7 +197,7 @@ test('collect uses last runId persisted by run when collect CWM_RUN_ID is unset'
   const collectResult = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T08:20:00.000Z'),
     statePath: '/tmp/cwm-adapter-state-lastrun.json',
-    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_SCENARIO: 'burst' },
+    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_RUN_ID: 'burst-1', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: collectAws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -212,7 +212,7 @@ test('collect uses last runId persisted by run when collect CWM_RUN_ID is unset'
   });
   assert.equal(collectResult.code, 0, collectResult.stdout);
   assert.equal(collectResult.payload.runId, runResult.payload.runId);
-  assert.equal(collectResult.payload.runIdSource, 'state.scenario');
+  assert.equal(collectResult.payload.runIdSource, 'env');
   assert.equal(collectResult.payload.complete, true);
   const artifactSend = collectAws.calls.find((args) => args[0] === 'ssm' && args[1] === 'send-command');
   const params = JSON.parse(artifactSend[artifactSend.indexOf('--parameters') + 1]);
