@@ -45,7 +45,7 @@ resource "aws_iam_role_policy" "app_ssm_db" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "${local.name}-ec2-${local.id_slug}"
+  name = "${local.name}-profile-${local.id_slug}"
   role = aws_iam_role.ec2.name
 }
 

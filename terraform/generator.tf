@@ -3,7 +3,7 @@ resource "aws_instance" "generator" {
   instance_type          = var.generator_instance_type
   subnet_id              = aws_subnet.public[0].id
   vpc_security_group_ids = [aws_security_group.generator.id]
-  iam_instance_profile   = aws_iam_instance_profile.ec2.arn
+  iam_instance_profile   = aws_iam_instance_profile.ec2.name
   key_name               = var.key_name != "" ? var.key_name : null
 
   monitoring = true
