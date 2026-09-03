@@ -32,6 +32,36 @@ function countFromMetric(metric) {
   return numberOrNull(metric.values.count);
 }
 
+function counterConsistency(reqs, failed) {
+  const requestValues = reqs && reqs.values ? reqs.values : null;
+  const failedValues = failed && failed.values ? failed.values : null;
+  const requestCount = numberOrNull(requestValues?.count);
+  const failedPasses = numberOrNull(failedValues?.passes ?? failedValues?.count);
+  const failedFails = numberOrNull(failedValues?.fails);
+  const failRate = numberOrNull(failedValues?.rate);
+  const reasons = [];
+
+  if (
+    requestCount != null
+    && failedPasses != null
+    && failedFails != null
+    && failedPasses + failedFails !== requestCount
+  ) {
+    reasons.push(
+      `http_req_failed passes plus fails (${failedPasses + failedFails}) does not match http_reqs total ${requestCount}`,
+    );
+  }
+  if (requestCount != null && failedPasses != null && failRate != null && requestCount > 0) {
+    const expectedFailRate = failedPasses / requestCount;
+    if (Math.abs(expectedFailRate - failRate) > 0.000001) {
+      reasons.push(
+        `http_req_failed rate ${failRate} does not match failed passes ${failedPasses} / http_reqs total ${requestCount}`,
+      );
+    }
+  }
+  return { valid: reasons.length === 0, reasons };
+}
+
 function metricDatapoints(metric) {
   return metric && Array.isArray(metric.datapoints) ? metric.datapoints : [];
 }
@@ -235,6 +265,7 @@ export function parseK6Summary(summary) {
     goodputRps,
     httpReqs: reqs && reqs.values ? reqs.values : null,
     httpReqFailed: failed && failed.values ? failed.values : null,
+    ...(reqs && failed ? { counterConsistency: counterConsistency(reqs, failed) } : {}),
   };
 }
 

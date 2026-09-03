@@ -33,6 +33,11 @@ function parseMeta(text) {
 
 function buildK6Command(spec, options) {
   const resultsDir = `/opt/cwm-bench/results/raw/${options.campaignId}/${options.runId}`;
+  const identity = JSON.stringify({
+    campaignId: options.campaignId,
+    runId: options.runId,
+    scenario: spec.key,
+  });
   const runnerScript = [
     'set +e',
     `k6 run --out json="$RESULTS_DIR/k6.json" load/${spec.workload.script}`,
@@ -56,6 +61,7 @@ function buildK6Command(spec, options) {
     `export ${spec.workload.envName}=${shellQuote(spec.workload.envValue)}`,
     'mkdir -p "$RESULTS_DIR"',
     'rm -f "$RESULTS_DIR/exit.code" "$RESULTS_DIR/completed_at" "$RESULTS_DIR/pid" "$RESULTS_DIR/started_at" "$RESULTS_DIR/runner.log"',
+    `printf '%s\\n' ${shellQuote(identity)} > "$RESULTS_DIR/identity.json"`,
     'date -u +%Y-%m-%dT%H:%M:%SZ > "$RESULTS_DIR/started_at"',
     `nohup setsid sh -c ${shellQuote(runnerScript)} > "$RESULTS_DIR/runner.log" 2>&1 < /dev/null &`,
     'K6_PID=$!',

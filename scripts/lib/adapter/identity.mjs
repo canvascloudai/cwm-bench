@@ -1,6 +1,6 @@
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
-function requireIdentityValue(env, name) {
+function requiredIdentityValue(env, name) {
   const value = env[name];
   if (typeof value !== 'string' || value.trim() === '') {
     const error = new Error(`${name} is required for benchmark run and collect commands`);
@@ -10,7 +10,7 @@ function requireIdentityValue(env, name) {
   const normalized = value.trim();
   if (!ID_PATTERN.test(normalized)) {
     const error = new Error(
-      `${name} must be 1-128 characters using letters, numbers, dot, underscore, colon, or hyphen`
+      `${name} must be 1-128 characters using letters, numbers, dot, underscore, colon, or hyphen`,
     );
     error.code = 'RUN_IDENTITY_INVALID';
     throw error;
@@ -19,12 +19,12 @@ function requireIdentityValue(env, name) {
 }
 
 export function requireRunIdentity(env, requestedScenario) {
-  const campaignId = requireIdentityValue(env, 'CWM_CAMPAIGN_ID');
-  const runId = requireIdentityValue(env, 'CWM_RUN_ID');
-  const scenario = requireIdentityValue(env, 'CWM_SCENARIO');
+  const campaignId = requiredIdentityValue(env, 'CWM_CAMPAIGN_ID');
+  const runId = requiredIdentityValue(env, 'CWM_RUN_ID');
+  const scenario = requiredIdentityValue(env, 'CWM_SCENARIO');
   if (scenario !== requestedScenario) {
     const error = new Error(
-      `CWM_SCENARIO ${scenario} does not match requested scenario ${requestedScenario}`
+      `CWM_SCENARIO ${scenario} does not match requested scenario ${requestedScenario}`,
     );
     error.code = 'RUN_IDENTITY_MISMATCH';
     throw error;

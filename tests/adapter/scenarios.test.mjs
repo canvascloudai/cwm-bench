@@ -285,6 +285,7 @@ test('run launches k6 as a detached process and polls a run-scoped marker', asyn
   const sends = aws.calls.filter((args) => args[0] === 'ssm' && args[1] === 'send-command');
   const scripts = sends.map((send) => JSON.parse(send[send.indexOf('--parameters') + 1]).commands[0]);
   assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_START') && script.includes('nohup setsid')));
+  assert.ok(scripts.some((script) => script.includes('identity.json') && script.includes('"campaignId":"detached"')));
   assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_STATUS') && script.includes('ADAPTER_K6_COMPLETE')));
   assert.ok(scripts.some((script) => script.includes('ADAPTER_TEARDOWN')));
   assert.equal(result.payload.statusPollAttempts, 1);

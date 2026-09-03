@@ -18,3 +18,34 @@ test('k6 error counters use the same steady phase as request counters', () => {
   assert.equal(parsed.goodputRps, 81);
   assert.equal(parsed.latencyPercentilesPresent, true);
 });
+
+test('k6 contradiction evidence stays raw and is marked contradictory', () => {
+  const parsed = parseK6Summary({
+    metrics: {
+      http_req_duration: { values: { med: 12, 'p(95)': 25, 'p(99)': 40 } },
+      http_reqs: { values: { rate: 90, count: 900 } },
+      http_req_failed: { values: { rate: 0, passes: 0, fails: 900 } },
+      errors_by_class: { values: { count: 3 } },
+      'errors_by_class{error_class:db_timeout}': { values: { count: 3 } },
+    },
+  });
+
+  assert.equal(parsed.errorClassEvidence, 'contradictory');
+  assert.equal(parsed.errorClassCountsPresent, false);
+  assert.equal(parsed.errorClasses, null);
+  assert.deepEqual(parsed.httpReqFailed, { rate: 0, passes: 0, fails: 900 });
+  assert.equal(parsed.counterConsistency.valid, true);
+});
+
+test('k6 counter totals and rates are explicitly flagged when inconsistent', () => {
+  const parsed = parseK6Summary({
+    metrics: {
+      http_reqs: { values: { rate: 90, count: 900 } },
+      http_req_failed: { values: { rate: 0.2, passes: 0, fails: 900 } },
+    },
+  });
+
+  assert.equal(parsed.counterConsistency.valid, false);
+  assert.match(parsed.counterConsistency.reasons[0], /rate 0.2/);
+  assert.deepEqual(parsed.httpReqFailed, { rate: 0.2, passes: 0, fails: 900 });
+});

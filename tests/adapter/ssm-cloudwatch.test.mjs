@@ -11,18 +11,7 @@ import {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const scenario = argv[argv.indexOf('--scenario') + 1];
-  const code = await main(argv, {
-    stdout,
-    stderr,
-    ...options,
-    env: {
-      CWM_CAMPAIGN_ID: 'test-campaign',
-      CWM_RUN_ID: `${scenario}-1`,
-      CWM_SCENARIO: scenario,
-      ...(options.env || {}),
-    },
-  });
+  const code = await main(argv, { stdout, stderr, ...options });
   return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString() };
 }
 
@@ -40,6 +29,7 @@ test('SSM send-command failure is a nonzero JSON error', async () => {
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      wait: async () => {},
     },
   });
   assert.equal(result.code, 1);
@@ -85,7 +75,7 @@ test('CloudWatch collection failure is nonzero, retry-bounded, and not fabricate
   });
   const result = await runWith(['collect', '--scenario', 'normal', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
-    env: { CWM_RUN_ID: 'normal-1' },
+    env: { CWM_RUN_ID: 'normal-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'normal' },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -134,7 +124,7 @@ test('collect success reports empty CloudWatch datapoints as unmeasured, not inv
   const aws = createAwsMock(ssmOnlineHandlers());
   const result = await runWith(['collect', '--scenario', 'idle', '--json'], {
     now: () => new Date('2026-09-01T00:00:00.000Z'),
-    env: { CWM_RUN_ID: 'idle-1', CWM_CAMPAIGN_ID: 'test-campaign' },
+    env: { CWM_RUN_ID: 'idle-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'idle' },
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),

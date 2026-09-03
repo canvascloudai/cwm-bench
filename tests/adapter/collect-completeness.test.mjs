@@ -30,8 +30,8 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
-test('adapter version is 1.2.0', () => {
-  assert.equal(ADAPTER_VERSION, '1.2.0');
+test('adapter version is 1.2.1', () => {
+  assert.equal(ADAPTER_VERSION, '1.2.1');
 });
 
 test('ALB and target-group ARNs map to CloudWatch dimensions', () => {
@@ -237,4 +237,28 @@ test('collect burst does not copy public CWM 2%/9.55% cells even when k6 errors 
   assert.doesNotMatch(result.stdout, /9\.55/);
   assert.doesNotMatch(result.stdout, /980/);
   assert.doesNotMatch(result.stdout, /905/);
+});
+
+test('collect rejects a complete artifact envelope with mismatched identity', async () => {
+  const aws = createAwsMock(collectCompleteHandlers({
+    identity: {
+      campaignId: 'test-campaign',
+      runId: 'stale-run',
+      scenario: 'burst',
+    },
+  }));
+  const result = await runWith(['collect', '--scenario', 'burst', '--json'], {
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    env: { CWM_RUN_ID: 'burst-1', CWM_CAMPAIGN_ID: 'test-campaign', CWM_SCENARIO: 'burst' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: memoryFs,
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.complete, false);
+  assert.ok(result.payload.missing.includes('artifacts:identity.json'));
+  assert.equal(result.payload.artifacts.identityPresent, true);
+  assert.equal(result.payload.artifacts.identityMatches, false);
 });
