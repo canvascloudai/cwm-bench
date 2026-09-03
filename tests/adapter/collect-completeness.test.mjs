@@ -156,13 +156,13 @@ test('collect burst with complete CloudWatch but missing k6 summary fails', asyn
   assert.equal(result.payload.knownGap, true);
 });
 
-test('collect uses last runId persisted by run when CWM_RUN_ID is unset', async () => {
+test('collect uses last runId persisted by run when collect CWM_RUN_ID is unset', async () => {
   const stored = { body: null };
   const runAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const runResult = await runWith(['run', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T08:00:00.000Z'),
     statePath: '/tmp/cwm-adapter-state-lastrun.json',
-    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+    env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_RUN_ID: 'burst-1', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
