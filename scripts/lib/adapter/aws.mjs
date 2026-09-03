@@ -121,6 +121,9 @@ export async function waitForInvocation(
         stdout: redact(payload.StandardOutputContent || ''),
         stderr: redact(payload.StandardErrorContent || ''),
         responseCode: payload.ResponseCode,
+        statusDetails: payload.StatusDetails || null,
+        executionStartDateTime: payload.ExecutionStartDateTime || null,
+        executionEndDateTime: payload.ExecutionEndDateTime || null,
         commandId,
       };
     }
@@ -137,6 +140,9 @@ export async function waitForInvocation(
         stdout: redact(payload.StandardOutputContent || ''),
         stderr: redact(payload.StandardErrorContent || payload.StatusDetails || status),
         responseCode: payload.ResponseCode,
+        statusDetails: payload.StatusDetails || null,
+        executionStartDateTime: payload.ExecutionStartDateTime || null,
+        executionEndDateTime: payload.ExecutionEndDateTime || null,
         commandId,
       };
     }
@@ -147,6 +153,9 @@ export async function waitForInvocation(
         stdout: redact(payload.StandardOutputContent || ''),
         stderr: redact(payload.StandardErrorContent || `SSM command ${commandId} timed out while ${status || 'pending'}`),
         responseCode: payload.ResponseCode,
+        statusDetails: payload.StatusDetails || null,
+        executionStartDateTime: payload.ExecutionStartDateTime || null,
+        executionEndDateTime: payload.ExecutionEndDateTime || null,
         commandId,
       };
     }
@@ -173,6 +182,12 @@ export async function runRemoteShell(runAws, options) {
     err.stdout = result.stdout;
     err.stderr = result.stderr;
     err.commandId = result.commandId;
+    err.details = {
+      statusDetails: result.statusDetails || null,
+      responseCode: result.responseCode ?? null,
+      executionStartDateTime: result.executionStartDateTime || null,
+      executionEndDateTime: result.executionEndDateTime || null,
+    };
     throw err;
   }
   return result;
