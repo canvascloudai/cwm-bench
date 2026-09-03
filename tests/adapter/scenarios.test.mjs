@@ -268,6 +268,27 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
+test('run launches k6 as a detached process and polls a run-scoped marker', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
+  const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
+    now: laterDayNow,
+    statePath: '/tmp/cwm-adapter-detached-run.json',
+    env: { CWM_CAMPAIGN_ID: 'detached', CWM_RUN_ID: 'cpu-only-1', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: memoryFs,
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.ok, true);
+  const sends = aws.calls.filter((args) => args[0] === 'ssm' && args[1] === 'send-command');
+  const scripts = sends.map((send) => JSON.parse(send[send.indexOf('--parameters') + 1]).commands[0]);
+  assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_START') && script.includes('nohup setsid')));
+  assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_STATUS') && script.includes('ADAPTER_K6_COMPLETE')));
+  assert.ok(scripts.some((script) => script.includes('ADAPTER_TEARDOWN')));
+  assert.equal(result.payload.statusPollAttempts, 1);
+});
 for (const key of ALL_RUNNABLE) {
   test(`run ${key} is a first-class scenario (not remapped)`, async () => {
     const spec = getScenario(key);
