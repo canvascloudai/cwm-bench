@@ -72,6 +72,7 @@ export function ssmOnlineHandlers(options = {}) {
   const poolSize = options.poolSize == null ? 250 : options.poolSize;
   const invocations = options.invocations || {};
   let commandSeq = 0;
+  const commandScripts = new Map();
   return {
     'ssm.describe-instance-information': async () => ({
       code: 0,
@@ -80,19 +81,30 @@ export function ssmOnlineHandlers(options = {}) {
       }),
       stderr: '',
     }),
-    'ssm.send-command': async () => {
+    'ssm.send-command': async (args) => {
       commandSeq += 1;
+      const commandId = `cmd-${commandSeq}`;
+      const parametersIndex = args.indexOf('--parameters');
+      const parameters = parametersIndex >= 0 ? JSON.parse(args[parametersIndex + 1]) : {};
+      commandScripts.set(commandId, Array.isArray(parameters.commands) ? parameters.commands.join('\n') : '');
       return {
         code: 0,
-        stdout: JSON.stringify({ Command: { CommandId: `cmd-${commandSeq}` } }),
+        stdout: JSON.stringify({ Command: { CommandId: commandId } }),
         stderr: '',
       };
     },
     'ssm.get-command-invocation': async (args) => {
       const commandId = args[args.indexOf('--command-id') + 1];
-      const stdout =
-        invocations[commandId] ||
+      const script = commandScripts.get(commandId) || '';
+      let stdout = invocations[commandId] ||
         JSON.stringify({ status: 'ok', poolSize, service: 'cwm-bench-app' });
+      if (!invocations[commandId] && script.includes('# ADAPTER_K6_START')) {
+        stdout = 'ADAPTER_K6_STARTED pid=123\nresults_dir=/opt/cwm-bench/results/raw/test-campaign/test-run';
+      } else if (!invocations[commandId] && script.includes('# ADAPTER_K6_STATUS')) {
+        stdout = 'ADAPTER_K6_COMPLETE exit=0\ncompleted_at=2026-09-01T00:10:00Z';
+      } else if (!invocations[commandId] && script.includes('ADAPTER_TEARDOWN')) {
+        stdout = 'ADAPTER_TEARDOWN_OK';
+      }
       return {
         code: 0,
         stdout: JSON.stringify({
