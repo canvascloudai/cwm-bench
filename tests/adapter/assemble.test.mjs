@@ -19,6 +19,28 @@ test('k6 error counters use the same steady phase as request counters', () => {
   assert.equal(parsed.latencyPercentilesPresent, true);
 });
 
+test('k6 warmup-only error counters do not contradict a clean steady phase', () => {
+  const parsed = parseK6Summary({
+    metrics: {
+      'http_req_duration{phase:steady}': { values: { med: 12, 'p(95)': 25, 'p(99)': 40 } },
+      'http_reqs{phase:steady}': { values: { rate: 90, count: 900 } },
+      'http_req_failed{phase:steady}': { values: { rate: 0, passes: 0, fails: 900 } },
+      'errors_by_class{error_class:internal,phase:warmup}': { values: { count: 3 } },
+    },
+  });
+
+  assert.equal(parsed.errorClassEvidence, 'zero-http-failure-rate');
+  assert.deepEqual(parsed.errorClasses, {
+    db_timeout: 0,
+    too_many_connections: 0,
+    queue_full: 0,
+    cpu_overload: 0,
+    internal: 0,
+    unclassified: 0,
+  });
+  assert.equal(parsed.classifiedErrorCount, 0);
+});
+
 test('k6 contradiction evidence stays raw and is marked contradictory', () => {
   const parsed = parseK6Summary({
     metrics: {
