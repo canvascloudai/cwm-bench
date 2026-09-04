@@ -49,3 +49,14 @@ test('terraform variables reject main/master/HEAD as app_source_git_ref', () => 
   assert.match(text, /main, master, and HEAD are rejected/);
   assert.match(text, /\^\[0-9a-fA-F\]\{7,40\}\$/);
 });
+
+test('app bootstrap avoids full OS updates and retries transient setup steps', () => {
+  const text = readFileSync(path.join(ROOT, 'terraform/userdata/app.sh.tftpl'), 'utf8');
+  assert.doesNotMatch(text, /^dnf -y update$/m);
+  assert.match(text, /retry 4 15 dnf -y install git python3 mariadb105 awscli-2/);
+  assert.match(text, /retry 4 15 npm ci --omit=dev --ignore-scripts/);
+  assert.match(text, /DB_READY=0/);
+  assert.match(text, /RDS did not become reachable during app bootstrap/);
+  assert.match(text, /seed_database\(\)/);
+  assert.match(text, /retry 6 10 seed_database/);
+});

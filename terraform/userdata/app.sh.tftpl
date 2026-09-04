@@ -6,14 +6,32 @@ set -euo pipefail
 
 exec > /var/log/cwm-bench-app-userdata.log 2>&1
 
-dnf -y update
-dnf -y install git python3 mariadb105 awscli-2
+retry() {
+  local attempts="$1"
+  local delay="$2"
+  shift 2
+  local attempt
+  for attempt in $(seq 1 "$attempts"); do
+    if "$@"; then
+      return 0
+    fi
+    if [ "$attempt" -lt "$attempts" ]; then
+      sleep "$delay"
+    fi
+  done
+  return 1
+}
+
+# Do not run a full OS update during measured-instance bootstrap. It adds a
+# large, unrelated network/install surface and can leave a replacement host
+# without a listener even though the benchmark app itself is healthy.
+retry 4 15 dnf -y install git python3 mariadb105 awscli-2
 
 # Node 20 (major pin). NodeSource first; AL2023 nodejs20 as fallback.
-if curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -; then
-  dnf -y install nodejs
+if retry 4 15 curl -fsSL https://rpm.nodesource.com/setup_20.x -o /tmp/nodesource-setup.sh && bash /tmp/nodesource-setup.sh; then
+  retry 4 15 dnf -y install nodejs
 else
-  dnf -y install nodejs20 || dnf -y install nodejs
+  retry 4 15 dnf -y install nodejs20 || retry 4 15 dnf -y install nodejs
 fi
 if ! command -v node >/dev/null 2>&1; then
   if command -v node-20 >/dev/null 2>&1; then
@@ -91,24 +109,40 @@ cp -a /opt/cwm-bench-src/app/. /opt/cwm-bench-app/
 
 cd /opt/cwm-bench-app
 if [ -f package-lock.json ]; then
-  npm ci --omit=dev --ignore-scripts
+  retry 4 15 npm ci --omit=dev --ignore-scripts
 else
-  npm install --omit=dev --ignore-scripts
+  retry 4 15 npm install --omit=dev --ignore-scripts
 fi
 
 # Wait for RDS, then seed. Re-seed is idempotent (DROP/CREATE).
 export AWS_DEFAULT_REGION="${region}"
-DB_PASSWORD="$(aws ssm get-parameter --name "${db_password_param}" --with-decryption --query Parameter.Value --output text)"
+DB_PASSWORD=""
+for i in $(seq 1 30); do
+  if DB_PASSWORD="$(aws ssm get-parameter --name "${db_password_param}" --with-decryption --query Parameter.Value --output text)" && [ -n "$DB_PASSWORD" ]; then
+    break
+  fi
+  sleep 5
+done
+test -n "$DB_PASSWORD"
 export MYSQL_PWD="$DB_PASSWORD"
 
+DB_READY=0
 for i in $(seq 1 90); do
   if mysqladmin ping -h "${mysql_host}" --silent; then
+    DB_READY=1
     break
   fi
   sleep 10
 done
+if [ "$DB_READY" -ne 1 ]; then
+  echo "FATAL: RDS did not become reachable during app bootstrap"
+  exit 1
+fi
 
-mysql -h "${mysql_host}" -u "${mysql_user}" < /opt/cwm-bench-app/seed/seed.sql
+seed_database() {
+  mysql -h "${mysql_host}" -u "${mysql_user}" < /opt/cwm-bench-app/seed/seed.sql
+}
+retry 6 10 seed_database
 
 APP_GIT_SHA="$ACTUAL_SHA"
 printf 'node=%s\npool=%s\ngit=%s\n' "$(node --version)" "${app_pool_size}" "$APP_GIT_SHA" > /opt/cwm-bench-app/RUNTIME.txt
