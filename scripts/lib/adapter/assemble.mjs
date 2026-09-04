@@ -193,7 +193,11 @@ export function parseK6Summary(summary) {
   let taggedErrorMetricCount = 0;
   const errorEntries = metricEntries(metrics, 'errors_by_class');
   const steadyErrorEntries = errorEntries.filter(([name]) => name.includes('phase:steady'));
-  for (const [name, metric] of (steadyErrorEntries.length > 0 ? steadyErrorEntries : errorEntries)) {
+  const hasPhasedErrorEntries = errorEntries.some(([name]) => name.includes('phase:'));
+  const scopedErrorEntries = steadyErrorEntries.length > 0
+    ? steadyErrorEntries
+    : (hasPhasedErrorEntries ? [] : errorEntries);
+  for (const [name, metric] of scopedErrorEntries) {
     anyErrorMetric = true;
     const tagged = name.match(/error_class:([^,}]+)/);
     if (tagged) {
