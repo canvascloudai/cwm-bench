@@ -46,6 +46,7 @@ const warmup = envOr('WARMUP', DEFAULT_WARMUP);
 const duration = envOr('DURATION', DEFAULT_DURATION);
 const target = requireTarget();
 const cpuSpinMs = Number(envOr('CPU_SPIN_MS', '20'));
+const cpuRequestTimeout = envOr('CPU_REQUEST_TIMEOUT', '10s');
 const rps = 1000;
 
 export const options = {
@@ -57,7 +58,7 @@ export const options = {
     run_id: envOr('RUN_ID', 'unset-run'),
     split: envOr('SPLIT', 'holdout'),
     diagnostic: diagnostic,
-    scenario: diagnostic,
+    scenario: 'burst',
     expected_app_pool_size: String(spec.expectedPool === null ? 'n/a' : spec.expectedPool),
   },
 };
@@ -68,6 +69,7 @@ export default function diagnosticRun() {
   let res;
   if (spec.mode === 'cpu') {
     res = http.get(`${target}/api/cpu-spin?ms=${cpuSpinMs}`, {
+      timeout: cpuRequestTimeout,
       tags: { name: 'GET /api/cpu-spin' },
     });
   } else {
