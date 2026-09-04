@@ -11,9 +11,6 @@ import { Counter, Rate } from 'k6/metrics';
 
 export const PRODUCT_COUNT = 200;
 
-// k6 omits this Counter entirely when no error is ever recorded. The adapter
-// may interpret that omission as zero only when http_req_failed also reports
-// a zero rate over a non-empty request sample.
 export const errorsByClass = new Counter('errors_by_class');
 export const classifiedErrorRate = new Rate('classified_error_rate');
 
@@ -67,6 +64,12 @@ export function extractErrorClass(res) {
     }
   } catch (_err) {
     // not JSON
+  }
+  // Transport failures have status 0 and no application error body. Keep
+  // them in the same machine-readable counter as other failed requests so
+  // the adapter can reconcile errors_by_class with http_req_failed.
+  if (res.status === 0 || res.error || res.error_code) {
+    return 'unclassified';
   }
   if (res.status >= 400) {
     return 'unclassified';
