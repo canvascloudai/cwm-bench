@@ -14,7 +14,11 @@ import { runRemoteShell } from './aws.mjs';
 
 const DEFAULT_APP_META_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
 const DEFAULT_APP_META_READINESS_POLL_MS = 5 * 1000;
-const DEFAULT_K6_STATUS_POLL_MS = 5 * 1000;
+// Status is read through SSM on the same generator running k6. Polling every
+// few seconds can overwhelm the SSM agent during long, saturated runs and
+// leave later readiness probes unable to execute. The run is detached, so a
+// coarser poll is safe and materially reduces command volume.
+const DEFAULT_K6_STATUS_POLL_MS = 30 * 1000;
 const DEFAULT_K6_STATUS_TIMEOUT_MS = 60 * 60 * 1000;
 
 function shellQuote(value) {
