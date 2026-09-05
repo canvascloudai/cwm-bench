@@ -62,6 +62,10 @@ function counterConsistency(reqs, failed) {
   return { valid: reasons.length === 0, reasons };
 }
 
+function zeroErrorClasses() {
+  return Object.fromEntries(K6_ERROR_CLASSES.map((key) => [key, 0]));
+}
+
 function metricDatapoints(metric) {
   return metric && Array.isArray(metric.datapoints) ? metric.datapoints : [];
 }
@@ -185,6 +189,10 @@ export function parseK6Summary(summary) {
   const rate = reqs && reqs.values ? numberOrNull(reqs.values.rate) : null;
   const requestCount = reqs && reqs.values ? numberOrNull(reqs.values.count) : null;
   const failRate = failed && failed.values ? numberOrNull(failed.values.rate) : null;
+  const httpFailureCount = failed && failed.values
+    ? numberOrNull(failed.values.passes ?? failed.values.count)
+    : null;
+  const counterConsistencyResult = reqs && failed ? counterConsistency(reqs, failed) : null;
 
   const errorClasses = {};
   let anyErrorMetric = false;
@@ -234,14 +242,32 @@ export function parseK6Summary(summary) {
         }
       }
       errorClassEvidence = 'classified-counter';
+    } else if (
+      counterConsistencyResult?.valid &&
+      failRate != null &&
+      failRate > 0 &&
+      httpFailureCount != null
+    ) {
+      Object.assign(errorClasses, zeroErrorClasses(), { unclassified: httpFailureCount });
+      classifiedErrorCount = httpFailureCount;
+      errorClassEvidence = 'unclassified-http-failures';
     } else {
       errorClassEvidence = 'contradictory';
     }
   } else if (requestCount != null && requestCount > 0 && failRate === 0) {
-    for (const key of K6_ERROR_CLASSES) {
-      errorClasses[key] = 0;
-    }
+    Object.assign(errorClasses, zeroErrorClasses());
     errorClassEvidence = 'zero-http-failure-rate';
+  } else if (
+    counterConsistencyResult?.valid &&
+    requestCount != null &&
+    requestCount > 0 &&
+    failRate != null &&
+    failRate > 0 &&
+    httpFailureCount != null
+  ) {
+    Object.assign(errorClasses, zeroErrorClasses(), { unclassified: httpFailureCount });
+    classifiedErrorCount = httpFailureCount;
+    errorClassEvidence = 'unclassified-http-failures';
   }
 
   let goodputRps = null;
@@ -260,16 +286,20 @@ export function parseK6Summary(summary) {
     latencyPercentilesPresent,
     errorClasses: errorClassEvidence === 'missing' || errorClassEvidence === 'contradictory' ? null : errorClasses,
     errorClassCountsPresent:
-      errorClassEvidence === 'classified-counter' || errorClassEvidence === 'zero-http-failure-rate',
+      errorClassEvidence === 'classified-counter' ||
+      errorClassEvidence === 'zero-http-failure-rate' ||
+      errorClassEvidence === 'unclassified-http-failures',
     errorClassEvidence,
     classifiedErrorCount:
-      errorClassEvidence === 'classified-counter' || errorClassEvidence === 'zero-http-failure-rate'
+      errorClassEvidence === 'classified-counter' ||
+      errorClassEvidence === 'zero-http-failure-rate' ||
+      errorClassEvidence === 'unclassified-http-failures'
         ? classifiedErrorCount
         : null,
     goodputRps,
     httpReqs: reqs && reqs.values ? reqs.values : null,
     httpReqFailed: failed && failed.values ? failed.values : null,
-    ...(reqs && failed ? { counterConsistency: counterConsistency(reqs, failed) } : {}),
+    ...(counterConsistencyResult ? { counterConsistency: counterConsistencyResult } : {}),
   };
 }
 
