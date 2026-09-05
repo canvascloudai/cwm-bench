@@ -290,6 +290,30 @@ test('run launches k6 as a detached process and waits with one run-scoped superv
   assert.ok(scripts.some((script) => script.includes('ADAPTER_TEARDOWN')));
   assert.equal(result.payload.statusPollAttempts, 1);
 });
+
+test('run reattaches after transient SSM supervisor control loss', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ poolSize: 250, k6WaitFailures: 1 }));
+  const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
+    now: laterDayNow,
+    statePath: '/tmp/cwm-adapter-ssm-reattach.json',
+    env: { CWM_CAMPAIGN_ID: 'reattach', CWM_RUN_ID: 'cpu-only-1', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+    deps: {
+      runAws: aws,
+      wait: async () => {},
+      runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
+      fs: memoryFs,
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.scenario, 'cpu-only');
+  const waitCommands = aws.calls.filter((args) => {
+    if (args[0] !== 'ssm' || args[1] !== 'send-command') return false;
+    const params = JSON.parse(args[args.indexOf('--parameters') + 1]);
+    return params.commands[0].includes('# ADAPTER_K6_STATUS_WAIT');
+  });
+  assert.equal(waitCommands.length, 2);
+});
+
 for (const key of ALL_RUNNABLE) {
   test(`run ${key} is a first-class scenario (not remapped)`, async () => {
     const spec = getScenario(key);
