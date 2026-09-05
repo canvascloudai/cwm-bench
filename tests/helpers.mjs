@@ -71,6 +71,7 @@ export function ssmOnlineHandlers(options = {}) {
   const region = options.region || 'us-east-1';
   const poolSize = options.poolSize == null ? 250 : options.poolSize;
   const invocations = options.invocations || {};
+  let k6WaitFailuresRemaining = options.k6WaitFailures || 0;
   let commandSeq = 0;
   const commandScripts = new Map();
   return {
@@ -104,6 +105,20 @@ export function ssmOnlineHandlers(options = {}) {
         !invocations[commandId] &&
         (script.includes('# ADAPTER_K6_STATUS') || script.includes('# ADAPTER_K6_STATUS_WAIT'))
       ) {
+        if (script.includes('# ADAPTER_K6_STATUS_WAIT') && k6WaitFailuresRemaining > 0) {
+          k6WaitFailuresRemaining -= 1;
+          return {
+            code: 0,
+            stdout: JSON.stringify({
+              Status: 'Failed',
+              StandardOutputContent: '',
+              StandardErrorContent: 'simulated SSM control loss',
+              ResponseCode: 1,
+              StatusDetails: 'Failed',
+            }),
+            stderr: '',
+          };
+        }
         stdout = 'ADAPTER_K6_COMPLETE exit=0\ncompleted_at=2026-09-01T00:10:00Z';
       } else if (!invocations[commandId] && script.includes('ADAPTER_TEARDOWN')) {
         stdout = 'ADAPTER_TEARDOWN_OK';
