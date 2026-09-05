@@ -59,6 +59,23 @@ test('k6 contradiction evidence stays raw and is marked contradictory', () => {
   assert.equal(parsed.counterConsistency.valid, true);
 });
 
+test('rate-consistent failed requests become explicit unclassified errors', () => {
+  const parsed = parseK6Summary({
+    metrics: {
+      http_reqs: { values: { rate: 90, count: 900 } },
+      http_req_failed: { values: { rate: 1 / 900, passes: 1, fails: 899 } },
+      errors_by_class: { values: { count: 0 } },
+      'errors_by_class{error_class:internal}': { values: { count: 0 } },
+    },
+  });
+
+  assert.equal(parsed.errorClassEvidence, 'unclassified-http-failures');
+  assert.equal(parsed.errorClassCountsPresent, true);
+  assert.equal(parsed.errorClasses.unclassified, 1);
+  assert.equal(parsed.classifiedErrorCount, 1);
+  assert.equal(parsed.counterConsistency.valid, true);
+});
+
 test('k6 counter totals and rates are explicitly flagged when inconsistent', () => {
   const parsed = parseK6Summary({
     metrics: {
