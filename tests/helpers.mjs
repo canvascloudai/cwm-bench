@@ -100,7 +100,10 @@ export function ssmOnlineHandlers(options = {}) {
         JSON.stringify({ status: 'ok', poolSize, service: 'cwm-bench-app' });
       if (!invocations[commandId] && script.includes('# ADAPTER_K6_START')) {
         stdout = 'ADAPTER_K6_STARTED pid=123\nresults_dir=/opt/cwm-bench/results/raw/test-campaign/test-run';
-      } else if (!invocations[commandId] && script.includes('# ADAPTER_K6_STATUS')) {
+      } else if (
+        !invocations[commandId] &&
+        (script.includes('# ADAPTER_K6_STATUS') || script.includes('# ADAPTER_K6_STATUS_WAIT'))
+      ) {
         stdout = 'ADAPTER_K6_COMPLETE exit=0\ncompleted_at=2026-09-01T00:10:00Z';
       } else if (!invocations[commandId] && script.includes('ADAPTER_TEARDOWN')) {
         stdout = 'ADAPTER_TEARDOWN_OK';
