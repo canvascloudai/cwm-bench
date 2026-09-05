@@ -268,7 +268,7 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
-test('run launches k6 as a detached process and polls a run-scoped marker', async () => {
+test('run launches k6 as a detached process and waits with one run-scoped supervisor', async () => {
   const aws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
     now: laterDayNow,
@@ -286,7 +286,7 @@ test('run launches k6 as a detached process and polls a run-scoped marker', asyn
   const scripts = sends.map((send) => JSON.parse(send[send.indexOf('--parameters') + 1]).commands[0]);
   assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_START') && script.includes('nohup setsid')));
   assert.ok(scripts.some((script) => script.includes('identity.json') && script.includes('"campaignId":"detached"')));
-  assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_STATUS') && script.includes('ADAPTER_K6_COMPLETE')));
+  assert.ok(scripts.some((script) => script.includes('# ADAPTER_K6_STATUS_WAIT') && script.includes('ADAPTER_K6_COMPLETE')));
   assert.ok(scripts.some((script) => script.includes('ADAPTER_TEARDOWN')));
   assert.equal(result.payload.statusPollAttempts, 1);
 });
