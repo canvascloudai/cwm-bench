@@ -19,6 +19,11 @@ const DEFAULT_APP_META_READINESS_POLL_MS = 5 * 1000;
 // leave later readiness probes unable to execute. The run is detached, so a
 // coarser poll is safe and materially reduces command volume.
 const DEFAULT_K6_STATUS_POLL_MS = 30 * 1000;
+// AWS-RunShellScript can lose a long-running invocation under generator load
+// even when the detached k6 process continues. Reattach in bounded slices so
+// a transient SSM control loss does not discard an otherwise complete run.
+const DEFAULT_K6_STATUS_SLICE_MS = 10 * 60 * 1000;
+const MAX_K6_STATUS_ATTEMPTS = 8;
 const DEFAULT_K6_STATUS_TIMEOUT_MS = 60 * 60 * 1000;
 
 function shellQuote(value) {
@@ -246,6 +251,7 @@ function parseK6Status(text) {
     return { state: 'complete', exitCode: Number(complete[1]) };
   }
   if (value.includes('ADAPTER_K6_LOST')) return { state: 'lost' };
+  if (value.includes('ADAPTER_K6_TIMEOUT')) return { state: 'timeout' };
   if (value.includes('ADAPTER_K6_RUNNING')) return { state: 'running' };
   if (value.includes('ADAPTER_K6_PENDING')) return { state: 'pending' };
   return { state: 'unknown' };
@@ -266,58 +272,84 @@ function k6StatusConfig(ctx) {
 
 async function waitForK6(ctx, runAws, options) {
   const config = k6StatusConfig(ctx);
-  const invocation = await runRemoteShell(runAws, {
-    instanceId: options.instanceId,
-    region: options.region,
-    commands: [buildK6WaitCommand(options, config.timeoutMs)],
-    timeoutSeconds: Math.ceil(config.timeoutMs / 1000) + 60,
-    waitTimeoutMs: (ctx.deps.ssmWaitMs || config.timeoutMs) + 60_000,
-    pollMs: ctx.deps.ssmPollMs || 2000,
-    comment: `cwm-bench wait ${options.scenario}`,
-    now: ctx.deps.nowMs,
-    wait: ctx.deps.wait,
-  });
+  const clock = ctx.deps.nowMs || Date.now;
+  const wait = ctx.deps.wait || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const deadline = clock() + config.timeoutMs;
+  let attempts = 0;
+  let lastFailure = null;
 
-  if (invocation.status !== 'Success') {
-    const error = new Error(
-      `SSM k6 wait command ${invocation.status}: ${invocation.stderr || invocation.status}`,
-    );
-    error.code = 'K6_WAIT_SSM_FAILED';
-    error.ssmStatus = invocation.status;
-    error.details = {
-      statusDetails: invocation.statusDetails || null,
-      responseCode: invocation.responseCode ?? null,
-    };
-    throw error;
+  while (clock() < deadline && attempts < MAX_K6_STATUS_ATTEMPTS) {
+    attempts += 1;
+    const remainingMs = Math.max(1, deadline - clock());
+    const sliceMs = Math.min(DEFAULT_K6_STATUS_SLICE_MS, remainingMs);
+    let invocation;
+    try {
+      invocation = await runRemoteShell(runAws, {
+        instanceId: options.instanceId,
+        region: options.region,
+        commands: [buildK6WaitCommand(options, sliceMs)],
+        timeoutSeconds: Math.ceil(sliceMs / 1000) + 60,
+        waitTimeoutMs: sliceMs + 60_000,
+        pollMs: ctx.deps.ssmPollMs || 2000,
+        comment: `cwm-bench wait ${options.scenario} attempt=${attempts}`,
+        now: ctx.deps.nowMs,
+        wait: ctx.deps.wait,
+      });
+    } catch (error) {
+      lastFailure = error;
+      invocation = null;
+    }
+
+    // A failed/timed-out SSM invocation may still have emitted the terminal
+    // marker before control was lost. Trust the run-scoped marker first.
+    const status = parseK6Status(invocation?.stdout);
+    if (status.state === 'complete') {
+      const ok = status.exitCode === 0;
+      return {
+        ...invocation,
+        ok,
+        status: ok ? 'Success' : 'Failed',
+        responseCode: status.exitCode,
+        pollAttempts: attempts,
+      };
+    }
+    if (status.state === 'lost') {
+      return {
+        ...invocation,
+        ok: false,
+        status: 'Failed',
+        responseCode: 1,
+        stderr: `${invocation?.stderr || ''}\nk6 exited without writing an exit marker`,
+        pollAttempts: attempts,
+      };
+    }
+
+    if (invocation && invocation.status === 'Success' && status.state === 'unknown') {
+      const error = new Error('k6 wait command returned no terminal marker');
+      error.code = 'K6_STATUS_UNKNOWN';
+      throw error;
+    }
+    if (invocation?.status && invocation.status !== 'Success') {
+      lastFailure = new Error(
+        `SSM k6 wait command ${invocation.status}: ${invocation.stderr || invocation.status}`,
+      );
+      lastFailure.code = 'K6_WAIT_SSM_FAILED';
+      lastFailure.ssmStatus = invocation.status;
+    }
+
+    const remainingAfterAttempt = deadline - clock();
+    if (remainingAfterAttempt <= 0) break;
+    // Give the SSM agent a short recovery window before reattaching. The
+    // supervisor itself will return ADAPTER_K6_TIMEOUT at the slice boundary.
+    await wait(Math.min(Math.max(config.pollMs, 30 * 1000), remainingAfterAttempt));
   }
 
-  const status = parseK6Status(invocation.stdout);
-  if (status.state === 'complete') {
-    const ok = status.exitCode === 0;
-    return {
-      ...invocation,
-      ok,
-      status: ok ? 'Success' : 'Failed',
-      responseCode: status.exitCode,
-      pollAttempts: 1,
-    };
-  }
-  if (status.state === 'lost') {
-    return {
-      ...invocation,
-      ok: false,
-      status: 'Failed',
-      responseCode: 1,
-      stderr: `${invocation.stderr || ''}\nk6 exited without writing an exit marker`,
-      pollAttempts: 1,
-    };
-  }
   const error = new Error(
-    status.state === 'unknown'
-      ? 'k6 wait command returned no terminal marker'
-      : `k6 wait command ended in ${status.state}`,
+    lastFailure?.message || 'k6 supervisor did not reach a terminal state',
   );
-  error.code = status.state === 'unknown' ? 'K6_STATUS_UNKNOWN' : 'K6_STATUS_TIMEOUT';
+  error.code = 'K6_STATUS_TIMEOUT';
+  error.attempts = attempts;
+  error.cause = lastFailure;
   throw error;
 }
 
