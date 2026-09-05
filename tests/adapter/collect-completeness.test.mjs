@@ -31,8 +31,8 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
-test('adapter version is 1.2.3', () => {
-  assert.equal(ADAPTER_VERSION, '1.2.3');
+test('adapter version is 1.2.4', () => {
+  assert.equal(ADAPTER_VERSION, '1.2.4');
 });
 
 test('persisted CloudWatch windows exclude the unstable terminal minute', () => {

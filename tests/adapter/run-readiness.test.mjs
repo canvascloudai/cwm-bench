@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readAppMeta } from '../../scripts/lib/adapter/run.mjs';
-import { createAwsMock } from '../helpers.mjs';
+import { readAppMeta, teardownScenario } from '../../scripts/lib/adapter/run.mjs';
+import { createAwsMock, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
 
 test('run-side app metadata guard retries after a post-reapply connection refusal', async () => {
   let invocationCount = 0;
@@ -58,4 +58,41 @@ test('run-side app metadata guard retries after a post-reapply connection refusa
   assert.equal(invocationCount, 2);
   assert.equal(commandCount, 2);
   assert.equal(now, 5);
+});
+
+test('interrupted-run teardown stops the campaign/run identity through SSM', async () => {
+  const runAws = createAwsMock(ssmOnlineHandlers());
+  const result = await teardownScenario({
+    env: {
+      CWM_CAMPAIGN_ID: 'campaign-1',
+      CWM_RUN_ID: 'run-1',
+    },
+    deps: {
+      runTerraform: async () => ({
+        code: 0,
+        stdout: terraformOutputFixture(),
+        stderr: '',
+      }),
+      runAws,
+      ssmWaitMs: 10,
+      ssmPollMs: 1,
+    },
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.campaignId, 'campaign-1');
+  assert.equal(result.runId, 'run-1');
+  assert.equal(result.teardown.k6Stopped, true);
+  assert.equal(
+    runAws.calls.filter((args) => args[0] === 'ssm' && args[1] === 'send-command').length,
+    1,
+  );
+  assert.match(
+    JSON.stringify(runAws.calls),
+    /campaign-1/,
+  );
+  assert.match(
+    JSON.stringify(runAws.calls),
+    /run-1/,
+  );
 });

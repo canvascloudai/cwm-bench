@@ -5,11 +5,10 @@ import { parseArgs, usageText } from './cli.mjs';
 import { redact, redactError } from './redact.mjs';
 import { getScenario } from './scenarios.mjs';
 import { waitReady } from './ready.mjs';
-import { runScenario } from './run.mjs';
+import { runScenario, teardownScenario } from './run.mjs';
 import { collectScenario } from './collect.mjs';
 import { createDefaultDeps } from './exec.mjs';
 import { defaultStatePath } from './state.mjs';
-import { identityPayload } from './identity.mjs';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
@@ -60,6 +59,10 @@ export async function dispatch(parsed, ctx) {
     return waitReady(ctx);
   }
 
+  if (parsed.command === 'teardown') {
+    return teardownScenario(ctx);
+  }
+
   getScenario(parsed.scenario);
 
   if (parsed.command === 'run') {
@@ -105,12 +108,7 @@ export async function main(argv, options = {}) {
     }
     return 0;
   } catch (err) {
-    const payload = failPayload(
-      err,
-      parsed.command === 'run' || parsed.command === 'collect'
-        ? identityPayload(ctx.env, parsed.scenario)
-        : {}
-    );
+    const payload = failPayload(err, parsed.scenario ? { scenario: parsed.scenario } : {});
     if (parsed.json || jsonPreferred) {
       writeJson(stdout, payload);
     } else {

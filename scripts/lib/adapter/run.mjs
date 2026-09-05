@@ -431,4 +431,48 @@ export async function runScenario(ctx, scenarioKey) {
   };
 }
 
+export async function teardownScenario(ctx) {
+  const outputs = await readTerraformOutputs(ctx.deps);
+  const region = outputs.region || ctx.env.AWS_REGION || PRIMARY_REGION;
+  const runAws = ctx.deps.runAws;
+  if (typeof runAws !== 'function') {
+    const err = new Error('AWS runner is not configured; cannot tear down via SSM');
+    err.code = 'AWS_UNAVAILABLE';
+    throw err;
+  }
+
+  const campaignId = ctx.env.CWM_CAMPAIGN_ID;
+  const runId = ctx.env.CWM_RUN_ID;
+  if (!campaignId || !runId) {
+    const err = new Error('teardown requires CWM_CAMPAIGN_ID and CWM_RUN_ID');
+    err.code = 'INVALID_IDENTITY';
+    throw err;
+  }
+
+  const invocation = await runRemoteShell(runAws, {
+    instanceId: outputs.generatorInstanceId,
+    region,
+    commands: [teardownCommand({ campaignId, runId })],
+    timeoutSeconds: 60,
+    waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+    pollMs: ctx.deps.ssmPollMs || 1000,
+    comment: 'cwm-bench interrupted-run teardown',
+    now: ctx.deps.nowMs,
+    wait: ctx.deps.wait,
+    throwOnFailure: true,
+  });
+
+  return {
+    ok: true,
+    adapterVersion: ADAPTER_VERSION,
+    campaignId,
+    runId,
+    region,
+    commandId: invocation.commandId,
+    remoteStdout: invocation.stdout,
+    remoteStderr: invocation.stderr,
+    teardown: { k6Stopped: true },
+  };
+}
+
 export { buildK6Command, readAppMeta, teardownCommand };

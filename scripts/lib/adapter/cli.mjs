@@ -1,4 +1,4 @@
-const COMMANDS = new Set(['wait-ready', 'run', 'collect', 'help']);
+const COMMANDS = new Set(['wait-ready', 'run', 'collect', 'teardown', 'help']);
 
 export function parseArgs(argv) {
   const args = [...argv];
@@ -74,6 +74,7 @@ Usage:
   node scripts/worker-adapter.mjs wait-ready --json
   node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
   node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
+  node scripts/worker-adapter.mjs teardown --json
   node scripts/worker-adapter.mjs --help
 
 Commands:
@@ -83,6 +84,8 @@ Commands:
   run          Execute one campaign scenario on the generator via SSM.
   collect      Gather Terraform outputs, resolved AMIs, CloudWatch metrics,
                and generator artifacts. Does not invent measurements.
+  teardown     Stop a detached k6 run identified by CWM_CAMPAIGN_ID and
+               CWM_RUN_ID. Used to recover interrupted worker runs.
 
 Unknown commands and unknown scenarios fail (nonzero).
 

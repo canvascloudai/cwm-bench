@@ -24,6 +24,13 @@ test('parseArgs: collect --scenario=peak --json', () => {
   assert.equal(parsed.scenario, 'peak');
 });
 
+test('parseArgs: teardown does not require a scenario', () => {
+  const parsed = parseArgs(['teardown', '--json']);
+  assert.equal(parsed.command, 'teardown');
+  assert.equal(parsed.json, true);
+  assert.equal(parsed.scenario, null);
+});
+
 test('parseArgs: unknown command throws', () => {
   assert.throws(() => parseArgs(['provision', '--json']), (err) => err.code === 'UNKNOWN_COMMAND');
 });
@@ -38,11 +45,12 @@ test('parseArgs: --help', () => {
   assert.equal(parsed.command, 'help');
 });
 
-test('usage text documents the three worker commands and holdouts', () => {
+test('usage text documents worker commands and holdouts', () => {
   const text = usageText();
   assert.match(text, /wait-ready --json/);
   assert.match(text, /run --scenario/);
   assert.match(text, /collect --scenario/);
+  assert.match(text, /teardown --json/);
   assert.match(text, /later-day/);
   assert.match(text, /second-region/);
   assert.match(text, /us-west-2/);
