@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { main } from '../../scripts/lib/adapter/main.mjs';
 import { ADAPTER_VERSION } from '../../scripts/lib/adapter/version.mjs';
+import { collectionWindow } from '../../scripts/lib/adapter/collect.mjs';
 import { cloudWatchAlbDimension, cloudWatchTargetGroupDimension } from '../../scripts/lib/adapter/aws.mjs';
 import {
   MemoryStream,
@@ -30,8 +31,18 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
-test('adapter version is 1.2.1', () => {
-  assert.equal(ADAPTER_VERSION, '1.2.1');
+test('adapter version is 1.2.2', () => {
+  assert.equal(ADAPTER_VERSION, '1.2.2');
+});
+
+test('persisted CloudWatch windows exclude the unstable terminal minute', () => {
+  const window = collectionWindow(new Date('2026-09-05T01:56:08.019Z'), {
+    CWM_RUN_STARTED_AT: '2026-09-05T01:41:08.019Z',
+    CWM_RUN_ENDED_AT: '2026-09-05T01:56:08.019Z',
+  }, null);
+  assert.equal(window.startTime, '2026-09-05T01:42:00.000Z');
+  assert.equal(window.endTime, '2026-09-05T01:55:00.000Z');
+  assert.equal(window.source, 'persisted-run');
 });
 
 test('ALB and target-group ARNs map to CloudWatch dimensions', () => {
