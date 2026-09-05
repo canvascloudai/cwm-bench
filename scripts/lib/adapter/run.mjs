@@ -103,6 +103,42 @@ function buildK6StatusCommand(options) {
   ].join('\n');
 }
 
+function buildK6WaitCommand(options, timeoutMs) {
+  const resultsDir = `/opt/cwm-bench/results/raw/${options.campaignId}/${options.runId}`;
+  const timeoutSeconds = Math.max(1, Math.ceil(timeoutMs / 1000));
+  return [
+    'set -u',
+    '# ADAPTER_K6_STATUS_WAIT',
+    `DIR=${shellQuote(resultsDir)}`,
+    `DEADLINE=$(($(date +%s) + ${timeoutSeconds}))`,
+    'while :; do',
+    '  if [ -f "$DIR/exit.code" ]; then',
+    '    CODE="$(tr -d "[:space:]" < "$DIR/exit.code")"',
+    '    printf "ADAPTER_K6_COMPLETE exit=%s\\n" "$CODE"',
+    '    if [ -f "$DIR/completed_at" ]; then printf "completed_at=%s\\n" "$(cat "$DIR/completed_at")"; fi',
+    '    tail -n 80 "$DIR/runner.log" 2>/dev/null || true',
+    '    exit 0',
+    '  fi',
+    '  if [ -f "$DIR/pid" ]; then',
+    '    PID="$(tr -d "[:space:]" < "$DIR/pid")"',
+    '    if ! kill -0 "$PID" 2>/dev/null; then',
+    '      printf "ADAPTER_K6_LOST pid=%s (no exit marker)\\n" "$PID"',
+    '      tail -n 80 "$DIR/runner.log" 2>/dev/null || true',
+    '      exit 0',
+    '    fi',
+    '  else',
+    '    printf "%s\\n" "ADAPTER_K6_PENDING"',
+    '  fi',
+    '  if [ "$(date +%s)" -ge "$DEADLINE" ]; then',
+    '    printf "%s\\n" "ADAPTER_K6_TIMEOUT"',
+    '    tail -n 80 "$DIR/runner.log" 2>/dev/null || true',
+    '    exit 0',
+    '  fi',
+    '  sleep 30',
+    'done',
+  ].join('\n');
+}
+
 function teardownCommand(options = {}) {
   if (!options.campaignId || !options.runId) {
     return [
@@ -230,77 +266,59 @@ function k6StatusConfig(ctx) {
 
 async function waitForK6(ctx, runAws, options) {
   const config = k6StatusConfig(ctx);
-  const clock = ctx.deps.nowMs || Date.now;
-  const wait = ctx.deps.wait || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
-  const started = clock();
-  const deadline = started + config.timeoutMs;
-  let attempts = 0;
-  let lastFailure = null;
+  const invocation = await runRemoteShell(runAws, {
+    instanceId: options.instanceId,
+    region: options.region,
+    commands: [buildK6WaitCommand(options, config.timeoutMs)],
+    timeoutSeconds: Math.ceil(config.timeoutMs / 1000) + 60,
+    waitTimeoutMs: (ctx.deps.ssmWaitMs || config.timeoutMs) + 60_000,
+    pollMs: ctx.deps.ssmPollMs || 2000,
+    comment: `cwm-bench wait ${options.scenario}`,
+    now: ctx.deps.nowMs,
+    wait: ctx.deps.wait,
+  });
 
-  for (;;) {
-    attempts += 1;
-    try {
-      const invocation = await runRemoteShell(runAws, {
-        instanceId: options.instanceId,
-        region: options.region,
-        commands: [buildK6StatusCommand(options)],
-        timeoutSeconds: 60,
-        waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
-        pollMs: ctx.deps.ssmPollMs || 1000,
-        comment: `cwm-bench status ${options.scenario}`,
-        now: ctx.deps.nowMs,
-        wait: ctx.deps.wait,
-      });
-      if (invocation.status === 'Success') {
-        const status = parseK6Status(invocation.stdout);
-        if (status.state === 'complete') {
-          const ok = status.exitCode === 0;
-          return {
-            ...invocation,
-            ok,
-            status: ok ? 'Success' : 'Failed',
-            responseCode: status.exitCode,
-            pollAttempts: attempts,
-          };
-        }
-        if (status.state === 'lost') {
-          return {
-            ...invocation,
-            ok: false,
-            status: 'Failed',
-            responseCode: 1,
-            stderr: `${invocation.stderr || ''}\nk6 exited without writing an exit marker`,
-            pollAttempts: attempts,
-          };
-        }
-        lastFailure = null;
-      } else {
-        lastFailure = new Error(
-          `SSM status command ${invocation.status}: ${invocation.stderr || invocation.status}`,
-        );
-        lastFailure.ssmStatus = invocation.status;
-        lastFailure.details = {
-          statusDetails: invocation.statusDetails || null,
-          responseCode: invocation.responseCode ?? null,
-        };
-      }
-    } catch (error) {
-      lastFailure = error;
-    }
-
-    const remainingMs = deadline - clock();
-    if (remainingMs <= 0) {
-      const timeout = new Error(
-        `k6 status did not become terminal within ${config.timeoutMs}ms after ` +
-          `${attempts} attempt(s): ${lastFailure?.message || 'status polling timed out'}`,
-      );
-      timeout.code = 'K6_STATUS_TIMEOUT';
-      timeout.attempts = attempts;
-      timeout.lastFailure = lastFailure ? String(lastFailure.message || lastFailure) : null;
-      throw timeout;
-    }
-    await wait(Math.min(config.pollMs, remainingMs));
+  if (invocation.status !== 'Success') {
+    const error = new Error(
+      `SSM k6 wait command ${invocation.status}: ${invocation.stderr || invocation.status}`,
+    );
+    error.code = 'K6_WAIT_SSM_FAILED';
+    error.ssmStatus = invocation.status;
+    error.details = {
+      statusDetails: invocation.statusDetails || null,
+      responseCode: invocation.responseCode ?? null,
+    };
+    throw error;
   }
+
+  const status = parseK6Status(invocation.stdout);
+  if (status.state === 'complete') {
+    const ok = status.exitCode === 0;
+    return {
+      ...invocation,
+      ok,
+      status: ok ? 'Success' : 'Failed',
+      responseCode: status.exitCode,
+      pollAttempts: 1,
+    };
+  }
+  if (status.state === 'lost') {
+    return {
+      ...invocation,
+      ok: false,
+      status: 'Failed',
+      responseCode: 1,
+      stderr: `${invocation.stderr || ''}\nk6 exited without writing an exit marker`,
+      pollAttempts: 1,
+    };
+  }
+  const error = new Error(
+    status.state === 'unknown'
+      ? 'k6 wait command returned no terminal marker'
+      : `k6 wait command ended in ${status.state}`,
+  );
+  error.code = status.state === 'unknown' ? 'K6_STATUS_UNKNOWN' : 'K6_STATUS_TIMEOUT';
+  throw error;
 }
 
 export async function runScenario(ctx, scenarioKey) {
