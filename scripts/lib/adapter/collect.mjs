@@ -44,7 +44,10 @@ function collectionWindow(now, env, persisted) {
   const actualEnd = parseBoundary(env.CWM_RUN_ENDED_AT || persistedEnd);
   if (actualStart && actualEnd) {
     const start = ceilMinute(actualStart);
-    const end = floorMinute(actualEnd);
+    // CloudWatch publishes the final minute's metric streams independently.
+    // Leave that terminal bucket out so RequestCount and target-2xx cannot be
+    // compared while one series is still catching up.
+    const end = new Date(floorMinute(actualEnd).getTime() - 60_000);
     if (start >= end) {
       const err = new Error('benchmark run has no complete CloudWatch minute within its persisted boundaries');
       err.code = 'RUN_WINDOW_TOO_SHORT';
@@ -476,3 +479,5 @@ export async function collectScenario(ctx, scenarioKey) {
 
   return payload;
 }
+
+export { collectionWindow };
