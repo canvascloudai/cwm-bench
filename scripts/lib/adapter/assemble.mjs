@@ -105,6 +105,46 @@ function datapointSumsMatch(left, right) {
   );
 }
 
+function elbFailuresExplainRequestGap(cloudwatch) {
+  const requestCount = cloudwatch && cloudwatch.alb_request_count;
+  const target2xx = cloudwatch && cloudwatch.alb_http_target_2xx;
+  const target5xx = cloudwatch && cloudwatch.alb_http_target_5xx;
+  const elb5xx = cloudwatch && cloudwatch.alb_http_elb_5xx;
+  if (
+    !metricIsMissing(target5xx) ||
+    metricIsMissing(elb5xx) ||
+    !sameDatapointCoverage(requestCount, target2xx)
+  ) {
+    return false;
+  }
+
+  const requestSum = metricSum(requestCount);
+  const target2xxSum = metricSum(target2xx);
+  const elb5xxSum = metricSum(elb5xx);
+  if (
+    requestSum == null ||
+    target2xxSum == null ||
+    elb5xxSum == null ||
+    requestSum < target2xxSum ||
+    elb5xxSum <= 0 ||
+    requestSum - target2xxSum !== elb5xxSum
+  ) {
+    return false;
+  }
+
+  const target2xxByTimestamp = new Map(
+    metricDatapoints(target2xx).map((point) => [point.timestamp, point.sum]),
+  );
+  return metricDatapoints(requestCount).every((point) => {
+    const target2xxValue = target2xxByTimestamp.get(point.timestamp);
+    return (
+      typeof point.sum === 'number' &&
+      typeof target2xxValue === 'number' &&
+      point.sum >= target2xxValue
+    );
+  });
+}
+
 function hasRequestSuccessEvidence(cloudwatch) {
   const requestCount = cloudwatch && cloudwatch.alb_request_count;
   const target2xx = cloudwatch && cloudwatch.alb_http_target_2xx;
@@ -143,20 +183,25 @@ export function assessAlb5xxEvidence(cloudwatch) {
     (!metricIsMissing(target5xx) && !target5xxObserved) ||
     (!metricIsMissing(elb5xx) && !elb5xxObserved);
   const successEvidence = hasRequestSuccessEvidence(cloudwatch);
+  const elbFailureEvidence = elbFailuresExplainRequestGap(cloudwatch);
   const observed5xxHasErrors =
     (target5xxObserved && target5xxSum > 0) ||
     (elb5xxObserved && elb5xxSum > 0);
   const contradictory = successEvidence.contradictory || malformed5xx;
   const canInferMissingAsZero =
     successEvidence.available && !observed5xxHasErrors && !malformed5xx;
+  const canInferTarget5xxAsZeroFromElbFailures =
+    elbFailureEvidence && !target5xxObserved && !malformed5xx;
 
   return {
     target5xxPresent: target5xxObserved || (canInferMissingAsZero && metricIsMissing(target5xx)),
     elb5xxPresent: elb5xxObserved || (canInferMissingAsZero && metricIsMissing(elb5xx)),
-    target5xxInferredZero: canInferMissingAsZero && metricIsMissing(target5xx),
+    target5xxInferredZero:
+      (canInferMissingAsZero || canInferTarget5xxAsZeroFromElbFailures)
+      && metricIsMissing(target5xx),
     elb5xxInferredZero: canInferMissingAsZero && metricIsMissing(elb5xx),
     observed5xxHasErrors,
-    contradictory,
+    contradictory: contradictory && !canInferTarget5xxAsZeroFromElbFailures,
   };
 }
 

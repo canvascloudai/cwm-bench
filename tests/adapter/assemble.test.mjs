@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { parseK6Summary } from '../../scripts/lib/adapter/assemble.mjs';
+import {
+  assessAlb5xxEvidence,
+  parseK6Summary,
+} from '../../scripts/lib/adapter/assemble.mjs';
 
 test('k6 error counters use the same steady phase as request counters', () => {
   const parsed = parseK6Summary({
@@ -87,4 +90,31 @@ test('k6 counter totals and rates are explicitly flagged when inconsistent', () 
   assert.equal(parsed.counterConsistency.valid, false);
   assert.match(parsed.counterConsistency.reasons[0], /rate 0.2/);
   assert.deepEqual(parsed.httpReqFailed, { rate: 0.2, passes: 0, fails: 900 });
+});
+
+test('an ELB 5xx can explain a missing target 5xx series', () => {
+  const evidence = assessAlb5xxEvidence({
+    alb_request_count: {
+      datapoints: [
+        { timestamp: '2026-09-05T07:06:00+00:00', sum: 60000 },
+        { timestamp: '2026-09-05T07:07:00+00:00', sum: 60001 },
+      ],
+    },
+    alb_http_target_2xx: {
+      datapoints: [
+        { timestamp: '2026-09-05T07:06:00+00:00', sum: 60000 },
+        { timestamp: '2026-09-05T07:07:00+00:00', sum: 60000 },
+      ],
+    },
+    alb_http_target_5xx: { datapoints: [] },
+    alb_http_elb_5xx: {
+      datapoints: [
+        { timestamp: '2026-09-05T07:07:00+00:00', sum: 1 },
+      ],
+    },
+  });
+
+  assert.equal(evidence.target5xxInferredZero, true);
+  assert.equal(evidence.elb5xxPresent, true);
+  assert.equal(evidence.contradictory, false);
 });
