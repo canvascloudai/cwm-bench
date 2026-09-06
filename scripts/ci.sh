@@ -5,8 +5,8 @@
 # 2. Fit per-metric only on a declared fit split.
 # 3. Hold out Burst, a later day, and a second region.
 # 4. A coefficients change without a new measurement ID is rejected.
-# 5. Until v1 measurements exist: keep Burst visible as a known gap.
-#    Do not label latency/CPU/throughput/error as "measured".
+# 5. v1 owned holdout measurements may be recorded with null metrics.
+#    Do not invent coefficients or copy the public 2%/9.55% cell as owned.
 # 6. BurstBalance=0 is a third error bucket (iops_throttle).
 set -euo pipefail
 
@@ -20,7 +20,10 @@ echo "==> honesty: coefficients provenance"
 python3 -m pip install -q -r calibrate/requirements.txt
 python3 calibrate/calibrate.py --check-provenance
 
-echo "==> calibrate stub (no measurements yet)"
+echo "==> holdout + calibrate provenance tests"
+python3 -m unittest discover -s tests -p 'test_*.py'
+
+echo "==> calibrate stub (coefficients not fitted; no run JSON)"
 python3 calibrate/calibrate.py
 # Composite score must be refused.
 set +e

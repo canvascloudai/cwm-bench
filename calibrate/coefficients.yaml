@@ -1,8 +1,102 @@
-# Empty coefficients. Not a fit. Do not invent numbers here.
-measurement_sha: null
-fit_split: null
-holdout_deltas: null
-created_at: null
+# Provenance stub from owned Admin Benchmarks campaign export
+# 473f1339-f712-4096-96d6-3d4fc07cb427. Not a fit.
+# Do not invent coefficients. metrics.* stay null.
+measurement_sha: 7416cb63ace3a7ab2e3486bb6f132a2dcb574c34
+fit_split:
+  run_ids:
+    - 473f1339-f712-4096-96d6-3d4fc07cb427:idle
+    - 473f1339-f712-4096-96d6-3d4fc07cb427:normal
+    - 473f1339-f712-4096-96d6-3d4fc07cb427:peak
+holdout_deltas:
+  burst:
+    run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:burst
+    campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    origin_run_id: 165c494e-2fa8-4d9a-addd-ddd5f94cdcde:burst
+    measured:
+      goodput: 875.1162528375527
+      p50: 1.9312195
+      p95: 3.71435975
+      p99: 7.017410239999992
+      error_rate: 9.522521716110773e-07
+      app_cpu_avg: 13.36
+      db_cpu: 10.91
+      db_conn_max: 55
+    fit_prediction: null
+    delta: null
+  pool-bound:
+    run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:pool-bound
+    campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    measured:
+      goodput: 875.12
+      p50: 1.93
+      p95: 3.72
+      p99: 7.12
+      error_rate: 0
+      app_cpu_avg: 11.46
+      db_cpu: 9.90
+      db_conn_max: 56
+    fit_prediction: null
+    delta: null
+  app-bound:
+    run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:app-bound
+    campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    measured:
+      goodput: 875.12
+      p50: 1.94
+      p95: 3.73
+      p99: 6.83
+      error_rate: 0
+      app_cpu_avg: 11.67
+      db_cpu: 9.83
+      db_conn_max: 43
+    fit_prediction: null
+    delta: null
+  cpu-only:
+    run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:cpu-only
+    campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    origin_run_id: 83320489-4325-44a1-8a75-9a5acfb6e1f1
+    measured:
+      goodput: 176.92973011451465
+      p50: 57.423296
+      p95: 76.1287563
+      p99: 82.61172944000003
+      error_rate: 0.7978069486304142
+      app_cpu_avg: 51.38
+      db_cpu: 3.14
+      db_conn_max: 0
+    fit_prediction: null
+    delta: null
+  later-day:
+    run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:later-day
+    campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    origin_run_id: 1259e7aa-65c7-4eda-8d42-ffd5ade498e8
+    measured:
+      goodput: 87.62
+      p50: 2.31
+      p95: 4.27
+      p99: 7.91
+      error_rate: 0
+      app_cpu_avg: 1.68
+      db_cpu: 5.16
+      db_conn_max: 10
+    fit_prediction: null
+    delta: null
+  second-region:
+    run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:second-region
+    campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    origin_run_id: ea6a3a45-1f2e-4f7e-810e-764f922935a5
+    measured:
+      goodput: 87.62
+      p50: 2.00
+      p95: 3.84
+      p99: 8.84
+      error_rate: 0
+      app_cpu_avg: 1.57
+      db_cpu: 4.63
+      db_conn_max: 8
+    fit_prediction: null
+    delta: null
+created_at: "2026-09-06T03:44:51.130Z"
 metrics:
   cpu: null
   p50: null

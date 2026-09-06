@@ -1,8 +1,11 @@
 # Provenance schema for per-metric coefficients.
-# Values in coefficients.yaml MUST stay null until a measurement_sha exists.
+# metrics.* MUST stay null until a real per-metric fit exists.
+# holdout_deltas may record measured fields with fit_prediction null
+# (measured-only stub). Do not invent fit_prediction or coefficients.
 #
 # A coefficients change without a new measurement_sha is rejected (CI).
 # Fit is per-metric only. There is no composite-score field on purpose.
+# Burst / diagnostics / later-day / second-region must not appear in fit_split.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 title: cwm-bench coefficients provenance
@@ -14,13 +17,42 @@ required:
   - holdout_deltas
   - created_at
   - metrics
+$defs:
+  measuredFields:
+    type: object
+    additionalProperties: false
+    properties:
+      goodput: { type: ["number", "null"] }
+      p50: { type: ["number", "null"] }
+      p95: { type: ["number", "null"] }
+      p99: { type: ["number", "null"] }
+      error_rate: { type: ["number", "null"] }
+      app_cpu_avg: { type: ["number", "null"] }
+      db_cpu: { type: ["number", "null"] }
+      db_conn_max: { type: ["number", "null"] }
+  holdoutEntry:
+    type: object
+    additionalProperties: false
+    required: [run_id, measured, fit_prediction]
+    properties:
+      run_id: { type: string, minLength: 1 }
+      campaign_id: { type: string, minLength: 1 }
+      origin_run_id: { type: string, minLength: 1 }
+      measured: { $ref: "#/$defs/measuredFields" }
+      fit_prediction:
+        description: Null until a per-metric fit exists. Do not invent.
+        type: ["object", "null"]
+      delta:
+        description: Null when fit_prediction is null.
+        type: ["object", "null"]
 properties:
   measurement_sha:
-    description: Git SHA of the campaign whose fit-split runs produced these coefficients. Null until v1 exists.
+    description: Git SHA of the campaign whose fit-split runs would produce coefficients. Set on a provenance stub; metrics may still be null.
     type: ["string", "null"]
   fit_split:
-    description: Run ids used for the per-metric least-squares fit. Must not include Burst.
+    description: Run ids used for the per-metric least-squares fit. Must not include Burst or other holdouts.
     type: ["object", "null"]
+    additionalProperties: false
     properties:
       run_ids:
         type: array
@@ -28,12 +60,23 @@ properties:
           type: string
     required: [run_ids]
   holdout_deltas:
-    description: Per-metric deltas on holdout runs (Burst, later day, second region). Null until reported.
+    description: >
+      Per-holdout measured values (Burst, diagnostics, later day, second region).
+      Measured-only stubs set fit_prediction and delta to null.
     type: ["object", "null"]
+    additionalProperties: false
+    required: [burst, later-day, second-region]
+    properties:
+      burst: { $ref: "#/$defs/holdoutEntry" }
+      pool-bound: { $ref: "#/$defs/holdoutEntry" }
+      app-bound: { $ref: "#/$defs/holdoutEntry" }
+      cpu-only: { $ref: "#/$defs/holdoutEntry" }
+      later-day: { $ref: "#/$defs/holdoutEntry" }
+      second-region: { $ref: "#/$defs/holdoutEntry" }
   created_at:
     type: ["string", "null"]
   metrics:
-    description: Per-metric coefficient objects. Each metric is fit independently. No composite.
+    description: Per-metric coefficient objects. Each metric is fit independently. No composite. Null on a provenance stub.
     type: object
     additionalProperties: false
     properties:
