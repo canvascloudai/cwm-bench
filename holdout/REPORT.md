@@ -1,16 +1,16 @@
 # Holdout report
 
-**Status: v1 owned campaign present. Coefficients not yet fitted.**
+**Status: v1 owned campaign present. Per-metric OLS fitted on idle/normal/peak.**
 
 Export campaign `473f1339-f712-4096-96d6-3d4fc07cb427` (`cwm-bench-campaign` schemaVersion 1.0.0) completed on `2026-09-06T03:44:51.130Z` with `ownedMeasurement: true` and `cleanupStatus: confirmed`. Adapter `1.2.5`. Every run below is `complete: true`, `knownGap: false`, `invented: false`. Cost is null in the export.
 
 Fit split (trusted, designation `fit`): idle, normal, peak. Holdouts (trusted false by design, valid true): burst, pool-bound, app-bound, cpu-only, later-day, second-region.
 
-`calibrate/coefficients.yaml` is a **provenance stub only**. `measurement_sha` is `7416cb63ace3a7ab2e3486bb6f132a2dcb574c34`. `metrics.*` remain null. `holdout_deltas.*.fit_prediction` is null. Do not invent coefficients. Do not optimize a composite score.
+`calibrate/coefficients.yaml` is a **per-metric OLS fit** of those three rungs. `measurement_sha` is `7416cb63ace3a7ab2e3486bb6f132a2dcb574c34` (same campaign; first fit of these measurements). Each metric is `affine_in_target_rps`: `intercept + slope * target_rps`. Loss is the per-metric sum of squared residuals. There is no composite score. Holdouts were not in the fit; `holdout_deltas.*.fit_prediction` and `delta` (`measured − prediction`) are reported after the fit.
 
 A later coefficients change is allowed only when all of the following are true:
 
-1. `calibrate/coefficients.yaml` carries a new `measurement_sha`.
+1. `calibrate/coefficients.yaml` carries a new `measurement_sha` (new measurements, not a retune to raise a score).
 2. `fit_split` is declared and **Burst was not in the fit set**.
 3. This report's holdout-delta tables stay populated from schema-valid holdout runs.
 4. CI `--check-provenance` passes.
@@ -48,14 +48,18 @@ The three diagnostics **classify** saturation. They do not assert a root cause o
 
 Same topology shape, later UTC day than the fit set (fit rungs on 2026-09-05; this run on 2026-09-06). Worker key `later-day` at 100 RPS. Origin campaign is this export (`473f1339…`); origin run `1259e7aa-65c7-4eda-8d42-ffd5ade498e8`. Region **us-east-2**.
 
-`fit_prediction` and `delta` are blank because coefficients are not fitted.
+`fit_prediction` and `delta` come from the idle/normal/peak OLS (`target_rps` 100). Exact floats are in `calibrate/coefficients.yaml`. Measured cells are the published export values (not invented).
 
 | campaign_id | run_id | date (UTC) | scenario | metric | fit prediction | held-out measured | delta | notes |
-| --- | --- | --- | --- | --- | --- | ---: | --- | --- |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | goodput | null (unfitted) | ~87.62 | null | target 100; 00:32:08–00:47:08Z; errs 0 |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | p50 | null (unfitted) | ~2.31 | null | ms |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | p95 | null (unfitted) | ~4.27 | null | ms |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | p99 | null (unfitted) | ~7.91 | null | ms |
+| --- | --- | --- | --- | --- | ---: | ---: | ---: | --- |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | goodput | 87.6242661085967 | ~87.62 | -0.004266108596695517 | target 100; 00:32:08–00:47:08Z; errs 0 |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | p50 | 2.3786839660705539 | ~2.31 | -0.068683966070553826 | ms |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | p95 | 4.2400055191450274 | ~4.27 | 0.029994480854972139 | ms |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | p99 | 7.0489330189612955 | ~7.91 | 0.8610669810387046 | ms |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | app_cpu_avg | 1.9007264424312253 | ~1.68 | -0.22072644243122541 | % |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | db_cpu | 4.3164102084054212 | ~5.16 | 0.84358979159457892 | % |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | error_rate | 0 | 0 | 0 | fit rungs were all zero |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:later-day | 2026-09-06 | later-day | db_conn_max | 8.9002939735423805 | 10 | 1.0997060264576195 | |
 
 ---
 
@@ -63,14 +67,18 @@ Same topology shape, later UTC day than the fit set (fit rungs on 2026-09-05; th
 
 Same topology shape in **us-west-2**. Worker key `second-region` at 100 RPS. Origin run `ea6a3a45-1f2e-4f7e-810e-764f922935a5`. This apply is a holdout, not a silent default change.
 
-`fit_prediction` and `delta` are blank because coefficients are not fitted.
+`fit_prediction` and `delta` come from the same idle/normal/peak OLS (`target_rps` 100). Exact floats are in `calibrate/coefficients.yaml`. Measured cells are the published export values (not invented).
 
 | campaign_id | run_id | region | scenario | metric | fit prediction | held-out measured | delta | notes |
-| --- | --- | --- | --- | --- | --- | ---: | --- | --- |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | goodput | null (unfitted) | ~87.62 | null | target 100; 2026-09-06T00:53:33–01:08:33Z; errs 0 |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | p50 | null (unfitted) | ~2.00 | null | ms |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | p95 | null (unfitted) | ~3.84 | null | ms |
-| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | p99 | null (unfitted) | ~8.84 | null | ms |
+| --- | --- | --- | --- | --- | ---: | ---: | ---: | --- |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | goodput | 87.6242661085967 | ~87.62 | -0.004266108596695517 | target 100; 2026-09-06T00:53:33–01:08:33Z; errs 0 |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | p50 | 2.3786839660705539 | ~2.00 | -0.37868396607055388 | ms |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | p95 | 4.2400055191450274 | ~3.84 | -0.40000551914502758 | ms |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | p99 | 7.0489330189612955 | ~8.84 | 1.7910669810387043 | ms |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | app_cpu_avg | 1.9007264424312253 | ~1.57 | -0.33072644243122529 | % |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | db_cpu | 4.3164102084054212 | ~4.63 | 0.31358979159457867 | % |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | error_rate | 0 | 0 | 0 | fit rungs were all zero |
+| 473f1339-f712-4096-96d6-3d4fc07cb427 | 473f1339-f712-4096-96d6-3d4fc07cb427:second-region | us-west-2 | second-region | db_conn_max | 8.9002939735423805 | 8 | -0.9002939735423805 | |
 
 ---
 
@@ -125,12 +133,12 @@ Idle/normal/peak: BurstBalance RDS 99, errs 0, fail_rate 0, pool 250, us-east-2.
 
 ## Pass / fail for a coefficients PR
 
-| Check | This stub | Fitted PR |
+| Check | This fitted PR | Later change |
 | --- | --- | --- |
-| New `measurement_sha` | present (`7416cb63ace3a7ab2e3486bb6f132a2dcb574c34`) | required (new SHA) |
+| `measurement_sha` | present (`7416cb63ace3a7ab2e3486bb6f132a2dcb574c34`; first fit of this campaign) | new SHA required if measurements change |
 | Burst in `fit_split` | **pass** (idle / normal / peak only) | **fail** if present |
-| Holdout deltas reported (this file + `coefficients.yaml`) | measured fields present; `fit_prediction` null | required |
-| `metrics.*` fitted | **null** (not a fit) | per-metric only, after a real fit |
+| Holdout deltas reported (this file + `coefficients.yaml`) | measured + `fit_prediction` + `delta` | required |
+| `metrics.*` fitted | per-metric OLS `affine_in_target_rps` | per-metric only |
 | Composite accuracy score optimized or cited as the loss | **fail** | **fail** |
 | Public 2% / 9.55% Burst cell copied as owned | **fail** (not copied) | **fail** |
 | Invented CloudWatch or customers | **fail** | **fail** |

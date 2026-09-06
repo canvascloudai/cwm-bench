@@ -20,7 +20,7 @@ The accuracy page consumes documents that validate against these schemas. It doe
 - Metric fields are `null` or zero. They are **not** the live CWM Burst figures (do not paste 9.55% / 2.00% / 980 / 905 here).
 - CI validates this fixture against the schema.
 
-A file with `isExample: false` under `results/` is treated as a claimed measurement. CI still rejects that path. The owned v1 campaign is published in `holdout/REPORT.md` and the calibrate provenance stub, not as run JSON under `results/`.
+A file with `isExample: false` under `results/` is treated as a claimed measurement. CI still rejects that path. The owned v1 campaign is published in `holdout/REPORT.md` and `calibrate/` (per-metric OLS from those published values), not as run JSON under `results/`.
 
 ## Required provenance
 

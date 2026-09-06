@@ -1,6 +1,10 @@
-# Provenance stub from owned Admin Benchmarks campaign export
-# 473f1339-f712-4096-96d6-3d4fc07cb427. Not a fit.
-# Do not invent coefficients. metrics.* stay null.
+# Per-metric OLS coefficients from owned Admin Benchmarks campaign
+# 473f1339-f712-4096-96d6-3d4fc07cb427.
+# Fit split: idle / normal / peak only. Burst and other holdouts
+# are not in the fit. Form is affine_in_target_rps:
+#   model = intercept + slope * target_rps
+# Loss is per-metric sum of squared residuals. No composite score.
+# Do not copy the public Burst literature cell as owned data.
 measurement_sha: 7416cb63ace3a7ab2e3486bb6f132a2dcb574c34
 fit_split:
   run_ids:
@@ -12,6 +16,7 @@ holdout_deltas:
     run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:burst
     campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
     origin_run_id: 165c494e-2fa8-4d9a-addd-ddd5f94cdcde:burst
+    target_rps: 1000.0
     measured:
       goodput: 875.1162528375527
       p50: 1.9312195
@@ -21,11 +26,28 @@ holdout_deltas:
       app_cpu_avg: 13.36
       db_cpu: 10.91
       db_conn_max: 55
-    fit_prediction: null
-    delta: null
+    fit_prediction:
+      goodput: 875.1212214240352
+      p50: 1.4367253906173447
+      p95: 3.0724163362689842
+      p99: 7.292058040911295
+      error_rate: 0.0
+      app_cpu_avg: 16.997316066317296
+      db_cpu: 13.14780966965979
+      db_conn_max: 85.25257226849584
+    delta:
+      goodput: -0.0049685864825050885
+      p50: 0.49449410938265537
+      p95: 0.6419434137310156
+      p99: -0.2746478009113025
+      error_rate: 9.522521716110773e-07
+      app_cpu_avg: -3.6373160663172968
+      db_cpu: -2.2378096696597893
+      db_conn_max: -30.25257226849584
   pool-bound:
     run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:pool-bound
     campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    target_rps: 1000.0
     measured:
       goodput: 875.12
       p50: 1.93
@@ -33,13 +55,30 @@ holdout_deltas:
       p99: 7.12
       error_rate: 0
       app_cpu_avg: 11.46
-      db_cpu: 9.90
+      db_cpu: 9.9
       db_conn_max: 56
-    fit_prediction: null
-    delta: null
+    fit_prediction:
+      goodput: 875.1212214240352
+      p50: 1.4367253906173447
+      p95: 3.0724163362689842
+      p99: 7.292058040911295
+      error_rate: 0.0
+      app_cpu_avg: 16.997316066317296
+      db_cpu: 13.14780966965979
+      db_conn_max: 85.25257226849584
+    delta:
+      goodput: -0.0012214240351795524
+      p50: 0.4932746093826552
+      p95: 0.647583663731016
+      p99: -0.17205804091129462
+      error_rate: 0.0
+      app_cpu_avg: -5.537316066317295
+      db_cpu: -3.247809669659789
+      db_conn_max: -29.25257226849584
   app-bound:
     run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:app-bound
     campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+    target_rps: 1000.0
     measured:
       goodput: 875.12
       p50: 1.94
@@ -49,12 +88,29 @@ holdout_deltas:
       app_cpu_avg: 11.67
       db_cpu: 9.83
       db_conn_max: 43
-    fit_prediction: null
-    delta: null
+    fit_prediction:
+      goodput: 875.1212214240352
+      p50: 1.4367253906173447
+      p95: 3.0724163362689842
+      p99: 7.292058040911295
+      error_rate: 0.0
+      app_cpu_avg: 16.997316066317296
+      db_cpu: 13.14780966965979
+      db_conn_max: 85.25257226849584
+    delta:
+      goodput: -0.0012214240351795524
+      p50: 0.5032746093826552
+      p95: 0.6575836637310157
+      p99: -0.46205804091129465
+      error_rate: 0.0
+      app_cpu_avg: -5.327316066317296
+      db_cpu: -3.3178096696597894
+      db_conn_max: -42.25257226849584
   cpu-only:
     run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:cpu-only
     campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
     origin_run_id: 83320489-4325-44a1-8a75-9a5acfb6e1f1
+    target_rps: 1000.0
     measured:
       goodput: 176.92973011451465
       p50: 57.423296
@@ -64,12 +120,29 @@ holdout_deltas:
       app_cpu_avg: 51.38
       db_cpu: 3.14
       db_conn_max: 0
-    fit_prediction: null
-    delta: null
+    fit_prediction:
+      goodput: 875.1212214240352
+      p50: 1.4367253906173447
+      p95: 3.0724163362689842
+      p99: 7.292058040911295
+      error_rate: 0.0
+      app_cpu_avg: 16.997316066317296
+      db_cpu: 13.14780966965979
+      db_conn_max: 85.25257226849584
+    delta:
+      goodput: -698.1914913095205
+      p50: 55.98657060938265
+      p95: 73.05633996373102
+      p99: 75.31967139908873
+      error_rate: 0.7978069486304142
+      app_cpu_avg: 34.382683933682706
+      db_cpu: -10.007809669659789
+      db_conn_max: -85.25257226849584
   later-day:
     run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:later-day
     campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
     origin_run_id: 1259e7aa-65c7-4eda-8d42-ffd5ade498e8
+    target_rps: 100.0
     measured:
       goodput: 87.62
       p50: 2.31
@@ -79,29 +152,115 @@ holdout_deltas:
       app_cpu_avg: 1.68
       db_cpu: 5.16
       db_conn_max: 10
-    fit_prediction: null
-    delta: null
+    fit_prediction:
+      goodput: 87.6242661085967
+      p50: 2.378683966070554
+      p95: 4.240005519145027
+      p99: 7.0489330189612955
+      error_rate: 0.0
+      app_cpu_avg: 1.9007264424312253
+      db_cpu: 4.316410208405421
+      db_conn_max: 8.90029397354238
+    delta:
+      goodput: -0.004266108596695517
+      p50: -0.06868396607055383
+      p95: 0.02999448085497214
+      p99: 0.8610669810387046
+      error_rate: 0.0
+      app_cpu_avg: -0.2207264424312254
+      db_cpu: 0.8435897915945789
+      db_conn_max: 1.0997060264576195
   second-region:
     run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:second-region
     campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
     origin_run_id: ea6a3a45-1f2e-4f7e-810e-764f922935a5
+    target_rps: 100.0
     measured:
       goodput: 87.62
-      p50: 2.00
+      p50: 2.0
       p95: 3.84
       p99: 8.84
       error_rate: 0
       app_cpu_avg: 1.57
       db_cpu: 4.63
       db_conn_max: 8
-    fit_prediction: null
-    delta: null
+    fit_prediction:
+      goodput: 87.6242661085967
+      p50: 2.378683966070554
+      p95: 4.240005519145027
+      p99: 7.0489330189612955
+      error_rate: 0.0
+      app_cpu_avg: 1.9007264424312253
+      db_cpu: 4.316410208405421
+      db_conn_max: 8.90029397354238
+    delta:
+      goodput: -0.004266108596695517
+      p50: -0.3786839660705539
+      p95: -0.4000055191450276
+      p99: 1.7910669810387043
+      error_rate: 0.0
+      app_cpu_avg: -0.3307264424312253
+      db_cpu: 0.31358979159457867
+      db_conn_max: -0.9002939735423805
 created_at: "2026-09-06T03:44:51.130Z"
 metrics:
-  cpu: null
-  p50: null
-  p95: null
-  p99: null
-  goodput: null
-  error_by_class: null
-  connections: null
+  cpu:
+    form: affine_in_target_rps
+    app:
+      form: affine_in_target_rps
+      intercept: 0.22332759533277313
+      slope: 0.016773988470984522
+      residual_sum_squares: 0.01951449699215795
+      n_fit: 3
+      predicts: app_cpu_avg
+    db:
+      form: affine_in_target_rps
+      intercept: 3.3351436015993805
+      slope: 0.00981266606806041
+      residual_sum_squares: 0.023244514492060497
+      n_fit: 3
+      predicts: db_cpu
+    note: "Two independent affines on target RPS. Idle/normal app_cpu_avg is the mean of the two published app-host CPUs. Peak uses the published tilde values."
+  p50:
+    form: affine_in_target_rps
+    intercept: 2.483346030009799
+    slope: -0.0010466206393924544
+    residual_sum_squares: 0.06171380824820461
+    n_fit: 3
+    predicts: p50
+  p95:
+    form: affine_in_target_rps
+    intercept: 4.369737650575699
+    slope: -0.0012973213143067147
+    residual_sum_squares: 0.07618288164484673
+    n_fit: 3
+    predicts: p95
+  p99:
+    form: affine_in_target_rps
+    intercept: 7.0219191276335176
+    slope: 0.0002701389132777775
+    residual_sum_squares: 0.1163254921837675
+    n_fit: 3
+    predicts: p99
+  goodput:
+    form: affine_in_target_rps
+    intercept: 0.12460440688130348
+    slope: 0.8749966170171539
+    residual_sum_squares: 4.385796008780582e-07
+    n_fit: 3
+    predicts: goodput
+  error_by_class:
+    form: affine_in_target_rps
+    intercept: 0.0
+    slope: 0.0
+    residual_sum_squares: 0.0
+    n_fit: 3
+    predicts: error_rate
+    note: "Fit rungs idle/normal/peak all have error_rate 0. OLS is the zero model. Per-class counts on the fit split are also zero; there is no non-zero class rate to estimate. Do not import the public Burst literature cell as owned data."
+  connections:
+    form: affine_in_target_rps
+    intercept: 0.4167074963253299
+    slope: 0.0848358647721705
+    residual_sum_squares: 1.3780009799118074
+    n_fit: 3
+    predicts: db_conn_max

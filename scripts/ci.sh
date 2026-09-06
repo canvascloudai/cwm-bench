@@ -5,8 +5,8 @@
 # 2. Fit per-metric only on a declared fit split.
 # 3. Hold out Burst, a later day, and a second region.
 # 4. A coefficients change without a new measurement ID is rejected.
-# 5. v1 owned holdout measurements may be recorded with null metrics.
-#    Do not invent coefficients or copy the public 2%/9.55% cell as owned.
+# 5. v1 owned holdout measurements are fitted per-metric on idle/normal/peak.
+#    Do not invent CloudWatch or copy the public 2%/9.55% cell as owned.
 # 6. BurstBalance=0 is a third error bucket (iops_throttle).
 set -euo pipefail
 
@@ -23,7 +23,7 @@ python3 calibrate/calibrate.py --check-provenance
 echo "==> holdout + calibrate provenance tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
-echo "==> calibrate stub (coefficients not fitted; no run JSON)"
+echo "==> calibrate per-metric OLS (fit_input; coefficients must match)"
 python3 calibrate/calibrate.py
 # Composite score must be refused.
 set +e

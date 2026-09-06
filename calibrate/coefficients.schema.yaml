@@ -1,7 +1,9 @@
 # Provenance schema for per-metric coefficients.
-# metrics.* MUST stay null until a real per-metric fit exists.
+# metrics.* are affine_in_target_rps objects after a real OLS fit on
+# idle/normal/peak, or null on a measured-only stub.
 # holdout_deltas may record measured fields with fit_prediction null
-# (measured-only stub). Do not invent fit_prediction or coefficients.
+# only while metrics.* are still null. After a fit, fit_prediction and
+# delta must be present. Do not invent either.
 #
 # A coefficients change without a new measurement_sha is rejected (CI).
 # Fit is per-metric only. There is no composite-score field on purpose.
@@ -30,6 +32,35 @@ $defs:
       app_cpu_avg: { type: ["number", "null"] }
       db_cpu: { type: ["number", "null"] }
       db_conn_max: { type: ["number", "null"] }
+  affineCoefficients:
+    description: >
+      y = intercept + slope * target_rps, fit by ordinary least squares
+      on that metric alone. residual_sum_squares is L(M) on the fit split.
+    type: object
+    additionalProperties: false
+    required: [form, intercept, slope, residual_sum_squares, n_fit, predicts]
+    properties:
+      form:
+        type: string
+        const: affine_in_target_rps
+      intercept: { type: number }
+      slope: { type: number }
+      residual_sum_squares: { type: number }
+      n_fit: { type: integer, minimum: 2 }
+      predicts: { type: string }
+      note: { type: string }
+  cpuCoefficients:
+    description: Two independent affines (app_cpu_avg and db_cpu). Not a composite.
+    type: object
+    additionalProperties: false
+    required: [form, app, db]
+    properties:
+      form:
+        type: string
+        const: affine_in_target_rps
+      app: { $ref: "#/$defs/affineCoefficients" }
+      db: { $ref: "#/$defs/affineCoefficients" }
+      note: { type: string }
   holdoutEntry:
     type: object
     additionalProperties: false
@@ -38,16 +69,23 @@ $defs:
       run_id: { type: string, minLength: 1 }
       campaign_id: { type: string, minLength: 1 }
       origin_run_id: { type: string, minLength: 1 }
+      target_rps:
+        description: Documented scenario target (idle 10, normal/later-day/second-region 100, peak 500, Burst-class 1000).
+        type: number
       measured: { $ref: "#/$defs/measuredFields" }
       fit_prediction:
         description: Null until a per-metric fit exists. Do not invent.
-        type: ["object", "null"]
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/measuredFields"
       delta:
-        description: Null when fit_prediction is null.
-        type: ["object", "null"]
+        description: measured - fit_prediction. Null when fit_prediction is null.
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/measuredFields"
 properties:
   measurement_sha:
-    description: Git SHA of the campaign whose fit-split runs would produce coefficients. Set on a provenance stub; metrics may still be null.
+    description: Git SHA of the campaign whose fit-split runs produced these coefficients.
     type: ["string", "null"]
   fit_split:
     description: Run ids used for the per-metric least-squares fit. Must not include Burst or other holdouts.
@@ -61,8 +99,8 @@ properties:
     required: [run_ids]
   holdout_deltas:
     description: >
-      Per-holdout measured values (Burst, diagnostics, later day, second region).
-      Measured-only stubs set fit_prediction and delta to null.
+      Per-holdout measured values (Burst, diagnostics, later day, second region)
+      plus fit_prediction and delta after a per-metric fit.
     type: ["object", "null"]
     additionalProperties: false
     required: [burst, later-day, second-region]
@@ -76,17 +114,38 @@ properties:
   created_at:
     type: ["string", "null"]
   metrics:
-    description: Per-metric coefficient objects. Each metric is fit independently. No composite. Null on a provenance stub.
+    description: Per-metric coefficient objects. Each metric is fit independently. No composite.
     type: object
     additionalProperties: false
     properties:
-      cpu: { type: ["object", "null"] }
-      p50: { type: ["object", "null"] }
-      p95: { type: ["object", "null"] }
-      p99: { type: ["object", "null"] }
-      goodput: { type: ["object", "null"] }
-      error_by_class: { type: ["object", "null"] }
-      connections: { type: ["object", "null"] }
+      cpu:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/cpuCoefficients"
+      p50:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/affineCoefficients"
+      p95:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/affineCoefficients"
+      p99:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/affineCoefficients"
+      goodput:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/affineCoefficients"
+      error_by_class:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/affineCoefficients"
+      connections:
+        oneOf:
+          - type: "null"
+          - $ref: "#/$defs/affineCoefficients"
     required:
       - cpu
       - p50

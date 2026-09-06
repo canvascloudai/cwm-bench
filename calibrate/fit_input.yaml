@@ -1,0 +1,63 @@
+# Owned fit-split measurements for per-metric OLS.
+# Copied from holdout/REPORT.md and holdout/exports/473f1339.summary.md.
+# Do not invent CloudWatch. Holdouts are not observations.
+#
+# app_cpu_avg on idle/normal is the mean of the two published app-host
+# CPUs. peak app/db CPU use the published tilde values (8.63 / 8.22);
+# no extra digits are invented.
+#
+# Burst, pool-bound, app-bound, cpu-only, later-day, and second-region
+# must not appear here. They stay in coefficients.yaml holdout_deltas.
+
+measurement_sha: 7416cb63ace3a7ab2e3486bb6f132a2dcb574c34
+campaign_id: 473f1339-f712-4096-96d6-3d4fc07cb427
+source:
+  - holdout/REPORT.md
+  - holdout/exports/473f1339.summary.md
+rungs:
+  - run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:idle
+    split: fit
+    scenario: idle
+    target_rps: 10
+    measured:
+      goodput: 8.874155959479843
+      p50: 2.62841
+      p95: 4.529567800000001
+      p99: 7.238151520000008
+      error_rate: 0
+      app_cpu_avg: 0.4785260097091355
+      db_cpu: 3.337818548370722
+      db_conn_max: 2
+    app_cpu_hosts:
+      - 0.51602637839263
+      - 0.441025641025641
+  - run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:normal
+    split: fit
+    scenario: normal
+    target_rps: 100
+    measured:
+      goodput: 87.62477401512365
+      p50: 2.1881595
+      p95: 4.0283214
+      p99: 6.787357539999996
+      error_rate: 0
+      app_cpu_avg: 1.7935897435897438
+      db_cpu: 4.433338557944269
+      db_conn_max: 8
+    app_cpu_hosts:
+      - 2.059615384615385
+      - 1.5275641025641027
+  - run_id: 473f1339-f712-4096-96d6-3d4fc07cb427:peak
+    split: fit
+    scenario: peak
+    target_rps: 500
+    measured:
+      goodput: 437.62281962650434
+      p50: 1.99503
+      p95: 3.7599577499999994
+      p99: 7.205033059999991
+      error_rate: 0
+      app_cpu_avg: 8.63
+      db_cpu: 8.22
+      db_conn_max: 43
+    notes: "app_cpu_avg and db_cpu are the published ~8.63 / ~8.22 values"

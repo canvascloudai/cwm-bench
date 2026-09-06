@@ -1,4 +1,4 @@
-"""CI provenance checks for measured-only holdout_deltas."""
+"""CI provenance checks for fitted coefficients and honesty gates."""
 
 from __future__ import annotations
 
@@ -89,7 +89,27 @@ class CheckProvenanceTests(unittest.TestCase):
 
     def test_invented_fit_prediction_without_metrics_fails(self) -> None:
         payload = _stub()
+        payload["metrics"] = {name: None for name in payload["metrics"]}
         payload["holdout_deltas"]["burst"]["fit_prediction"] = {"goodput": 905}
+        path = _write(payload)
+        try:
+            self.assertEqual(check_provenance(path), 1)
+        finally:
+            path.unlink()
+
+    def test_fitted_metrics_without_holdout_prediction_fails(self) -> None:
+        payload = _stub()
+        payload["holdout_deltas"]["burst"]["fit_prediction"] = None
+        payload["holdout_deltas"]["burst"]["delta"] = None
+        path = _write(payload)
+        try:
+            self.assertEqual(check_provenance(path), 1)
+        finally:
+            path.unlink()
+
+    def test_incomplete_metrics_fails(self) -> None:
+        payload = _stub()
+        payload["metrics"]["p99"] = None
         path = _write(payload)
         try:
             self.assertEqual(check_provenance(path), 1)
