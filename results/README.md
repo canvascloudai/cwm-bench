@@ -17,6 +17,6 @@ results/raw/{campaign_id}/{run_id}/
 
 ## Honesty
 
-Do not commit a file that claims `isExample: false`. CI searches `results/` for that claim and fails. The owned v1 campaign is published via `holdout/REPORT.md` and `calibrate/coefficients.yaml` (metrics null). The only JSON run document in this repository is `schema/example-run.json` (`isExample: true`), and it is **not** a result.
+Do not commit a file that claims `isExample: false`. CI searches `results/` for that claim and fails. The owned v1 campaign is published via `holdout/REPORT.md` and `calibrate/coefficients.yaml` (per-metric OLS on idle/normal/peak). The only JSON run document in this repository is `schema/example-run.json` (`isExample: true`), and it is **not** a result.
 
 Do not invent CloudWatch numbers, coefficients, customers, or revenue. Do not copy the live CWM Burst cell (9.55% / 2.00%) into this tree as if we measured it.

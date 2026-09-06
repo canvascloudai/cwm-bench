@@ -12,19 +12,19 @@ These rules are also in `README.md` and in comments on `.github/workflows/ci.yml
 2. **Fit per-metric only** (CPU, P50/P95/P99, goodput, error-by-class, connections) on a **declared fit split**.
 3. **Hold out Burst**, plus a later day and a second region.
 4. **Coefficients ship with `measurement_sha`, `fit_split`, `holdout_deltas`.** A coefficients change without a new measurement ID is rejected (CI `--check-provenance`).
-5. **v1 owned campaign is present** in `holdout/REPORT.md`. Coefficients are **not** fitted. Do not invent coefficients. Do not copy the public 2% / 9.55% Burst cell as owned data. Cost from the public price list can be measured.
+5. **v1 owned campaign is present** in `holdout/REPORT.md`. Coefficients are fitted per-metric from owned idle / normal / peak. Do not invent CloudWatch. Do not copy the public 2% / 9.55% Burst cell as owned data. Cost from the public price list can be measured.
 6. **gp2 `BurstBalance` hitting 0 is a third error bucket** (`iops_throttle`), distinct from CPU failures and DB connection failures. Do not fold IOPS throttle into either.
 
 ## What you may add
 
 - Schema-valid runs under `results/raw/{campaign_id}/{run_id}/` from an actual apply + k6 + CloudWatch pull. Never overwrite.
-- Holdout tables in `holdout/REPORT.md` filled from owned campaign exports (v1 `473f1339…` is present).
-- Coefficients **only** with a new `measurement_sha` and reported holdout deltas. Burst must not be in the fit set.
+- Holdout tables in `holdout/REPORT.md` filled from owned campaign exports (v1 `473f1339…` is present; later-day / second-region now include fit predictions).
+- Coefficients **only** from a per-metric fit with a declared `measurement_sha` and reported holdout deltas. Burst must not be in the fit set. Do not retune to raise a composite score.
 - Fixes to terraform, the reference app, or k6 scripts that make the program more reproducible. Say so in the commit. Do not sneak in mix or pool changes that exist to move a score.
 
 ## What you must not add
 
-- Invented CloudWatch numbers, fitted coefficients, customers, or revenue.
+- Invented CloudWatch numbers, invented coefficients, customers, or revenue.
 - A `results/` file with `isExample: false` that is not a real run (CI rejects the claim; do not invent the run either).
 - EXAMPLE fixtures that look like a finished campaign or that reuse the live CWM Burst figures (9.55% / 2.00% / 980 / 905) as if we measured them.
 - Comments that assert a root cause of the public Burst gap. The diagnostics **classify**; they do not close the gap.
@@ -32,7 +32,7 @@ These rules are also in `README.md` and in comments on `.github/workflows/ci.yml
 
 ## PR checklist
 
-- [ ] `bash scripts/ci.sh` passes (terraform fmt/validate, schema EXAMPLE, k6 inspect, calibrate stub, results honesty, worker-adapter tests).
+- [ ] `bash scripts/ci.sh` passes (terraform fmt/validate, schema EXAMPLE, k6 inspect, calibrate OLS, results honesty, worker-adapter tests).
 - [ ] Burst completeness comes from a real collect (required CloudWatch + k6 summary). Do not invent a campaign. Do not copy the public 2% / 9.55% cell as owned data.
 - [ ] No composite-score work.
 - [ ] New coefficients ⇒ new `measurement_sha` + holdout deltas + Burst not in fit.

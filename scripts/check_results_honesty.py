@@ -2,8 +2,9 @@
 """Reject claimed measurements under results/.
 
 Honesty: do not commit a file that claims isExample=false under results/.
-The v1 owned campaign is published in holdout/ and calibrate/. EXAMPLE
-fixtures live in schema/, not here.
+The v1 owned campaign is published in holdout/ and calibrate/ (fitted
+per-metric from those published values). EXAMPLE fixtures live in
+schema/, not here.
 """
 
 from __future__ import annotations

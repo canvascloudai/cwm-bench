@@ -4,7 +4,7 @@ Versioned, reproducible **measurement program** for [Cloud World Model](https://
 
 The public accuracy page (`GET https://www.cloudworldmodel.ai/api/accuracy-benchmark`) **consumes this dataset. It does not get to vote on it.**
 
-**v1 owned campaign exists** (`473f1339-f712-4096-96d6-3d4fc07cb427`, filled in `holdout/REPORT.md`). Burst on this CRUD workload measured **≈ 0% errors**. Coefficients are **not fitted yet** (`calibrate/coefficients.yaml` `metrics.*` remain null). Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell as owned data. `results/` still has no `isExample: false` run JSON (CI rejects that path).
+**v1 owned campaign exists** (`473f1339-f712-4096-96d6-3d4fc07cb427`, filled in `holdout/REPORT.md`). Burst on this CRUD workload measured **≈ 0% errors**. Coefficients are **fitted per-metric** by OLS on idle / normal / peak only (`calibrate/coefficients.yaml`). Holdouts report `fit_prediction` and `delta`. Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell as owned data. `results/` still has no `isExample: false` run JSON (CI rejects that path).
 
 Public source of this program: [github.com/canvascloudai/cwm-bench](https://github.com/canvascloudai/cwm-bench). Origin namespace: `cloudworldmodel` (name the repo `cwm-bench`).
 
@@ -23,11 +23,11 @@ Live as of **2026-08-29**: `overallScore` **94.7%**. The hole is Burst at **1000
 
 The 2% is cited as RDS connection timeout (~500 max connections) from **AWS documentation**, not a company-owned CloudWatch run. Coefficients on that page are least-squares-fit to documented scenarios. That public 9.55% cell is **not** owned data.
 
-This repo now holds an owned v1 campaign. On this CRUD workload, Burst-class canonical / pool-bound / app-bound runs measured ≈ **0% errors**. That does **not** match the public 2% literature cell. Do not add a CPU-error term for CRUD Burst. cpu-only shows CPU can fail when forced. Coefficients are not fitted. Do **not** retune anything to raise 94.7%.
+This repo now holds an owned v1 campaign. On this CRUD workload, Burst-class canonical / pool-bound / app-bound runs measured ≈ **0% errors**. That does **not** match the public 2% literature cell. Do not add a CPU-error term for CRUD Burst. cpu-only shows CPU can fail when forced. Coefficients are a per-metric OLS fit of idle / normal / peak. Do **not** retune anything to raise 94.7%.
 
 The owned campaign's primary region was **us-east-2** (not the us-east-1 pin below). Second-region holdout was **us-west-2**.
 
-This repository is the program that produced that dataset: terraform for the topology, a tiny reference app, k6 rungs and diagnostics, schemas the accuracy page must ingest, a calibration provenance stub that refuses a composite score, and a filled holdout report.
+This repository is the program that produced that dataset: terraform for the topology, a tiny reference app, k6 rungs and diagnostics, schemas the accuracy page must ingest, a per-metric OLS fitter that refuses a composite score, and a filled holdout report.
 
 ## Honesty rules
 
@@ -37,7 +37,7 @@ Also in `CONTRIBUTING.md` and in comments on CI.
 2. Fit per-metric only (CPU, P50/P95/P99, goodput, error-by-class, connections) on a declared fit split.
 3. Hold out Burst, plus a later day and a second region.
 4. Coefficients ship with measurement SHA, fit split, holdout deltas. A coefficients change without a new measurement ID is rejected.
-5. v1 owned campaign is present in `holdout/REPORT.md`. Coefficients are **not** fitted. Do not invent coefficients. Do not copy the public 2% / 9.55% Burst cell as owned data. Cost from the public price list can be measured.
+5. v1 owned campaign is present in `holdout/REPORT.md`. Coefficients are fitted per-metric from owned idle / normal / peak. Do not invent CloudWatch. Do not copy the public 2% / 9.55% Burst cell as owned data. Cost from the public price list can be measured.
 6. gp2 `BurstBalance` hitting 0 is a **third** error bucket (`iops_throttle`), distinct from CPU failures and DB connection failures. Do not fold IOPS throttle into either.
 
 ## Canonical topology
@@ -89,8 +89,8 @@ load/         k6 scenarios + diagnostics + later-day / second-region holdout key
 terraform/    Canonical topology (AWS provider 5.x). fmt/validate in CI; no apply.
 schema/       draft 2020-12. EXAMPLE fixtures only (isExample: true).
 results/      README + .gitkeep. No runs.
-calibrate/    Provenance stub (measurement_sha + holdout measured; metrics.* null). Refuses composite scores.
-holdout/      REPORT.md filled from owned campaign 473f1339…; coefficients not fitted.
+calibrate/    Per-metric OLS (idle/normal/peak). Holdout deltas reported. Refuses composite scores.
+holdout/      REPORT.md filled from owned campaign 473f1339…; later-day / second-region predictions from the fit.
 scripts/      ci.sh + worker-adapter.mjs (Admin Benchmarks worker contract)
 ```
 
@@ -117,9 +117,10 @@ counts) or it fails with `COLLECT_INCOMPLETE`. Empty CloudWatch stays
 null. Nothing is invented. See `scripts/README.md`.
 
 The Admin Benchmarks v1 campaign is collected (see `holdout/REPORT.md`).
-Burst-class CRUD error on that workload is ≈ 0%. Coefficients are not
-fitted. The adapter still requires a complete collect for burst; it will
-not write fake CloudWatch into `results/`.
+Burst-class CRUD error on that workload is ≈ 0%. Coefficients are a
+per-metric OLS fit of idle / normal / peak. The adapter still requires
+a complete collect for burst; it will not write fake CloudWatch into
+`results/`.
 
 App check used by the worker and CI:
 
@@ -185,7 +186,7 @@ The only JSON run document in this repository today is `schema/example-run.json`
 4. Fill `holdout/REPORT.md`. A coefficients PR without those deltas, or with Burst in the fit set, is rejected.
 5. The accuracy page reads this dataset. It does not average it with documentation citations to hide Burst.
 
-v1 holdout measurements are recorded. `coefficients.yaml` is a provenance stub (`metrics.*` null, `fit_prediction` null). The fitter is not implemented: `python3 calibrate/calibrate.py` still prints `no measurements yet` when no run JSON is passed. `--composite-score` exits non-zero.
+v1 holdout measurements are recorded. `coefficients.yaml` is a per-metric OLS fit of idle / normal / peak (`metrics.*` non-null; holdout `fit_prediction` / `delta` present). `python3 calibrate/calibrate.py` recomputes that fit from `calibrate/fit_input.yaml` and checks the committed file. `--composite-score` exits non-zero.
 
 ## Status of v1
 
@@ -196,8 +197,8 @@ v1 holdout measurements are recorded. `coefficients.yaml` is a provenance stub (
 | k6 rungs + diagnostics | Present |
 | Run / campaign schemas | Present (EXAMPLE fixture only) |
 | Raw results | None under `results/` (CI still rejects `isExample: false`) |
-| Coefficients | Provenance stub only; `metrics.*` **null**; not fitted |
-| Holdout tables | Filled from owned campaign `473f1339-f712-4096-96d6-3d4fc07cb427` |
+| Coefficients | Per-metric OLS on idle / normal / peak; `metrics.*` fitted |
+| Holdout tables | Filled from owned campaign `473f1339-f712-4096-96d6-3d4fc07cb427`; predictions + deltas |
 | Burst | Owned CRUD Burst-class error ≈ **0%** on this workload (not the public 2% / 9.55% cell) |
 
 ## CI
@@ -207,9 +208,9 @@ GitHub Actions (`.github/workflows/ci.yml`) and `bash scripts/ci.sh`:
 - terraform fmt + validate (**no apply**)
 - schema-validate EXAMPLE fixtures
 - `k6 inspect` on load scripts
-- calibrate provenance (measured-only holdout_deltas allowed; Burst not in fit_split)
-- holdout v1 tests (REPORT filled, metrics null, no owned 9.55)
-- calibrate stub + refuse composite score
+- calibrate provenance (fitted metrics + holdout deltas; Burst not in fit_split)
+- holdout v1 tests (REPORT filled, metrics fitted, no owned 9.55)
+- calibrate OLS reproducibility + refuse composite score
 - reject `results/` files that claim `isExample: false`
 - worker-adapter unit tests (AWS mocked; no fabricated campaign)
 
