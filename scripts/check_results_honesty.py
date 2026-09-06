@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Reject claimed measurements under results/.
 
-Honesty: until v1 exists, nobody commits a file that claims isExample=false
-(a "measured" document that would be fake). EXAMPLE fixtures live in schema/,
-not here.
+Honesty: do not commit a file that claims isExample=false under results/.
+The v1 owned campaign is published in holdout/ and calibrate/. EXAMPLE
+fixtures live in schema/, not here.
 """
 
 from __future__ import annotations
@@ -54,7 +54,7 @@ def main() -> int:
     if bad:
         print(
             "results/ contains a claimed measurement (isExample=false). "
-            "v1 data does not exist. Do not commit fake runs:",
+            "Do not commit run JSON here; publish via holdout/:",
             file=sys.stderr,
         )
         for item in bad:

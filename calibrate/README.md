@@ -1,6 +1,6 @@
 # Calibration
 
-Stub only. **v1 measurements do not exist.** This directory must not grow fitted numbers until a campaign with a `measurement_sha` lands.
+Provenance stub for the owned v1 campaign. **Coefficients are not fitted.** `metrics.*` stay null. Do not invent numbers here.
 
 ## Intended loss
 
@@ -19,16 +19,16 @@ Hold out:
 - a later day
 - a second region
 
-Those appear in `holdout_deltas` after a fit, never in the fit set.
+Those appear in `holdout_deltas` as **measured** fields. `fit_prediction` stays null until a real per-metric fit exists.
 
 ## What the stub does
 
 ```bash
 python3 calibrate/calibrate.py
-# -> no measurements yet   (exit 0)
+# -> no measurements yet   (exit 0; no run JSON + no fitter)
 
 python3 calibrate/calibrate.py --check-provenance
-# -> exit 0 while coefficients.yaml is all null
+# -> exit 0 for the measured-only provenance stub (metrics.* null)
 
 python3 calibrate/calibrate.py --composite-score
 # -> exit 2, refuses
@@ -40,16 +40,16 @@ If you pass run JSON files, `isExample: true` documents are ignored. Real runs w
 
 `coefficients.yaml` and `coefficients.schema.yaml` require:
 
-| Field | Now | Later |
+| Field | Now (v1 stub) | After a fit |
 | --- | --- | --- |
-| `measurement_sha` | `null` | SHA of the campaign |
-| `fit_split` | `null` | run ids (no Burst) |
-| `holdout_deltas` | `null` | per-metric holdout deltas |
-| `created_at` | `null` | timestamp |
-| `metrics.*` | `null` | per-metric coefficients |
+| `measurement_sha` | `7416cb63ace3a7ab2e3486bb6f132a2dcb574c34` | SHA of the campaign |
+| `fit_split` | idle / normal / peak run ids (no Burst) | run ids (no Burst) |
+| `holdout_deltas` | measured fields; `fit_prediction` **null** | per-metric holdout deltas |
+| `created_at` | `2026-09-06T03:44:51.130Z` | timestamp |
+| `metrics.*` | **null** | per-metric coefficients |
 
-A coefficients change without a new `measurement_sha` is rejected by `--check-provenance` and by CI.
+A coefficients change without a new `measurement_sha` is rejected by `--check-provenance` and by CI. Burst in `fit_split` fails. Invented `fit_prediction` while `metrics.*` are null fails.
 
 ## Accuracy page
 
-The accuracy page **consumes** this dataset. It does not vote on coefficients. Until v1 exists, Burst stays a known gap. Do not retune anything to raise 94.7%.
+The accuracy page **consumes** this dataset. It does not vote on coefficients. Do not retune anything to raise 94.7%. The public 2% / 9.55% Burst cell is not owned data. Owned CRUD Burst-class error on this workload is ≈ 0%.

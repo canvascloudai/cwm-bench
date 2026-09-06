@@ -8,13 +8,13 @@ Honesty rules (also in README, CONTRIBUTING, and CI):
   3. Hold out Burst, plus a later day and a second region.
   4. Coefficients ship with measurement SHA, fit split, holdout deltas.
      A coefficients change without a new measurement ID is rejected.
-  5. Until v1 measurements exist: keep Burst error visible as a known
-     gap OR leave the floor failing. Do not label latency/CPU/throughput/
-     error as "measured". Cost from the price list can be measured.
+  5. v1 owned holdout measurements may be recorded with null metrics.
+     Do not invent coefficients. Do not copy the public 2%/9.55% cell
+     as owned data. Cost from the price list can be measured.
   6. gp2 BurstBalance hitting 0 is a THIRD error bucket, distinct from
      CPU failures and DB connection failures.
 
-Intended loss (documented, not computed — there are no measurements yet):
+Intended loss (documented, not computed — coefficients are not fitted):
 
     For each metric M in {cpu, p50, p95, p99, goodput, error_by_class, connections}:
         L(M) = sum_{run in fit_split} (model(M, run) - measured(M, run))^2
@@ -24,16 +24,19 @@ Intended loss (documented, not computed — there are no measurements yet):
     coefficients that raise a composite accuracy score.
 
     Burst runs, later-day runs, and second-region runs are holdout.
-    They appear only in holdout_deltas after a fit exists.
+    They appear in holdout_deltas. Measured-only stubs set
+    fit_prediction to null.
 
 This script:
   * Reads schema-valid runs from --runs (default: no files).
   * Refuses to compute or optimize a composite accuracy score
     (exit 2 if asked).
   * Would fit per-metric on split=fit only; currently prints
-    "no measurements yet" and exits 0.
-  * --check-provenance rejects coefficients.yaml that has any
-    non-null metric without a measurement_sha.
+    "no measurements yet" and exits 0 (no run JSON + no fitter).
+  * --check-provenance validates coefficients.yaml against the
+    provenance schema, rejects Burst in fit_split, rejects fitted
+    metrics without a measurement_sha, and allows measured-only
+    holdout_deltas (fit_prediction null while metrics.* are null).
 """
 
 from __future__ import annotations
@@ -51,7 +54,19 @@ except ImportError:  # pragma: no cover - CI installs PyYAML
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COEFFICIENTS_PATH = Path(__file__).resolve().parent / "coefficients.yaml"
+COEFFICIENTS_SCHEMA_PATH = Path(__file__).resolve().parent / "coefficients.schema.yaml"
 RUN_SCHEMA_PATH = REPO_ROOT / "schema" / "run.schema.json"
+
+HOLDOUT_FIT_FORBIDDEN = frozenset(
+    {
+        "burst",
+        "pool-bound",
+        "app-bound",
+        "cpu-only",
+        "later-day",
+        "second-region",
+    }
+)
 
 COMPOSITE_FLAGS = (
     "composite",
@@ -97,6 +112,46 @@ def load_runs(paths: list[Path]) -> list[dict]:
     return runs
 
 
+def run_id_scenario(run_id: str) -> str:
+    token = str(run_id).strip()
+    if ":" in token:
+        token = token.rsplit(":", 1)[-1]
+    return token.lower()
+
+
+def holdout_ids_in_fit(fit_split: object) -> list[str]:
+    if not isinstance(fit_split, dict):
+        return []
+    bad: list[str] = []
+    for run_id in fit_split.get("run_ids") or []:
+        if run_id_scenario(run_id) in HOLDOUT_FIT_FORBIDDEN:
+            bad.append(str(run_id))
+    return bad
+
+
+def any_holdout_prediction(deltas: object) -> bool:
+    if not isinstance(deltas, dict):
+        return False
+    for entry in deltas.values():
+        if isinstance(entry, dict) and entry.get("fit_prediction") is not None:
+            return True
+    return False
+
+
+def validate_coefficients_schema(payload: dict) -> list[str]:
+    if yaml is None:
+        return ["PyYAML is required to load coefficients.schema.yaml"]
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        return []
+    schema = yaml.safe_load(COEFFICIENTS_SCHEMA_PATH.read_text())
+    return [
+        f"{e.json_path}: {e.message}"
+        for e in Draft202012Validator(schema).iter_errors(payload)
+    ]
+
+
 def check_provenance(path: Path) -> int:
     if yaml is None:
         print("PyYAML is required for --check-provenance", file=sys.stderr)
@@ -106,9 +161,23 @@ def check_provenance(path: Path) -> int:
         print(f"{path}: not a mapping", file=sys.stderr)
         return 1
 
+    schema_errors = validate_coefficients_schema(payload)
+    if schema_errors:
+        print(f"{path}: coefficients schema failed", file=sys.stderr)
+        for err in schema_errors:
+            print(f"  {err}", file=sys.stderr)
+        return 1
+
     metrics = payload.get("metrics") or {}
     any_fit = any(metrics.get(name) is not None for name in metrics)
     sha = payload.get("measurement_sha")
+    fit_split = payload.get("fit_split")
+    holdout_deltas = payload.get("holdout_deltas")
+    created_at = payload.get("created_at")
+    provenance_started = any(
+        value is not None for value in (sha, fit_split, holdout_deltas, created_at)
+    )
+
     if any_fit and not sha:
         print(
             f"{path}: coefficients present without measurement_sha "
@@ -116,12 +185,39 @@ def check_provenance(path: Path) -> int:
             file=sys.stderr,
         )
         return 1
-    if any_fit and payload.get("fit_split") is None:
+    if (any_fit or provenance_started) and fit_split is None:
         print(f"{path}: coefficients present without fit_split", file=sys.stderr)
         return 1
-    if any_fit and payload.get("holdout_deltas") is None:
+    if (any_fit or provenance_started) and holdout_deltas is None:
         print(
             f"{path}: coefficients present without holdout_deltas",
+            file=sys.stderr,
+        )
+        return 1
+    if provenance_started and not sha:
+        print(
+            f"{path}: provenance fields set without measurement_sha "
+            "(a coefficients change without a new measurement ID is rejected)",
+            file=sys.stderr,
+        )
+        return 1
+    if provenance_started and created_at is None:
+        print(f"{path}: provenance fields set without created_at", file=sys.stderr)
+        return 1
+
+    forbidden = holdout_ids_in_fit(fit_split)
+    if forbidden:
+        print(
+            f"{path}: Burst/holdout run id in fit_split (hold Burst out): "
+            + ", ".join(forbidden),
+            file=sys.stderr,
+        )
+        return 1
+
+    if not any_fit and any_holdout_prediction(holdout_deltas):
+        print(
+            f"{path}: fit_prediction set while metrics.* are null "
+            "(measured-only stub; do not invent predictions)",
             file=sys.stderr,
         )
         return 1
