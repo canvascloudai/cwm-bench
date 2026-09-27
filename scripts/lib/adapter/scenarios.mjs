@@ -1,4 +1,4 @@
-import { PRIMARY_REGION, SECOND_REGION } from './version.mjs';
+import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
 
 /**
  * Campaign matrix implemented by this adapter.
@@ -24,7 +24,34 @@ export const SCENARIO_KEYS = Object.freeze([
   'cpu-only',
   'later-day',
   'second-region',
+  'typical-fit-20',
+  'typical-fit-100',
+  'typical-fit-200',
+  'typical-holdout-300',
+  'typical-saturation-500',
 ]);
+
+function typicalScenario(key, rps, split, kind, optionalRung) {
+  const required = optionalRung ? 'optional' : 'required';
+  return {
+    key,
+    kind,
+    rps,
+    split,
+    regionRole: 'primary',
+    requiredRegion: TYPICAL_REGION,
+    workload: { script: 'typical.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'typical',
+    expectedWorkers: 2,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    description: optionalRung
+      ? `Typical profile saturation rung at ${rps} total RPS (holdout, diagnostic, ${required}). Requires app_profile=typical, app_workers=2, and Terraform region ${TYPICAL_REGION}.`
+      : `Typical profile ${split} rung at ${rps} total RPS (${required}). Requires app_profile=typical, app_workers=2, and Terraform region ${TYPICAL_REGION}.`,
+  };
+}
 
 const DEFINITIONS = {
   idle: {
@@ -152,6 +179,11 @@ const DEFINITIONS = {
     description:
       'Second-region holdout in us-west-2. Distinct scenario key and k6 SCENARIO=second-region. Setup fails if Terraform region is us-east-1. Not a rename of the primary-region run.',
   },
+  'typical-fit-20': typicalScenario('typical-fit-20', 20, 'fit', 'rung', false),
+  'typical-fit-100': typicalScenario('typical-fit-100', 100, 'fit', 'rung', false),
+  'typical-fit-200': typicalScenario('typical-fit-200', 200, 'fit', 'rung', false),
+  'typical-holdout-300': typicalScenario('typical-holdout-300', 300, 'holdout', 'holdout', false),
+  'typical-saturation-500': typicalScenario('typical-saturation-500', 500, 'holdout', 'diagnostic', true),
 };
 
 export function scenariosRequiringCompleteCollect() {
@@ -256,6 +288,47 @@ export function assertExpectedPool(spec, poolSize) {
       `scenario ${spec.key} expects APP_POOL_SIZE=${spec.expectedPoolSize}; /api/meta reported ${poolSize}. Re-apply terraform; do not pretend the other pool topology produced this run.`
     );
     err.code = 'POOL_MISMATCH';
+    throw err;
+  }
+}
+
+export function reportedProfile(meta) {
+  if (meta && typeof meta.profile === 'string' && meta.profile.length > 0) return meta.profile;
+  return 'lean';
+}
+
+export function reportedWorkers(meta) {
+  if (meta && meta.workers != null && meta.workers !== '') {
+    const workers = Number(meta.workers);
+    if (Number.isFinite(workers)) return workers;
+  }
+  return 1;
+}
+
+export function assertExpectedProfile(spec, meta) {
+  const expectedProfile = spec.expectedProfile || 'lean';
+  const expectedWorkers = spec.expectedWorkers == null ? 1 : spec.expectedWorkers;
+  const profile = reportedProfile(meta);
+  const workers = reportedWorkers(meta);
+  if (profile !== expectedProfile || workers !== expectedWorkers) {
+    const err = new Error(
+      `scenario ${spec.key} expects profile ${expectedProfile} with ${expectedWorkers} worker(s); ` +
+        `/api/meta reported profile ${profile} with ${workers} worker(s). ` +
+        'Refusing to run a lean scenario on a typical stack or a typical scenario on a lean stack.'
+    );
+    err.code = 'PROFILE_MISMATCH';
+    throw err;
+  }
+}
+
+export function assertTypicalRegion(spec, region) {
+  if (spec.expectedProfile !== 'typical') return;
+  const required = spec.requiredRegion || TYPICAL_REGION;
+  if (region !== required) {
+    const err = new Error(
+      `scenario ${spec.key} requires Terraform region ${required}; resolved region is ${region || 'unset'}.`
+    );
+    err.code = 'TYPICAL_REGION_CONSTRAINT';
     throw err;
   }
 }

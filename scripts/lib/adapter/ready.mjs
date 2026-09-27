@@ -25,7 +25,7 @@ function capabilityPayload() {
       description: spec.description,
     })),
     matrixNote:
-      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured.',
+      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical, app_workers=2, in us-east-2.',
     primaryRegion: PRIMARY_REGION,
     secondRegion: SECOND_REGION,
     knownGaps: [],
@@ -37,6 +37,61 @@ function capabilityPayload() {
       laterDayIsAliasOfNormal: false,
       secondRegionIsAliasOfPrimary: false,
     },
+  };
+}
+
+function parseJsonObjects(text) {
+  const src = String(text || '');
+  const found = [];
+  for (let i = 0; i < src.length; i += 1) {
+    if (src[i] !== '{') continue;
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    for (let j = i; j < src.length; j += 1) {
+      const ch = src[j];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (ch === '\\') escaped = true;
+        else if (ch === '"') inString = false;
+        continue;
+      }
+      if (ch === '"') inString = true;
+      else if (ch === '{') depth += 1;
+      else if (ch === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          try {
+            found.push(JSON.parse(src.slice(i, j + 1)));
+          } catch {
+            // Ignore non-JSON braces in curl errors.
+          }
+          i = j;
+          break;
+        }
+      }
+    }
+  }
+  return found;
+}
+
+export function metaFromStdout(text) {
+  const objects = parseJsonObjects(text).filter(
+    (obj) => obj && typeof obj === 'object' && (
+      Object.prototype.hasOwnProperty.call(obj, 'poolSize') ||
+      Object.prototype.hasOwnProperty.call(obj, 'profile') ||
+      Object.prototype.hasOwnProperty.call(obj, 'gitSha')
+    )
+  );
+  return objects.length ? objects[objects.length - 1] : null;
+}
+
+function appNodeReport(instanceId, meta) {
+  return {
+    instanceId,
+    profile: meta && Object.prototype.hasOwnProperty.call(meta, 'profile') ? meta.profile : null,
+    workers: meta && Object.prototype.hasOwnProperty.call(meta, 'workers') ? meta.workers : null,
+    gitSha: meta && Object.prototype.hasOwnProperty.call(meta, 'gitSha') ? meta.gitSha : null,
   };
 }
 
@@ -267,8 +322,9 @@ export async function waitReady(ctx) {
     controller,
   );
 
+  const appNodes = [];
   for (const instanceId of outputs.appInstanceIds) {
-    await retryReadiness(
+    const invocation = await retryReadiness(
       `app ${instanceId} health`,
       () => runRemoteShell(runAws, {
         instanceId,
@@ -284,8 +340,10 @@ export async function waitReady(ctx) {
     }),
       controller,
     );
+    appNodes.push(appNodeReport(instanceId, metaFromStdout(invocation && invocation.stdout)));
   }
 
+  payload.appNodes = appNodes;
   payload.ready.appHealth = true;
   return payload;
 }

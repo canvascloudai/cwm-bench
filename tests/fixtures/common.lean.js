@@ -140,12 +140,3 @@ export function handleRunSummary(data) {
     [`${dir}/summary.json`]: JSON.stringify(data, null, 2),
   };
 }
-
-// Typical-profile rungs (total RPS through the ALB). The RPS object above is unchanged.
-export const TYPICAL_RPS = Object.freeze({
-  'typical-fit-20': 20,
-  'typical-fit-100': 100,
-  'typical-fit-200': 200,
-  'typical-holdout-300': 300,
-  'typical-saturation-500': 500,
-});

@@ -41,6 +41,8 @@ python3 scripts/validate_schema.py
 echo "==> app syntax (Node)"
 if command -v node >/dev/null 2>&1; then
   (cd app && npm ci --ignore-scripts && npm run check)
+  echo "==> app-typical syntax (Node)"
+  (cd app-typical && npm ci --omit=dev --ignore-scripts && npm run check)
 else
   echo "node not installed; skip app syntax" >&2
 fi
@@ -58,10 +60,12 @@ if command -v k6 >/dev/null 2>&1; then
   export TARGET="${TARGET:-http://cwm-bench.example.invalid}"
   if k6 inspect load/scenarios.js >/dev/null 2>&1; then
     k6 inspect load/diagnostics.js >/dev/null
+    k6 inspect load/typical.js >/dev/null
   else
     # Older k6 builds may lack inspect; archive still parses init.
     k6 archive load/scenarios.js -O /tmp/cwm-scenarios.tar >/dev/null
     k6 archive load/diagnostics.js -O /tmp/cwm-diagnostics.tar >/dev/null
+    k6 archive load/typical.js -O /tmp/cwm-typical.tar >/dev/null
   fi
 else
   echo "k6 not installed; skip k6 inspect" >&2
@@ -75,6 +79,14 @@ if command -v terraform >/dev/null 2>&1; then
 else
   echo "terraform not installed; skip terraform" >&2
   exit 1
+fi
+
+echo "==> app-typical correctness against MySQL 8.0 (docker, if available)"
+if { command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; } \
+  || { command -v sudo >/dev/null 2>&1 && sudo docker info >/dev/null 2>&1; }; then
+  node tests/typical/correctness.mjs
+else
+  echo "docker unavailable; skip app-typical mysql correctness" >&2
 fi
 
 echo "CI passed"
