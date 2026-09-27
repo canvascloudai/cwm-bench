@@ -28,10 +28,10 @@ Placeholders you must fill in:
 - An AWS account Kevin controls, with credentials allowed to create and destroy EC2, VPC, ELBv2, RDS, IAM roles and instance profiles, SSM parameters and CloudWatch dashboards. Also read access to CloudWatch metrics, and SSM `SendCommand`.
 - **Region: us-east-2.** Set it everywhere (section 3).
 - Tools: Terraform 1.9.8 (pinned in `terraform/.terraform-version`), Node 20, git, AWS CLI v2.
-- Cost guard set up **before** apply:
-  - An AWS Budgets alert on the account at USD 50.
-  - A hard wall-clock limit: **destroy no later than 6 hours after `terraform apply` starts, whatever state the campaign is in.**
-  - Expected spend [estimate]: about USD 0.63 per hour at list price (ALB 0.0225 + 2 × m5.large 0.096 + db.r5.large 0.24 + c6i.xlarge about 0.17, the last one unverified). That is about 3 to 4.5 hours in total, roughly USD 3 to 5.
+- Cost guard:
+  - No budget alert and no time limit. Take as long as the runs need.
+  - Expected spend [estimate]: about USD 0.63 per hour while the stack is up at list price (ALB 0.0225 + 2 × m5.large 0.096 + db.r5.large 0.24 + c6i.xlarge about 0.17, the last one unverified).
+  - Tear down as soon as the last run is collected or the campaign stops for any reason. Do not leave the stack up between sessions.
 - One isolated working directory per campaign. Do not share it with any other campaign (terraform/README.md, "work-directory isolation").
 
 ## 3. Setup
@@ -98,7 +98,7 @@ Run these in this order, one at a time, all in the same apply:
 | 2 | `typical-fit-100` | 100 | fit | yes |
 | 3 | `typical-fit-200` | 200 | fit | yes |
 | 4 | `typical-holdout-300` | 300 | holdout | yes |
-| 5 | `typical-saturation-500` | 500 | holdout (diagnostic) | **optional**: only if keys 1–4 all collected OK and more than 1 hour remains before the 6-hour limit |
+| 5 | `typical-saturation-500` | 500 | holdout (diagnostic) | **optional**: only if keys 1-4 all collected OK |
 
 For each key:
 
