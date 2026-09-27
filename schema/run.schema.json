@@ -46,8 +46,8 @@
     },
     "scenario": {
       "type": "string",
-      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic"],
-      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal."
+      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic", "typical-fit-20", "typical-fit-100", "typical-fit-200", "typical-holdout-300", "typical-saturation-500"],
+      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal. typical-* keys are the flag-gated typical profile."
     },
     "notes": { "type": "string" },
     "gitSha": {
@@ -138,7 +138,18 @@
       "properties": {
         "name": { "type": "string" },
         "poolSize": { "type": "integer" },
-        "queueLimit": { "type": "integer" }
+        "queueLimit": { "type": "integer" },
+        "profile": {
+          "type": "string",
+          "enum": ["lean", "typical"],
+          "description": "Workload profile copied onto the app nodes. Absent on documents written before the typical profile existed."
+        },
+        "workers": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Node worker processes per app server. The primary process does not serve."
+        }
       }
     },
     "database": {
@@ -164,13 +175,15 @@
     },
     "requestMix": {
       "type": "object",
-      "required": ["getProductPct", "listPct", "writePct"],
+      "minProperties": 1,
+      "description": "Lean documents use getProductPct, listPct, and writePct. Typical documents may instead use a route-share map whose extra keys are percents.",
       "properties": {
         "getProductPct": { "type": "number" },
         "listPct": { "type": "number" },
         "writePct": { "type": "number" },
         "notes": { "type": "string" }
-      }
+      },
+      "additionalProperties": { "type": "number" }
     },
     "concurrency": {
       "type": "object",

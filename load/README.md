@@ -8,7 +8,8 @@ Pinned on the generator by terraform: **k6 v0.54.0** (`var.k6_version`).
 | --- | --- |
 | `scenarios.js` | Canonical rungs: idle 10 / normal 100 / peak 500 / burst 1000 RPS. |
 | `diagnostics.js` | Three 1000 RPS runs: pool-bound, app-bound, cpu-only. |
-| `lib/common.js` | Arrival-rate options, error-class tagging, results path. |
+| `typical.js` | Typical profile mix: 59/20/10/10/1 across the five RealWorld-shaped routes. |
+| `lib/common.js` | Arrival-rate options, error-class tagging, results path, typical rungs. |
 
 Protocol for every script: **warmup then 15 min steady**. Defaults: `WARMUP=5m`, `DURATION=15m`. Override with env vars. VUs are pre-allocated from the target RPS (see `vuBudget`).
 
@@ -75,6 +76,13 @@ SCENARIO=burst   k6 run --out json="$RESULTS_DIR/k6.json" --out csv="$RESULTS_DI
 SCENARIO=later-day      k6 run load/scenarios.js
 # second-region: only valid when this apply is us-west-2 (adapter enforces).
 SCENARIO=second-region  k6 run load/scenarios.js
+
+# Typical profile (app_profile=typical, app_workers=2, us-east-2). Same warmup and steady defaults.
+SCENARIO=typical-fit-20        k6 run load/typical.js
+SCENARIO=typical-fit-100       k6 run load/typical.js
+SCENARIO=typical-fit-200       k6 run load/typical.js
+SCENARIO=typical-holdout-300   k6 run load/typical.js
+SCENARIO=typical-saturation-500 k6 run load/typical.js
 ```
 
 Diagnostics at 1000 RPS (Burst holdout). **Re-apply** terraform before app-bound so the nodes actually have `APP_POOL_SIZE=40`.

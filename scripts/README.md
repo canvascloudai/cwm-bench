@@ -52,6 +52,11 @@ measured.
 | `pool-bound` / `app-bound` / `cpu-only` | 1000 RPS diagnostics |
 | `later-day` | Holdout. Fails unless today (UTC) is after the fit campaign date. Runs `SCENARIO=later-day`, not `normal`. |
 | `second-region` | Holdout. Fails unless Terraform region is **us-west-2**. Runs `SCENARIO=second-region`, not the primary-region apply. |
+| `typical-fit-20` / `typical-fit-100` / `typical-fit-200` | Typical profile fit rungs at 20 / 100 / 200 total RPS. Require `app_profile=typical`, `app_workers=2`, and region **us-east-2**. |
+| `typical-holdout-300` | Typical holdout at 300 total RPS. Same profile, workers, and region constraints. |
+| `typical-saturation-500` | Optional typical diagnostic holdout at 500 total RPS. Completeness is optional. |
+
+`run` reads `/api/meta` before k6. A lean key on a typical stack, or a typical key on a lean stack, fails with `PROFILE_MISMATCH` and does not start k6. A typical key outside us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. `wait-ready` includes `appNodes`, one object per app server, with `profile`, `workers`, and `gitSha` from `/api/meta`. Missing `profile` on the lean app is reported as null there; `run` treats a missing profile as lean so the owned campaign still starts.
 
 Public CWM `GET /api/accuracy-benchmark` lists idle / normal / peak /
 burst only. later-day and second-region come from this repo's campaign

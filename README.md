@@ -81,12 +81,18 @@ Burst is **holdout**. Do not put it in the fit set.
 
 If generator CPU exceeds ~70% in the steady window, discard the run.
 
+## Typical profile
+
+A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. They run only in **us-east-2**. The frozen definition is `typical/PREREGISTRATION.md`. Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`.
+
 ## Repository layout
 
 ```
 app/          Node 20 reference CRUD + seed SQL (8 categories, 200 products, 0 orders)
-load/         k6 scenarios + diagnostics + later-day / second-region holdout keys
+app-typical/  Flag-gated typical profile (separate package and seed)
+load/         k6 scenarios + diagnostics + typical mix + later-day / second-region holdout keys
 terraform/    Canonical topology (AWS provider 5.x). fmt/validate in CI; no apply.
+typical/      Pre-registration and the CanvasCloudAI runbook
 schema/       draft 2020-12. EXAMPLE fixtures only (isExample: true).
 results/      README + .gitkeep. No runs.
 calibrate/    Per-metric OLS (idle/normal/peak). Holdout deltas reported. Refuses composite scores.
@@ -105,12 +111,18 @@ node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 ```
 
-`wait-ready` returns `adapterVersion` (`1.1.0`) and the full
+`wait-ready` returns `adapterVersion` (`1.3.0`) and the full
 `supportedScenarios` list (`idle`, `normal`, `peak`, `burst`,
-`pool-bound`, `app-bound`, `cpu-only`, `later-day`, `second-region`).
+`pool-bound`, `app-bound`, `cpu-only`, `later-day`, `second-region`,
+`typical-fit-20`, `typical-fit-100`, `typical-fit-200`,
+`typical-holdout-300`, `typical-saturation-500`).
 `later-day` is a real later-UTC-day holdout, not an alias of `normal`.
 `second-region` is a real **us-west-2** holdout, not a rename of the
-us-east-1 run. Burst is **not** a capability skip. `collect` must
+us-east-1 run. `typical-*` keys require `app_profile=typical`, two
+workers, and region us-east-2. A lean key on a typical stack, or the
+reverse, fails with `PROFILE_MISMATCH` before k6 starts. When the stack
+is up, `wait-ready` reports each app node's `profile`, `workers`, and
+`gitSha` from `/api/meta`. Burst is **not** a capability skip. `collect` must
 return a complete run (required CloudWatch datapoints, including ALB,
 plus k6 `summary.json` with latency percentiles and error-class
 counts) or it fails with `COLLECT_INCOMPLETE`. Empty CloudWatch stays

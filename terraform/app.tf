@@ -31,6 +31,8 @@ resource "aws_instance" "app" {
     mysql_database    = "cwmbench"
     app_pool_size     = var.app_pool_size
     app_queue_limit   = var.app_queue_limit
+    app_profile       = var.app_profile
+    app_workers       = var.app_workers
     db_password_param = aws_ssm_parameter.db_password.name
     region            = var.region
     git_url           = var.app_source_git_url

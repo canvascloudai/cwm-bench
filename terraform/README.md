@@ -74,6 +74,10 @@ After apply, record outputs: `alb_dns`, `alb_arn`, `target_group_arn`, `rds_endp
 - `extra_tags` — map
 - `ami_id` — pin for a campaign
 - `app_source_git_ref` — **exact measurement SHA**. user_data fails if this is empty or a branch name (`main` / `master` / `HEAD`). There is no unpinned clone.
+- `app_profile` — `lean` (default) copies `app/` and seeds `seed.sql`. `typical` copies `app-typical/` and seeds `seed-typical.sql`.
+- `app_workers` — Node worker processes per app server, default `1`, valid `1`..`8`. The typical campaign sets `2`. The primary process does not serve. Each worker's mysql2 `connectionLimit` is `floor(app_pool_size / app_workers)`; `queueLimit` stays `app_queue_limit` on every worker.
+
+With the defaults (`app_profile=lean`, `app_workers=1`) the rendered app user_data matches the lean campaign. A typical campaign is a separate apply: `-var='region=us-east-2' -var='app_profile=typical' -var='app_workers=2'`.
 
 A second-region holdout is a **separate apply** with `-var='region=us-west-2'`. That is not a silent default change and not a rename of the us-east-1 run. See `CLEANUP-COMPAT.md` before touching resource addresses.
 

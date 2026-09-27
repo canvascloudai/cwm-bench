@@ -58,6 +58,28 @@ variable "app_queue_limit" {
   default     = 50
 }
 
+variable "app_profile" {
+  type        = string
+  description = "Which app directory user_data copies from the pinned SHA. lean copies app/ and seeds seed.sql. typical copies app-typical/ and seeds seed-typical.sql. Default lean keeps the owned campaign app."
+  default     = "lean"
+
+  validation {
+    condition     = contains(["lean", "typical"], var.app_profile)
+    error_message = "app_profile must be lean or typical."
+  }
+}
+
+variable "app_workers" {
+  type        = number
+  description = "Node worker processes per app server. The primary process does not serve. Default 1 is one worker. The typical campaign sets 2. Per-worker mysql2 connectionLimit is floor(app_pool_size / app_workers); queueLimit stays app_queue_limit on each worker."
+  default     = 1
+
+  validation {
+    condition     = var.app_workers == floor(var.app_workers) && var.app_workers >= 1 && var.app_workers <= 8
+    error_message = "app_workers must be an integer from 1 to 8."
+  }
+}
+
 variable "generator_instance_type" {
   type        = string
   description = "Load-generator instance type. Default c6i.xlarge: 4 vCPU compute-optimized so k6 can drive 1000 RPS without the generator becoming the bottleneck. If generator CPU exceeds ~70% during a run, discard the run."

@@ -45,7 +45,9 @@
   "application": {
     "name": "cwm-bench-app",
     "poolSize": 0,
-    "queueLimit": 0
+    "queueLimit": 0,
+    "profile": "lean",
+    "workers": 1
   },
   "database": {
     "engine": "mysql-8.0",

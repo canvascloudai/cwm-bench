@@ -1,9 +1,11 @@
 import { ADAPTER_VERSION, PRIMARY_REGION } from './version.mjs';
 import {
   assertExpectedPool,
+  assertExpectedProfile,
   assertLaterDay,
   assertNotAliased,
   assertSecondRegion,
+  assertTypicalRegion,
   getScenario,
   isFitScenario,
   utcDateString,
@@ -194,6 +196,19 @@ function appMetaReadinessConfig(ctx) {
   };
 }
 
+function isAppMetaRetryable(error) {
+  const code = error && error.code;
+  const text = String((error && error.message) || '').toLowerCase();
+  if (code === 'APP_META_NOT_READY') return true;
+  if (code === 'SSM_EXECUTION_FAILED') {
+    return /curl|failed to connect|connection refused|connection reset|couldn't connect|empty reply/.test(text);
+  }
+  if (code === 'AWS_CLI_FAILED' || code === 'SSM_SEND_FAILED') {
+    return /invocationdoesnotexist|invalidinstanceid|not yet registered|throttl/.test(text);
+  }
+  return false;
+}
+
 async function readAppMeta(runAws, instanceId, region, ctx) {
   const config = appMetaReadinessConfig(ctx);
   const clock = ctx.deps.nowMs || Date.now;
@@ -228,7 +243,8 @@ async function readAppMeta(runAws, instanceId, region, ctx) {
     } catch (error) {
       lastError = error;
       const remainingMs = deadline - clock();
-      if (remainingMs <= 0) {
+      if (!isAppMetaRetryable(error) || remainingMs <= 0) {
+        if (!isAppMetaRetryable(error)) throw error;
         const timeout = new Error(
           `app metadata did not become ready within ${config.timeoutMs}ms after ` +
           `${attempts} attempt(s): ${lastError?.message || String(lastError)}`,
@@ -367,6 +383,7 @@ export async function runScenario(ctx, scenarioKey) {
   const outputs = await readTerraformOutputs(ctx.deps);
   const region = outputs.region || ctx.env.AWS_REGION || PRIMARY_REGION;
   assertSecondRegion(spec, region);
+  assertTypicalRegion(spec, region);
 
   const runAws = ctx.deps.runAws;
   if (typeof runAws !== 'function') {
@@ -375,10 +392,10 @@ export async function runScenario(ctx, scenarioKey) {
     throw err;
   }
 
-  if (spec.expectedPoolSize != null && outputs.appInstanceIds[0]) {
+  if (outputs.appInstanceIds[0]) {
     const meta = await readAppMeta(runAws, outputs.appInstanceIds[0], region, ctx);
-    const poolSize = meta && meta.poolSize;
-    assertExpectedPool(spec, poolSize);
+    assertExpectedProfile(spec, meta);
+    assertExpectedPool(spec, meta && meta.poolSize);
   }
 
   const campaignId = ctx.env.CWM_CAMPAIGN_ID || (outputs.topology && outputs.topology.test_id) || 'unset-campaign';
