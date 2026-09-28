@@ -1,0 +1,541 @@
+{
+ "engineVersion": "1.2.5",
+ "connector": "user-cwm MCP",
+ "date": "2026-09-27, about 23:25-23:45 ET",
+ "seed": 20240601,
+ "calibrationIdOwnedTypical": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+ "protocol": [
+  "simulation.create with create-payload-<RPS>.json (traffic set at create; name differs per run, see below)",
+  "simulation.step {simulationId} once (no traffic override); response currentStep = 6",
+  "simulation.metrics {simulationId} (compact); saved verbatim as raw/rung<RPS>-run<A|B>-metrics.json",
+  "300 RPS only: simulation.cost_breakdown {simulationId}",
+  "simulation.delete {simulationId}"
+ ],
+ "injectTrafficCalls": "none: traffic is set in simulation.create and never changed, so no simulation.inject_traffic calls were made",
+ "runs": [
+  {
+   "rps": 20,
+   "run": "A",
+   "simulationId": "f7618faa-4729-40eb-b081-569e3ee240c8",
+   "name": "export typical 20 run A",
+   "createPayload": "create-payload-20.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-20.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "f7618faa-4729-40eb-b081-569e3ee240c8"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "f7618faa-4729-40eb-b081-569e3ee240c8"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "e06c26e97e0450f194334f26a84fb2cc22ab4d4fb7fc7eac4510faada927b76f",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     1.405,
+     1.405
+    ],
+    "p50": 5.1653137,
+    "p95": 7.8147054,
+    "p99": 77.42678,
+    "throughput": 17.625895,
+    "errorRatePct": 0,
+    "costPerHour": 0.48,
+    "dbCpuPct": 5.6,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 20,
+   "run": "B",
+   "simulationId": "bc271932-76b7-4606-9c8f-199d53e2fec9",
+   "name": "export typical 20 run B",
+   "createPayload": "create-payload-20.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-20.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "bc271932-76b7-4606-9c8f-199d53e2fec9"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "bc271932-76b7-4606-9c8f-199d53e2fec9"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "e06c26e97e0450f194334f26a84fb2cc22ab4d4fb7fc7eac4510faada927b76f",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     1.405,
+     1.405
+    ],
+    "p50": 5.1653137,
+    "p95": 7.8147054,
+    "p99": 77.42678,
+    "throughput": 17.625895,
+    "errorRatePct": 0,
+    "costPerHour": 0.48,
+    "dbCpuPct": 5.6,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 100,
+   "run": "A",
+   "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+   "name": "export typical 100 run A",
+   "createPayload": "create-payload-100.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-100.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     5.215,
+     5.215
+    ],
+    "p50": 4.879573,
+    "p95": 9.234496,
+    "p99": 81.72693,
+    "throughput": 87.619644,
+    "errorRatePct": 0,
+    "costPerHour": 0.6,
+    "dbCpuPct": 11.4,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 100,
+   "run": "B",
+   "simulationId": "f7ade65b-2707-41ee-a450-8ae6c6ecb167",
+   "name": "export typical 100 run B",
+   "createPayload": "create-payload-100.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-100.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "f7ade65b-2707-41ee-a450-8ae6c6ecb167"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "f7ade65b-2707-41ee-a450-8ae6c6ecb167"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     5.215,
+     5.215
+    ],
+    "p50": 4.879573,
+    "p95": 9.234496,
+    "p99": 81.72693,
+    "throughput": 87.619644,
+    "errorRatePct": 0,
+    "costPerHour": 0.6,
+    "dbCpuPct": 11.4,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 200,
+   "run": "A",
+   "simulationId": "957c36f1-1ecb-471e-866d-f8960860ece0",
+   "name": "export typical 200 run A",
+   "createPayload": "create-payload-200.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-200.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "957c36f1-1ecb-471e-866d-f8960860ece0"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "957c36f1-1ecb-471e-866d-f8960860ece0"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "5e1b6640610e595e9b629600950e84184bd8736f898bb4423ed4a2afa7f18512",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     9.978,
+     9.978
+    ],
+    "p50": 4.522397,
+    "p95": 11.009235,
+    "p99": 87.10212,
+    "throughput": 175.11183,
+    "errorRatePct": 0,
+    "costPerHour": 0.74,
+    "dbCpuPct": 18.6,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 200,
+   "run": "B",
+   "simulationId": "d8d468e2-77d7-4b0f-a889-e9a9d2ff5d94",
+   "name": "export typical 200 run B",
+   "createPayload": "create-payload-200.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-200.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "d8d468e2-77d7-4b0f-a889-e9a9d2ff5d94"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "d8d468e2-77d7-4b0f-a889-e9a9d2ff5d94"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "5e1b6640610e595e9b629600950e84184bd8736f898bb4423ed4a2afa7f18512",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     9.978,
+     9.978
+    ],
+    "p50": 4.522397,
+    "p95": 11.009235,
+    "p99": 87.10212,
+    "throughput": 175.11183,
+    "errorRatePct": 0,
+    "costPerHour": 0.74,
+    "dbCpuPct": 18.6,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 300,
+   "run": "A",
+   "simulationId": "10931cb8-3400-4b83-92f7-f1d325e81201",
+   "name": "export typical 300 probe rds",
+   "createPayload": "create-payload-300.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-300.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "10931cb8-3400-4b83-92f7-f1d325e81201"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "10931cb8-3400-4b83-92f7-f1d325e81201"
+     }
+    },
+    {
+     "tool": "simulation.cost_breakdown",
+     "args": {
+      "simulationId": "10931cb8-3400-4b83-92f7-f1d325e81201"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "cf5dcb6659ad2eff5995ee6c161ddc23503359e70280fea46da00592197a1dfa",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     14.74,
+     14.74
+    ],
+    "p50": 4.1652207,
+    "p95": 12.783974,
+    "p99": 92.47731,
+    "throughput": 262.604,
+    "errorRatePct": 0,
+    "costPerHour": 0.88,
+    "dbCpuPct": 25.8,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 300,
+   "run": "B",
+   "simulationId": "d4a9eecc-5f8d-45be-9dff-d9e57049e13e",
+   "name": "export typical 300 run B",
+   "createPayload": "create-payload-300.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-300.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "d4a9eecc-5f8d-45be-9dff-d9e57049e13e"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "d4a9eecc-5f8d-45be-9dff-d9e57049e13e"
+     }
+    },
+    {
+     "tool": "simulation.cost_breakdown",
+     "args": {
+      "simulationId": "d4a9eecc-5f8d-45be-9dff-d9e57049e13e"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "calibrationNote": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+   "effectiveConfigHash": "cf5dcb6659ad2eff5995ee6c161ddc23503359e70280fea46da00592197a1dfa",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     14.74,
+     14.74
+    ],
+    "p50": 4.1652207,
+    "p95": 12.783974,
+    "p99": 92.47731,
+    "throughput": 262.604,
+    "errorRatePct": 0,
+    "costPerHour": 0.88,
+    "dbCpuPct": 25.8,
+    "status": [
+     "healthy",
+     "healthy",
+     "healthy",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 500,
+   "run": "A",
+   "simulationId": "59cc1f32-cff0-45fe-ba85-03a795b3f543",
+   "name": "export typical 500 run A",
+   "createPayload": "create-payload-500.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-500.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "59cc1f32-cff0-45fe-ba85-03a795b3f543"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "59cc1f32-cff0-45fe-ba85-03a795b3f543"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "modeled",
+   "calibrationId": null,
+   "calibrationNote": "typical application reference/scaling model; owned typical fit not applied: traffic: expected 20\u2013300 RPS, actual 500.",
+   "effectiveConfigHash": "9650fcdd163d34deff9305b68d1b50bba6cddf01016a9ac4221f02ea5bad3815",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     99.107,
+     99.107
+    ],
+    "p50": 15,
+    "p95": 39,
+    "p99": 341,
+    "throughput": 450,
+    "errorRatePct": 9.954,
+    "costPerHour": 1.18,
+    "dbCpuPct": 14.3,
+    "status": [
+     "healthy",
+     "critical",
+     "critical",
+     "healthy"
+    ]
+   }
+  },
+  {
+   "rps": 500,
+   "run": "B",
+   "simulationId": "26750066-7d65-427c-ae2c-a905df59a366",
+   "name": "export typical 500 run B",
+   "createPayload": "create-payload-500.json",
+   "calls": [
+    {
+     "tool": "simulation.create",
+     "args": "create-payload-500.json (name as above)"
+    },
+    {
+     "tool": "simulation.step",
+     "args": {
+      "simulationId": "26750066-7d65-427c-ae2c-a905df59a366"
+     }
+    },
+    {
+     "tool": "simulation.metrics",
+     "args": {
+      "simulationId": "26750066-7d65-427c-ae2c-a905df59a366"
+     }
+    }
+   ],
+   "engineVersion": "1.2.5",
+   "calibrationKind": "modeled",
+   "calibrationId": null,
+   "calibrationNote": "typical application reference/scaling model; owned typical fit not applied: traffic: expected 20\u2013300 RPS, actual 500.",
+   "effectiveConfigHash": "9650fcdd163d34deff9305b68d1b50bba6cddf01016a9ac4221f02ea5bad3815",
+   "currentStep": 6,
+   "outputs": {
+    "appCpuPct": [
+     99.107,
+     99.107
+    ],
+    "p50": 15,
+    "p95": 39,
+    "p99": 341,
+    "throughput": 450,
+    "errorRatePct": 9.954,
+    "costPerHour": 1.18,
+    "dbCpuPct": 14.3,
+    "status": [
+     "healthy",
+     "critical",
+     "critical",
+     "healthy"
+    ]
+   }
+  }
+ ],
+ "extraChecks": [
+  {
+   "simulationId": "f52f3907-f9f4-4ccb-ae91-197d0073114b",
+   "what": "same 300 RPS payload with seed 7 instead of 20240601",
+   "result": "all scored outputs identical (CPU 14.74, P50 4.1652207, P95 12.783974, throughput 262.604, error 0, cost 0.88, same effectiveConfigHash); only the unscored ALB CPU differed (3.3 vs 3.8 after the step; 4.4 vs 3.5 at create). Response not saved beyond these values."
+  },
+  {
+   "simulationId": "c86b8559-8040-44b7-9d4a-07fc16a8732f",
+   "what": "300 RPS payload WITHOUT explicit serviceFamily ec2/rds (seed 20240601)",
+   "result": "owned fit still applied and all performance outputs identical, but db resolves to 0.12 USD/hour instead of 0.24, so costPerHour is 0.76 (cost_breakdown 0.759919) instead of 0.88. This is why the payload pins serviceFamily."
+  }
+ ]
+}

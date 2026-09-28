@@ -1,0 +1,93 @@
+{
+ "name": "export typical 100 run {RUN}",
+ "appWeight": "typical",
+ "seed": 20240601,
+ "traffic": 100,
+ "minInstances": 2,
+ "maxInstances": 2,
+ "resources": [
+  {
+   "id": "alb",
+   "type": "network",
+   "name": "ALB (Application Load Balancer)",
+   "provider": "aws",
+   "location": {
+    "regionKey": "us-east-2"
+   },
+   "characteristics": {
+    "serviceFamily": "alb",
+    "loadBalancerScheme": "internal"
+   }
+  },
+  {
+   "id": "app-1",
+   "type": "compute",
+   "name": "app-1",
+   "provider": "aws",
+   "location": {
+    "regionKey": "us-east-2"
+   },
+   "characteristics": {
+    "size": "m5.large",
+    "serviceFamily": "ec2",
+    "autoscaling": false,
+    "workload": "crud-typical",
+    "appRuntime": "node",
+    "appWorkerCount": 2,
+    "appDbPoolSize": 250
+   }
+  },
+  {
+   "id": "app-2",
+   "type": "compute",
+   "name": "app-2",
+   "provider": "aws",
+   "location": {
+    "regionKey": "us-east-2"
+   },
+   "characteristics": {
+    "size": "m5.large",
+    "serviceFamily": "ec2",
+    "autoscaling": false,
+    "workload": "crud-typical",
+    "appRuntime": "node",
+    "appWorkerCount": 2,
+    "appDbPoolSize": 250
+   }
+  },
+  {
+   "id": "db",
+   "type": "database",
+   "name": "db",
+   "provider": "aws",
+   "location": {
+    "regionKey": "us-east-2"
+   },
+   "characteristics": {
+    "size": "db.r5.large",
+    "serviceFamily": "rds",
+    "workloadDatabaseEngine": "mysql",
+    "workloadDatabaseVersion": "8.0",
+    "maxConnections": 500
+   }
+  }
+ ],
+ "connections": [
+  {
+   "sourceId": "alb",
+   "targetId": "app-1"
+  },
+  {
+   "sourceId": "alb",
+   "targetId": "app-2"
+  },
+  {
+   "sourceId": "app-1",
+   "targetId": "db"
+  },
+  {
+   "sourceId": "app-2",
+   "targetId": "db"
+  }
+ ]
+}

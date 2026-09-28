@@ -1,0 +1,20 @@
+{
+ "note": "Cost was not measured. Both values below are references, not bills.",
+ "listPriceReferenceNoEgress": {
+  "usdPerHour": 0.4545,
+  "basis": "public list price: ALB 0.0225 + 2 x m5.large 0.096 + db.r5.large 0.24; no egress, no load generator. Same reference as results-2026-09-27/score.py and the accuracy page."
+ },
+ "connectorCostPerHour300": {
+  "usdPerHour": 0.88,
+  "exact": 0.879919,
+  "basis": "user-cwm simulation.step/metrics costPerHour at 300 RPS (rounded) and simulation.cost_breakdown totalCostPerHour (exact); includes modeled egress 0.425419. Resources: app-1 0.096, app-2 0.096, db 0.24, alb 0.0225, egress 0.425419. Sum without egress = 0.4545."
+ },
+ "scoredCostPredictionNoEgressBasis": {
+  "usdPerHour": 0.4545,
+  "derivation": "cost_breakdown total 0.879919 minus egress 0.425419. The accuracy page shows 0.454581 for this field; the connector does not return that number (BL-82). Both score 100.0 against 0.4545."
+ },
+ "pageAfterFitCostPrediction": {
+  "usdPerHour": 0.454581,
+  "source": "https://www.cloudworldmodel.ai/api/accuracy-benchmark typicalOwnedHoldout.afterFit, fetched 2026-09-27 about 23:09 ET"
+ }
+}

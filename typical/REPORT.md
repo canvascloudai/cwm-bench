@@ -78,19 +78,21 @@ Throughput is the only strong weighted metric (scores 86 to 97). Part of the gap
 
 ## After owned calibration fit (engine 1.2.5, 2026-09-27)
 
-CWM production (engine 1.2.5) now applies an owned typical calibration built only from the 20, 100, and 200 RPS runs of campaign `typical-v1-20260927c`. The calibration id is `aws-crud/typical:typical-v1-20260927c:6aa574d7…`. The 300 RPS run stayed a holdout and was never used for tuning. Every number in this section is from `typical/scores-after-fit.json` or from the 2026-09-27 verification summary of that fit. Displayed table values are rounded. The JSON has the exact floats.
+Without cost, the 300 RPS holdout moves from 27.0 before the fit to 82.4 after it. That is the comparison to use. Before and after cost scores use different bases, so the with-cost totals, 24.3 before and 84.2 or 74.8 after, are not the same kind of number.
+
+CWM production (engine 1.2.5) applies an owned typical calibration built only from the 20, 100, and 200 RPS runs of campaign `typical-v1-20260927c`. The calibration id is `aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0`. The 300 RPS run stayed a holdout and was never used for tuning. The main remaining miss is P95: predicted 12.78 ms, measured 26.92 ms, score 47.5. Displayed table values are rounded. Exact floats are in `typical/scores-after-fit.json` and `typical/after-fit/`.
 
 ### Holdout at 300 RPS, after fit
 
 Per-metric scores: P50 90.1, P95 47.5, CPU 96.3, throughput 100.0, error 100.0. Weights are the same as the before-fit section.
 
-The cost line has two bases. Measured cost is still missing. The file's measured cost cell is the list-price reference of USD 0.4545 per hour, not a bill.
+Measured cost is still missing. Both cost figures below are references, not a bill.
 
-- **84.2** when cost excludes data-transfer (egress), matching the accuracy page. On that basis the cost score is 100.0 against the page reference of USD 0.454581 per hour. The weighted cost contribution is 10.0.
-- **74.8** when the connector's USD 0.88 per hour is used. That figure includes USD 0.425 per hour of egress. The cost score is then 6.4, and the weighted contribution is 0.6.
-- **82.4** without cost, on either basis.
+- **82.4** without cost, on either basis below. Before the fit, the same measurements scored 27.0 without cost.
+- **84.2** when the cost prediction excludes data-transfer (egress). The export uses USD 0.4545 per hour, which is the cost breakdown total 0.879919 minus egress 0.425419. The accuracy page shows USD 0.454581 for that field. Both score 100.0 against the USD 0.4545 reference, so the total is 84.2 either way. The weighted cost contribution is 10.0.
+- **74.8** when the connector's USD 0.88 per hour is used. That figure includes USD 0.425419 per hour of egress. The cost score is then 6.4, and the weighted contribution is 0.6.
 
-The before-fit result on the same measurements stays 24.3 (27.0 without cost).
+The before-fit cost score compared an egress-inclusive prediction with the no-egress reference, and that score was 0. The after-fit 84.2 drops egress from the prediction. The after-fit 74.8 keeps it. Those are different bases.
 
 | Metric | Predicted | Measured | Score | Weight | Weighted |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -99,12 +101,16 @@ The before-fit result on the same measurements stays 24.3 (27.0 without cost).
 | CPU | 14.74 % | 15.30 % | 96.3 | 0.20 | 19.3 |
 | Throughput | 262.604 | 262.609 | 100.0 | 0.15 | 15.0 |
 | Error rate | 0 % | 0.0044 % | 100.0 | 0.10 | 10.0 |
-| Cost, egress excluded (page) | USD 0.454581 reference | USD 0.4545 | 100.0 | 0.10 | 10.0 |
+| Cost, egress excluded | USD 0.4545 (page shows 0.454581) | USD 0.4545 | 100.0 | 0.10 | 10.0 |
 | **Total, page** | | | | | **84.2** |
 | Cost, connector | USD 0.88 | USD 0.4545 | 6.4 | 0.10 | 0.6 |
 | **Total, connector** | | | | | **74.8** |
 
-The page total uses the egress-excluded cost row. The connector total uses the USD 0.88 row instead. P99 is not weighted: predicted 92.48 ms, measured 97.54 ms, score 94.8.
+The page total uses the egress-excluded cost row. The connector total uses the USD 0.88 row instead. P99 is not weighted: predicted 92.48 ms, measured 97.54 ms, score 94.8. P95 remains the main miss in the table above: 12.78 ms predicted against 26.92 ms measured, score 47.5.
+
+### Reproducing this result
+
+Engine 1.2.5. The calibration id is `aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0`. Every create payload pins seed `20240601`. Determinism was confirmed: two runs were identical at every rung, and a seed-7 run gave the same scored outputs. `serviceFamily` is pinned because leaving it out changes the database price, from USD 0.24 per hour to USD 0.12, so the 300 RPS cost becomes USD 0.76 instead of USD 0.88. Reproduce the scores from the frozen files with `python3 typical/after-fit/score_export.py`.
 
 ### Predicted against measured
 
@@ -124,8 +130,6 @@ The 20, 100, and 200 RPS rows are fit points. Close agreement is expected. It is
 
 The 300 RPS row is the real holdout test.
 
-The 500 RPS row is outside the fitted range (20 to 300 RPS). The fit does not apply there. The file marks that prediction as modeled, with a gate of 20-300 RPS. It still predicts 99.107% CPU, about 99%, against 26.3% measured. The scores stay at the before-fit saturation result: total 25.6, or 28.5 without cost.
-
 | Rung | P50 | P95 | CPU | Throughput | Error | Cost | Total | Total without cost | P99 (unweighted) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | fit-20 | 97.9 | 94.1 | 99.1 | 100.0 | 100.0 | 94.4 | 97.4 | 97.7 | 99.0 |
@@ -134,6 +138,10 @@ The 500 RPS row is outside the fitted range (20 to 300 RPS). The fit does not ap
 | holdout-300, connector cost | 90.1 | 47.5 | 96.3 | 100.0 | 100.0 | 6.4 | 74.8 | 82.4 | 94.8 |
 | holdout-300, page cost | 90.1 | 47.5 | 96.3 | 100.0 | 100.0 | 100.0 | 84.2 | 82.4 | 94.8 |
 | saturation-500, fit does not apply | 0 | 44.2 | 0 | 97.2 | 0.1 | 0 | 25.6 | 28.5 | 12.6 |
+
+### 500 RPS diagnostic (held out, outside fitted range)
+
+On engine 1.2.5 the owned fit does not apply above 300 RPS. The engine falls back to generic typical and predicts 99.107% CPU, status critical, and 9.954% errors, against measured 26.34% CPU and 0.0103% errors. That is a false saturation warning. The export scores this rung 25.6, or 28.5 without cost. This is a known open gap.
 
 ### Weak spots
 
