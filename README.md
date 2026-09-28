@@ -4,7 +4,7 @@ Versioned, reproducible **measurement program** for [Cloud World Model](https://
 
 The public accuracy page (`GET https://www.cloudworldmodel.ai/api/accuracy-benchmark`) **consumes this dataset. It does not get to vote on it.**
 
-**v1 owned campaign exists** (`473f1339-f712-4096-96d6-3d4fc07cb427`, filled in `holdout/REPORT.md`). Burst on this CRUD workload measured **≈ 0% errors**. Coefficients are **fitted per-metric** by OLS on idle / normal / peak only (`calibrate/coefficients.yaml`). Holdouts report `fit_prediction` and `delta`. Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell as owned data. `results/` still has no `isExample: false` run JSON (CI rejects that path).
+**v1 owned campaign exists** (`473f1339-f712-4096-96d6-3d4fc07cb427`, filled in `holdout/REPORT.md`). The typical campaign `typical-v1-20260927c` is in `typical/REPORT.md`. Burst on this CRUD workload measured **≈ 0% errors**. Coefficients are **fitted per-metric** by OLS on idle / normal / peak only (`calibrate/coefficients.yaml`). Holdouts report `fit_prediction` and `delta`. Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell as owned data. `results/` still has no `isExample: false` run JSON (CI rejects that path).
 
 Public source of this program: [github.com/canvascloudai/cwm-bench](https://github.com/canvascloudai/cwm-bench). Origin namespace: `cloudworldmodel` (name the repo `cwm-bench`).
 
@@ -83,7 +83,7 @@ If generator CPU exceeds ~70% in the steady window, discard the run.
 
 ## Typical profile
 
-A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. They run only in **us-east-2**. The frozen definition is `typical/PREREGISTRATION.md`. Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`.
+A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. They run only in **us-east-2**. The frozen definition is `typical/PREREGISTRATION.md`. Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`. The measured campaign is `typical/REPORT.md`, with the numeric export in `holdout/exports/typical-v1-20260927c.summary.md`.
 
 ## Repository layout
 
@@ -92,11 +92,11 @@ app/          Node 20 reference CRUD + seed SQL (8 categories, 200 products, 0 o
 app-typical/  Flag-gated typical profile (separate package and seed)
 load/         k6 scenarios + diagnostics + typical mix + later-day / second-region holdout keys
 terraform/    Canonical topology (AWS provider 5.x). fmt/validate in CI; no apply.
-typical/      Pre-registration and the CanvasCloudAI runbook
+typical/      Pre-registration, runbook, predictions, and typical/REPORT.md
 schema/       draft 2020-12. EXAMPLE fixtures only (isExample: true).
 results/      README + .gitkeep. No runs.
 calibrate/    Per-metric OLS (idle/normal/peak). Holdout deltas reported. Refuses composite scores.
-holdout/      REPORT.md filled from owned campaign 473f1339…; later-day / second-region predictions from the fit.
+holdout/      REPORT.md filled from owned lean campaign 473f1339…; typical export is holdout/exports/typical-v1-20260927c.summary.md
 scripts/      ci.sh + worker-adapter.mjs (Admin Benchmarks worker contract)
 ```
 
@@ -208,7 +208,7 @@ v1 holdout measurements are recorded. `coefficients.yaml` is a per-metric OLS fi
 | Reference app + seed | Present |
 | k6 rungs + diagnostics | Present |
 | Run / campaign schemas | Present (EXAMPLE fixture only) |
-| Raw results | None under `results/` (CI still rejects `isExample: false`) |
+| Raw results | None under `results/` (CI still rejects `isExample: false`). Typical collect JSON is in `typical/campaign/typical-v1-20260927c/` |
 | Coefficients | Per-metric OLS on idle / normal / peak; `metrics.*` fitted |
 | Holdout tables | Filled from owned campaign `473f1339-f712-4096-96d6-3d4fc07cb427`; predictions + deltas |
 | Burst | Owned CRUD Burst-class error ≈ **0%** on this workload (not the public 2% / 9.55% cell) |
