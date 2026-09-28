@@ -1,0 +1,9 @@
+{
+  "scenario": "typical-saturation-500",
+  "attempt": 1,
+  "collectOk": true,
+  "generatorCpuPeakPercent": 7.716666666666665,
+  "generatorCpuPeakKnown": true,
+  "steadyWindowVerified": true,
+  "discardedForGeneratorCpu": false
+}

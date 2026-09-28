@@ -1,0 +1,9 @@
+{
+  "scenario": "typical-fit-100",
+  "attempt": 1,
+  "collectOk": true,
+  "generatorCpuPeakPercent": 2.0783333333333336,
+  "generatorCpuPeakKnown": true,
+  "steadyWindowVerified": true,
+  "discardedForGeneratorCpu": false
+}

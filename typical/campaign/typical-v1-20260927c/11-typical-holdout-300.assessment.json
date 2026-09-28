@@ -1,0 +1,9 @@
+{
+  "scenario": "typical-holdout-300",
+  "attempt": 1,
+  "collectOk": true,
+  "generatorCpuPeakPercent": 5.02,
+  "generatorCpuPeakKnown": true,
+  "steadyWindowVerified": true,
+  "discardedForGeneratorCpu": false
+}
