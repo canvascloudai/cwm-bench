@@ -4,7 +4,7 @@ Campaign `typical-v1-20260927c`, one attempt per key, region us-east-2, adapter 
 
 The numbers below were checked against the collect JSON in `typical/campaign/typical-v1-20260927c/` and against `typical/PREDICTIONS.md`. Reproduce the scores with `python3 typical/score.py`. Exact floats are in `typical/scores.json` and `holdout/exports/typical-v1-20260927c.summary.md`.
 
-**TODO:** The campaign name ends in `c`. Whether earlier attempts `a` and `b` existed, and whether they produced runs, is pending Kevin's confirmation. This archive has one attempt of each of the five keys and nothing about any earlier campaign.
+Two earlier setup attempts (`typical-v1-20260927` and `typical-v1-20260927b`) stopped in preflight before Terraform init or apply: one failed on a checkout verification problem and the other on a region comparison bug in the capability check, and neither provisioned a stack or produced measurements. `typical-v1-20260927c` is the only measured campaign, and each scenario key ran once.
 
 ## Measured against predicted
 
