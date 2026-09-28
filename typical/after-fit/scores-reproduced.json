@@ -1,0 +1,165 @@
+{
+ "20": {
+  "role": "fit",
+  "calibration": "owned",
+  "engine": "1.2.5",
+  "predicted": {
+   "cpu": 1.405,
+   "p50": 5.1653137,
+   "p95": 7.8147054,
+   "p99": 77.42678,
+   "thr": 17.625895,
+   "err": 0,
+   "cost": 0.48,
+   "kind": "owned",
+   "engine": "1.2.5"
+  },
+  "connectorCostBasis": {
+   "costPred": 0.48,
+   "scores": {
+    "p50": 97.9,
+    "p95": 94.1,
+    "cpu": 99.1,
+    "thr": 100.0,
+    "err": 100.0,
+    "cost": 94.4
+   },
+   "total": 97.4,
+   "withoutCost": 97.7
+  },
+  "p99DiagnosticScore": 99.0
+ },
+ "100": {
+  "role": "fit",
+  "calibration": "owned",
+  "engine": "1.2.5",
+  "predicted": {
+   "cpu": 5.215,
+   "p50": 4.879573,
+   "p95": 9.234496,
+   "p99": 81.72693,
+   "thr": 87.619644,
+   "err": 0,
+   "cost": 0.6,
+   "kind": "owned",
+   "engine": "1.2.5"
+  },
+  "connectorCostBasis": {
+   "costPred": 0.6,
+   "scores": {
+    "p50": 95.8,
+    "p95": 89.5,
+    "cpu": 99.6,
+    "thr": 100.0,
+    "err": 100.0,
+    "cost": 68.0
+   },
+   "total": 93.3,
+   "withoutCost": 96.1
+  },
+  "p99DiagnosticScore": 98.3
+ },
+ "200": {
+  "role": "fit",
+  "calibration": "owned",
+  "engine": "1.2.5",
+  "predicted": {
+   "cpu": 9.978,
+   "p50": 4.522397,
+   "p95": 11.009235,
+   "p99": 87.10212,
+   "thr": 175.11183,
+   "err": 0,
+   "cost": 0.74,
+   "kind": "owned",
+   "engine": "1.2.5"
+  },
+  "connectorCostBasis": {
+   "costPred": 0.74,
+   "scores": {
+    "p50": 98.1,
+    "p95": 96.6,
+    "cpu": 99.9,
+    "thr": 100.0,
+    "err": 100.0,
+    "cost": 37.2
+   },
+   "total": 92.5,
+   "withoutCost": 98.6
+  },
+  "p99DiagnosticScore": 99.3
+ },
+ "300": {
+  "role": "independent holdout",
+  "calibration": "owned",
+  "engine": "1.2.5",
+  "predicted": {
+   "cpu": 14.74,
+   "p50": 4.1652207,
+   "p95": 12.783974,
+   "p99": 92.47731,
+   "thr": 262.604,
+   "err": 0,
+   "cost": 0.88,
+   "kind": "owned",
+   "engine": "1.2.5"
+  },
+  "connectorCostBasis": {
+   "costPred": 0.88,
+   "scores": {
+    "p50": 90.1,
+    "p95": 47.5,
+    "cpu": 96.3,
+    "thr": 100.0,
+    "err": 100.0,
+    "cost": 6.4
+   },
+   "total": 74.8,
+   "withoutCost": 82.4
+  },
+  "p99DiagnosticScore": 94.8,
+  "noEgressCostBasis": {
+   "costPred": 0.4545,
+   "scores": {
+    "p50": 90.1,
+    "p95": 47.5,
+    "cpu": 96.3,
+    "thr": 100.0,
+    "err": 100.0,
+    "cost": 100.0
+   },
+   "total": 84.2,
+   "withoutCost": 82.4
+  }
+ },
+ "500": {
+  "role": "diagnostic only (saturation context)",
+  "calibration": "modeled",
+  "engine": "1.2.5",
+  "predicted": {
+   "cpu": 99.107,
+   "p50": 15,
+   "p95": 39,
+   "p99": 341,
+   "thr": 450,
+   "err": 9.954,
+   "cost": 1.18,
+   "kind": "modeled",
+   "engine": "1.2.5"
+  },
+  "connectorCostBasis": {
+   "costPred": 1.18,
+   "scores": {
+    "p50": 0,
+    "p95": 44.2,
+    "cpu": 0,
+    "thr": 97.2,
+    "err": 0.1,
+    "cost": 0
+   },
+   "total": 25.6,
+   "withoutCost": 28.5
+  },
+  "p99DiagnosticScore": 12.6
+ }
+}

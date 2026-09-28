@@ -1,0 +1,1399 @@
+{
+  "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+  "scenarioHash": "0ec9e78d0a4fc6582100761d0b2b74c94b56f6a61dd48afafcc259cd6e2b16dd",
+  "effectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+  "replayIdentity": {
+    "scenarioHash": "0ec9e78d0a4fc6582100761d0b2b74c94b56f6a61dd48afafcc259cd6e2b16dd",
+    "effectiveConfigHash": "7b489a10498e72fd81d6b5ac03374e91a9d71827d73ba4c6639c08efea83d357"
+  },
+  "engineVersion": "1.2.5",
+  "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+  "calibrationEvidence": {
+    "kind": "owned",
+    "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+    "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+    "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+    "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+  },
+  "predictionEvidence": {
+    "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+    "appCpu": {
+      "low": 3.38975,
+      "high": 7.04025,
+      "central": 5.215
+    },
+    "version": 1,
+    "appWeight": "typical",
+    "loadScope": "within measured load",
+    "sourceIds": [
+      "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+      "catalog:aws:m5.large"
+    ],
+    "formulaIds": [
+      "app-weight-v1",
+      "owned-typical-app-cpu-ols-v1",
+      "owned-typical-percentile-ols-v1",
+      "owned-typical-p99-ols-v1"
+    ],
+    "latencyP50": {
+      "low": 3.1717224979508196,
+      "high": 6.587423649590164,
+      "central": 4.879573073770492,
+      "evidenceLevel": "measured"
+    },
+    "latencyP95": {
+      "low": 6.002422651475404,
+      "high": 12.466570122295071,
+      "central": 9.234496386885237,
+      "evidenceLevel": "measured"
+    },
+    "latencyP99": {
+      "low": 53.12250522299181,
+      "high": 110.33135700159838,
+      "central": 81.72693111229509,
+      "evidenceLevel": "measured"
+    },
+    "evidenceLevel": "measured",
+    "legacyGeneric": false,
+    "appCpuByResource": [
+      {
+        "low": 3.38975,
+        "high": 7.04025,
+        "central": 5.215,
+        "resourceId": "app-1",
+        "evidenceLevel": "measured",
+        "legacyGeneric": false
+      },
+      {
+        "low": 3.38975,
+        "high": 7.04025,
+        "central": 5.215,
+        "resourceId": "app-2",
+        "evidenceLevel": "measured",
+        "legacyGeneric": false
+      }
+    ],
+    "appWeightDefaulted": false
+  },
+  "appWeight": "typical",
+  "appWeightDefaulted": false,
+  "currentStep": 6,
+  "traffic": 100,
+  "latencyP50": 4.879573,
+  "latencyP95": 9.234496,
+  "latencyP99": 81.72693,
+  "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+  "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+  "errorRate": 0,
+  "throughput": 87.619644,
+  "goodputRps": 87.619644,
+  "goodputSemantics": "post_step_point_rate",
+  "goodputProvenance": {
+    "kind": "derived",
+    "sourceFields": [
+      "metrics.throughput"
+    ]
+  },
+  "goodputWindow": {
+    "status": "unavailable",
+    "provenance": {
+      "kind": "unavailable",
+      "reason": "persisted goodput points do not include recorded simulation-clock interval bounds"
+    }
+  },
+  "offeredRps": 100,
+  "costPerHour": 0.6,
+  "metricId": "47211",
+  "resources": [
+    {
+      "id": "alb",
+      "name": "ALB (Application Load Balancer)",
+      "location": {
+        "regionKey": "use2"
+      },
+      "status": "healthy",
+      "cpuPercent": 3.5,
+      "recoveryProgress": {
+        "state": "healthy",
+        "parkWindow": {
+          "totalSteps": 0,
+          "completedSteps": 0,
+          "remainingSteps": 0
+        },
+        "cooldown": {
+          "target": null,
+          "completedSteps": 0,
+          "requiredSteps": 0,
+          "remainingSteps": 0
+        }
+      }
+    },
+    {
+      "id": "app-1",
+      "name": "app-1",
+      "location": {
+        "regionKey": "use2"
+      },
+      "status": "healthy",
+      "cpuPercent": 5.215,
+      "availabilityState": "available",
+      "isRoutable": true,
+      "recoveryProgress": {
+        "state": "healthy",
+        "parkWindow": {
+          "totalSteps": 0,
+          "completedSteps": 0,
+          "remainingSteps": 0
+        },
+        "cooldown": {
+          "target": null,
+          "completedSteps": 0,
+          "requiredSteps": 0,
+          "remainingSteps": 0
+        }
+      }
+    },
+    {
+      "id": "app-2",
+      "name": "app-2",
+      "location": {
+        "regionKey": "use2"
+      },
+      "status": "healthy",
+      "cpuPercent": 5.215,
+      "availabilityState": "available",
+      "isRoutable": true,
+      "recoveryProgress": {
+        "state": "healthy",
+        "parkWindow": {
+          "totalSteps": 0,
+          "completedSteps": 0,
+          "remainingSteps": 0
+        },
+        "cooldown": {
+          "target": null,
+          "completedSteps": 0,
+          "requiredSteps": 0,
+          "remainingSteps": 0
+        }
+      }
+    },
+    {
+      "id": "db",
+      "name": "db",
+      "location": {
+        "regionKey": "use2"
+      },
+      "status": "healthy",
+      "cpuPercent": 11.4,
+      "availabilityState": "available",
+      "isRoutable": true,
+      "recoveryProgress": {
+        "state": "healthy",
+        "parkWindow": {
+          "totalSteps": 0,
+          "completedSteps": 0,
+          "remainingSteps": 0
+        },
+        "cooldown": {
+          "target": null,
+          "completedSteps": 0,
+          "requiredSteps": 0,
+          "remainingSteps": 0
+        }
+      }
+    }
+  ],
+  "metricsHistoryLength": 7,
+  "metrics": [
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 0,
+          "high": 0,
+          "central": 0
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 0,
+            "high": 0,
+            "central": 0,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 0,
+            "high": 0,
+            "central": 0,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47187",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": -1,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 0,
+      "memoryUsage": 6.9,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 0,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 2.1,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    },
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 3.38975,
+          "high": 7.04025,
+          "central": 5.215
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47189",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": 0,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 7.3,
+      "memoryUsage": 12,
+      "offeredRps": 100,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 11.4,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 2.9,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "cpuUsage": 11.4,
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "cpuUsage": 2.9,
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    },
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 3.38975,
+          "high": 7.04025,
+          "central": 5.215
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47191",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": 1,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 7.3,
+      "memoryUsage": 6.8,
+      "offeredRps": 100,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 11.4,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 2.6,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "cpuUsage": 11.4,
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "cpuUsage": 2.6,
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    },
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 3.38975,
+          "high": 7.04025,
+          "central": 5.215
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47193",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": 2,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 7.3,
+      "memoryUsage": 15,
+      "offeredRps": 100,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 11.4,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 3,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "cpuUsage": 11.4,
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "cpuUsage": 3,
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    },
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 3.38975,
+          "high": 7.04025,
+          "central": 5.215
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47194",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": 3,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 7.3,
+      "memoryUsage": 12.3,
+      "offeredRps": 100,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 11.4,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 3.5,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "cpuUsage": 11.4,
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "cpuUsage": 3.5,
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    },
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 3.38975,
+          "high": 7.04025,
+          "central": 5.215
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47196",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": 4,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 7.3,
+      "memoryUsage": 14.6,
+      "offeredRps": 100,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 11.4,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 3.2,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "cpuUsage": 11.4,
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "cpuUsage": 3.2,
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    },
+    {
+      "appWeight": "typical",
+      "appWeightDefaulted": false,
+      "predictionEvidence": {
+        "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is independent and 500 RPS is saturation context, neither used to fit.",
+        "appCpu": {
+          "low": 3.38975,
+          "high": 7.04025,
+          "central": 5.215
+        },
+        "version": 1,
+        "appWeight": "typical",
+        "loadScope": "within measured load",
+        "sourceIds": [
+          "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+          "catalog:aws:m5.large"
+        ],
+        "formulaIds": [
+          "app-weight-v1",
+          "owned-typical-app-cpu-ols-v1",
+          "owned-typical-percentile-ols-v1",
+          "owned-typical-p99-ols-v1"
+        ],
+        "latencyP50": {
+          "low": 3.1717224979508196,
+          "high": 6.587423649590164,
+          "central": 4.879573073770492,
+          "evidenceLevel": "measured"
+        },
+        "latencyP95": {
+          "low": 6.002422651475404,
+          "high": 12.466570122295071,
+          "central": 9.234496386885237,
+          "evidenceLevel": "measured"
+        },
+        "latencyP99": {
+          "low": 53.12250522299181,
+          "high": 110.33135700159838,
+          "central": 81.72693111229509,
+          "evidenceLevel": "measured"
+        },
+        "evidenceLevel": "measured",
+        "legacyGeneric": false,
+        "appCpuByResource": [
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-1",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          },
+          {
+            "low": 3.38975,
+            "high": 7.04025,
+            "central": 5.215,
+            "resourceId": "app-2",
+            "evidenceLevel": "measured",
+            "legacyGeneric": false
+          }
+        ],
+        "appWeightDefaulted": false
+      },
+      "metricId": "47211",
+      "simulationId": "74a3940d-65e1-4d7b-9356-22c4fd1ff466",
+      "timestamp": 5,
+      "latencyP50": 4.879573,
+      "latencyP95": 9.234496,
+      "latencyP99": 81.72693,
+      "engineVersion": "1.2.5",
+      "predictionEffectiveConfigHash": "771d0ea8630e7f628e3b005055490558543c9ad1209ed3776692b50fa46d3289",
+      "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+      "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+      "calibrationEvidence": {
+        "kind": "owned",
+        "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20–200 RPS fit, 300 RPS independent holdout. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+        "latencyBasis": "P50/P95/P99 modeled from owned typical in-VPC internal-ALB k6 fit; prediction, not a measurement",
+        "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+        "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+      },
+      "cpuUsage": 7.3,
+      "memoryUsage": 8.5,
+      "offeredRps": 100,
+      "throughput": 87.619644,
+      "errorRate": 0,
+      "costPerHour": 0.6,
+      "lastCostPerHour": 0.6,
+      "connectionPressure": 0.04,
+      "databases": [
+        {
+          "name": "db",
+          "cpuUtil": 11.4,
+          "resourceId": "db",
+          "isServerless": false,
+          "maxConnections": 500,
+          "connectionPressure": 0.04,
+          "effectiveConnectionLimit": 500
+        }
+      ],
+      "loadBalancers": [
+        {
+          "name": "ALB (Application Load Balancer)",
+          "lbUtil": 0.2,
+          "cpuUtil": 3.5,
+          "routedRps": 100,
+          "resourceId": "alb",
+          "lbLatencyMs": 2,
+          "targetErrorRate": 0
+        }
+      ],
+      "costBreakdown": [
+        {
+          "name": "app-1",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-1",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "app-2",
+          "cpuUsage": 5.215,
+          "provider": "aws",
+          "resourceId": "app-2",
+          "costPerHour": 0.096,
+          "resourceType": "compute"
+        },
+        {
+          "name": "db",
+          "cpuUsage": 11.4,
+          "provider": "aws",
+          "resourceId": "db",
+          "costPerHour": 0.24,
+          "resourceType": "database"
+        },
+        {
+          "name": "ALB (Application Load Balancer)",
+          "cpuUsage": 3.5,
+          "provider": "aws",
+          "resourceId": "alb",
+          "costPerHour": 0.0225,
+          "resourceType": "network"
+        },
+        {
+          "name": "Egress & Data Transfer",
+          "provider": "aws",
+          "resourceId": "egress",
+          "costPerHour": 0.141944,
+          "resourceType": "egress"
+        }
+      ],
+      "errorBreakdown": {
+        "dbFailure": 0,
+        "ociStorage": 0,
+        "cpuOverload": 0,
+        "computeFailure": 0,
+        "poolSaturation": 0,
+        "queueAbsorption": 0,
+        "capacityOverload": 0
+      },
+      "goodputRps": 87.619644,
+      "goodputSemantics": "post_step_point_rate",
+      "goodputProvenance": {
+        "kind": "derived",
+        "sourceFields": [
+          "metrics.throughput"
+        ]
+      }
+    }
+  ],
+  "eksSpotEvidenceHistory": [],
+  "errorBreakdown": {
+    "dbFailure": 0,
+    "ociStorage": 0,
+    "cpuOverload": 0,
+    "computeFailure": 0,
+    "poolSaturation": 0,
+    "queueAbsorption": 0,
+    "capacityOverload": 0
+  },
+  "auroraFailovers": []
+}

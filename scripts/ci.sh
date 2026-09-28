@@ -16,6 +16,32 @@ cd "$ROOT"
 echo "==> honesty: results/ must not claim isExample=false"
 python3 scripts/check_results_honesty.py
 
+echo "==> typical after-fit score reproduction"
+python3 typical/after-fit/score_export.py
+python3 - << 'PY'
+import json
+from pathlib import Path
+
+repro = json.loads(Path("typical/after-fit/scores-reproduced.json").read_text())
+pub = json.loads(Path("typical/scores-after-fit.json").read_text())
+for rung in ("20", "100", "200", "300", "500"):
+    scored = repro[rung]["connectorCostBasis"]
+    published = pub[rung]
+    if scored["scores"] != published["scores"] or scored["total"] != published["total"] or scored["withoutCost"] != published["noCost"]:
+        raise SystemExit(f"after-fit scores diverge at {rung} RPS")
+    predicted = repro[rung]["predicted"]
+    for key in ("cpu", "p50", "p95", "p99", "thr", "err", "cost"):
+        if predicted[key] != published["pred"][key]:
+            raise SystemExit(f"after-fit prediction diverges at {rung} RPS {key}")
+page = pub["300_pageCostBasis"]
+no_egress = repro["300"]["noEgressCostBasis"]
+if no_egress["scores"] != page["scores"] or no_egress["total"] != 84.2 or no_egress["withoutCost"] != 82.4:
+    raise SystemExit("after-fit no-egress basis diverges")
+if repro["300"]["connectorCostBasis"]["total"] != 74.8:
+    raise SystemExit("after-fit connector total diverges")
+print("after-fit export matches typical/scores-after-fit.json (84.2 / 74.8 / 82.4)")
+PY
+
 echo "==> honesty: coefficients provenance"
 python3 -m pip install -q -r calibrate/requirements.txt
 python3 calibrate/calibrate.py --check-provenance

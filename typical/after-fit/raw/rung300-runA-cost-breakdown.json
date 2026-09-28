@@ -1,0 +1,60 @@
+{
+ "tool": "simulation.cost_breakdown",
+ "args": {
+  "simulationId": "10931cb8-3400-4b83-92f7-f1d325e81201"
+ },
+ "response": {
+  "simulationId": "10931cb8-3400-4b83-92f7-f1d325e81201",
+  "stepIndex": 5,
+  "totalCostPerHour": 0.879919,
+  "residualCostPerHour": 0,
+  "resources": [
+   {
+    "resourceId": "app-1",
+    "name": "app-1",
+    "resourceType": "compute",
+    "provider": "aws",
+    "costPerHour": 0.096,
+    "availabilityState": "available",
+    "isRoutable": true,
+    "status": "healthy"
+   },
+   {
+    "resourceId": "app-2",
+    "name": "app-2",
+    "resourceType": "compute",
+    "provider": "aws",
+    "costPerHour": 0.096,
+    "availabilityState": "available",
+    "isRoutable": true,
+    "status": "healthy"
+   },
+   {
+    "resourceId": "db",
+    "name": "db",
+    "resourceType": "database",
+    "provider": "aws",
+    "costPerHour": 0.24,
+    "availabilityState": "available",
+    "isRoutable": true,
+    "status": "healthy"
+   },
+   {
+    "resourceId": "alb",
+    "name": "ALB (Application Load Balancer)",
+    "resourceType": "network",
+    "provider": "aws",
+    "costPerHour": 0.0225,
+    "status": "healthy"
+   },
+   {
+    "resourceId": "egress",
+    "name": "Egress & Data Transfer",
+    "resourceType": "egress",
+    "provider": "aws",
+    "costPerHour": 0.425419,
+    "status": "billed"
+   }
+  ]
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "source": "cwm-bench campaign typical-v1-20260927c, measurement commit 6aa574d7ff9d3080b88b221bcd59f7d218ae37f0 (cwm-bench PR #13). Extracted with the same field rules as results-2026-09-27/score.py: app CPU = mean of the two app hosts cpuAvgPct; latency = k6 in-VPC internal-ALB p50/p95/p99; goodput = whole-run goodputRps; error = k6 http_req_failed rate x 100. Cost was not measured.",
+ "rungs": {
+  "20": {
+   "rung": "typical-fit-20",
+   "role": "fit",
+   "appCpuPct": 1.3926281143517627,
+   "appCpuPerNodePct": [
+    1.3211538461538461,
+    1.4641023825496793
+   ],
+   "p50Ms": 5.273524,
+   "p95Ms": 8.303591199999996,
+   "p99Ms": 76.62596036000001,
+   "goodputRps": 17.624145831386777,
+   "errorRatePct": 0,
+   "dbCpuPct": 5.5487179487179485,
+   "measuredCost": null
+  },
+  "100": {
+   "rung": "typical-fit-100",
+   "role": "fit",
+   "appCpuPct": 5.238137291849269,
+   "appCpuPerNodePct": [
+    4.958333333333333,
+    5.517941250365205
+   ],
+   "p50Ms": 4.684795,
+   "p95Ms": 8.354502,
+   "p99Ms": 83.1684065,
+   "goodputRps": 87.62279003099846,
+   "errorRatePct": 0.002853039914028397,
+   "dbCpuPct": 11.492307692307692,
+   "measuredCost": null
+  },
+  "200": {
+   "rung": "typical-fit-200",
+   "role": "fit",
+   "appCpuPct": 9.967308023757205,
+   "appCpuPerNodePct": [
+    9.498717948717948,
+    10.435898098796464
+   ],
+   "p50Ms": 4.6089649999999995,
+   "p95Ms": 11.400343699999972,
+   "p99Ms": 86.46146425000002,
+   "goodputRps": 175.11042969554555,
+   "errorRatePct": 0.006186057577920533,
+   "dbCpuPct": 18.563463853285263,
+   "measuredCost": null
+  },
+  "300": {
+   "rung": "typical-holdout-300",
+   "role": "independent holdout",
+   "appCpuPct": 15.303205128205128,
+   "appCpuPerNodePct": [
+    14.358974358974358,
+    16.2474358974359
+   ],
+   "p50Ms": 4.621661,
+   "p95Ms": 26.917676599999997,
+   "p99Ms": 97.54310300000054,
+   "goodputRps": 262.60872607647724,
+   "errorRatePct": 0.0044423431456231816,
+   "dbCpuPct": 26.709615384615383,
+   "measuredCost": null
+  },
+  "500": {
+   "rung": "typical-saturation-500",
+   "role": "diagnostic only (saturation context)",
+   "appCpuPct": 26.34166695034375,
+   "appCpuPerNodePct": [
+    25.39551282051282,
+    27.28782108017468
+   ],
+   "p50Ms": 5.187581,
+   "p95Ms": 88.189861,
+   "p99Ms": 181.94077207999973,
+   "goodputRps": 437.5769855710571,
+   "errorRatePct": 0.010282815511055931,
+   "dbCpuPct": 45.57307692307692,
+   "measuredCost": null
+  }
+ }
+}
