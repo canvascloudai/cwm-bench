@@ -4,7 +4,7 @@ Versioned, reproducible **measurement program** for [Cloud World Model](https://
 
 The public accuracy page (`GET https://www.cloudworldmodel.ai/api/accuracy-benchmark`) **consumes this dataset. It does not get to vote on it.**
 
-**v1 owned campaign exists** (`473f1339-f712-4096-96d6-3d4fc07cb427`, filled in `holdout/REPORT.md`). The typical campaign `typical-v1-20260927c` is in `typical/REPORT.md`. Burst on this CRUD workload measured **≈ 0% errors**. Coefficients are **fitted per-metric** by OLS on idle / normal / peak only (`calibrate/coefficients.yaml`). Holdouts report `fit_prediction` and `delta`. Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell as owned data. `results/` still has no `isExample: false` run JSON (CI rejects that path).
+**v1 owned campaign exists** (`473f1339-f712-4096-96d6-3d4fc07cb427`, filled in `holdout/REPORT.md`). The typical campaign `typical-v1-20260927c` is in `typical/REPORT.md`. After an owned calibration fit (engine 1.2.5, fit only on the 20/100/200 RPS runs), the 300 RPS holdout is 84.2 on the accuracy page's cost basis (82.4 without cost), against 24.3 before the fit (27.0 without cost). After-fit scores are in `typical/scores-after-fit.json`. Burst on this CRUD workload measured **≈ 0% errors**. Coefficients are **fitted per-metric** by OLS on idle / normal / peak only (`calibrate/coefficients.yaml`). Holdouts report `fit_prediction` and `delta`. Do not retune coefficients to raise the public score. Do not copy the public 2% / 9.55% cell as owned data. `results/` still has no `isExample: false` run JSON (CI rejects that path).
 
 Public source of this program: [github.com/canvascloudai/cwm-bench](https://github.com/canvascloudai/cwm-bench). Origin namespace: `cloudworldmodel` (name the repo `cwm-bench`).
 
@@ -83,7 +83,7 @@ If generator CPU exceeds ~70% in the steady window, discard the run.
 
 ## Typical profile
 
-A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. They run only in **us-east-2**. The frozen definition is `typical/PREREGISTRATION.md`. Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`. The measured campaign is `typical/REPORT.md`, with the numeric export in `holdout/exports/typical-v1-20260927c.summary.md`.
+A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. They run only in **us-east-2**. The frozen definition is `typical/PREREGISTRATION.md`. Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`. The measured campaign is `typical/REPORT.md`, with the numeric export in `holdout/exports/typical-v1-20260927c.summary.md`. That report also records the engine 1.2.5 after-fit holdout; the scores are `typical/scores-after-fit.json`.
 
 ## Repository layout
 
@@ -92,7 +92,7 @@ app/          Node 20 reference CRUD + seed SQL (8 categories, 200 products, 0 o
 app-typical/  Flag-gated typical profile (separate package and seed)
 load/         k6 scenarios + diagnostics + typical mix + later-day / second-region holdout keys
 terraform/    Canonical topology (AWS provider 5.x). fmt/validate in CI; no apply.
-typical/      Pre-registration, runbook, predictions, and typical/REPORT.md
+typical/      Pre-registration, runbook, predictions, typical/REPORT.md, and typical/scores-after-fit.json
 schema/       draft 2020-12. EXAMPLE fixtures only (isExample: true).
 results/      README + .gitkeep. No runs.
 calibrate/    Per-metric OLS (idle/normal/peak). Holdout deltas reported. Refuses composite scores.

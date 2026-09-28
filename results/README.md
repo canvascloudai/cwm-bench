@@ -1,6 +1,6 @@
 # Results
 
-Raw results land here. The v1 owned campaign is summarized in `holdout/REPORT.md`. The typical campaign is summarized in `typical/REPORT.md` and `holdout/exports/typical-v1-20260927c.summary.md`, with collect JSON under `typical/campaign/`. This directory is still empty of run JSON on purpose (CI rejects `isExample: false` here).
+Raw results land here. The v1 owned campaign is summarized in `holdout/REPORT.md`. The typical campaign is summarized in `typical/REPORT.md` and `holdout/exports/typical-v1-20260927c.summary.md`, with collect JSON under `typical/campaign/`. The engine 1.2.5 after-fit holdout is in that report and in `typical/scores-after-fit.json`. This directory is still empty of run JSON on purpose (CI rejects `isExample: false` here).
 
 ## Convention
 
