@@ -1,0 +1,159 @@
+{
+  "campaign": "typical-second-region-20261006",
+  "destroyedAt": "2026-10-06T04:10:51.556Z",
+  "checkedAt": "2026-10-06T04:26:56.473Z",
+  "scope": "Only the destroyed campaign; intentional active stacks excluded",
+  "results": [
+    {
+      "region": "us-east-2",
+      "checkedAt": "2026-10-06T04:26:12.863Z",
+      "taggedArns": [],
+      "liveInstanceIds": [],
+      "volumeIds": [],
+      "ruleIds": [],
+      "rdsIds": []
+    },
+    {
+      "region": "us-west-2",
+      "checkedAt": "2026-10-06T04:26:23.063Z",
+      "taggedArns": [
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0649c7663bf69fb2f",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0cd9b20d48e5c7cba",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-03ed543c87c0ee5e9",
+        "arn:aws:ec2:us-west-2:REDACTED:subnet/subnet-0b6510355b4b7ca0e",
+        "arn:aws:ec2:us-west-2:REDACTED:instance/i-01e5f143a23b5ae3f",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0c0dd24586f8ef475",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-05897a7dcdf17dea0",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0e5b587e7e3fc046a",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-042e7888080411a91",
+        "arn:aws:ec2:us-west-2:REDACTED:volume/vol-06920256030b01dc2",
+        "arn:aws:ec2:us-west-2:REDACTED:volume/vol-0bae72bd181d7ff97",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0bff492cff3ffbb0d",
+        "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-062e9d59de875f312",
+        "arn:aws:ec2:us-west-2:REDACTED:instance/i-00765ba981e3ce573",
+        "arn:aws:ec2:us-west-2:REDACTED:instance/i-02362b5e3d0880004",
+        "arn:aws:ec2:us-west-2:REDACTED:volume/vol-0d4b18ac4d1e544c0"
+      ],
+      "liveInstanceIds": [],
+      "volumeIds": [],
+      "ruleIds": [],
+      "rdsIds": []
+    }
+  ],
+  "classifications": [
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0649c7663bf69fb2f",
+      "resourceId": "sgr-0649c7663bf69fb2f",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:25.081Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0cd9b20d48e5c7cba",
+      "resourceId": "sgr-0cd9b20d48e5c7cba",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:27.087Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-03ed543c87c0ee5e9",
+      "resourceId": "sgr-03ed543c87c0ee5e9",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:29.063Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:subnet/subnet-0b6510355b4b7ca0e",
+      "resourceId": "subnet-0b6510355b4b7ca0e",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:31.172Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:instance/i-01e5f143a23b5ae3f",
+      "resourceId": "i-01e5f143a23b5ae3f",
+      "classification": "terminated",
+      "checkedAt": "2026-10-06T04:26:33.319Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0c0dd24586f8ef475",
+      "resourceId": "sgr-0c0dd24586f8ef475",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:35.313Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-05897a7dcdf17dea0",
+      "resourceId": "sgr-05897a7dcdf17dea0",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:37.376Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0e5b587e7e3fc046a",
+      "resourceId": "sgr-0e5b587e7e3fc046a",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:39.504Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-042e7888080411a91",
+      "resourceId": "sgr-042e7888080411a91",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:41.686Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:volume/vol-06920256030b01dc2",
+      "resourceId": "vol-06920256030b01dc2",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:43.799Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:volume/vol-0bae72bd181d7ff97",
+      "resourceId": "vol-0bae72bd181d7ff97",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:45.916Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0bff492cff3ffbb0d",
+      "resourceId": "sgr-0bff492cff3ffbb0d",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:47.925Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-062e9d59de875f312",
+      "resourceId": "sgr-062e9d59de875f312",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:50.063Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:instance/i-00765ba981e3ce573",
+      "resourceId": "i-00765ba981e3ce573",
+      "classification": "terminated",
+      "checkedAt": "2026-10-06T04:26:52.165Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:instance/i-02362b5e3d0880004",
+      "resourceId": "i-02362b5e3d0880004",
+      "classification": "terminated",
+      "checkedAt": "2026-10-06T04:26:54.322Z"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:volume/vol-0d4b18ac4d1e544c0",
+      "resourceId": "vol-0d4b18ac4d1e544c0",
+      "classification": "not-found",
+      "checkedAt": "2026-10-06T04:26:56.473Z"
+    }
+  ],
+  "liveCleanupConfirmed": true,
+  "strictEmpty": false
+}

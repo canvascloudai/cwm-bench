@@ -1,0 +1,9 @@
+{
+  "detectedAt": "2026-10-06T02:40:57.478Z",
+  "scenario": "typical-later-day",
+  "attempt": 1,
+  "campaign": "typical-later-day-20261006",
+  "problem": "Original local runner lost in workspace restart; remote workload is inspected, not relaunched",
+  "originalAttemptStartedAt": "2026-10-06T02:29:13.425Z",
+  "newLoadAttempt": false
+}

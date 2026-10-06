@@ -1,0 +1,23 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--instance-ids",
+    "i-019f83709efdd11ac",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--comment",
+    "cwm-bench interrupted-run teardown",
+    "--timeout-seconds",
+    "60",
+    "--parameters",
+    "{\"commands\":[\"set -u\\nDIR='/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z'\\nif [ -f \\\"$DIR/exit.code\\\" ]; then\\n  printf \\\"%s\\\\n\\\" \\\"ADAPTER_TEARDOWN_OK (k6 already completed)\\\"\\n  exit 0\\nfi\\nif [ -f \\\"$DIR/pid\\\" ]; then\\n  PID=\\\"$(tr -d \\\"[:space:]\\\" < \\\"$DIR/pid\\\")\\\"\\n  kill -TERM -- \\\"-$PID\\\" >/dev/null 2>&1 || true\\n  kill -TERM \\\"$PID\\\" >/dev/null 2>&1 || true\\n  for _ in 1 2 3 4 5; do\\n    if ! kill -0 \\\"$PID\\\" >/dev/null 2>&1; then break; fi\\n    sleep 1\\n  done\\n  kill -KILL -- \\\"-$PID\\\" >/dev/null 2>&1 || true\\n  kill -KILL \\\"$PID\\\" >/dev/null 2>&1 || true\\n  printf \\\"ADAPTER_TEARDOWN_KILLED pid=%s\\\\n\\\" \\\"$PID\\\"\\nelse\\n  printf \\\"%s\\\\n\\\" \\\"ADAPTER_TEARDOWN_OK (k6 was not started)\\\"\\nfi\"]}",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T02:49:40.107Z"
+}

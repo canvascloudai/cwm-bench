@@ -1,0 +1,23 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--instance-ids",
+    "i-019f83709efdd11ac",
+    "--parameters",
+    "{\"commands\":[\"set -eu\\nfor d in /opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-*; do\\n  [ -d \\\"$d\\\" ] || continue\\n  printf \\\"RECOVERY_DIR=%s\\\\n\\\" \\\"$d\\\"\\n  cat \\\"$d/identity.json\\\"\\n  for f in started_at completed_at exit.code pid; do\\n    if [ -f \\\"$d/$f\\\" ]; then printf \\\"\\\\nRECOVERY_%s=%s\\\\n\\\" \\\"$f\\\" \\\"$(cat \\\"$d/$f\\\")\\\"; fi\\n  done\\n  if [ -f \\\"$d/pid\\\" ]; then p=\\\"$(cat \\\"$d/pid\\\")\\\"; if kill -0 \\\"$p\\\" 2>/dev/null; then echo \\\"RECOVERY_PROCESS=alive\\\"; else echo \\\"RECOVERY_PROCESS=not-running\\\"; fi; fi\\ndone\"]}",
+    "--timeout-seconds",
+    "60",
+    "--comment",
+    "cwm-bench interruption read-only evidence",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T02:37:15.012Z"
+}

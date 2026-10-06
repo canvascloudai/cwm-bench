@@ -1,0 +1,29 @@
+{
+  "contract": {
+    "repository": "https://github.com/canvascloudai/cwm-bench.git",
+    "revision": "64c6e89d74e25c549e7dad740471443621da5aac",
+    "adapterVersion": "1.4.0",
+    "fitDate": "2026-09-27",
+    "regions": [
+      "us-east-2",
+      "us-west-2"
+    ],
+    "scenarios": [
+      [
+        "typical-later-day",
+        "typical-later-day-300"
+      ],
+      [
+        "typical-second-region",
+        "typical-second-region-300"
+      ]
+    ]
+  },
+  "parent": "typical-holdouts-v1-20261006",
+  "childIds": [
+    "typical-later-day-20261006",
+    "typical-second-region-20261006"
+  ],
+  "terraform": "/tmp/cwm-terraform-1.9.8/terraform",
+  "noAwsOrDatabaseAccess": true
+}

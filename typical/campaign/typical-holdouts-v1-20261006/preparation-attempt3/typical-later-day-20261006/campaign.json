@@ -1,0 +1,8 @@
+{
+  "parent": "typical-holdouts-v1-20261006",
+  "child": "typical-later-day-20261006",
+  "region": "us-east-2",
+  "revision": "64c6e89d74e25c549e7dad740471443621da5aac",
+  "backendSchema": "cwm_h_typical_later_day_20261006",
+  "fitDate": "2026-09-27"
+}

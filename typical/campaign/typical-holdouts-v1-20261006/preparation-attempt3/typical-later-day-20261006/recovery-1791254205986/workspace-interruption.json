@@ -1,0 +1,7 @@
+{
+  "detectedAt": "2026-10-06T02:36:45.986Z",
+  "campaign": "typical-later-day-20261006",
+  "scenario": "typical-later-day",
+  "problem": "Workspace restarted; original local runner and its buffered command output were lost",
+  "newLoadAttemptStarted": false
+}

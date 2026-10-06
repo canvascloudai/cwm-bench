@@ -1,0 +1,10 @@
+{
+  "command": "git",
+  "args": [
+    "clone",
+    "https://github.com/canvascloudai/cwm-bench.git",
+    "/home/runner/workspace/.local/private-cwm-holdouts/typical-holdouts-v1-20261006/checkout-us-west-2-attempt3"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T03:14:54.206Z"
+}

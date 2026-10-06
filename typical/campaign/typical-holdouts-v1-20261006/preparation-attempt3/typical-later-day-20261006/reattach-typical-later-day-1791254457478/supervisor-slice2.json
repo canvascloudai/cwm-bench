@@ -1,0 +1,11 @@
+{
+  "commandId": "022fdc7d-1bdb-4f26-a454-14d45b66a9f7",
+  "status": "Success",
+  "stdout": "CWM_RECOVERY_RUNNING\n",
+  "stderr": "",
+  "responseCode": 0,
+  "statusDetails": "Success",
+  "executionStartDateTime": "2026-10-06T02:45:04.599Z",
+  "executionEndDateTime": "2026-10-06T02:48:59.599Z",
+  "ok": true
+}

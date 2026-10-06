@@ -1,0 +1,23 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--instance-ids",
+    "i-019f83709efdd11ac",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--comment",
+    "cwm-bench reattach typical-later-day",
+    "--timeout-seconds",
+    "250",
+    "--parameters",
+    "{\"commands\":[\"set -eu\\nDIR='/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z'\\nEND=$(($(date +%s) + 235))\\nwhile [ ! -f \\\"$DIR/exit.code\\\" ] && [ \\\"$(date +%s)\\\" -lt \\\"$END\\\" ]; do\\n p=\\\"$(cat \\\"$DIR/pid\\\")\\\"; kill -0 \\\"$p\\\" 2>/dev/null || { echo CWM_RECOVERY_LOST; exit 0; }\\n sleep 5\\ndone\\nif [ -f \\\"$DIR/exit.code\\\" ]; then\\n printf \\\"ADAPTER_K6_COMPLETE exit=%s\\\\n\\\" \\\"$(cat \\\"$DIR/exit.code\\\")\\\"\\n printf \\\"completed_at=%s\\\\n\\\" \\\"$(cat \\\"$DIR/completed_at\\\")\\\"\\n tail -n 80 \\\"$DIR/runner.log\\\"\\nelse echo CWM_RECOVERY_RUNNING; fi\"]}",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T02:49:03.672Z"
+}

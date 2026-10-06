@@ -1,0 +1,15 @@
+{
+  "command": "terraform",
+  "args": [
+    "destroy",
+    "-input=false",
+    "-auto-approve",
+    "-var=region=us-east-2",
+    "-var=test_id=typical-later-day-20261006",
+    "-var=app_profile=typical",
+    "-var=app_workers=2",
+    "-var=app_source_git_ref=64c6e89d74e25c549e7dad740471443621da5aac"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T03:14:21.388Z"
+}
