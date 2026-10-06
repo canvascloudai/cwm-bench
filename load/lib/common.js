@@ -155,4 +155,15 @@ export const TYPICAL_RPS = Object.freeze({
   'typical-later-day-300': 300,
   'typical-second-region': 100,
   'typical-second-region-300': 300,
+  // typical-scale-v1: total RPS on 1, 2, or 3 app servers. The adapter
+  // enforces us-east-2 and the key's expected app count.
+  'typical-scale-1x-100': 100,
+  'typical-scale-1x-200': 200,
+  'typical-scale-1x-300': 300,
+  'typical-scale-2x-100': 100,
+  'typical-scale-2x-200': 200,
+  'typical-scale-2x-300': 300,
+  'typical-scale-3x-100': 100,
+  'typical-scale-3x-200': 200,
+  'typical-scale-3x-300': 300,
 });

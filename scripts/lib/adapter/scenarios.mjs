@@ -18,6 +18,11 @@ import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
  * us-east-2). typical-second-region and typical-second-region-300 mirror
  * the second-region constraint at those same rates in us-west-2 only.
  * Other typical keys stay on us-east-2.
+ *
+ * typical-scale-{1x,2x,3x}-{100,200,300} are the typical-scale-v1
+ * validation keys: the same mix in us-east-2, split holdout, with
+ * expectedAppCount 1, 2, or 3. Every other typical key expects 2 app
+ * servers. A live count that differs fails with APP_COUNT_MISMATCH.
  */
 
 export const SCENARIO_KEYS = Object.freeze([
@@ -39,6 +44,15 @@ export const SCENARIO_KEYS = Object.freeze([
   'typical-later-day-300',
   'typical-second-region',
   'typical-second-region-300',
+  'typical-scale-1x-100',
+  'typical-scale-1x-200',
+  'typical-scale-1x-300',
+  'typical-scale-2x-100',
+  'typical-scale-2x-200',
+  'typical-scale-2x-300',
+  'typical-scale-3x-100',
+  'typical-scale-3x-200',
+  'typical-scale-3x-300',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -54,12 +68,37 @@ function typicalScenario(key, rps, split, kind, optionalRung) {
     expectedPoolSize: 250,
     expectedProfile: 'typical',
     expectedWorkers: 2,
+    expectedAppCount: 2,
     completeness: 'optional',
     requiresCompleteCollect: false,
     aliasOf: null,
     description: optionalRung
       ? `Typical profile saturation rung at ${rps} total RPS (holdout, diagnostic, ${required}). Requires app_profile=typical, app_workers=2, and Terraform region ${TYPICAL_REGION}.`
       : `Typical profile ${split} rung at ${rps} total RPS (${required}). Requires app_profile=typical, app_workers=2, and Terraform region ${TYPICAL_REGION}.`,
+  };
+}
+
+function typicalScaleScenario(key, appCount, rps) {
+  return {
+    key,
+    kind: 'holdout',
+    rps,
+    split: 'holdout',
+    regionRole: 'primary',
+    requiredRegion: TYPICAL_REGION,
+    workload: { script: 'typical.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'typical',
+    expectedWorkers: 2,
+    expectedAppCount: appCount,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    description:
+      `Typical-profile app-count validation at ${rps} total RPS on ${appCount} × m5.large. ` +
+      `Same load/typical.js mix as the typical-v1 rungs. Requires app_profile=typical, app_workers=2, pool 250, ` +
+      `Terraform region ${TYPICAL_REGION}, and topology app_count=${appCount}. ` +
+      'Split is holdout (validation, not fit). Not a rename of a typical-fit or typical-holdout key.',
   };
 }
 
@@ -72,6 +111,7 @@ function typicalStabilityHoldout(key, rps, fields) {
     expectedPoolSize: 250,
     expectedProfile: 'typical',
     expectedWorkers: 2,
+    expectedAppCount: 2,
     completeness: 'optional',
     requiresCompleteCollect: false,
     aliasOf: null,
@@ -239,6 +279,15 @@ const DEFINITIONS = {
     description:
       `Typical-profile second-region holdout at 300 total RPS in ${SECOND_REGION}. Same load/typical.js mix as typical-holdout-300. Requires app_profile=typical, app_workers=2, and pool 250. Setup fails unless Terraform region is ${SECOND_REGION}. Other typical keys, including typical-holdout-300, stay locked to ${TYPICAL_REGION}. Not a rename of the ${TYPICAL_REGION} typical apply and not the lean second-region key.`,
   }),
+  'typical-scale-1x-100': typicalScaleScenario('typical-scale-1x-100', 1, 100),
+  'typical-scale-1x-200': typicalScaleScenario('typical-scale-1x-200', 1, 200),
+  'typical-scale-1x-300': typicalScaleScenario('typical-scale-1x-300', 1, 300),
+  'typical-scale-2x-100': typicalScaleScenario('typical-scale-2x-100', 2, 100),
+  'typical-scale-2x-200': typicalScaleScenario('typical-scale-2x-200', 2, 200),
+  'typical-scale-2x-300': typicalScaleScenario('typical-scale-2x-300', 2, 300),
+  'typical-scale-3x-100': typicalScaleScenario('typical-scale-3x-100', 3, 100),
+  'typical-scale-3x-200': typicalScaleScenario('typical-scale-3x-200', 3, 200),
+  'typical-scale-3x-300': typicalScaleScenario('typical-scale-3x-300', 3, 300),
 };
 
 export function scenariosRequiringCompleteCollect() {
@@ -285,11 +334,13 @@ export function assertNotAliased(spec) {
     err.code = 'ALIASED_SCENARIO';
     throw err;
   }
-  const typicalStability =
+  const typicalOwnKey =
     spec.expectedProfile === 'typical' &&
-    (spec.calendarConstraint === 'later-utc-day-than-fit' || spec.regionRole === 'second');
+    (spec.calendarConstraint === 'later-utc-day-than-fit' ||
+      spec.regionRole === 'second' ||
+      spec.expectedAppCount != null);
   if (
-    typicalStability &&
+    typicalOwnKey &&
     (spec.workload.script !== 'typical.js' || spec.workload.envValue !== spec.key)
   ) {
     const err = new Error(
@@ -396,6 +447,26 @@ export function assertExpectedProfile(spec, meta) {
         'Refusing to run a lean scenario on a typical stack or a typical scenario on a lean stack.'
     );
     err.code = 'PROFILE_MISMATCH';
+    throw err;
+  }
+}
+
+export function assertExpectedAppCount(spec, outputs) {
+  if (spec.expectedAppCount == null) return;
+  const expected = Number(spec.expectedAppCount);
+  const ids = outputs && Array.isArray(outputs.appInstanceIds) ? outputs.appInstanceIds : [];
+  const topology = outputs && outputs.topology ? outputs.topology : {};
+  const declared = topology.app_count;
+  const declaredMissing = declared == null || declared === '';
+  const declaredNum = declaredMissing ? NaN : Number(declared);
+  if (ids.length !== expected || declaredNum !== expected) {
+    const err = new Error(
+      `scenario ${spec.key} expects ${expected} app server(s); ` +
+        `terraform reported ${ids.length} app instance id(s) and topology.app_count=${
+          declaredMissing ? 'unset' : declared
+        }. Refusing to label this stack with that key.`
+    );
+    err.code = 'APP_COUNT_MISMATCH';
     throw err;
   }
 }

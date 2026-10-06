@@ -1,0 +1,289 @@
+{
+ "engineVersion": "1.2.14",
+ "freezeLabel": "typical-scale-v1 predictions frozen against engine 1.2.14",
+ "freezeTimestamp": "2026-10-06 12:41:17 EDT",
+ "freezeTimestampZone": "America/New_York",
+ "connector": "user-cwm MCP",
+ "seed": 20240601,
+ "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+ "protocol": "create (traffic at create, seed 20240601) \u2192 step once (currentStep=6) \u2192 cost_breakdown / snapshot \u2192 delete",
+ "scoring": "Score typical-scale-v1 from predictions.json only. Do not re-query the live engine for these cells.",
+ "runB": "Not part of this freeze package. One simulation per cell was harvested and then deleted.",
+ "createPayloads": "Reconstructed from typical/after-fit/create-payload-<RPS>.json by the preregistration \u00a75.1 graph rule (app tier count only). The 2\u00d7 payloads match those files apart from the name field. The live create bodies were not attached separately.",
+ "runs": [
+  {
+   "cell": "1x-100",
+   "nodes": 1,
+   "rps": 100,
+   "simulationId": "d1c3b3ef-a271-4167-a16d-c011368b409d",
+   "createPayload": "create-payload-1x-100.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned-scaled",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": null,
+   "effectiveConfigHashNote": "Unavailable via MCP for owned-scaled cells: simulation.get/step responses fail connector enum validation before body is returned. Hash present server-side.",
+   "currentStep": 6,
+   "harvestPath": "list-full (CPU/P50/P95/notes) + snapshot (throughput/errorRate/cost) + cost_breakdown; kind from MCP validation error",
+   "snapshotPinId": "9b27f201-c1da-4c26-a49c-a242d3b56c0b",
+   "outputs": {
+    "appCpuPerHost": 9.978,
+    "p50": 4.522396967213114,
+    "p95": 11.009235083606534,
+    "p99": 87.10211997786887,
+    "throughput": 87.555916,
+    "errorRate": 0,
+    "costPerHour": 0.5,
+    "costBreakdownTotal": 0.500341,
+    "dbCpu": 11.4
+   },
+   "warnings": [
+    "Pool-capacity warning: this one-server topology has a 250-connection application-pool ceiling versus MySQL max_connections=500; demand above the pool ceiling may be constrained. This declared limit alone does not add errors or reduce throughput.",
+    "Scaled from the typical-v1 two-server fit to 1 app server using equivalent two-server fit load 200 RPS; this server count was not measured."
+   ],
+   "extrapolationNotes": []
+  },
+  {
+   "cell": "1x-200",
+   "nodes": 1,
+   "rps": 200,
+   "simulationId": "5124aeba-fe13-4260-a01e-bdc22fb61d1a",
+   "createPayload": "create-payload-1x-200.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned-scaled",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": null,
+   "effectiveConfigHashNote": "Unavailable via MCP for owned-scaled cells (connector enum validation).",
+   "currentStep": 6,
+   "harvestPath": "list-full + snapshot + cost_breakdown; kind from MCP validation error",
+   "snapshotPinId": "92163ad2-5737-45fe-8ec5-f9322dbd33d1",
+   "outputs": {
+    "appCpuPerHost": 19.502,
+    "p50": 4.165220860655737,
+    "p95": 14.558712477049129,
+    "p99": 97.85249770901643,
+    "throughput": 175.0481,
+    "errorRate": 0,
+    "costPerHour": 0.64,
+    "costBreakdownTotal": 0.642078,
+    "dbCpu": 18.6
+   },
+   "warnings": [
+    "Pool-capacity warning: this one-server topology has a 250-connection application-pool ceiling versus MySQL max_connections=500; demand above the pool ceiling may be constrained. This declared limit alone does not add errors or reduce throughput.",
+    "Scaled from the typical-v1 two-server fit to 1 app server using equivalent two-server fit load 400 RPS; this server count was not measured."
+   ],
+   "extrapolationNotes": [
+    "At 200 total RPS, the derived equivalent fit load is 400 RPS, beyond the 300 RPS independent holdout; this is an additional unvalidated fit extrapolation. P50 remains capped at its 300 RPS projection."
+   ]
+  },
+  {
+   "cell": "1x-300",
+   "nodes": 1,
+   "rps": 300,
+   "simulationId": "414226cd-0f13-4d87-8dcd-50f15058ec48",
+   "createPayload": "create-payload-1x-300.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned-scaled",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": null,
+   "effectiveConfigHashNote": "Unavailable via MCP for owned-scaled cells (connector enum validation).",
+   "currentStep": 6,
+   "harvestPath": "list-full + snapshot + cost_breakdown; kind from MCP validation error",
+   "snapshotPinId": "d40513e3-0efe-4601-b5b5-19194cdf72b3",
+   "outputs": {
+    "appCpuPerHost": 29.027,
+    "p50": 4.165220860655737,
+    "p95": 18.108189870491724,
+    "p99": 108.60287544016398,
+    "throughput": 262.54028,
+    "errorRate": 0,
+    "costPerHour": 0.78,
+    "costBreakdownTotal": 0.783815,
+    "dbCpu": 25.8
+   },
+   "warnings": [
+    "Pool-capacity warning: this one-server topology has a 250-connection application-pool ceiling versus MySQL max_connections=500; demand above the pool ceiling may be constrained. This declared limit alone does not add errors or reduce throughput.",
+    "Scaled from the typical-v1 two-server fit to 1 app server using equivalent two-server fit load 600 RPS; this server count was not measured."
+   ],
+   "extrapolationNotes": [
+    "At 300 total RPS, the derived equivalent fit load is 600 RPS, beyond the 300 RPS independent holdout; this is an additional unvalidated fit extrapolation. P50 remains capped at its 300 RPS projection."
+   ]
+  },
+  {
+   "cell": "2x-100",
+   "nodes": 2,
+   "rps": 100,
+   "simulationId": "f320ee04-11d6-41d3-afb4-59f089b746f0",
+   "createPayload": "create-payload-2x-100.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": "9e06dff7f8ba0e38eb6ca44f602faca656c6b27e9ac07c7925bd1d90bb50cfe3",
+   "effectiveConfigHashNote": null,
+   "currentStep": 6,
+   "harvestPath": "simulation.step (full) + simulation.get + snapshot + cost_breakdown",
+   "snapshotPinId": "736e877c-a960-4e56-9f16-db3a263281e8",
+   "outputs": {
+    "appCpuPerHost": 5.215,
+    "p50": 4.879573,
+    "p95": 9.234496,
+    "p99": 81.72693111229509,
+    "throughput": 87.619644,
+    "errorRate": 0,
+    "costPerHour": 0.6,
+    "costBreakdownTotal": 0.596444,
+    "dbCpu": 11.4
+   },
+   "warnings": [],
+   "extrapolationNotes": []
+  },
+  {
+   "cell": "2x-200",
+   "nodes": 2,
+   "rps": 200,
+   "simulationId": "35c4baac-5ef0-4134-8a71-175ea45de0d6",
+   "createPayload": "create-payload-2x-200.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": "e61502617c70d57c8a0e9be50ca0a3a616882c1833f72cd7b2c9ea137eb94292",
+   "effectiveConfigHashNote": null,
+   "currentStep": 6,
+   "harvestPath": "simulation.step (full) + cost_breakdown",
+   "snapshotPinId": null,
+   "outputs": {
+    "appCpuPerHost": 9.978,
+    "p50": 4.522397,
+    "p95": 11.009235,
+    "p99": 87.10211997786887,
+    "throughput": 175.11183,
+    "errorRate": 0,
+    "costPerHour": 0.74,
+    "costBreakdownTotal": 0.738181,
+    "dbCpu": 18.6
+   },
+   "warnings": [],
+   "extrapolationNotes": []
+  },
+  {
+   "cell": "2x-300",
+   "nodes": 2,
+   "rps": 300,
+   "simulationId": "9342c481-b5bf-4369-8980-63dffa2ef8a0",
+   "createPayload": "create-payload-2x-300.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": "2e2adbbb02797ef60893e892d2043dcfe1a07b19fca9e1a89c1ac0afe7e75858",
+   "effectiveConfigHashNote": null,
+   "currentStep": 6,
+   "harvestPath": "simulation.step (full) + cost_breakdown",
+   "snapshotPinId": null,
+   "outputs": {
+    "appCpuPerHost": 14.74,
+    "p50": 4.1652207,
+    "p95": 12.783974,
+    "p99": 92.47730884344264,
+    "throughput": 262.604,
+    "errorRate": 0,
+    "costPerHour": 0.88,
+    "costBreakdownTotal": 0.879919,
+    "dbCpu": 25.8
+   },
+   "warnings": [],
+   "extrapolationNotes": []
+  },
+  {
+   "cell": "3x-100",
+   "nodes": 3,
+   "rps": 100,
+   "simulationId": "63c05f1a-7381-4434-82b6-673a28cf6b07",
+   "createPayload": "create-payload-3x-100.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned-scaled",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": null,
+   "effectiveConfigHashNote": "Unavailable via MCP for owned-scaled cells (connector enum validation).",
+   "currentStep": 6,
+   "harvestPath": "list-full + snapshot + cost_breakdown; kind from MCP validation error",
+   "snapshotPinId": "5913373e-2a6d-4bb5-90ba-580b7127c39c",
+   "outputs": {
+    "appCpuPerHost": 3.628,
+    "p50": 4.998631775956284,
+    "p95": 8.64291682131147,
+    "p99": 79.93520149043717,
+    "throughput": 87.68337,
+    "errorRate": 0,
+    "costPerHour": 0.69,
+    "costBreakdownTotal": 0.692547,
+    "dbCpu": 11.4
+   },
+   "warnings": [
+    "Pool-capacity warning: the three application pools total 750 connections versus MySQL max_connections=500; the database limit is lower than combined pool capacity.",
+    "Scaled from the typical-v1 two-server fit to 3 app servers using equivalent two-server fit load 66.66666666666667 RPS; this server count was not measured."
+   ],
+   "extrapolationNotes": []
+  },
+  {
+   "cell": "3x-200",
+   "nodes": 3,
+   "rps": 200,
+   "simulationId": "f495a13a-5182-4c6a-a6ba-441e74ff7fd8",
+   "createPayload": "create-payload-3x-200.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned-scaled",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": null,
+   "effectiveConfigHashNote": "Unavailable via MCP for owned-scaled cells (connector enum validation).",
+   "currentStep": 6,
+   "harvestPath": "list-full + snapshot + cost_breakdown; kind from MCP validation error",
+   "snapshotPinId": "5d199697-ca25-4a53-a4d5-d49a6185a1c2",
+   "outputs": {
+    "appCpuPerHost": 6.803,
+    "p50": 4.760514371584699,
+    "p95": 9.826075952459002,
+    "p99": 83.51866073415302,
+    "throughput": 175.17555,
+    "errorRate": 0,
+    "costPerHour": 0.83,
+    "costBreakdownTotal": 0.834284,
+    "dbCpu": 18.6
+   },
+   "warnings": [
+    "Pool-capacity warning: the three application pools total 750 connections versus MySQL max_connections=500; the database limit is lower than combined pool capacity.",
+    "Scaled from the typical-v1 two-server fit to 3 app servers using equivalent two-server fit load 133.33333333333334 RPS; this server count was not measured."
+   ],
+   "extrapolationNotes": []
+  },
+  {
+   "cell": "3x-300",
+   "nodes": 3,
+   "rps": 300,
+   "simulationId": "c3b069b0-2286-419e-9645-5989e2ae458e",
+   "createPayload": "create-payload-3x-300.json",
+   "engineVersion": "1.2.14",
+   "calibrationKind": "owned-scaled",
+   "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "effectiveConfigHash": null,
+   "effectiveConfigHashNote": "Unavailable via MCP for owned-scaled cells (connector enum validation).",
+   "currentStep": 6,
+   "harvestPath": "list-full + snapshot + cost_breakdown; kind from MCP validation error",
+   "snapshotPinId": "327da52e-3e08-45eb-abdc-a80b71c13b65",
+   "outputs": {
+    "appCpuPerHost": 9.978,
+    "p50": 4.522396967213114,
+    "p95": 11.009235083606534,
+    "p99": 87.10211997786887,
+    "throughput": 262.66776,
+    "errorRate": 0,
+    "costPerHour": 0.98,
+    "costBreakdownTotal": 0.976022,
+    "dbCpu": 25.8
+   },
+   "warnings": [
+    "Pool-capacity warning: the three application pools total 750 connections versus MySQL max_connections=500; the database limit is lower than combined pool capacity.",
+    "Scaled from the typical-v1 two-server fit to 3 app servers using equivalent two-server fit load 200 RPS; this server count was not measured."
+   ],
+   "extrapolationNotes": []
+  }
+ ]
+}

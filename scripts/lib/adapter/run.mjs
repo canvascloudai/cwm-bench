@@ -1,5 +1,6 @@
 import { ADAPTER_VERSION, PRIMARY_REGION } from './version.mjs';
 import {
+  assertExpectedAppCount,
   assertExpectedPool,
   assertExpectedProfile,
   assertLaterDay,
@@ -384,6 +385,7 @@ export async function runScenario(ctx, scenarioKey) {
   const region = outputs.region || ctx.env.AWS_REGION || PRIMARY_REGION;
   assertSecondRegion(spec, region);
   assertTypicalRegion(spec, region);
+  assertExpectedAppCount(spec, outputs);
 
   const runAws = ctx.deps.runAws;
   if (typeof runAws !== 'function') {

@@ -96,7 +96,10 @@ Scenario keys (kebab-case, discovered from this repo + public CWM rungs):
   typical-fit-20, typical-fit-100, typical-fit-200,
   typical-holdout-300, typical-saturation-500,
   typical-later-day, typical-later-day-300,
-  typical-second-region, typical-second-region-300
+  typical-second-region, typical-second-region-300,
+  typical-scale-1x-100, typical-scale-1x-200, typical-scale-1x-300,
+  typical-scale-2x-100, typical-scale-2x-200, typical-scale-2x-300,
+  typical-scale-3x-100, typical-scale-3x-200, typical-scale-3x-300
 
 Holdouts:
   later-day      Distinct holdout. Runs only on a later UTC calendar day
@@ -117,6 +120,12 @@ Typical profile (app_profile=typical, app_workers=2, pool 250):
   are that same mix in us-west-2 only. Each pair is one apply: run 100,
   then 300, then destroy. Those keys do not loosen the us-east-2 lock
   on the other typical keys.
+  typical-scale-1x-*, typical-scale-2x-*, and typical-scale-3x-* are the
+  typical-scale-v1 validation keys (100, 200, then 300 total RPS) in
+  us-east-2. Each N is its own apply with -var app_count=N. They are
+  split holdout, not fit. A live app count other than N fails with
+  APP_COUNT_MISMATCH. Every other typical key expects 2 app servers
+  and fails the same way on any other count.
 
 Burst is a supported scenario. collect must assemble required CloudWatch
 datapoints plus k6 summary.json (latency percentiles and error-class

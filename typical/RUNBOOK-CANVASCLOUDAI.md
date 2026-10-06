@@ -53,7 +53,7 @@ unset CWM_RUN_ID CWM_WARMUP CWM_DURATION   # use the defaults: 5m warmup, 15m st
 node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
 ```
 
-In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5 and, on this revision, `typical-later-day`, `typical-later-day-300`, `typical-second-region`, and `typical-second-region-300` (section 10). Record `adapterVersion` (`1.4.0` on this revision). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`.
+In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5, the four holdout keys in section 10, and the nine `typical-scale-*` keys in section 11. Record `adapterVersion` (`1.5.0` on this revision). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`. The recorded holdouts remain adapter `1.4.0`.
 
 ## 4. Provision (typical profile, us-east-2)
 
@@ -256,3 +256,76 @@ node scripts/worker-adapter.mjs collect --scenario typical-second-region-300 --j
 Destroy with section 8, substituting `region=us-west-2` and `test_id=typical-second-region-YYYYMMDD` in the terraform vars and in the leftover AWS checks, only after both keys are collected.
 
 `SECOND_REGION_CONSTRAINT` means this apply is not us-west-2. Other typical keys in us-west-2, including `typical-fit-100` and `typical-holdout-300`, fail with `TYPICAL_REGION_CONSTRAINT`. Do not point those keys at us-west-2.
+
+## 11. App-server count change (typical-scale-v1)
+
+These nine applies are not part of section 6 or section 10. The frozen plan is `typical/scale-v1/PREREGISTRATION.md`. Predictions are already frozen in `typical/scale-v1/predictions/predictions.json` (engine 1.2.14). Do not re-query the live engine to score them. Do not change instance types, pool size, workers, the request mix, warmup, or duration. The only topology variable is `app_count`.
+
+`<SHA>` is the commit that contains `typical/scale-v1/PREREGISTRATION.md`. `<AMI>` is one id for all nine applies. Resolve it once before session 1:
+
+```bash
+aws ssm get-parameter \
+  --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 \
+  --region us-east-2 \
+  --query Parameter.Value --output text
+```
+
+Pass that same `-var ami_id=<AMI>` on every apply. Record it in the campaign note. This runbook does not name an AMI, because the wiring commit did not query AWS.
+
+### 11.1 Session order (Latin square)
+
+Three sessions. Each session is one repetition of each app count. Each count takes each position once. Sessions may fall on different UTC days.
+
+| Session | 1st apply | 2nd apply | 3rd apply |
+| --- | --- | --- | --- |
+| S1 (rep 1) | 2× | 1× | 3× |
+| S2 (rep 2) | 1× | 3× | 2× |
+| S3 (rep 3) | 3× | 2× | 1× |
+
+Apply id: `typical-scale-${N}x-r${K}-YYYYMMDD`, where `K` is the repetition (1, 2, or 3) and `YYYYMMDD` is the UTC date of that apply. Parent id: `typical-scale-v1-YYYYMMDD` using the UTC date of the first apply. Each apply is a fresh clone and a fresh terraform state. Destroy before the next apply.
+
+On every apply the ladder is 100, then 200, then 300, on that same stack.
+
+### 11.2 One apply
+
+```bash
+APPLY=typical-scale-${N}x-r${K}-YYYYMMDD
+git clone https://github.com/canvascloudai/cwm-bench.git cwm-bench-$APPLY && cd cwm-bench-$APPLY
+git checkout --detach <SHA> && test -f typical/scale-v1/PREREGISTRATION.md && mkdir -p out
+export AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 CWM_CAMPAIGN_ID=$APPLY
+unset CWM_WARMUP CWM_DURATION CWM_FIT_CAMPAIGN_DATE
+node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
+cd terraform && terraform init && terraform apply \
+  -var='region=us-east-2' -var="test_id=$APPLY" -var='app_profile=typical' -var='app_workers=2' \
+  -var="app_count=$N" -var="ami_id=<AMI>" -var='app_source_git_ref=<SHA>'
+terraform output -json > ../out/01-terraform-outputs.json && cd ..
+node scripts/worker-adapter.mjs wait-ready --json > out/02-wait-ready.json
+aws rds describe-db-instances --region us-east-2 --query "DBInstances[?contains(DBInstanceIdentifier,'cwm-bench')].EngineVersion" > out/03-rds-engine-version.json
+for RPS in 100 200 300; do
+  KEY=typical-scale-${N}x-$RPS
+  export CWM_SCENARIO=$KEY CWM_RUN_ID=$KEY-r$K
+  node scripts/worker-adapter.mjs run --scenario $KEY --json > out/10-$KEY.run.json
+  # Set CWM_RUN_STARTED_AT and CWM_RUN_ENDED_AT from the generator started_at / completed_at
+  # before collect. Unset, collect falls back to a trailing 40-minute window and will
+  # include the previous rung.
+  node scripts/worker-adapter.mjs collect --scenario $KEY --json > out/11-$KEY.collect.json
+done
+```
+
+Do not change any other variable: instance types, `app_pool_size`, `mysql_max_connections`, `name_prefix`, warmup, duration.
+
+Gates (stop or record):
+
+- After apply: `topology_declaration.app_count` is N, `app_instance_ids` has length N, `resolved_ami_id` is `<AMI>`, and `ami_source` is `variable`.
+- After wait-ready: `ok`, adapterVersion `1.5.0`, and N `appNodes`, each `typical` / 2 workers / `<SHA>`.
+- After each run: `ok: true` and `adapterVersion` `1.5.0`.
+- After each collect: `ok`, `complete`, `identityMatches`, `invented: false`, generator CPU in the steady window at or below 70%, and `terraformOutputs.topology_declaration.app_count` is N. The collect window must cover only that rung. `collectionWindow()` falls back to a trailing 40-minute window when `CWM_RUN_STARTED_AT` / `CWM_RUN_ENDED_AT` are unset. Started back-to-back, that window would span the previous rung. Check `cloudwatch.window.source` is `persisted-run`, or that the window bounds match the run.
+- `APP_COUNT_MISMATCH` means the live app count is not the key's count. Do not switch to another typical key to get past it. Existing typical keys, including `typical-holdout-300`, also expect 2 app servers.
+
+Re-run rules are `typical/scale-v1/PREREGISTRATION.md` §8.2. Errors, saturation, and slow rungs are never re-run. Keep every attempt (`-attempt2`).
+
+### 11.3 Destroy and the cleanup lock
+
+Destroy with section 8, using `region=us-east-2`, `test_id=$APPLY`, and the same `-var` set (`app_count`, `ami_id`, `app_profile`, `app_workers`, `app_source_git_ref`).
+
+The holdouts ended with the runner's strict safety lock retained: tag inventory still listed resources that direct checks then classified as terminated or not-found (`typical/campaign/typical-holdouts-v1-20261006/README-execution.md`). Between these nine applies, do the section 8 leftover checks (EC2 non-terminated, RDS, volumes, security-group rules). Proceed when every ARN classifies as terminated or not-found, and record that classification on the apply. Do not wait for an empty tag inventory, and do not delete anything by hand outside Terraform.
