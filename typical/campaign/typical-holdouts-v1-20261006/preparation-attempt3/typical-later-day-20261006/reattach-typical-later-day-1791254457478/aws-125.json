@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "caff174a-4ecc-4e45-bff4-95b91182c1f9",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "cwm-bench interrupted-run teardown",
+        "ExpiresAfter": "2026-10-06T03:50:39.950000+00:00",
+        "Parameters": {
+            "commands": [
+                "set -u\nDIR='/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z'\nif [ -f \"$DIR/exit.code\" ]; then\n  printf \"%s\\n\" \"ADAPTER_TEARDOWN_OK (k6 already completed)\"\n  exit 0\nfi\nif [ -f \"$DIR/pid\" ]; then\n  PID=\"$(tr -d \"[:space:]\" < \"$DIR/pid\")\"\n  kill -TERM -- \"-$PID\" >/dev/null 2>&1 || true\n  kill -TERM \"$PID\" >/dev/null 2>&1 || true\n  for _ in 1 2 3 4 5; do\n    if ! kill -0 \"$PID\" >/dev/null 2>&1; then break; fi\n    sleep 1\n  done\n  kill -KILL -- \"-$PID\" >/dev/null 2>&1 || true\n  kill -KILL \"$PID\" >/dev/null 2>&1 || true\n  printf \"ADAPTER_TEARDOWN_KILLED pid=%s\\n\" \"$PID\"\nelse\n  printf \"%s\\n\" \"ADAPTER_TEARDOWN_OK (k6 was not started)\"\nfi"
+            ]
+        },
+        "InstanceIds": [
+            "i-019f83709efdd11ac"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-10-06T02:49:39.950000+00:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 60,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

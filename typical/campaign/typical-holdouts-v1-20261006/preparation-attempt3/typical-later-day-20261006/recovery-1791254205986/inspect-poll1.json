@@ -1,0 +1,22 @@
+{
+    "CommandId": "1b335295-8a07-4cfe-b722-3a4df988bdca",
+    "InstanceId": "i-019f83709efdd11ac",
+    "Comment": "cwm-bench interruption read-only evidence",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-10-06T02:37:15.050Z",
+    "ExecutionElapsedTime": "PT0.006S",
+    "ExecutionEndDateTime": "2026-10-06T02:37:15.050Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "RECOVERY_DIR=/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z\n{\"campaignId\":\"typical-later-day-20261006\",\"runId\":\"typical-later-day-2026-10-06T022913480Z\",\"scenario\":\"typical-later-day\"}\n\nRECOVERY_started_at=2026-10-06T02:29:20Z\n\nRECOVERY_pid=27036\nRECOVERY_PROCESS=alive\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}

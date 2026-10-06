@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "131298f2-7440-4bca-9433-c12021ed60f7",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "cwm-bench reattach typical-later-day",
+        "ExpiresAfter": "2026-10-06T03:41:59.485000+00:00",
+        "Parameters": {
+            "commands": [
+                "set -eu\nfor d in /opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-*; do\n [ -d \"$d\" ] || continue\n printf \"CWM_RECOVERY_IDENTITY=%s\\n\" \"$(cat \"$d/identity.json\")\"\n printf \"CWM_RECOVERY_STARTED_AT=%s\\n\" \"$(cat \"$d/started_at\")\"\ndone"
+            ]
+        },
+        "InstanceIds": [
+            "i-019f83709efdd11ac"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-10-06T02:40:59.485000+00:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 60,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

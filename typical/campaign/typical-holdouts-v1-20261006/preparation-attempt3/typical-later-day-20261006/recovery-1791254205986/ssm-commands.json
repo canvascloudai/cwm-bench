@@ -1,0 +1,224 @@
+{
+    "Commands": [
+        {
+            "CommandId": "fc4b8af7-eea4-4401-96ec-11f5aedbc6cc",
+            "DocumentName": "AWS-RunShellScript",
+            "DocumentVersion": "$DEFAULT",
+            "Comment": "cwm-bench wait typical-later-day attempt=1",
+            "ExpiresAfter": "2026-10-06T03:40:25.085000+00:00",
+            "Parameters": {
+                "commands": [
+                    "set -u\n# ADAPTER_K6_STATUS_WAIT\nDIR='/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z'\nDEADLINE=$(($(date +%s) + 600))\nwhile :; do\n  if [ -f \"$DIR/exit.code\" ]; then\n    CODE=\"$(tr -d \"[:space:]\" < \"$DIR/exit.code\")\"\n    printf \"ADAPTER_K6_COMPLETE exit=%s\\n\" \"$CODE\"\n    if [ -f \"$DIR/completed_at\" ]; then printf \"completed_at=%s\\n\" \"$(cat \"$DIR/completed_at\")\"; fi\n    tail -n 80 \"$DIR/runner.log\" 2>/dev/null || true\n    exit 0\n  fi\n  if [ -f \"$DIR/pid\" ]; then\n    PID=\"$(tr -d \"[:space:]\" < \"$DIR/pid\")\"\n    if ! kill -0 \"$PID\" 2>/dev/null; then\n      printf \"ADAPTER_K6_LOST pid=%s (no exit marker)\\n\" \"$PID\"\n      tail -n 80 \"$DIR/runner.log\" 2>/dev/null || true\n      exit 0\n    fi\n  else\n    printf \"%s\\n\" \"ADAPTER_K6_PENDING\"\n  fi\n  if [ \"$(date +%s)\" -ge \"$DEADLINE\" ]; then\n    printf \"%s\\n\" \"ADAPTER_K6_TIMEOUT\"\n    tail -n 80 \"$DIR/runner.log\" 2>/dev/null || true\n    exit 0\n  fi\n  sleep 30\ndone"
+                ]
+            },
+            "InstanceIds": [
+                "i-019f83709efdd11ac"
+            ],
+            "Targets": [],
+            "RequestedDateTime": "2026-10-06T02:29:25.085000+00:00",
+            "Status": "InProgress",
+            "StatusDetails": "InProgress",
+            "OutputS3Region": "us-east-2",
+            "OutputS3BucketName": "",
+            "OutputS3KeyPrefix": "",
+            "MaxConcurrency": "50",
+            "MaxErrors": "0",
+            "TargetCount": 1,
+            "CompletedCount": 0,
+            "ErrorCount": 0,
+            "DeliveryTimedOutCount": 0,
+            "ServiceRole": "",
+            "NotificationConfig": {
+                "NotificationArn": "",
+                "NotificationEvents": [],
+                "NotificationType": ""
+            },
+            "CloudWatchOutputConfig": {
+                "CloudWatchLogGroupName": "",
+                "CloudWatchOutputEnabled": false
+            },
+            "TimeoutSeconds": 660,
+            "AlarmConfiguration": {
+                "IgnorePollAlarmFailure": false,
+                "Alarms": []
+            },
+            "TriggeredAlarms": []
+        },
+        {
+            "CommandId": "15e3523b-a23b-4aaa-9af0-c9b6b9c6e146",
+            "DocumentName": "AWS-RunShellScript",
+            "DocumentVersion": "$DEFAULT",
+            "Comment": "cwm-bench run typical-later-day",
+            "ExpiresAfter": "2026-10-06T04:29:20.810000+00:00",
+            "Parameters": {
+                "commands": [
+                    "set -euo pipefail\n# cwm-bench adapter remote launch. Do not print secrets.\n# ADAPTER_K6_START\nif [ -f /opt/cwm-bench/TARGET.env ]; then . /opt/cwm-bench/TARGET.env; fi\ncd /opt/cwm-bench\nexport CAMPAIGN_ID='typical-later-day-20261006'\nexport RUN_ID='typical-later-day-2026-10-06T022913480Z'\nexport SPLIT='holdout'\nexport WARMUP='5m'\nexport DURATION='15m'\nexport RESULTS_DIR='/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z'\nexport SCENARIO='typical-later-day'\nmkdir -p \"$RESULTS_DIR\"\nrm -f \"$RESULTS_DIR/exit.code\" \"$RESULTS_DIR/completed_at\" \"$RESULTS_DIR/pid\" \"$RESULTS_DIR/started_at\" \"$RESULTS_DIR/runner.log\"\nprintf '%s\\n' '{\"campaignId\":\"typical-later-day-20261006\",\"runId\":\"typical-later-day-2026-10-06T022913480Z\",\"scenario\":\"typical-later-day\"}' > \"$RESULTS_DIR/identity.json\"\ndate -u +%Y-%m-%dT%H:%M:%SZ > \"$RESULTS_DIR/started_at\"\nnohup setsid sh -c 'set +e\nk6 run --out json=\"$RESULTS_DIR/k6.json\" load/typical.js\nK6_EXIT=$?\nprintf \"%s\\n\" \"$K6_EXIT\" > \"$RESULTS_DIR/exit.code\"\ndate -u +%Y-%m-%dT%H:%M:%SZ > \"$RESULTS_DIR/completed_at\"\nexit \"$K6_EXIT\"' > \"$RESULTS_DIR/runner.log\" 2>&1 < /dev/null &\nK6_PID=$!\nprintf \"%s\\n\" \"$K6_PID\" > \"$RESULTS_DIR/pid\"\nprintf \"ADAPTER_K6_STARTED pid=%s\\n\" \"$K6_PID\"\nprintf \"results_dir=%s\\n\" \"$RESULTS_DIR\""
+                ]
+            },
+            "InstanceIds": [
+                "i-019f83709efdd11ac"
+            ],
+            "Targets": [],
+            "RequestedDateTime": "2026-10-06T02:29:20.810000+00:00",
+            "Status": "Success",
+            "StatusDetails": "Success",
+            "OutputS3Region": "us-east-2",
+            "OutputS3BucketName": "",
+            "OutputS3KeyPrefix": "",
+            "MaxConcurrency": "50",
+            "MaxErrors": "0",
+            "TargetCount": 1,
+            "CompletedCount": 1,
+            "ErrorCount": 0,
+            "DeliveryTimedOutCount": 0,
+            "ServiceRole": "",
+            "NotificationConfig": {
+                "NotificationArn": "",
+                "NotificationEvents": [],
+                "NotificationType": ""
+            },
+            "CloudWatchOutputConfig": {
+                "CloudWatchLogGroupName": "",
+                "CloudWatchOutputEnabled": false
+            },
+            "TimeoutSeconds": 3600,
+            "AlarmConfiguration": {
+                "IgnorePollAlarmFailure": false,
+                "Alarms": []
+            },
+            "TriggeredAlarms": []
+        },
+        {
+            "CommandId": "ca992221-3cd7-48dc-b70f-b54b12afcc99",
+            "DocumentName": "AWS-RunShellScript",
+            "DocumentVersion": "$DEFAULT",
+            "Comment": "cwm-bench wait-ready generator",
+            "ExpiresAfter": "2026-10-06T03:31:02.653000+00:00",
+            "Parameters": {
+                "commands": [
+                    "set -euo pipefail\ntest -f /opt/cwm-bench/TARGET.env\ntest -f /opt/cwm-bench/load/scenarios.js\ntest -f /opt/cwm-bench/load/diagnostics.js\ncommand -v k6 >/dev/null\nk6 version\n# shellcheck disable=SC1091\n. /opt/cwm-bench/TARGET.env\ntest -n \"${TARGET:-}\"\ncurl -fsS --max-time 10 \"$TARGET/health\""
+                ]
+            },
+            "InstanceIds": [
+                "i-019f83709efdd11ac"
+            ],
+            "Targets": [],
+            "RequestedDateTime": "2026-10-06T02:29:02.653000+00:00",
+            "Status": "Success",
+            "StatusDetails": "Success",
+            "OutputS3Region": "us-east-2",
+            "OutputS3BucketName": "",
+            "OutputS3KeyPrefix": "",
+            "MaxConcurrency": "50",
+            "MaxErrors": "0",
+            "TargetCount": 1,
+            "CompletedCount": 1,
+            "ErrorCount": 0,
+            "DeliveryTimedOutCount": 0,
+            "ServiceRole": "",
+            "NotificationConfig": {
+                "NotificationArn": "",
+                "NotificationEvents": [],
+                "NotificationType": ""
+            },
+            "CloudWatchOutputConfig": {
+                "CloudWatchLogGroupName": "",
+                "CloudWatchOutputEnabled": false
+            },
+            "TimeoutSeconds": 120,
+            "AlarmConfiguration": {
+                "IgnorePollAlarmFailure": false,
+                "Alarms": []
+            },
+            "TriggeredAlarms": []
+        },
+        {
+            "CommandId": "5e66e1b3-a818-4bc6-96be-638696e5a96f",
+            "DocumentName": "AWS-RunShellScript",
+            "DocumentVersion": "$DEFAULT",
+            "Comment": "cwm-bench wait-ready generator",
+            "ExpiresAfter": "2026-10-06T03:30:47.955000+00:00",
+            "Parameters": {
+                "commands": [
+                    "set -euo pipefail\ntest -f /opt/cwm-bench/TARGET.env\ntest -f /opt/cwm-bench/load/scenarios.js\ntest -f /opt/cwm-bench/load/diagnostics.js\ncommand -v k6 >/dev/null\nk6 version\n# shellcheck disable=SC1091\n. /opt/cwm-bench/TARGET.env\ntest -n \"${TARGET:-}\"\ncurl -fsS --max-time 10 \"$TARGET/health\""
+                ]
+            },
+            "InstanceIds": [
+                "i-019f83709efdd11ac"
+            ],
+            "Targets": [],
+            "RequestedDateTime": "2026-10-06T02:28:47.955000+00:00",
+            "Status": "Failed",
+            "StatusDetails": "Failed",
+            "OutputS3Region": "us-east-2",
+            "OutputS3BucketName": "",
+            "OutputS3KeyPrefix": "",
+            "MaxConcurrency": "50",
+            "MaxErrors": "0",
+            "TargetCount": 1,
+            "CompletedCount": 1,
+            "ErrorCount": 1,
+            "DeliveryTimedOutCount": 0,
+            "ServiceRole": "",
+            "NotificationConfig": {
+                "NotificationArn": "",
+                "NotificationEvents": [],
+                "NotificationType": ""
+            },
+            "CloudWatchOutputConfig": {
+                "CloudWatchLogGroupName": "",
+                "CloudWatchOutputEnabled": false
+            },
+            "TimeoutSeconds": 120,
+            "AlarmConfiguration": {
+                "IgnorePollAlarmFailure": false,
+                "Alarms": []
+            },
+            "TriggeredAlarms": []
+        },
+        {
+            "CommandId": "9e800e69-818f-47f6-90dd-03ae89ba773a",
+            "DocumentName": "AWS-RunShellScript",
+            "DocumentVersion": "$DEFAULT",
+            "Comment": "cwm-bench wait-ready generator",
+            "ExpiresAfter": "2026-10-06T03:30:33.301000+00:00",
+            "Parameters": {
+                "commands": [
+                    "set -euo pipefail\ntest -f /opt/cwm-bench/TARGET.env\ntest -f /opt/cwm-bench/load/scenarios.js\ntest -f /opt/cwm-bench/load/diagnostics.js\ncommand -v k6 >/dev/null\nk6 version\n# shellcheck disable=SC1091\n. /opt/cwm-bench/TARGET.env\ntest -n \"${TARGET:-}\"\ncurl -fsS --max-time 10 \"$TARGET/health\""
+                ]
+            },
+            "InstanceIds": [
+                "i-019f83709efdd11ac"
+            ],
+            "Targets": [],
+            "RequestedDateTime": "2026-10-06T02:28:33.301000+00:00",
+            "Status": "Failed",
+            "StatusDetails": "Failed",
+            "OutputS3Region": "us-east-2",
+            "OutputS3BucketName": "",
+            "OutputS3KeyPrefix": "",
+            "MaxConcurrency": "50",
+            "MaxErrors": "0",
+            "TargetCount": 1,
+            "CompletedCount": 1,
+            "ErrorCount": 1,
+            "DeliveryTimedOutCount": 0,
+            "ServiceRole": "",
+            "NotificationConfig": {
+                "NotificationArn": "",
+                "NotificationEvents": [],
+                "NotificationType": ""
+            },
+            "CloudWatchOutputConfig": {
+                "CloudWatchLogGroupName": "",
+                "CloudWatchOutputEnabled": false
+            },
+            "TimeoutSeconds": 120,
+            "AlarmConfiguration": {
+                "IgnorePollAlarmFailure": false,
+                "Alarms": []
+            },
+            "TriggeredAlarms": []
+        }
+    ]
+}

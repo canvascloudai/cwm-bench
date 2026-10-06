@@ -1,0 +1,16 @@
+{
+  "parent": "typical-holdouts-v1-20261006",
+  "revision": "64c6e89d74e25c549e7dad740471443621da5aac",
+  "startedAt": "2026-10-06T02:14:56.241Z",
+  "finishedAt": "2026-10-06T02:15:54.193Z",
+  "regions": [
+    {
+      "region": "us-east-2",
+      "campaign": "typical-later-day-20261006",
+      "destroyed": false,
+      "attempts": [],
+      "issues": []
+    }
+  ],
+  "cleanupProblems": []
+}

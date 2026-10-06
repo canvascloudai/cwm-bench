@@ -1,0 +1,11 @@
+{
+  "commandId": "131298f2-7440-4bca-9433-c12021ed60f7",
+  "status": "Success",
+  "stdout": "CWM_RECOVERY_IDENTITY={\"campaignId\":\"typical-later-day-20261006\",\"runId\":\"typical-later-day-2026-10-06T022913480Z\",\"scenario\":\"typical-later-day\"}\nCWM_RECOVERY_STARTED_AT=2026-10-06T02:29:20Z\n",
+  "stderr": "",
+  "responseCode": 0,
+  "statusDetails": "Success",
+  "executionStartDateTime": "2026-10-06T02:40:59.666Z",
+  "executionEndDateTime": "2026-10-06T02:40:59.666Z",
+  "ok": true
+}

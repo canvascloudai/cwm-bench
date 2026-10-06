@@ -1,0 +1,25 @@
+{
+  "recordedAt": "2026-10-06T04:29:08.349772+00:00",
+  "parent": "typical-holdouts-v1-20261006",
+  "pinnedGitSha": "64c6e89d74e25c549e7dad740471443621da5aac",
+  "runnerExitCode": 1,
+  "bothTerraformStatesEmpty": true,
+  "liveCleanupConfirmed": true,
+  "strictTagInventoryEmpty": false,
+  "recoveryLockRetained": true,
+  "proofFiles": [
+    "inventory/delayed-typical-later-day-20261006-1791257624587/delayed-verification.json",
+    "inventory/delayed-typical-second-region-20261006-1791260751557/delayed-verification.json"
+  ],
+  "classificationCounts": {
+    "typical-later-day-20261006": {
+      "not-found": 15,
+      "terminated": 3
+    },
+    "typical-second-region-20261006": {
+      "not-found": 13,
+      "terminated": 3
+    }
+  },
+  "note": "Original strict cleanup failure retained. All final retained ARNs are covered by direct not-found or terminated results. No manual AWS deletion, reruns, scoring, retuning, or coefficient changes."
+}

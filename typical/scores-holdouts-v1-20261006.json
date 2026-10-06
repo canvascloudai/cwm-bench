@@ -1,0 +1,229 @@
+{
+ "campaignId": "typical-holdouts-v1-20261006",
+ "referenceCampaign": "typical-v1-20260927c",
+ "engine": "1.2.5",
+ "scoredAgainstCommit": "64c6e89d74e25c549e7dad740471443621da5aac",
+ "calibrationUnchanged": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+ "reproductionOfPublished300": {
+  "page": 84.2,
+  "noCost": 82.4,
+  "connector": 74.8,
+  "matches": true
+ },
+ "notes": [
+  "Rung objects use the connector cost basis in scores and total, matching typical/scores-after-fit.json. Page-cost totals are the *_pageCostBasis objects.",
+  "meas.cost is the list-price reference USD 0.4545 per hour used for scoring, not a measured bill.",
+  "The 100 RPS page cost prediction 0.4545 is derived, not a figure published in scores-after-fit.json: non-egress costBreakdown lines in typical/after-fit/raw/rung100-runA-metrics.json (0.096 + 0.096 + 0.24 + 0.0225), excluding egress 0.141944.",
+  "us-west-2 rows are scored with the us-east-2 prediction and the USD 0.4545 reference. The cost component is not a regional cost test. The without-cost total does not use that reference."
+ ],
+ "typical-later-day": {
+  "region": "us-east-2",
+  "runId": "typical-later-day-2026-10-06T022913480Z",
+  "adapter": "1.4.0",
+  "referenceScenario": "typical-fit-100",
+  "pred": {
+   "cpu": 5.215,
+   "p50": 4.879573,
+   "p95": 9.234496,
+   "p99": 81.72693,
+   "thr": 87.619644,
+   "err": 0,
+   "cost": 0.6,
+   "fit": "owned",
+   "engine": "1.2.5"
+  },
+  "meas": {
+   "cpu": 5.461536845099605,
+   "p50": 5.439607,
+   "p95": 9.7898165,
+   "p99": 88.75636449999999,
+   "thr": 87.6253492297855,
+   "err": 0,
+   "cost": 0.4545,
+   "db": 13.473813450609272
+  },
+  "scores": {
+   "p50": 89.7,
+   "p95": 94.3,
+   "cpu": 95.5,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 68.0
+  },
+  "total": 92.4,
+  "noCost": 95.1,
+  "p99score": 92.1
+ },
+ "typical-later-day_pageCostBasis": {
+  "costPred": 0.4545,
+  "scores": {
+   "p50": 89.7,
+   "p95": 94.3,
+   "cpu": 95.5,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 100.0
+  },
+  "total": 95.6,
+  "noCost": 95.1,
+  "costPredDerived": true
+ },
+ "typical-later-day-300": {
+  "region": "us-east-2",
+  "runId": "typical-later-day-300-2026-10-06T025024483Z",
+  "adapter": "1.4.0",
+  "referenceScenario": "typical-holdout-300",
+  "pred": {
+   "cpu": 14.74,
+   "p50": 4.1652207,
+   "p95": 12.783974,
+   "p99": 92.47731,
+   "thr": 262.604,
+   "err": 0,
+   "cost": 0.88,
+   "fit": "owned",
+   "engine": "1.2.5"
+  },
+  "meas": {
+   "cpu": 15.813503285780286,
+   "p50": 5.175492,
+   "p95": 51.122386600000034,
+   "p99": 126.41098951999969,
+   "thr": 262.55196121325883,
+   "err": 0.006664614388585103,
+   "cost": 0.4545,
+   "db": 31.418488497715792
+  },
+  "scores": {
+   "p50": 80.5,
+   "p95": 25.0,
+   "cpu": 93.2,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 6.4
+  },
+  "total": 66.6,
+  "noCost": 73.3,
+  "p99score": 73.2
+ },
+ "typical-later-day-300_pageCostBasis": {
+  "costPred": 0.4545,
+  "scores": {
+   "p50": 80.5,
+   "p95": 25.0,
+   "cpu": 93.2,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 100.0
+  },
+  "total": 76.0,
+  "noCost": 73.3
+ },
+ "typical-second-region": {
+  "region": "us-west-2",
+  "runId": "typical-second-region-2026-10-06T032348637Z",
+  "adapter": "1.4.0",
+  "referenceScenario": "typical-fit-100",
+  "pred": {
+   "cpu": 5.215,
+   "p50": 4.879573,
+   "p95": 9.234496,
+   "p99": 81.72693,
+   "thr": 87.619644,
+   "err": 0,
+   "cost": 0.6,
+   "fit": "owned",
+   "engine": "1.2.5"
+  },
+  "meas": {
+   "cpu": 5.72531975451282,
+   "p50": 4.531484,
+   "p95": 7.629682399999997,
+   "p99": 88.17071732000001,
+   "thr": 87.6215288088677,
+   "err": 0.002853094180638903,
+   "cost": 0.4545,
+   "db": 12.614102564102563
+  },
+  "scores": {
+   "p50": 92.3,
+   "p95": 79.0,
+   "cpu": 91.1,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 68.0
+  },
+  "total": 88.2,
+  "noCost": 90.5,
+  "p99score": 92.7,
+  "costReferenceRegion": "us-east-2"
+ },
+ "typical-second-region_pageCostBasis": {
+  "costPred": 0.4545,
+  "scores": {
+   "p50": 92.3,
+   "p95": 79.0,
+   "cpu": 91.1,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 100.0
+  },
+  "total": 91.4,
+  "noCost": 90.5,
+  "costPredDerived": true,
+  "costReferenceRegion": "us-east-2"
+ },
+ "typical-second-region-300": {
+  "region": "us-west-2",
+  "runId": "typical-second-region-300-2026-10-06T034502772Z",
+  "adapter": "1.4.0",
+  "referenceScenario": "typical-holdout-300",
+  "pred": {
+   "cpu": 14.74,
+   "p50": 4.1652207,
+   "p95": 12.783974,
+   "p99": 92.47731,
+   "thr": 262.604,
+   "err": 0,
+   "cost": 0.88,
+   "fit": "owned",
+   "engine": "1.2.5"
+  },
+  "meas": {
+   "cpu": 16.085248562592426,
+   "p50": 4.621589,
+   "p95": 32.88688839999976,
+   "p99": 112.82016088000026,
+   "thr": 262.6124176163182,
+   "err": 0.003807722696248441,
+   "cost": 0.4545,
+   "db": 29.269852842091094
+  },
+  "scores": {
+   "p50": 90.1,
+   "p95": 38.9,
+   "cpu": 91.6,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 6.4
+  },
+  "total": 71.7,
+  "noCost": 79.0,
+  "p99score": 82.0,
+  "costReferenceRegion": "us-east-2"
+ },
+ "typical-second-region-300_pageCostBasis": {
+  "costPred": 0.4545,
+  "scores": {
+   "p50": 90.1,
+   "p95": 38.9,
+   "cpu": 91.6,
+   "thr": 100.0,
+   "err": 100.0,
+   "cost": 100.0
+  },
+  "total": 81.1,
+  "noCost": 79.0,
+  "costReferenceRegion": "us-east-2"
+ }
+}

@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "75f39f87-43f1-4dfd-a129-92e992022549",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "cwm-bench reattach typical-later-day",
+        "ExpiresAfter": "2026-10-06T03:45:13.895000+00:00",
+        "Parameters": {
+            "commands": [
+                "set -eu\nDIR='/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z'\nEND=$(($(date +%s) + 235))\nwhile [ ! -f \"$DIR/exit.code\" ] && [ \"$(date +%s)\" -lt \"$END\" ]; do\n p=\"$(cat \"$DIR/pid\")\"; kill -0 \"$p\" 2>/dev/null || { echo CWM_RECOVERY_LOST; exit 0; }\n sleep 5\ndone\nif [ -f \"$DIR/exit.code\" ]; then\n printf \"ADAPTER_K6_COMPLETE exit=%s\\n\" \"$(cat \"$DIR/exit.code\")\"\n printf \"completed_at=%s\\n\" \"$(cat \"$DIR/completed_at\")\"\n tail -n 80 \"$DIR/runner.log\"\nelse echo CWM_RECOVERY_RUNNING; fi"
+            ]
+        },
+        "InstanceIds": [
+            "i-019f83709efdd11ac"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-10-06T02:41:03.895000+00:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 250,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

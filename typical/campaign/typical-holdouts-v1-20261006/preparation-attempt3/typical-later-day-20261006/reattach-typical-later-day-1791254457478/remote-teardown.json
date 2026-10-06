@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "adapterVersion": "1.4.0",
+  "campaignId": "typical-later-day-20261006",
+  "runId": "typical-later-day-2026-10-06T022913480Z",
+  "region": "us-east-2",
+  "commandId": "caff174a-4ecc-4e45-bff4-95b91182c1f9",
+  "remoteStdout": "ADAPTER_TEARDOWN_OK (k6 already completed)\n",
+  "remoteStderr": "",
+  "teardown": {
+    "k6Stopped": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+    "CommandId": "022fdc7d-1bdb-4f26-a454-14d45b66a9f7",
+    "InstanceId": "i-019f83709efdd11ac",
+    "Comment": "cwm-bench reattach typical-later-day",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-10-06T02:45:04.599Z",
+    "ExecutionElapsedTime": "PT3M55.129S",
+    "ExecutionEndDateTime": "2026-10-06T02:48:59.599Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "CWM_RECOVERY_RUNNING\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}

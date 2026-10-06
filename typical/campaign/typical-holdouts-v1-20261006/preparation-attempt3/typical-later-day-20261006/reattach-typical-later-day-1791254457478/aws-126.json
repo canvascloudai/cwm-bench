@@ -1,0 +1,22 @@
+{
+    "CommandId": "caff174a-4ecc-4e45-bff4-95b91182c1f9",
+    "InstanceId": "i-019f83709efdd11ac",
+    "Comment": "cwm-bench interrupted-run teardown",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-10-06T02:49:40.147Z",
+    "ExecutionElapsedTime": "PT0.002S",
+    "ExecutionEndDateTime": "2026-10-06T02:49:40.147Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "ADAPTER_TEARDOWN_OK (k6 already completed)\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}

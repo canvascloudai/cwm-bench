@@ -1,0 +1,12 @@
+{
+  "command": "node",
+  "args": [
+    "scripts/worker-adapter.mjs",
+    "run",
+    "--scenario",
+    "typical-second-region-300",
+    "--json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T04:05:33.077Z"
+}

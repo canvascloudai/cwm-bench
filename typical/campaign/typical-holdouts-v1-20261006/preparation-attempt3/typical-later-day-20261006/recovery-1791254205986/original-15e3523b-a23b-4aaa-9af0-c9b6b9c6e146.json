@@ -1,0 +1,22 @@
+{
+    "CommandId": "15e3523b-a23b-4aaa-9af0-c9b6b9c6e146",
+    "InstanceId": "i-019f83709efdd11ac",
+    "Comment": "cwm-bench run typical-later-day",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-10-06T02:29:20.993Z",
+    "ExecutionElapsedTime": "PT0.006S",
+    "ExecutionEndDateTime": "2026-10-06T02:29:20.993Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "ADAPTER_K6_STARTED pid=27036\nresults_dir=/opt/cwm-bench/results/raw/typical-later-day-20261006/typical-later-day-2026-10-06T022913480Z\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}
