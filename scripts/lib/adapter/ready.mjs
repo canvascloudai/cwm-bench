@@ -25,7 +25,7 @@ function capabilityPayload() {
       description: spec.description,
     })),
     matrixNote:
-      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical, app_workers=2, in us-east-2.',
+      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical and app_workers=2. They require us-east-2, except typical-second-region and typical-second-region-300, which require us-west-2. typical-later-day and typical-later-day-300 also require a later UTC day than the fit campaign.',
     primaryRegion: PRIMARY_REGION,
     secondRegion: SECOND_REGION,
     knownGaps: [],

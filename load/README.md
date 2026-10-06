@@ -77,12 +77,19 @@ SCENARIO=later-day      k6 run load/scenarios.js
 # second-region: only valid when this apply is us-west-2 (adapter enforces).
 SCENARIO=second-region  k6 run load/scenarios.js
 
-# Typical profile (app_profile=typical, app_workers=2, us-east-2). Same warmup and steady defaults.
+# Typical profile (app_profile=typical, app_workers=2). Same warmup and steady defaults.
+# Fit, 300, and 500 keys are valid only in us-east-2 (adapter enforces).
 SCENARIO=typical-fit-20        k6 run load/typical.js
 SCENARIO=typical-fit-100       k6 run load/typical.js
 SCENARIO=typical-fit-200       k6 run load/typical.js
 SCENARIO=typical-holdout-300   k6 run load/typical.js
 SCENARIO=typical-saturation-500 k6 run load/typical.js
+# Same mix. Later-day keys: us-east-2, UTC day after the fit date (adapter enforces).
+SCENARIO=typical-later-day         k6 run load/typical.js
+SCENARIO=typical-later-day-300     k6 run load/typical.js
+# Second-region keys: only valid when this apply is us-west-2 (adapter enforces).
+SCENARIO=typical-second-region     k6 run load/typical.js
+SCENARIO=typical-second-region-300 k6 run load/typical.js
 ```
 
 Diagnostics at 1000 RPS (Burst holdout). **Re-apply** terraform before app-bound so the nodes actually have `APP_POOL_SIZE=40`.

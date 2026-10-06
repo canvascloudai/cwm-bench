@@ -46,8 +46,8 @@
     },
     "scenario": {
       "type": "string",
-      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic", "typical-fit-20", "typical-fit-100", "typical-fit-200", "typical-holdout-300", "typical-saturation-500"],
-      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal. typical-* keys are the flag-gated typical profile."
+      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic", "typical-fit-20", "typical-fit-100", "typical-fit-200", "typical-holdout-300", "typical-saturation-500", "typical-later-day", "typical-later-day-300", "typical-second-region", "typical-second-region-300"],
+      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal. typical-* keys are the flag-gated typical profile. typical-later-day and typical-later-day-300 are 100 and 300 RPS holdouts on a later UTC day in us-east-2. typical-second-region and typical-second-region-300 are the same rates in us-west-2."
     },
     "notes": { "type": "string" },
     "gitSha": {

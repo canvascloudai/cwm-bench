@@ -83,7 +83,7 @@ If generator CPU exceeds ~70% in the steady window, discard the run.
 
 ## Typical profile
 
-A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. They run only in **us-east-2**. The frozen definition is `typical/PREREGISTRATION.md`. Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`. The measured campaign is `typical/REPORT.md`, with the numeric export in `holdout/exports/typical-v1-20260927c.summary.md`. That report also records the engine 1.2.5 after-fit holdout; the scores are `typical/scores-after-fit.json`, and `python3 typical/after-fit/score_export.py` reproduces them from `typical/after-fit/`.
+A second workload lives in `app-typical/` and stays off unless Terraform is applied with `app_profile=typical` and `app_workers=2`. The default remains the lean app (`app_profile=lean`, `app_workers=1`). Scenario keys are `typical-fit-20`, `typical-fit-100`, `typical-fit-200`, `typical-holdout-300`, and optional `typical-saturation-500`. Those keys run only in **us-east-2**. Two further holdout applies use the same typical mix at 100 RPS and 300 RPS: `typical-later-day` and `typical-later-day-300` (us-east-2, a later UTC day than the `typical-v1-20260927c` fit date 2026-09-27) and `typical-second-region` and `typical-second-region-300` (us-west-2 only). Each apply runs both rates before destroy. They do not loosen the us-east-2 lock on the other typical keys, and they are not the lean `later-day` / `second-region` keys. The frozen definition is `typical/PREREGISTRATION.md` (section 12 is the holdout amendment). Runner steps are `typical/RUNBOOK-CANVASCLOUDAI.md`. The measured campaign is `typical/REPORT.md`, with the numeric export in `holdout/exports/typical-v1-20260927c.summary.md`. That report also records the engine 1.2.5 after-fit holdout; the scores are `typical/scores-after-fit.json`, and `python3 typical/after-fit/score_export.py` reproduces them from `typical/after-fit/`.
 
 ## Repository layout
 
@@ -111,15 +111,21 @@ node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 ```
 
-`wait-ready` returns `adapterVersion` (`1.3.0`) and the full
+`wait-ready` returns `adapterVersion` (`1.4.0`) and the full
 `supportedScenarios` list (`idle`, `normal`, `peak`, `burst`,
 `pool-bound`, `app-bound`, `cpu-only`, `later-day`, `second-region`,
 `typical-fit-20`, `typical-fit-100`, `typical-fit-200`,
-`typical-holdout-300`, `typical-saturation-500`).
+`typical-holdout-300`, `typical-saturation-500`, `typical-later-day`,
+`typical-later-day-300`, `typical-second-region`,
+`typical-second-region-300`).
 `later-day` is a real later-UTC-day holdout, not an alias of `normal`.
 `second-region` is a real **us-west-2** holdout, not a rename of the
-us-east-1 run. `typical-*` keys require `app_profile=typical`, two
-workers, and region us-east-2. A lean key on a typical stack, or the
+us-east-1 run. `typical-*` keys require `app_profile=typical` and two
+workers. They require region us-east-2, except `typical-second-region`
+and `typical-second-region-300`, which require us-west-2.
+`typical-later-day` and `typical-later-day-300` also require a later UTC
+day than the fit campaign (`CWM_FIT_CAMPAIGN_DATE` or adapter state).
+A lean key on a typical stack, or the
 reverse, fails with `PROFILE_MISMATCH` before k6 starts. When the stack
 is up, `wait-ready` reports each app node's `profile`, `workers`, and
 `gitSha` from `/api/meta`. Burst is **not** a capability skip. `collect` must

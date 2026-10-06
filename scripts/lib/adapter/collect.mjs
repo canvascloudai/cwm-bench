@@ -4,6 +4,7 @@ import {
   assertLaterDay,
   assertNotAliased,
   assertSecondRegion,
+  assertTypicalRegion,
   getScenario,
 } from './scenarios.mjs';
 import { fitDateFrom, loadState } from './state.mjs';
@@ -332,6 +333,7 @@ export async function collectScenario(ctx, scenarioKey) {
   const state = await loadState(ctx.statePath, ctx.deps.fs || {});
   assertLaterDay(spec, ctx.now(), fitDateFrom(state, ctx.env));
   assertSecondRegion(spec, region);
+  assertTypicalRegion(spec, region);
   if (spec.expectedPoolSize != null) {
     assertExpectedPool(spec, Number(outputs.topology && outputs.topology.app_pool_size));
   }

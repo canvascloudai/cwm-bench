@@ -148,4 +148,11 @@ export const TYPICAL_RPS = Object.freeze({
   'typical-fit-200': 200,
   'typical-holdout-300': 300,
   'typical-saturation-500': 500,
+  // Same mix as the 100 and 300 typical rungs. The adapter, not this map,
+  // enforces a later UTC day (typical-later-day*) or us-west-2
+  // (typical-second-region*). Other typical keys stay on us-east-2.
+  'typical-later-day': 100,
+  'typical-later-day-300': 300,
+  'typical-second-region': 100,
+  'typical-second-region-300': 300,
 });
