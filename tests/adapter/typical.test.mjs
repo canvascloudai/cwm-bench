@@ -9,11 +9,13 @@ import { test } from 'node:test';
 import { main } from '../../scripts/lib/adapter/main.mjs';
 import {
   assertExpectedProfile,
+  assertLaterDay,
+  assertSecondRegion,
   assertTypicalRegion,
   getScenario,
   listScenarioKeys,
 } from '../../scripts/lib/adapter/scenarios.mjs';
-import { TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
+import { SECOND_REGION, TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
 import { metaFromStdout } from '../../scripts/lib/adapter/ready.mjs';
 import {
   APP_TEMPLATE_VARS,
@@ -115,7 +117,11 @@ test('lean files and generator template stay byte-identical to main', () => {
   assert.ok(currentCommon.startsWith(leanCommon));
   const suffix = currentCommon.slice(leanCommon.length);
   assert.match(suffix, /export const TYPICAL_RPS/);
+  assert.match(suffix, /'typical-later-day': 100/);
+  assert.match(suffix, /'typical-second-region': 100/);
   assert.doesNotMatch(leanCommon, /TYPICAL_RPS/);
+  assert.doesNotMatch(leanCommon, /typical-later-day/);
+  assert.doesNotMatch(leanCommon, /typical-second-region/);
   assert.match(leanCommon, /idle: 10/);
   assert.match(leanCommon, /burst: 1000/);
 });
@@ -210,6 +216,14 @@ test('app tokens verify and the load script signs the same user token', () => {
     path.join(ROOT, 'load/typical.js'),
   ], { encoding: 'utf8' });
   assert.equal(selftest.status, 0, selftest.stderr);
+  for (const key of ['typical-later-day', 'typical-second-region']) {
+    const named = spawnSync('k6', [
+      'inspect',
+      '-e', `SCENARIO=${key}`,
+      path.join(ROOT, 'load/typical.js'),
+    ], { encoding: 'utf8' });
+    assert.equal(named.status, 0, named.stderr);
+  }
 });
 
 test('typical scenario catalog has the frozen rungs, pool, workers, and region', () => {
@@ -232,6 +246,34 @@ test('typical scenario catalog has the frozen rungs, pool, workers, and region',
   assert.equal(getScenario('typical-saturation-500').completeness, 'optional');
   assert.equal(getScenario('idle').expectedProfile, undefined);
   assert.equal(reportedLean(getScenario('idle')), 'lean');
+
+  const later = getScenario('typical-later-day');
+  const second = getScenario('typical-second-region');
+  assert.ok(keys.includes('typical-later-day'));
+  assert.ok(keys.includes('typical-second-region'));
+  for (const spec of [later, second]) {
+    assert.equal(spec.rps, 100);
+    assert.equal(spec.split, 'holdout');
+    assert.equal(spec.kind, 'holdout');
+    assert.equal(spec.expectedProfile, 'typical');
+    assert.equal(spec.expectedWorkers, 2);
+    assert.equal(spec.expectedPoolSize, 250);
+    assert.equal(spec.workload.script, 'typical.js');
+    assert.equal(spec.workload.envValue, spec.key);
+    assert.equal(spec.aliasOf, null);
+    assert.notEqual(spec.workload.envValue, 'typical-fit-100');
+    assert.notEqual(spec.workload.script, 'scenarios.js');
+  }
+  assert.equal(later.requiredRegion, TYPICAL_REGION);
+  assert.equal(later.calendarConstraint, 'later-utc-day-than-fit');
+  assert.equal(later.regionRole, 'primary');
+  assert.equal(second.requiredRegion, SECOND_REGION);
+  assert.equal(second.regionRole, 'second');
+  assert.equal(second.forbiddenRegion, TYPICAL_REGION);
+  assert.equal(getScenario('later-day').workload.script, 'scenarios.js');
+  assert.equal(getScenario('second-region').workload.script, 'scenarios.js');
+  assert.equal(getScenario('later-day').expectedProfile, undefined);
+  assert.equal(getScenario('second-region').expectedProfile, undefined);
 });
 
 function reportedLean(spec) {
@@ -381,4 +423,243 @@ test('wait-ready reports profile, workers, and gitSha from each app node', async
   const parsed = metaFromStdout('{"status":"ok"}\n{"profile":"typical","workers":2,"gitSha":"abc","poolSize":250}');
   assert.equal(parsed.profile, 'typical');
   assert.equal(parsed.gitSha, 'abc');
+});
+
+const TYPICAL_FIT_DATE = '2026-09-27';
+const DAY_AFTER_TYPICAL_FIT = () => new Date('2026-09-28T00:00:01.000Z');
+
+function typicalMeta() {
+  return { poolSize: 250, profile: 'typical', workers: 2, gitSha: 'abc1234', service: 'cwm-bench-app' };
+}
+
+function typicalTerraform(region) {
+  return terraformOutputFixture({
+    topology_declaration: { value: { region, test_id: 'typical-holdout', app_pool_size: 250 } },
+  });
+}
+
+test('typical-later-day uses the fit-campaign date and is not typical-fit-100', () => {
+  const spec = getScenario('typical-later-day');
+  const fitDay = new Date('2026-09-27T23:59:59.000Z');
+  assert.throws(
+    () => assertLaterDay(spec, fitDay, TYPICAL_FIT_DATE),
+    (err) => err.code === 'LATER_DAY_CONSTRAINT'
+  );
+  assert.throws(
+    () => assertLaterDay(spec, DAY_AFTER_TYPICAL_FIT(), null),
+    (err) => err.code === 'LATER_DAY_CONSTRAINT'
+  );
+  assert.doesNotThrow(() => assertLaterDay(spec, DAY_AFTER_TYPICAL_FIT(), TYPICAL_FIT_DATE));
+  assert.doesNotThrow(() => assertLaterDay(getScenario('typical-fit-100'), fitDay, TYPICAL_FIT_DATE));
+  assert.doesNotThrow(() => assertLaterDay(getScenario('later-day'), DAY_AFTER_TYPICAL_FIT(), '2026-09-01'));
+});
+
+test('us-west-2 is accepted only for typical-second-region', () => {
+  const second = getScenario('typical-second-region');
+  assert.doesNotThrow(() => assertSecondRegion(second, 'us-west-2'));
+  assert.doesNotThrow(() => assertTypicalRegion(second, 'us-west-2'));
+  assert.throws(
+    () => assertSecondRegion(second, 'us-east-2'),
+    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+  );
+  assert.throws(
+    () => assertSecondRegion(second, 'us-east-1'),
+    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+  );
+  assert.throws(
+    () => assertSecondRegion(second, null),
+    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+  );
+  assert.throws(
+    () => assertTypicalRegion(second, 'us-east-2'),
+    (err) => err.code === 'TYPICAL_REGION_CONSTRAINT'
+  );
+
+  for (const key of [
+    'typical-fit-20',
+    'typical-fit-100',
+    'typical-fit-200',
+    'typical-holdout-300',
+    'typical-saturation-500',
+    'typical-later-day',
+  ]) {
+    assert.doesNotThrow(() => assertSecondRegion(getScenario(key), 'us-west-2'));
+    assert.throws(
+      () => assertTypicalRegion(getScenario(key), 'us-west-2'),
+      (err) => err.code === 'TYPICAL_REGION_CONSTRAINT'
+    );
+    assert.doesNotThrow(() => assertTypicalRegion(getScenario(key), 'us-east-2'));
+  }
+
+  assert.doesNotThrow(() => assertSecondRegion(getScenario('second-region'), 'us-west-2'));
+  assert.throws(
+    () => assertSecondRegion(getScenario('second-region'), 'us-east-1'),
+    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+  );
+});
+
+test('run typical-later-day on the fit UTC day does not start k6', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const result = await runWith(['run', '--scenario', 'typical-later-day', '--json'], {
+    now: () => new Date('2026-09-27T18:00:00.000Z'),
+    env: { CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.error.code, 'LATER_DAY_CONSTRAINT');
+  assert.equal(aws.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+});
+
+test('collect typical-later-day on the fit UTC day fails before AWS', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const result = await runWith(['collect', '--scenario', 'typical-later-day', '--json'], {
+    now: () => new Date('2026-09-27T18:00:00.000Z'),
+    env: { CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.error.code, 'LATER_DAY_CONSTRAINT');
+  assert.equal(aws.calls.length, 0);
+});
+
+test('run typical-later-day on a later UTC day in us-east-2 starts typical.js', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const result = await runWith(['run', '--scenario', 'typical-later-day', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    statePath: '/tmp/cwm-typical-later-day.json',
+    env: {
+      CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE,
+      CWM_WARMUP: '1s',
+      CWM_DURATION: '1s',
+    },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.ok, true);
+  assert.equal(result.payload.scenario, 'typical-later-day');
+  assert.equal(result.payload.rps, 100);
+  assert.equal(result.payload.split, 'holdout');
+  assert.equal(result.payload.region, 'us-east-2');
+  assert.equal(result.payload.calendarDateUtc, '2026-09-28');
+  assert.equal(result.payload.fitCampaignDateUtc, TYPICAL_FIT_DATE);
+  const script = k6Scripts(aws).find((entry) => entry.includes('k6 run'));
+  assert.match(script, /load\/typical\.js/);
+  assert.match(script, /SCENARIO='typical-later-day'/);
+  assert.doesNotMatch(script, /SCENARIO='typical-fit-100'/);
+  assert.doesNotMatch(script, /load\/scenarios\.js/);
+});
+
+test('typical-later-day in us-west-2 and on a lean stack does not start k6', async () => {
+  const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const westResult = await runWith(['run', '--scenario', 'typical-later-day', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    env: { CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE },
+    deps: {
+      runAws: west,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-west-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(westResult.code, 1);
+  assert.equal(westResult.payload.error.code, 'TYPICAL_REGION_CONSTRAINT');
+  assert.equal(west.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+
+  const lean = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
+  const leanResult = await runWith(['run', '--scenario', 'typical-later-day', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    env: { CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE },
+    deps: {
+      runAws: lean,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(leanResult.code, 1);
+  assert.equal(leanResult.payload.error.code, 'PROFILE_MISMATCH');
+  assert.equal(k6Scripts(lean).some((script) => script.includes('k6 run')), false);
+});
+
+test('run typical-second-region accepts only us-west-2 and keeps other typical keys locked', async () => {
+  const east = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const eastResult = await runWith(['run', '--scenario', 'typical-second-region', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    deps: {
+      runAws: east,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(eastResult.code, 1);
+  assert.equal(eastResult.payload.error.code, 'SECOND_REGION_CONSTRAINT');
+  assert.equal(east.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+
+  const other = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const otherResult = await runWith(['run', '--scenario', 'typical-fit-100', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    deps: {
+      runAws: other,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-west-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(otherResult.code, 1);
+  assert.equal(otherResult.payload.error.code, 'TYPICAL_REGION_CONSTRAINT');
+  assert.equal(other.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+
+  const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const westResult = await runWith(['run', '--scenario', 'typical-second-region', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    statePath: '/tmp/cwm-typical-second-region.json',
+    env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+    deps: {
+      runAws: west,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-west-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(westResult.code, 0, westResult.stdout);
+  assert.equal(westResult.payload.ok, true);
+  assert.equal(westResult.payload.scenario, 'typical-second-region');
+  assert.equal(westResult.payload.rps, 100);
+  assert.equal(westResult.payload.region, 'us-west-2');
+  assert.equal(westResult.payload.split, 'holdout');
+  const script = k6Scripts(west).find((entry) => entry.includes('k6 run'));
+  assert.match(script, /load\/typical\.js/);
+  assert.match(script, /SCENARIO='typical-second-region'/);
+  assert.doesNotMatch(script, /load\/scenarios\.js/);
+});
+
+test('wait-ready lists the typical stability holdouts', async () => {
+  const stdout = new MemoryStream();
+  const code = await main(['wait-ready', '--json'], {
+    stdout,
+    stderr: new MemoryStream(),
+    deps: {
+      runTerraform: async () => ({ code: 0, stdout: '{}', stderr: '' }),
+    },
+  });
+  assert.equal(code, 0, stdout.toString());
+  const payload = JSON.parse(stdout.toString());
+  assert.ok(payload.supportedScenarios.includes('typical-later-day'));
+  assert.ok(payload.supportedScenarios.includes('typical-second-region'));
+  const later = payload.scenarios.find((item) => item.key === 'typical-later-day');
+  const second = payload.scenarios.find((item) => item.key === 'typical-second-region');
+  assert.equal(later.calendarConstraint, 'later-utc-day-than-fit');
+  assert.equal(later.requiredRegion, 'us-east-2');
+  assert.equal(later.rps, 100);
+  assert.equal(second.requiredRegion, 'us-west-2');
+  assert.equal(second.regionRole, 'second');
+  assert.equal(payload.scenarios.find((item) => item.key === 'typical-fit-100').requiredRegion, 'us-east-2');
 });

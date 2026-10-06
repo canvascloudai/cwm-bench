@@ -24,6 +24,8 @@ class TypicalSchemaTest(unittest.TestCase):
             "typical-fit-200",
             "typical-holdout-300",
             "typical-saturation-500",
+            "typical-later-day",
+            "typical-second-region",
         ):
             self.assertIn(key, allowed)
         for key in ("idle", "normal", "peak", "burst", "later-day", "second-region"):

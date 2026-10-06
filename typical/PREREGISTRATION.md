@@ -142,7 +142,7 @@ That is about 65,100 rows across the required rungs, taking `comments` from 50,0
 
 ## 8. Known gaps (disclosed up front)
 
-- **No later-day and no second-region typical repeats.** Lean's later-day and us-west-2 deltas at 100 RPS were small: app CPU −0.22 / −0.33 points, P99 +0.86 / +1.79 ms [FACT: holdout/REPORT.md]. We do **not** assume the same holds for typical.
+- **No later-day and no second-region typical repeats.** Lean's later-day and us-west-2 deltas at 100 RPS were small: app CPU −0.22 / −0.33 points, P99 +0.86 / +1.79 ms [FACT: holdout/REPORT.md]. We do **not** assume the same holds for typical. Amendment: section 12 defines `typical-later-day` and `typical-second-region` so this gap can be measured. Those keys are not part of the `typical-v1-20260927c` fit, and they do not change sections 3–7 or 9.
 - **One repetition per rung.** Variance is not estimated.
 - **One reference workload.** "Typical" here means *this documented workload*, not "the average customer app".
 - **Other process models are not measured.** `bcryptjs` on the event loop (section 4.2); a single-process variant is not measured.
@@ -217,3 +217,41 @@ The results of every required rung are published in cwm-bench, **whatever they s
 - **Before freeze:** edits to this file are normal PR edits.
 - **After freeze:** any change to sections 3–9 means a new version (`typical-v2`), a new measurement SHA and a new campaign. The report lists what changed and why.
 - The lean workload (`app/src/server.js`, `app/seed/seed.sql`, `load/scenarios.js`, `load/diagnostics.js`, lean scenario keys, and Terraform defaults) must keep reproducing the lean campaign unchanged.
+
+## 12. Amendment: day and region holdouts for the fitted typical-v1 reference
+
+Status: amendment to the gap disclosed in section 8. It does not change the typical app, request mix, seed, fit ladder, coefficients, or calibration id. It is not a new fit and not `typical-v2`.
+
+### 12.1 Purpose
+
+Validate day-stability and region-stability of the already-fitted `typical-v1-20260927c` reference at 100 total RPS. The fit UTC date of that campaign is 2026-09-27 [FACT: campaign id `typical-v1-20260927c`; collect and run JSON under `typical/campaign/typical-v1-20260927c/` record `calendarDateUtc` `2026-09-27`].
+
+### 12.2 Keys
+
+Both keys use the existing protocol (5 min warmup, then 15 min steady [FACT: section 6]) and the unchanged `load/typical.js` mix. Expected profile `typical`, 2 workers, pool 250. Topology matches section 3 (2 × m5.large, db.r5.large, internal ALB, c6i.xlarge generator).
+
+| Scenario key | Region | Total RPS | What changes vs `typical-fit-100` |
+| --- | --- | ---: | --- |
+| `typical-later-day` | **us-east-2** | 100 | UTC calendar day strictly after 2026-09-27. Set `CWM_FIT_CAMPAIGN_DATE=2026-09-27` (adapter state is accepted too). |
+| `typical-second-region` | **us-west-2** | 100 | Region only. Separate apply. |
+
+Lean `later-day` and `second-region` stay on the lean script and the lean profile. A typical stack rejects them with `PROFILE_MISMATCH`. Running those lean keys is not this measurement.
+
+`typical-later-day` in any region other than us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. `typical-second-region` outside us-west-2 fails with `SECOND_REGION_CONSTRAINT`. Every other `typical-*` key still rejects us-west-2.
+
+### 12.3 Attempts
+
+Suggested ids: parent `typical-holdouts-v1-YYYYMMDD`; separate applies `typical-later-day-YYYYMMDD` and `typical-second-region-YYYYMMDD`. One attempt per key. Rerun only when generator CPU in the steady window exceeds about 70% [FACT: README.md and section 6] or for a documented infrastructure failure. Keep every attempt [FACT: section 10].
+
+### 12.4 Comparison, fixed before the runs
+
+Primary: measured value minus the measured `typical-fit-100` row from `typical-v1-20260927c` in `holdout/exports/typical-v1-20260927c.summary.md` (goodput 87.62279003099846, p50 4.684795, p95 8.354502, p99 83.1684065, app CPU 5.238137291849269, db CPU 11.492307692307692). Report the difference per metric. Do not refit.
+
+Secondary: score each holdout the way section 9.4 scores a holdout, against the after-fit predictions at 100 RPS in `typical/scores-after-fit.json` (`100.pred`: cpu 5.215, p50 4.879573, p95 9.234496, p99 81.72693, thr 87.619644, err 0, cost 0.6). Report the page score with cost and without cost. The fit-rung scores already in that file at 100 RPS are total 93.3 and noCost 96.1. Those numbers are the fit rung, not a prediction of the holdout score.
+
+### 12.5 Out of scope
+
+- Changing the app-server count (section 3 stays at 2). A 1-server or 3-server run is a different topology.
+- Burst, the 1000 RPS diagnostics, and `typical-saturation-500`.
+- Any coefficient change, calibration-id change, or retune.
+- Assuming the lean later-day / us-west-2 deltas transfer. Those deltas at 100 RPS were app CPU −0.22 / −0.33 points and P99 +0.86 / +1.79 ms [FACT: section 8, holdout/REPORT.md]. They are context only.

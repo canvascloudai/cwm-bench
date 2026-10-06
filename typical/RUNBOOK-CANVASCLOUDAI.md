@@ -53,7 +53,7 @@ unset CWM_RUN_ID CWM_WARMUP CWM_DURATION   # use the defaults: 5m warmup, 15m st
 node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
 ```
 
-In `out/00-capability.json`, confirm that `supportedScenarios` contains all five `typical-*` keys (section 5) and record `adapterVersion`.
+In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5 and, on this revision, `typical-later-day` and `typical-second-region` (section 10). Record `adapterVersion`.
 
 ## 4. Provision (typical profile, us-east-2)
 
@@ -177,3 +177,78 @@ The note states:
 6. Confirmation that no tagged resources remain (or the IDs of any that do)
 
 Do not summarize or interpret the metrics. Kevin publishes them against the pre-registered analysis plan.
+
+## 10. Day and region holdouts (separate from the typical-v1 ladder)
+
+These two keys are not part of section 6. Each one is its own apply, its own terraform working directory, and its own campaign slug. Destroy the stack between them. Do not run them inside the typical-v1 apply, and do not change instance types, pool size, workers, the request mix, warmup, or duration. Analysis is `typical/PREREGISTRATION.md` section 12. Parent id for the pair: `typical-holdouts-v1-YYYYMMDD`.
+
+The later-day fit date is the typical-v1 fit UTC date **2026-09-27** (`typical-v1-20260927c`). The UTC day of that run must be later.
+
+One attempt per key. Rerun only if generator CPU in the steady window exceeds about 70%, or for a documented infrastructure failure. Keep every attempt (add `-attempt2` to the file name; do not overwrite).
+
+### 10.1 `typical-later-day` (us-east-2, 100 RPS)
+
+```bash
+git clone https://github.com/canvascloudai/cwm-bench.git cwm-bench-typical-later-day-YYYYMMDD
+cd cwm-bench-typical-later-day-YYYYMMDD
+git checkout --detach <SHA>
+mkdir -p out
+
+export AWS_REGION=us-east-2
+export AWS_DEFAULT_REGION=us-east-2
+export CWM_CAMPAIGN_ID=typical-later-day-YYYYMMDD
+export CWM_FIT_CAMPAIGN_DATE=2026-09-27
+unset CWM_RUN_ID CWM_WARMUP CWM_DURATION
+
+cd terraform
+terraform init
+terraform apply \
+  -var='region=us-east-2' \
+  -var='test_id=typical-later-day-YYYYMMDD' \
+  -var='app_profile=typical' \
+  -var='app_workers=2' \
+  -var='app_source_git_ref=<SHA>'
+cd ..
+
+node scripts/worker-adapter.mjs wait-ready --json > out/02-wait-ready.json
+node scripts/worker-adapter.mjs run --scenario typical-later-day --json > out/10-typical-later-day.run.json
+node scripts/worker-adapter.mjs collect --scenario typical-later-day --json > out/11-typical-later-day.collect.json
+```
+
+Destroy this work directory with section 8 (`region=us-east-2`, `test_id=typical-later-day-YYYYMMDD`) before starting the other key.
+
+`LATER_DAY_CONSTRAINT` means the UTC day is not after 2026-09-27, or `CWM_FIT_CAMPAIGN_DATE` was not set. Do not switch the key to `typical-fit-100` to get past it. `TYPICAL_REGION_CONSTRAINT` means this apply is not us-east-2.
+
+### 10.2 `typical-second-region` (us-west-2, 100 RPS)
+
+Use a new clone or a fresh terraform directory. Do not reuse the us-east-2 state.
+
+```bash
+git clone https://github.com/canvascloudai/cwm-bench.git cwm-bench-typical-second-region-YYYYMMDD
+cd cwm-bench-typical-second-region-YYYYMMDD
+git checkout --detach <SHA>
+mkdir -p out
+
+export AWS_REGION=us-west-2
+export AWS_DEFAULT_REGION=us-west-2
+export CWM_CAMPAIGN_ID=typical-second-region-YYYYMMDD
+unset CWM_RUN_ID CWM_WARMUP CWM_DURATION CWM_FIT_CAMPAIGN_DATE
+
+cd terraform
+terraform init
+terraform apply \
+  -var='region=us-west-2' \
+  -var='test_id=typical-second-region-YYYYMMDD' \
+  -var='app_profile=typical' \
+  -var='app_workers=2' \
+  -var='app_source_git_ref=<SHA>'
+cd ..
+
+node scripts/worker-adapter.mjs wait-ready --json > out/02-wait-ready.json
+node scripts/worker-adapter.mjs run --scenario typical-second-region --json > out/10-typical-second-region.run.json
+node scripts/worker-adapter.mjs collect --scenario typical-second-region --json > out/11-typical-second-region.collect.json
+```
+
+Destroy with section 8, substituting `region=us-west-2` and `test_id=typical-second-region-YYYYMMDD` in the terraform vars and in the leftover AWS checks.
+
+`SECOND_REGION_CONSTRAINT` means this apply is not us-west-2. Other typical keys in us-west-2 fail with `TYPICAL_REGION_CONSTRAINT`. Do not point `typical-fit-100` at us-west-2.

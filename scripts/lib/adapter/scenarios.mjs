@@ -12,6 +12,10 @@ import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
  * later-day and second-region are first-class scenarios with their own
  * keys, constraints, k6 SCENARIO tags, and run ids. They are not aliases
  * of `normal` or of the primary-region apply.
+ *
+ * typical-later-day and typical-second-region mirror those constraints on
+ * the typical profile (load/typical.js, 100 RPS). us-west-2 is accepted
+ * only for typical-second-region. Other typical keys stay on us-east-2.
  */
 
 export const SCENARIO_KEYS = Object.freeze([
@@ -29,6 +33,8 @@ export const SCENARIO_KEYS = Object.freeze([
   'typical-fit-200',
   'typical-holdout-300',
   'typical-saturation-500',
+  'typical-later-day',
+  'typical-second-region',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -50,6 +56,23 @@ function typicalScenario(key, rps, split, kind, optionalRung) {
     description: optionalRung
       ? `Typical profile saturation rung at ${rps} total RPS (holdout, diagnostic, ${required}). Requires app_profile=typical, app_workers=2, and Terraform region ${TYPICAL_REGION}.`
       : `Typical profile ${split} rung at ${rps} total RPS (${required}). Requires app_profile=typical, app_workers=2, and Terraform region ${TYPICAL_REGION}.`,
+  };
+}
+
+function typicalStabilityHoldout(key, fields) {
+  return {
+    key,
+    kind: 'holdout',
+    rps: 100,
+    split: 'holdout',
+    workload: { script: 'typical.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'typical',
+    expectedWorkers: 2,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    ...fields,
   };
 }
 
@@ -184,6 +207,20 @@ const DEFINITIONS = {
   'typical-fit-200': typicalScenario('typical-fit-200', 200, 'fit', 'rung', false),
   'typical-holdout-300': typicalScenario('typical-holdout-300', 300, 'holdout', 'holdout', false),
   'typical-saturation-500': typicalScenario('typical-saturation-500', 500, 'holdout', 'diagnostic', true),
+  'typical-later-day': typicalStabilityHoldout('typical-later-day', {
+    regionRole: 'primary',
+    requiredRegion: TYPICAL_REGION,
+    calendarConstraint: 'later-utc-day-than-fit',
+    description:
+      `Typical-profile later-day holdout at 100 total RPS. Same load/typical.js mix as typical-fit-100. Requires app_profile=typical, app_workers=2, pool 250, and Terraform region ${TYPICAL_REGION}. Setup fails unless the current UTC calendar day is strictly after the fit campaign date (CWM_FIT_CAMPAIGN_DATE or adapter state). Not a rename of typical-fit-100 and not the lean later-day key.`,
+  }),
+  'typical-second-region': typicalStabilityHoldout('typical-second-region', {
+    regionRole: 'second',
+    requiredRegion: SECOND_REGION,
+    forbiddenRegion: TYPICAL_REGION,
+    description:
+      `Typical-profile second-region holdout at 100 total RPS in ${SECOND_REGION}. Same load/typical.js mix as typical-fit-100. Requires app_profile=typical, app_workers=2, and pool 250. Setup fails unless Terraform region is ${SECOND_REGION}. Other typical keys stay locked to ${TYPICAL_REGION}. Not a rename of the ${TYPICAL_REGION} typical apply and not the lean second-region key.`,
+  }),
 };
 
 export function scenariosRequiringCompleteCollect() {
@@ -230,6 +267,16 @@ export function assertNotAliased(spec) {
     err.code = 'ALIASED_SCENARIO';
     throw err;
   }
+  if (
+    (spec.key === 'typical-later-day' || spec.key === 'typical-second-region') &&
+    (spec.workload.script !== 'typical.js' || spec.workload.envValue !== spec.key)
+  ) {
+    const err = new Error(
+      `${spec.key} must execute load/typical.js with SCENARIO=${spec.key}, not an alias of typical-fit-100 or the lean holdout script`
+    );
+    err.code = 'ALIASED_SCENARIO';
+    throw err;
+  }
 }
 
 export function utcDateString(date) {
@@ -237,10 +284,12 @@ export function utcDateString(date) {
 }
 
 export function assertLaterDay(spec, now, fitDateUtc) {
-  if (spec.key !== 'later-day') return;
+  if (spec.calendarConstraint !== 'later-utc-day-than-fit') return;
   if (!fitDateUtc) {
     const err = new Error(
-      'later-day requires a fit campaign UTC date (run a fit scenario first, or the worker must persist one). Refusing to alias normal on the same day.'
+      spec.key === 'later-day'
+        ? 'later-day requires a fit campaign UTC date (run a fit scenario first, or the worker must persist one). Refusing to alias normal on the same day.'
+        : `${spec.key} requires a fit campaign UTC date (CWM_FIT_CAMPAIGN_DATE or adapter state). Refusing to alias typical-fit-100 on the same day.`
     );
     err.code = 'LATER_DAY_CONSTRAINT';
     throw err;
@@ -248,7 +297,9 @@ export function assertLaterDay(spec, now, fitDateUtc) {
   const today = utcDateString(now);
   if (!(today > fitDateUtc)) {
     const err = new Error(
-      `later-day holdout requires a later UTC calendar day than the fit campaign (${fitDateUtc}); today is ${today}. Not running as normal.`
+      spec.key === 'later-day'
+        ? `later-day holdout requires a later UTC calendar day than the fit campaign (${fitDateUtc}); today is ${today}. Not running as normal.`
+        : `${spec.key} requires a later UTC calendar day than the fit campaign (${fitDateUtc}); today is ${today}. Not running as typical-fit-100.`
     );
     err.code = 'LATER_DAY_CONSTRAINT';
     throw err;
@@ -256,25 +307,32 @@ export function assertLaterDay(spec, now, fitDateUtc) {
 }
 
 export function assertSecondRegion(spec, region) {
-  if (spec.key !== 'second-region') return;
+  if (spec.regionRole !== 'second') return;
   const required = spec.requiredRegion || SECOND_REGION;
+  const forbidden = spec.forbiddenRegion || PRIMARY_REGION;
   if (!region) {
     const err = new Error(
-      `second-region requires Terraform region ${required}; no region was resolved. Not aliasing the primary-region run.`
+      spec.key === 'second-region'
+        ? `second-region requires Terraform region ${required}; no region was resolved. Not aliasing the primary-region run.`
+        : `${spec.key} requires Terraform region ${required}; no region was resolved. Not aliasing the primary-region typical apply.`
     );
     err.code = 'SECOND_REGION_CONSTRAINT';
     throw err;
   }
-  if (region === (spec.forbiddenRegion || PRIMARY_REGION)) {
+  if (region === forbidden) {
     const err = new Error(
-      `second-region must run in ${required}, not primary region ${region}. This is not a rename of the us-east-1 run.`
+      spec.key === 'second-region'
+        ? `second-region must run in ${required}, not primary region ${region}. This is not a rename of the us-east-1 run.`
+        : `${spec.key} must run in ${required}, not ${region}. This is not a rename of the ${forbidden} typical apply.`
     );
     err.code = 'SECOND_REGION_CONSTRAINT';
     throw err;
   }
   if (region !== required) {
     const err = new Error(
-      `second-region holdout is documented as ${required}; Terraform region is ${region}`
+      spec.key === 'second-region'
+        ? `second-region holdout is documented as ${required}; Terraform region is ${region}`
+        : `${spec.key} holdout is documented as ${required}; Terraform region is ${region}`
     );
     err.code = 'SECOND_REGION_CONSTRAINT';
     throw err;

@@ -94,7 +94,8 @@ Scenario keys (kebab-case, discovered from this repo + public CWM rungs):
   pool-bound, app-bound, cpu-only,
   later-day, second-region,
   typical-fit-20, typical-fit-100, typical-fit-200,
-  typical-holdout-300, typical-saturation-500
+  typical-holdout-300, typical-saturation-500,
+  typical-later-day, typical-second-region
 
 Holdouts:
   later-day      Distinct holdout. Runs only on a later UTC calendar day
@@ -102,12 +103,16 @@ Holdouts:
   second-region  Distinct holdout. Runs in us-west-2. Not an alias of the
                  primary-region (us-east-1) run.
 
-Typical profile (app_profile=typical, app_workers=2, region us-east-2):
+Typical profile (app_profile=typical, app_workers=2, pool 250):
   typical-fit-20 / typical-fit-100 / typical-fit-200 are fit rungs.
   typical-holdout-300 is a required holdout. typical-saturation-500 is an
   optional diagnostic holdout. Lean scenarios refuse a typical-profile
   stack, and typical scenarios refuse a lean stack (PROFILE_MISMATCH).
-  Typical scenarios also refuse any Terraform region other than us-east-2.
+  Those keys refuse any Terraform region other than us-east-2.
+  typical-later-day is the 100 RPS typical mix on a later UTC day than
+  the fit campaign (CWM_FIT_CAMPAIGN_DATE or adapter state), still in
+  us-east-2. typical-second-region is that same mix in us-west-2 only.
+  Neither key loosens the us-east-2 lock on the other typical keys.
 
 Burst is a supported scenario. collect must assemble required CloudWatch
 datapoints plus k6 summary.json (latency percentiles and error-class
