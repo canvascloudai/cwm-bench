@@ -11,11 +11,12 @@ import {
   assertExpectedProfile,
   assertLaterDay,
   assertSecondRegion,
+  assertExpectedAppCount,
   assertTypicalRegion,
   getScenario,
   listScenarioKeys,
 } from '../../scripts/lib/adapter/scenarios.mjs';
-import { SECOND_REGION, TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
+import { ADAPTER_VERSION, SECOND_REGION, TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
 import { metaFromStdout } from '../../scripts/lib/adapter/ready.mjs';
 import {
   APP_TEMPLATE_VARS,
@@ -121,6 +122,10 @@ test('lean files and generator template stay byte-identical to main', () => {
   assert.match(suffix, /'typical-later-day-300': 300/);
   assert.match(suffix, /'typical-second-region': 100/);
   assert.match(suffix, /'typical-second-region-300': 300/);
+  assert.match(suffix, /'typical-scale-1x-100': 100/);
+  assert.match(suffix, /'typical-scale-1x-300': 300/);
+  assert.match(suffix, /'typical-scale-2x-200': 200/);
+  assert.match(suffix, /'typical-scale-3x-300': 300/);
   assert.doesNotMatch(leanCommon, /TYPICAL_RPS/);
   assert.doesNotMatch(leanCommon, /typical-later-day/);
   assert.doesNotMatch(leanCommon, /typical-second-region/);
@@ -218,7 +223,21 @@ test('app tokens verify and the load script signs the same user token', () => {
     path.join(ROOT, 'load/typical.js'),
   ], { encoding: 'utf8' });
   assert.equal(selftest.status, 0, selftest.stderr);
-  for (const key of ['typical-later-day', 'typical-later-day-300', 'typical-second-region', 'typical-second-region-300']) {
+  for (const key of [
+    'typical-later-day',
+    'typical-later-day-300',
+    'typical-second-region',
+    'typical-second-region-300',
+    'typical-scale-1x-100',
+    'typical-scale-1x-200',
+    'typical-scale-1x-300',
+    'typical-scale-2x-100',
+    'typical-scale-2x-200',
+    'typical-scale-2x-300',
+    'typical-scale-3x-100',
+    'typical-scale-3x-200',
+    'typical-scale-3x-300',
+  ]) {
     const named = spawnSync('k6', [
       'inspect',
       '-e', `SCENARIO=${key}`,
@@ -239,6 +258,7 @@ test('typical scenario catalog has the frozen rungs, pool, workers, and region',
     assert.equal(spec.expectedProfile, 'typical');
     assert.equal(spec.expectedWorkers, 2);
     assert.equal(spec.expectedPoolSize, 250);
+    assert.equal(spec.expectedAppCount, 2);
     assert.equal(spec.requiredRegion, TYPICAL_REGION);
     assert.equal(spec.requiresCompleteCollect, false);
     assert.equal(spec.aliasOf, null);
@@ -261,6 +281,7 @@ test('typical scenario catalog has the frozen rungs, pool, workers, and region',
     assert.equal(spec.expectedProfile, 'typical');
     assert.equal(spec.expectedWorkers, 2);
     assert.equal(spec.expectedPoolSize, 250);
+    assert.equal(spec.expectedAppCount, 2);
     assert.equal(spec.workload.script, 'typical.js');
     assert.equal(spec.workload.envValue, spec.key);
     assert.equal(spec.aliasOf, null);
@@ -315,7 +336,7 @@ test('profile mismatch is rejected in both directions before k6', async () => {
       runTerraform: async () => ({
         code: 0,
         stdout: terraformOutputFixture({
-          topology_declaration: { value: { region: 'us-east-2', test_id: 'typical', app_pool_size: 250 } },
+          topology_declaration: { value: { region: 'us-east-2', test_id: 'typical', app_pool_size: 250, app_count: 2 } },
         }),
         stderr: '',
       }),
@@ -353,7 +374,7 @@ test('typical run refuses the wrong region and the wrong worker count without st
       runTerraform: async () => ({
         code: 0,
         stdout: terraformOutputFixture({
-          topology_declaration: { value: { region: 'us-east-2', test_id: 'typical', app_pool_size: 250 } },
+          topology_declaration: { value: { region: 'us-east-2', test_id: 'typical', app_pool_size: 250, app_count: 2 } },
         }),
         stderr: '',
       }),
@@ -383,7 +404,7 @@ test('typical run in us-east-2 starts typical.js when profile and pool match', a
       runTerraform: async () => ({
         code: 0,
         stdout: terraformOutputFixture({
-          topology_declaration: { value: { region: 'us-east-2', test_id: 'typical', app_pool_size: 250 } },
+          topology_declaration: { value: { region: 'us-east-2', test_id: 'typical', app_pool_size: 250, app_count: 2 } },
         }),
         stderr: '',
       }),
@@ -443,7 +464,7 @@ function typicalMeta() {
 
 function typicalTerraform(region) {
   return terraformOutputFixture({
-    topology_declaration: { value: { region, test_id: 'typical-holdout', app_pool_size: 250 } },
+    topology_declaration: { value: { region, test_id: 'typical-holdout', app_pool_size: 250, app_count: 2 } },
   });
 }
 
@@ -779,4 +800,208 @@ test('run typical-second-region-300 accepts only us-west-2', async () => {
   assert.match(script, /load\/typical\.js/);
   assert.match(script, /SCENARIO='typical-second-region-300'/);
   assert.doesNotMatch(script, /SCENARIO='typical-holdout-300'/);
+});
+
+const SCALE_KEYS = [
+  ['typical-scale-1x-100', 1, 100],
+  ['typical-scale-1x-200', 1, 200],
+  ['typical-scale-1x-300', 1, 300],
+  ['typical-scale-2x-100', 2, 100],
+  ['typical-scale-2x-200', 2, 200],
+  ['typical-scale-2x-300', 2, 300],
+  ['typical-scale-3x-100', 3, 100],
+  ['typical-scale-3x-200', 3, 200],
+  ['typical-scale-3x-300', 3, 300],
+];
+
+function scaleTerraform(region, appCount) {
+  const ids = Array.from({ length: appCount }, (_, index) => `i-scale${index + 1}`);
+  return terraformOutputFixture({
+    app_instance_ids: { value: ids },
+    app_root_volume_ids: { value: ids.map((_, index) => `vol-scale${index + 1}`) },
+    topology_declaration: {
+      value: {
+        region,
+        test_id: 'typical-scale',
+        app_pool_size: 250,
+        app_count: appCount,
+      },
+    },
+  });
+}
+
+test('typical-scale keys are us-east-2 holdouts with the key app count', () => {
+  assert.equal(ADAPTER_VERSION, '1.5.0');
+  for (const [key, appCount, rps] of SCALE_KEYS) {
+    const spec = getScenario(key);
+    assert.equal(spec.rps, rps);
+    assert.equal(spec.split, 'holdout');
+    assert.equal(spec.kind, 'holdout');
+    assert.equal(spec.expectedAppCount, appCount);
+    assert.equal(spec.expectedPoolSize, 250);
+    assert.equal(spec.expectedProfile, 'typical');
+    assert.equal(spec.expectedWorkers, 2);
+    assert.equal(spec.requiredRegion, TYPICAL_REGION);
+    assert.equal(spec.workload.script, 'typical.js');
+    assert.equal(spec.workload.envValue, key);
+    assert.equal(spec.aliasOf, null);
+    assert.doesNotThrow(() => assertExpectedAppCount(spec, {
+      appInstanceIds: Array.from({ length: appCount }, (_, index) => `i-${index}`),
+      topology: { app_count: appCount },
+    }));
+    if (appCount !== 2) {
+      assert.throws(
+        () => assertExpectedAppCount(spec, {
+          appInstanceIds: ['i-app1', 'i-app2'],
+          topology: { app_count: 2 },
+        }),
+        (err) => err.code === 'APP_COUNT_MISMATCH'
+      );
+    }
+  }
+  assert.throws(
+    () => assertExpectedAppCount(getScenario('typical-scale-3x-300'), {
+      appInstanceIds: ['i-app1', 'i-app2'],
+      topology: { app_count: 2 },
+    }),
+    (err) => err.code === 'APP_COUNT_MISMATCH'
+  );
+  assert.throws(
+    () => assertExpectedAppCount(getScenario('typical-holdout-300'), {
+      appInstanceIds: ['i-app1', 'i-app2', 'i-app3'],
+      topology: { app_count: 3 },
+    }),
+    (err) => err.code === 'APP_COUNT_MISMATCH'
+  );
+});
+
+test('run typical-scale refuses the wrong app count, region, profile, and pool', async () => {
+  const mismatch = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const mismatchResult = await runWith(['run', '--scenario', 'typical-scale-3x-300', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    deps: {
+      runAws: mismatch,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-east-2', 2), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(mismatchResult.code, 1);
+  assert.equal(mismatchResult.payload.error.code, 'APP_COUNT_MISMATCH');
+  assert.equal(mismatch.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+
+  const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const westResult = await runWith(['run', '--scenario', 'typical-scale-2x-100', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    deps: {
+      runAws: west,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-west-2', 2), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(westResult.code, 1);
+  assert.equal(westResult.payload.error.code, 'TYPICAL_REGION_CONSTRAINT');
+
+  const lean = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
+  const leanResult = await runWith(['run', '--scenario', 'typical-scale-2x-100', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    deps: {
+      runAws: lean,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-east-2', 2), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(leanResult.code, 1);
+  assert.equal(leanResult.payload.error.code, 'PROFILE_MISMATCH');
+  assert.equal(k6Scripts(lean).some((script) => script.includes('k6 run')), false);
+
+  const pool = createAwsMock(ssmOnlineHandlers({
+    meta: { poolSize: 40, profile: 'typical', workers: 2 },
+  }));
+  const poolResult = await runWith(['run', '--scenario', 'typical-scale-2x-200', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    deps: {
+      runAws: pool,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-east-2', 2), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(poolResult.code, 1);
+  assert.equal(poolResult.payload.error.code, 'POOL_MISMATCH');
+
+  const existing = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const existingResult = await runWith(['run', '--scenario', 'typical-holdout-300', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    deps: {
+      runAws: existing,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-east-2', 3), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(existingResult.code, 1);
+  assert.equal(existingResult.payload.error.code, 'APP_COUNT_MISMATCH');
+});
+
+test('run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const result = await runWith(['run', '--scenario', 'typical-scale-1x-100', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    statePath: '/tmp/cwm-typical-scale-1x-100.json',
+    env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-east-2', 1), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.ok, true);
+  assert.equal(result.payload.adapterVersion, '1.5.0');
+  assert.equal(result.payload.scenario, 'typical-scale-1x-100');
+  assert.equal(result.payload.rps, 100);
+  assert.equal(result.payload.split, 'holdout');
+  assert.equal(result.payload.region, 'us-east-2');
+  const script = k6Scripts(aws).find((entry) => entry.includes('k6 run'));
+  assert.match(script, /load\/typical\.js/);
+  assert.match(script, /SCENARIO='typical-scale-1x-100'/);
+  assert.match(script, /SPLIT='holdout'/);
+});
+
+test('collect typical-scale-3x-300 on a 2-node stack fails APP_COUNT_MISMATCH', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const result = await runWith(['collect', '--scenario', 'typical-scale-3x-300', '--json'], {
+    now: () => new Date('2026-10-06T16:00:00.000Z'),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: scaleTerraform('us-east-2', 2), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(result.code, 1);
+  assert.equal(result.payload.error.code, 'APP_COUNT_MISMATCH');
+  assert.equal(aws.calls.some((args) => args[0] === 'cloudwatch'), false);
+});
+
+test('wait-ready lists the nine typical-scale keys', async () => {
+  const stdout = new MemoryStream();
+  const code = await main(['wait-ready', '--json'], {
+    stdout,
+    stderr: new MemoryStream(),
+    deps: {
+      runTerraform: async () => ({ code: 0, stdout: '{}', stderr: '' }),
+    },
+  });
+  assert.equal(code, 0, stdout.toString());
+  const payload = JSON.parse(stdout.toString());
+  assert.equal(payload.adapterVersion, '1.5.0');
+  for (const [key, appCount, rps] of SCALE_KEYS) {
+    assert.ok(payload.supportedScenarios.includes(key), key);
+    const spec = payload.scenarios.find((item) => item.key === key);
+    assert.equal(spec.expectedAppCount, appCount);
+    assert.equal(spec.rps, rps);
+    assert.equal(spec.split, 'holdout');
+    assert.equal(spec.requiredRegion, 'us-east-2');
+  }
+  assert.equal(payload.scenarios.find((item) => item.key === 'typical-fit-100').expectedAppCount, 2);
+  assert.equal(payload.scenarios.find((item) => item.key === 'typical-holdout-300').expectedAppCount, 2);
+  assert.match(payload.matrixNote, /APP_COUNT_MISMATCH/);
 });

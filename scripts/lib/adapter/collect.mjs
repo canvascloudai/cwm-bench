@@ -1,5 +1,6 @@
 import { ADAPTER_VERSION, PRIMARY_REGION } from './version.mjs';
 import {
+  assertExpectedAppCount,
   assertExpectedPool,
   assertLaterDay,
   assertNotAliased,
@@ -334,6 +335,7 @@ export async function collectScenario(ctx, scenarioKey) {
   assertLaterDay(spec, ctx.now(), fitDateFrom(state, ctx.env));
   assertSecondRegion(spec, region);
   assertTypicalRegion(spec, region);
+  assertExpectedAppCount(spec, outputs);
   if (spec.expectedPoolSize != null) {
     assertExpectedPool(spec, Number(outputs.topology && outputs.topology.app_pool_size));
   }

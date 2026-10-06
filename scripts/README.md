@@ -13,11 +13,12 @@ node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs --help
 ```
 
-`wait-ready` always returns `adapterVersion` (`1.4.0`) and `supportedScenarios`.
-`1.4.0` adds `typical-later-day`, `typical-later-day-300`,
-`typical-second-region`, and `typical-second-region-300`. The 300 RPS
-keys are part of this same contract. The recorded `typical-v1-20260927c`
-campaign stays at adapter `1.3.0`.
+`wait-ready` always returns `adapterVersion` (`1.5.0`) and `supportedScenarios`.
+`1.5.0` adds `typical-scale-{1x,2x,3x}-{100,200,300}` and
+`APP_COUNT_MISMATCH`. `1.4.0` added `typical-later-day`,
+`typical-later-day-300`, `typical-second-region`, and
+`typical-second-region-300`; those holdout artifacts stay at `1.4.0`.
+The recorded `typical-v1-20260927c` campaign stays at adapter `1.3.0`.
 If Terraform state exists, it also verifies app health and SSM
 reachability (no inbound SSH). Post-provision checks retry normal
 bootstrap delays for up to 20 minutes by default, while terminal AWS/SSM
@@ -63,8 +64,9 @@ measured.
 | `typical-later-day-300` | Same later-day holdout at 300 total RPS. Same profile, workers, pool, region, and fit-date check. Not a rename of `typical-holdout-300`. |
 | `typical-second-region` | Typical holdout at 100 total RPS on `load/typical.js` in **us-west-2** only. Same profile, workers, and pool 250. Other typical keys still reject us-west-2. Not the lean `second-region` key. |
 | `typical-second-region-300` | Same second-region holdout at 300 total RPS in **us-west-2** only. `typical-holdout-300` still rejects us-west-2. |
+| `typical-scale-{1x,2x,3x}-{100,200,300}` | Typical-scale-v1 validation at 100 / 200 / 300 total RPS on 1, 2, or 3 app servers. Holdout split, pool 250, **us-east-2**. The key's `expectedAppCount` must match `topology.app_count` and `app_instance_ids` length (`APP_COUNT_MISMATCH`). Other typical keys expect 2. |
 
-`run` reads `/api/meta` before k6. A lean key on a typical stack, or a typical key on a lean stack, fails with `PROFILE_MISMATCH` and does not start k6. A typical key other than `typical-second-region` and `typical-second-region-300` outside us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. Those two keys fail unless the region is us-west-2 (`SECOND_REGION_CONSTRAINT`). `typical-later-day` and `typical-later-day-300` fail with `LATER_DAY_CONSTRAINT` unless the UTC day is after the fit campaign date. `collect` applies the same day and region checks. `wait-ready` includes `appNodes`, one object per app server, with `profile`, `workers`, and `gitSha` from `/api/meta`, and lists all four keys in `supportedScenarios`. Missing `profile` on the lean app is reported as null there; `run` treats a missing profile as lean so the owned campaign still starts.
+`run` reads `/api/meta` before k6. A lean key on a typical stack, or a typical key on a lean stack, fails with `PROFILE_MISMATCH` and does not start k6. A typical key other than `typical-second-region` and `typical-second-region-300` outside us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. Those two keys fail unless the region is us-west-2 (`SECOND_REGION_CONSTRAINT`). `typical-later-day` and `typical-later-day-300` fail with `LATER_DAY_CONSTRAINT` unless the UTC day is after the fit campaign date. A typical key whose live app count is not `expectedAppCount` fails with `APP_COUNT_MISMATCH` (2 for every typical key except the nine `typical-scale-*` keys, which expect 1, 2, or 3). `collect` applies the same day, region, and app-count checks. `wait-ready` includes `appNodes`, one object per app server, with `profile`, `workers`, and `gitSha` from `/api/meta`, and lists the typical holdout keys and the nine `typical-scale-*` keys in `supportedScenarios`. Missing `profile` on the lean app is reported as null there; `run` treats a missing profile as lean so the owned campaign still starts.
 
 Public CWM `GET /api/accuracy-benchmark` lists idle / normal / peak /
 burst only. later-day and second-region come from this repo's campaign

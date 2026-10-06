@@ -263,3 +263,7 @@ Do not refit. Report each rate on its own. A pass at one rate is not a pass at t
 - Assuming the lean later-day / us-west-2 deltas transfer. Those deltas at 100 RPS were app CPU −0.22 / −0.33 points and P99 +0.86 / +1.79 ms [FACT: section 8, holdout/REPORT.md]. They are context only.
 - The known P95 miss at 300 RPS (predicted 12.78 ms, measured 26.92 ms, score 47.5 [FACT: `typical/REPORT.md`]). A later-day or second-region result at 300 RPS does not resolve it.
 - The 500 RPS false-saturation gap. On engine 1.2.5 the owned fit does not apply above 300 RPS: predicted 99.107% CPU and 9.954% errors against measured 26.34% CPU and 0.0103% errors, scored 25.6, or 28.5 without cost [FACT: `typical/REPORT.md`]. That stays out of scope for a later `typical-v2` densification.
+
+## 13. Pointer: app-server count campaign
+
+Changing the app-server count is a different topology (section 12.5). That campaign is `typical/scale-v1/PREREGISTRATION.md` (`typical-scale-v1`). Sections 3–9 and 12 of this file are unchanged.

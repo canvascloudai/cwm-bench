@@ -90,6 +90,17 @@ SCENARIO=typical-later-day-300     k6 run load/typical.js
 # Second-region keys: only valid when this apply is us-west-2 (adapter enforces).
 SCENARIO=typical-second-region     k6 run load/typical.js
 SCENARIO=typical-second-region-300 k6 run load/typical.js
+# App-count validation (typical-scale-v1). us-east-2, holdout split.
+# The adapter requires app_count 1, 2, or 3 to match the key.
+SCENARIO=typical-scale-1x-100 k6 run load/typical.js
+SCENARIO=typical-scale-1x-200 k6 run load/typical.js
+SCENARIO=typical-scale-1x-300 k6 run load/typical.js
+SCENARIO=typical-scale-2x-100 k6 run load/typical.js
+SCENARIO=typical-scale-2x-200 k6 run load/typical.js
+SCENARIO=typical-scale-2x-300 k6 run load/typical.js
+SCENARIO=typical-scale-3x-100 k6 run load/typical.js
+SCENARIO=typical-scale-3x-200 k6 run load/typical.js
+SCENARIO=typical-scale-3x-300 k6 run load/typical.js
 ```
 
 Diagnostics at 1000 RPS (Burst holdout). **Re-apply** terraform before app-bound so the nodes actually have `APP_POOL_SIZE=40`.
