@@ -84,10 +84,12 @@ SCENARIO=typical-fit-100       k6 run load/typical.js
 SCENARIO=typical-fit-200       k6 run load/typical.js
 SCENARIO=typical-holdout-300   k6 run load/typical.js
 SCENARIO=typical-saturation-500 k6 run load/typical.js
-# Same mix at 100 RPS. typical-later-day: us-east-2, UTC day after the fit date.
-SCENARIO=typical-later-day     k6 run load/typical.js
-# typical-second-region: only valid when this apply is us-west-2 (adapter enforces).
-SCENARIO=typical-second-region k6 run load/typical.js
+# Same mix. Later-day keys: us-east-2, UTC day after the fit date (adapter enforces).
+SCENARIO=typical-later-day         k6 run load/typical.js
+SCENARIO=typical-later-day-300     k6 run load/typical.js
+# Second-region keys: only valid when this apply is us-west-2 (adapter enforces).
+SCENARIO=typical-second-region     k6 run load/typical.js
+SCENARIO=typical-second-region-300 k6 run load/typical.js
 ```
 
 Diagnostics at 1000 RPS (Burst holdout). **Re-apply** terraform before app-bound so the nodes actually have `APP_POOL_SIZE=40`.

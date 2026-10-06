@@ -118,7 +118,9 @@ test('lean files and generator template stay byte-identical to main', () => {
   const suffix = currentCommon.slice(leanCommon.length);
   assert.match(suffix, /export const TYPICAL_RPS/);
   assert.match(suffix, /'typical-later-day': 100/);
+  assert.match(suffix, /'typical-later-day-300': 300/);
   assert.match(suffix, /'typical-second-region': 100/);
+  assert.match(suffix, /'typical-second-region-300': 300/);
   assert.doesNotMatch(leanCommon, /TYPICAL_RPS/);
   assert.doesNotMatch(leanCommon, /typical-later-day/);
   assert.doesNotMatch(leanCommon, /typical-second-region/);
@@ -216,7 +218,7 @@ test('app tokens verify and the load script signs the same user token', () => {
     path.join(ROOT, 'load/typical.js'),
   ], { encoding: 'utf8' });
   assert.equal(selftest.status, 0, selftest.stderr);
-  for (const key of ['typical-later-day', 'typical-second-region']) {
+  for (const key of ['typical-later-day', 'typical-later-day-300', 'typical-second-region', 'typical-second-region-300']) {
     const named = spawnSync('k6', [
       'inspect',
       '-e', `SCENARIO=${key}`,
@@ -248,11 +250,12 @@ test('typical scenario catalog has the frozen rungs, pool, workers, and region',
   assert.equal(reportedLean(getScenario('idle')), 'lean');
 
   const later = getScenario('typical-later-day');
+  const later300 = getScenario('typical-later-day-300');
   const second = getScenario('typical-second-region');
-  assert.ok(keys.includes('typical-later-day'));
-  assert.ok(keys.includes('typical-second-region'));
-  for (const spec of [later, second]) {
-    assert.equal(spec.rps, 100);
+  const second300 = getScenario('typical-second-region-300');
+  for (const [spec, rps] of [[later, 100], [later300, 300], [second, 100], [second300, 300]]) {
+    assert.ok(keys.includes(spec.key));
+    assert.equal(spec.rps, rps);
     assert.equal(spec.split, 'holdout');
     assert.equal(spec.kind, 'holdout');
     assert.equal(spec.expectedProfile, 'typical');
@@ -262,14 +265,20 @@ test('typical scenario catalog has the frozen rungs, pool, workers, and region',
     assert.equal(spec.workload.envValue, spec.key);
     assert.equal(spec.aliasOf, null);
     assert.notEqual(spec.workload.envValue, 'typical-fit-100');
+    assert.notEqual(spec.workload.envValue, 'typical-holdout-300');
     assert.notEqual(spec.workload.script, 'scenarios.js');
   }
   assert.equal(later.requiredRegion, TYPICAL_REGION);
   assert.equal(later.calendarConstraint, 'later-utc-day-than-fit');
   assert.equal(later.regionRole, 'primary');
+  assert.equal(later300.requiredRegion, TYPICAL_REGION);
+  assert.equal(later300.calendarConstraint, 'later-utc-day-than-fit');
   assert.equal(second.requiredRegion, SECOND_REGION);
   assert.equal(second.regionRole, 'second');
   assert.equal(second.forbiddenRegion, TYPICAL_REGION);
+  assert.equal(second300.requiredRegion, SECOND_REGION);
+  assert.equal(second300.regionRole, 'second');
+  assert.equal(second300.forbiddenRegion, TYPICAL_REGION);
   assert.equal(getScenario('later-day').workload.script, 'scenarios.js');
   assert.equal(getScenario('second-region').workload.script, 'scenarios.js');
   assert.equal(getScenario('later-day').expectedProfile, undefined);
@@ -439,41 +448,47 @@ function typicalTerraform(region) {
 }
 
 test('typical-later-day uses the fit-campaign date and is not typical-fit-100', () => {
-  const spec = getScenario('typical-later-day');
   const fitDay = new Date('2026-09-27T23:59:59.000Z');
-  assert.throws(
-    () => assertLaterDay(spec, fitDay, TYPICAL_FIT_DATE),
-    (err) => err.code === 'LATER_DAY_CONSTRAINT'
-  );
-  assert.throws(
-    () => assertLaterDay(spec, DAY_AFTER_TYPICAL_FIT(), null),
-    (err) => err.code === 'LATER_DAY_CONSTRAINT'
-  );
-  assert.doesNotThrow(() => assertLaterDay(spec, DAY_AFTER_TYPICAL_FIT(), TYPICAL_FIT_DATE));
+  for (const key of ['typical-later-day', 'typical-later-day-300']) {
+    const spec = getScenario(key);
+    assert.throws(
+      () => assertLaterDay(spec, fitDay, TYPICAL_FIT_DATE),
+      (err) => err.code === 'LATER_DAY_CONSTRAINT'
+    );
+    assert.throws(
+      () => assertLaterDay(spec, DAY_AFTER_TYPICAL_FIT(), null),
+      (err) => err.code === 'LATER_DAY_CONSTRAINT'
+    );
+    assert.doesNotThrow(() => assertLaterDay(spec, DAY_AFTER_TYPICAL_FIT(), TYPICAL_FIT_DATE));
+  }
   assert.doesNotThrow(() => assertLaterDay(getScenario('typical-fit-100'), fitDay, TYPICAL_FIT_DATE));
+  assert.doesNotThrow(() => assertLaterDay(getScenario('typical-holdout-300'), fitDay, TYPICAL_FIT_DATE));
   assert.doesNotThrow(() => assertLaterDay(getScenario('later-day'), DAY_AFTER_TYPICAL_FIT(), '2026-09-01'));
 });
 
-test('us-west-2 is accepted only for typical-second-region', () => {
-  const second = getScenario('typical-second-region');
-  assert.doesNotThrow(() => assertSecondRegion(second, 'us-west-2'));
-  assert.doesNotThrow(() => assertTypicalRegion(second, 'us-west-2'));
-  assert.throws(
-    () => assertSecondRegion(second, 'us-east-2'),
-    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
-  );
-  assert.throws(
-    () => assertSecondRegion(second, 'us-east-1'),
-    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
-  );
-  assert.throws(
-    () => assertSecondRegion(second, null),
-    (err) => err.code === 'SECOND_REGION_CONSTRAINT'
-  );
-  assert.throws(
-    () => assertTypicalRegion(second, 'us-east-2'),
-    (err) => err.code === 'TYPICAL_REGION_CONSTRAINT'
-  );
+test('us-west-2 is accepted only for the typical-second-region keys', () => {
+  for (const key of ['typical-second-region', 'typical-second-region-300']) {
+    const second = getScenario(key);
+    assert.equal(second.rps, key.endsWith('-300') ? 300 : 100);
+    assert.doesNotThrow(() => assertSecondRegion(second, 'us-west-2'));
+    assert.doesNotThrow(() => assertTypicalRegion(second, 'us-west-2'));
+    assert.throws(
+      () => assertSecondRegion(second, 'us-east-2'),
+      (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+    );
+    assert.throws(
+      () => assertSecondRegion(second, 'us-east-1'),
+      (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+    );
+    assert.throws(
+      () => assertSecondRegion(second, null),
+      (err) => err.code === 'SECOND_REGION_CONSTRAINT'
+    );
+    assert.throws(
+      () => assertTypicalRegion(second, 'us-east-2'),
+      (err) => err.code === 'TYPICAL_REGION_CONSTRAINT'
+    );
+  }
 
   for (const key of [
     'typical-fit-20',
@@ -482,6 +497,7 @@ test('us-west-2 is accepted only for typical-second-region', () => {
     'typical-holdout-300',
     'typical-saturation-500',
     'typical-later-day',
+    'typical-later-day-300',
   ]) {
     assert.doesNotThrow(() => assertSecondRegion(getScenario(key), 'us-west-2'));
     assert.throws(
@@ -653,13 +669,114 @@ test('wait-ready lists the typical stability holdouts', async () => {
   assert.equal(code, 0, stdout.toString());
   const payload = JSON.parse(stdout.toString());
   assert.ok(payload.supportedScenarios.includes('typical-later-day'));
+  assert.ok(payload.supportedScenarios.includes('typical-later-day-300'));
   assert.ok(payload.supportedScenarios.includes('typical-second-region'));
+  assert.ok(payload.supportedScenarios.includes('typical-second-region-300'));
   const later = payload.scenarios.find((item) => item.key === 'typical-later-day');
+  const later300 = payload.scenarios.find((item) => item.key === 'typical-later-day-300');
   const second = payload.scenarios.find((item) => item.key === 'typical-second-region');
+  const second300 = payload.scenarios.find((item) => item.key === 'typical-second-region-300');
   assert.equal(later.calendarConstraint, 'later-utc-day-than-fit');
   assert.equal(later.requiredRegion, 'us-east-2');
   assert.equal(later.rps, 100);
+  assert.equal(later300.calendarConstraint, 'later-utc-day-than-fit');
+  assert.equal(later300.requiredRegion, 'us-east-2');
+  assert.equal(later300.rps, 300);
   assert.equal(second.requiredRegion, 'us-west-2');
   assert.equal(second.regionRole, 'second');
+  assert.equal(second.rps, 100);
+  assert.equal(second300.requiredRegion, 'us-west-2');
+  assert.equal(second300.regionRole, 'second');
+  assert.equal(second300.rps, 300);
   assert.equal(payload.scenarios.find((item) => item.key === 'typical-fit-100').requiredRegion, 'us-east-2');
+  assert.equal(payload.scenarios.find((item) => item.key === 'typical-holdout-300').requiredRegion, 'us-east-2');
+});
+
+test('run typical-later-day-300 on a later UTC day in us-east-2 starts typical.js at 300 RPS', async () => {
+  const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const result = await runWith(['run', '--scenario', 'typical-later-day-300', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    statePath: '/tmp/cwm-typical-later-day-300.json',
+    env: {
+      CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE,
+      CWM_WARMUP: '1s',
+      CWM_DURATION: '1s',
+    },
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.scenario, 'typical-later-day-300');
+  assert.equal(result.payload.rps, 300);
+  assert.equal(result.payload.split, 'holdout');
+  assert.equal(result.payload.region, 'us-east-2');
+  assert.equal(result.payload.fitCampaignDateUtc, TYPICAL_FIT_DATE);
+  const script = k6Scripts(aws).find((entry) => entry.includes('k6 run'));
+  assert.match(script, /load\/typical\.js/);
+  assert.match(script, /SCENARIO='typical-later-day-300'/);
+  assert.doesNotMatch(script, /SCENARIO='typical-holdout-300'/);
+
+  const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const westResult = await runWith(['run', '--scenario', 'typical-later-day-300', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    env: { CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE },
+    deps: {
+      runAws: west,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-west-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(westResult.code, 1);
+  assert.equal(westResult.payload.error.code, 'TYPICAL_REGION_CONSTRAINT');
+  assert.equal(west.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+});
+
+test('run typical-second-region-300 accepts only us-west-2', async () => {
+  const east = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const eastResult = await runWith(['run', '--scenario', 'typical-second-region-300', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    deps: {
+      runAws: east,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-east-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(eastResult.code, 1);
+  assert.equal(eastResult.payload.error.code, 'SECOND_REGION_CONSTRAINT');
+  assert.equal(east.calls.some((args) => args[0] === 'ssm' && args[1] === 'send-command'), false);
+
+  const locked = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const lockedResult = await runWith(['run', '--scenario', 'typical-holdout-300', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    deps: {
+      runAws: locked,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-west-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(lockedResult.code, 1);
+  assert.equal(lockedResult.payload.error.code, 'TYPICAL_REGION_CONSTRAINT');
+
+  const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
+  const westResult = await runWith(['run', '--scenario', 'typical-second-region-300', '--json'], {
+    now: DAY_AFTER_TYPICAL_FIT,
+    statePath: '/tmp/cwm-typical-second-region-300.json',
+    env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
+    deps: {
+      runAws: west,
+      runTerraform: async () => ({ code: 0, stdout: typicalTerraform('us-west-2'), stderr: '' }),
+      fs: memoryFs(),
+    },
+  });
+  assert.equal(westResult.code, 0, westResult.stdout);
+  assert.equal(westResult.payload.scenario, 'typical-second-region-300');
+  assert.equal(westResult.payload.rps, 300);
+  assert.equal(westResult.payload.region, 'us-west-2');
+  const script = k6Scripts(west).find((entry) => entry.includes('k6 run'));
+  assert.match(script, /load\/typical\.js/);
+  assert.match(script, /SCENARIO='typical-second-region-300'/);
+  assert.doesNotMatch(script, /SCENARIO='typical-holdout-300'/);
 });

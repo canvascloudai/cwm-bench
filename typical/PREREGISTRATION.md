@@ -224,30 +224,36 @@ Status: amendment to the gap disclosed in section 8. Section 8 is unchanged. Thi
 
 ### 12.1 Purpose
 
-Validate day-stability and region-stability of the already-fitted `typical-v1-20260927c` reference at 100 total RPS. The fit UTC date of that campaign is 2026-09-27 [FACT: campaign id `typical-v1-20260927c`; collect and run JSON under `typical/campaign/typical-v1-20260927c/` record `calendarDateUtc` `2026-09-27`].
+Validate day-stability and region-stability of the already-fitted `typical-v1-20260927c` reference at 100 total RPS and at 300 total RPS. The fit UTC date of that campaign is 2026-09-27 [FACT: campaign id `typical-v1-20260927c`; collect and run JSON under `typical/campaign/typical-v1-20260927c/` record `calendarDateUtc` `2026-09-27`].
+
+Passing at 100 RPS establishes repeatability at 100 RPS only. Passing at 300 RPS tests whether the published after-fit holdout score at 300 RPS holds on a later day and in a second region. That published score is **84.2** on the page cost basis and **82.4** without cost [FACT: `typical/REPORT.md`; `typical/scores-after-fit.json` `300_pageCostBasis`]. The connector-cost total in the same file is **74.8**.
 
 ### 12.2 Keys
 
-Both keys use the existing protocol (5 min warmup, then 15 min steady [FACT: section 6]) and the unchanged `load/typical.js` mix. Expected profile `typical`, 2 workers, pool 250. Topology matches section 3 (2 × m5.large, db.r5.large, internal ALB, c6i.xlarge generator).
+Each apply runs both rates, 100 then 300, on one stack, then destroys. Protocol is the existing 5 min warmup, then 15 min steady [FACT: section 6]. The `load/typical.js` mix is unchanged. Expected profile `typical`, 2 workers, pool 250. Topology matches section 3 (2 × m5.large, db.r5.large, internal ALB, c6i.xlarge generator).
 
-| Scenario key | Region | Total RPS | What changes vs `typical-fit-100` |
+| Scenario key | Region | Total RPS | What changes vs the same-rate typical-v1 key |
 | --- | --- | ---: | --- |
-| `typical-later-day` | **us-east-2** | 100 | UTC calendar day strictly after 2026-09-27. Set `CWM_FIT_CAMPAIGN_DATE=2026-09-27` (adapter state is accepted too). |
-| `typical-second-region` | **us-west-2** | 100 | Region only. Separate apply. |
+| `typical-later-day` | **us-east-2** | 100 | UTC calendar day strictly after 2026-09-27. Set `CWM_FIT_CAMPAIGN_DATE=2026-09-27` (adapter state is accepted too). Compare with `typical-fit-100`. |
+| `typical-later-day-300` | **us-east-2** | 300 | Same day constraint and the same apply as `typical-later-day`. Compare with `typical-holdout-300`. |
+| `typical-second-region` | **us-west-2** | 100 | Region only. Separate apply. Compare with `typical-fit-100`. |
+| `typical-second-region-300` | **us-west-2** | 300 | Same region and the same apply as `typical-second-region`. Compare with `typical-holdout-300`. |
 
 Lean `later-day` and `second-region` stay on the lean script and the lean profile. A typical stack rejects them with `PROFILE_MISMATCH`. Running those lean keys is not this measurement.
 
-`typical-later-day` in any region other than us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. `typical-second-region` outside us-west-2 fails with `SECOND_REGION_CONSTRAINT`. Every other `typical-*` key still rejects us-west-2.
+`typical-later-day` and `typical-later-day-300` in any region other than us-east-2 fail with `TYPICAL_REGION_CONSTRAINT`. `typical-second-region` and `typical-second-region-300` outside us-west-2 fail with `SECOND_REGION_CONSTRAINT`. Every other `typical-*` key, including `typical-holdout-300`, still rejects us-west-2.
 
 ### 12.3 Attempts
 
-Suggested ids: parent `typical-holdouts-v1-YYYYMMDD`; separate applies `typical-later-day-YYYYMMDD` and `typical-second-region-YYYYMMDD`. One attempt per key. Rerun only when generator CPU in the steady window exceeds about 70% [FACT: README.md and section 6] or for a documented infrastructure failure. Keep every attempt [FACT: section 10].
+Suggested ids: parent `typical-holdouts-v1-YYYYMMDD`; separate applies `typical-later-day-YYYYMMDD` (both later-day keys) and `typical-second-region-YYYYMMDD` (both second-region keys). One attempt per key. Rerun only when generator CPU in the steady window exceeds about 70% [FACT: README.md and section 6] or for a documented infrastructure failure. Keep every attempt [FACT: section 10].
 
 ### 12.4 Comparison, fixed before the runs
 
-Primary: measured value minus the measured `typical-fit-100` row from `typical-v1-20260927c` in `holdout/exports/typical-v1-20260927c.summary.md` (goodput 87.62279003099846, p50 4.684795, p95 8.354502, p99 83.1684065, app CPU 5.238137291849269, db CPU 11.492307692307692). Report the difference per metric. Do not refit.
+Do not refit. Report each rate on its own. A pass at one rate is not a pass at the other.
 
-Secondary: score each holdout the way section 9.4 scores a holdout, against the after-fit predictions at 100 RPS in `typical/scores-after-fit.json` (`100.pred`: cpu 5.215, p50 4.879573, p95 9.234496, p99 81.72693, thr 87.619644, err 0, cost 0.6). Report the page score with cost and without cost. The fit-rung scores already in that file at 100 RPS are total 93.3 and noCost 96.1. Those numbers are the fit rung, not a prediction of the holdout score.
+**100 RPS** (`typical-later-day`, `typical-second-region`). Primary: measured value minus the measured `typical-fit-100` row from `typical-v1-20260927c` in `holdout/exports/typical-v1-20260927c.summary.md` (goodput 87.62279003099846, p50 4.684795, p95 8.354502, p99 83.1684065, app CPU 5.238137291849269, db CPU 11.492307692307692). Secondary: score the way section 9.4 scores a holdout, against the after-fit predictions at 100 RPS in `typical/scores-after-fit.json` (`100.pred`: cpu 5.215, p50 4.879573, p95 9.234496, p99 81.72693, thr 87.619644, err 0, cost 0.6). Report the page score with cost and without cost. The fit-rung scores already in that file at 100 RPS are total 93.3 and noCost 96.1. Those numbers are the fit rung, not a prediction of this holdout score. Passing here establishes repeatability at 100 RPS only.
+
+**300 RPS** (`typical-later-day-300`, `typical-second-region-300`). Primary: measured value minus the measured `typical-holdout-300` row from that same export (goodput 262.60872607647724, p50 4.621661, p95 26.917676599999997, p99 97.54310300000054, app CPU 15.303205128205128, db CPU 26.709615384615383). Secondary: score the same way against the after-fit predictions at 300 RPS in `typical/scores-after-fit.json` (`300.pred`: cpu 14.74, p50 4.1652207, p95 12.783974, p99 92.47731, thr 262.604, err 0, cost 0.88). Report the page score with cost and without cost. The published after-fit scores for this reference are 84.2 on the page cost basis and 82.4 without cost (`300_pageCostBasis`; `typical/REPORT.md`). The connector-cost total in the same file is 74.8. Say which basis is used. Passing here tests whether that 84.2 / 82.4 score holds on a later UTC day and in us-west-2.
 
 ### 12.5 Out of scope
 
@@ -255,3 +261,5 @@ Secondary: score each holdout the way section 9.4 scores a holdout, against the 
 - Burst, the 1000 RPS diagnostics, and `typical-saturation-500`.
 - Any coefficient change, calibration-id change, or retune.
 - Assuming the lean later-day / us-west-2 deltas transfer. Those deltas at 100 RPS were app CPU −0.22 / −0.33 points and P99 +0.86 / +1.79 ms [FACT: section 8, holdout/REPORT.md]. They are context only.
+- The known P95 miss at 300 RPS (predicted 12.78 ms, measured 26.92 ms, score 47.5 [FACT: `typical/REPORT.md`]). A later-day or second-region result at 300 RPS does not resolve it.
+- The 500 RPS false-saturation gap. On engine 1.2.5 the owned fit does not apply above 300 RPS: predicted 99.107% CPU and 9.954% errors against measured 26.34% CPU and 0.0103% errors, scored 25.6, or 28.5 without cost [FACT: `typical/REPORT.md`]. That stays out of scope for a later `typical-v2` densification.

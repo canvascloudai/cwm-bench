@@ -79,7 +79,7 @@ After apply, record outputs: `alb_dns`, `alb_arn`, `target_group_arn`, `rds_endp
 
 With the defaults (`app_profile=lean`, `app_workers=1`) the rendered app user_data matches the lean campaign. A typical campaign is a separate apply: `-var='region=us-east-2' -var='app_profile=typical' -var='app_workers=2'`.
 
-A second-region holdout is a **separate apply** with `-var='region=us-west-2'`. That is not a silent default change and not a rename of the us-east-1 run. The typical-profile counterpart is the same separate apply with `-var='app_profile=typical' -var='app_workers=2'` and scenario key `typical-second-region`. It is not a rename of the us-east-2 typical apply. Other `typical-*` keys still require us-east-2. See `CLEANUP-COMPAT.md` before touching resource addresses. Use a separate terraform work directory and destroy between applies (`typical/RUNBOOK-CANVASCLOUDAI.md`).
+A second-region holdout is a **separate apply** with `-var='region=us-west-2'`. That is not a silent default change and not a rename of the us-east-1 run. The typical-profile counterpart is the same separate apply with `-var='app_profile=typical' -var='app_workers=2'` and scenario keys `typical-second-region` (100 RPS) then `typical-second-region-300` (300 RPS) before destroy. It is not a rename of the us-east-2 typical apply. Other `typical-*` keys, including `typical-holdout-300`, still require us-east-2. See `CLEANUP-COMPAT.md` before touching resource addresses. Use a separate terraform work directory and destroy between applies (`typical/RUNBOOK-CANVASCLOUDAI.md`).
 
 Changing `app_instance_type`, `db_instance_class`, `app_count`, or `region` is a **new topology**.
 
