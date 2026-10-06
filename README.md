@@ -111,7 +111,7 @@ node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 ```
 
-`wait-ready` returns `adapterVersion` (`1.3.0`) and the full
+`wait-ready` returns `adapterVersion` (`1.4.0`) and the full
 `supportedScenarios` list (`idle`, `normal`, `peak`, `burst`,
 `pool-bound`, `app-bound`, `cpu-only`, `later-day`, `second-region`,
 `typical-fit-20`, `typical-fit-100`, `typical-fit-200`,

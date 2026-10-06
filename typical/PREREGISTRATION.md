@@ -142,7 +142,7 @@ That is about 65,100 rows across the required rungs, taking `comments` from 50,0
 
 ## 8. Known gaps (disclosed up front)
 
-- **No later-day and no second-region typical repeats.** Lean's later-day and us-west-2 deltas at 100 RPS were small: app CPU −0.22 / −0.33 points, P99 +0.86 / +1.79 ms [FACT: holdout/REPORT.md]. We do **not** assume the same holds for typical. Amendment: section 12 defines `typical-later-day` and `typical-second-region` so this gap can be measured. Those keys are not part of the `typical-v1-20260927c` fit, and they do not change sections 3–7 or 9.
+- **No later-day and no second-region typical repeats.** Lean's later-day and us-west-2 deltas at 100 RPS were small: app CPU −0.22 / −0.33 points, P99 +0.86 / +1.79 ms [FACT: holdout/REPORT.md]. We do **not** assume the same holds for typical.
 - **One repetition per rung.** Variance is not estimated.
 - **One reference workload.** "Typical" here means *this documented workload*, not "the average customer app".
 - **Other process models are not measured.** `bcryptjs` on the event loop (section 4.2); a single-process variant is not measured.
@@ -220,7 +220,7 @@ The results of every required rung are published in cwm-bench, **whatever they s
 
 ## 12. Amendment: day and region holdouts for the fitted typical-v1 reference
 
-Status: amendment to the gap disclosed in section 8. It does not change the typical app, request mix, seed, fit ladder, coefficients, or calibration id. It is not a new fit and not `typical-v2`.
+Status: amendment to the gap disclosed in section 8. Section 8 is unchanged. This section does not change the typical app, request mix, seed, fit ladder, coefficients, or calibration id. It is not a new fit and not `typical-v2`. The worker adapter that accepts these keys reports `adapterVersion` `1.4.0`. The `typical-v1-20260927c` artifacts stay at `1.3.0`, the version that campaign ran.
 
 ### 12.1 Purpose
 

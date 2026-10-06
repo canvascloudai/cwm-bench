@@ -13,7 +13,9 @@ node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs --help
 ```
 
-`wait-ready` always returns `adapterVersion` and `supportedScenarios`.
+`wait-ready` always returns `adapterVersion` (`1.4.0`) and `supportedScenarios`.
+`1.4.0` adds `typical-later-day` and `typical-second-region`. The recorded
+`typical-v1-20260927c` campaign stays at adapter `1.3.0`.
 If Terraform state exists, it also verifies app health and SSM
 reachability (no inbound SSH). Post-provision checks retry normal
 bootstrap delays for up to 20 minutes by default, while terminal AWS/SSM

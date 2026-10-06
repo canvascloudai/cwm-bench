@@ -53,7 +53,7 @@ unset CWM_RUN_ID CWM_WARMUP CWM_DURATION   # use the defaults: 5m warmup, 15m st
 node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
 ```
 
-In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5 and, on this revision, `typical-later-day` and `typical-second-region` (section 10). Record `adapterVersion`.
+In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5 and, on this revision, `typical-later-day` and `typical-second-region` (section 10). Record `adapterVersion` (`1.4.0` on this revision). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`.
 
 ## 4. Provision (typical profile, us-east-2)
 
