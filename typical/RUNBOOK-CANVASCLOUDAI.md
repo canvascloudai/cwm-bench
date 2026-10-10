@@ -53,7 +53,7 @@ unset CWM_RUN_ID CWM_WARMUP CWM_DURATION   # use the defaults: 5m warmup, 15m st
 node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
 ```
 
-In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5, the four holdout keys in section 10, the nine `typical-scale-*` keys in section 11, and the nine `typical-p95-*` keys in section 12. Record `adapterVersion` (`1.6.0` on this revision). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`. The recorded holdouts remain adapter `1.4.0`. The recorded scale-v1 campaign remains adapter `1.5.0`.
+In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5, the four holdout keys in section 10, the nine `typical-scale-*` keys in section 11, and the nine `typical-p95-*` keys in section 12. Record `adapterVersion` (`1.6.1` on this revision; `1.6.0` was the p95 wiring before the measurement-SHA fix). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`. The recorded holdouts remain adapter `1.4.0`. The recorded scale-v1 campaign remains adapter `1.5.0`.
 
 ## 4. Provision (typical profile, us-east-2)
 
@@ -332,7 +332,7 @@ The holdouts ended with the runner's strict safety lock retained: tag inventory 
 
 ## 12. P95 model validation (typical-p95-v1)
 
-These nine applies are not part of section 6, section 10, or section 11. The frozen plan is `typical/p95-v1/PREREGISTRATION.md`. The candidate predictions are frozen in `typical/p95-v1/predictions/model-predictions.csv`. Do not recompute them and do not query a live engine to score them. The engine baseline is frozen in `typical/p95-v1/predictions/engine-baseline/` (engine 1.2.18, `predictions.json`). The commit that contains that baseline is `<SHA>` / `measurement_sha`. Do not apply on any other SHA. Do not change instance types, pool size, workers, the request mix, warmup, or duration.
+These nine applies are not part of section 6, section 10, or section 11. The frozen plan is `typical/p95-v1/PREREGISTRATION.md`. The candidate predictions are frozen in `typical/p95-v1/predictions/model-predictions.csv`. Do not recompute them and do not query a live engine to score them. The engine baseline is frozen in `typical/p95-v1/predictions/engine-baseline/` (engine 1.2.18, `predictions.json`). `<SHA>` / `measurement_sha` is the merge commit of the adapter 1.6.1 provenance fix on main, not `68b5fa2`. Do not apply on any other SHA. Do not change instance types, pool size, workers, the request mix, warmup, or duration.
 
 `<AMI>` is one id for all nine applies. Resolve it once before session 1 and record it in the campaign note. This runbook does not name an AMI, because the wiring commit did not query AWS.
 
@@ -393,9 +393,9 @@ Do not change any other variable: instance types, `app_pool_size`, `mysql_max_co
 Gates, checked before the next rung where the collect is in hand (`typical/p95-v1/score_p95_v1.py` implements the same rules):
 
 - After apply: `topology_declaration.app_count` is N, `app_instance_ids` has length N, `resolved_ami_id` is `<AMI>`, and `ami_source` is `variable`.
-- After wait-ready: `ok`, adapterVersion `1.6.0`, and N `appNodes`, each `typical` / 2 workers / `<SHA>`.
-- After each run: `ok: true`, `adapterVersion` `1.6.0`, `ladder` `[300,200,100]`, and `rung_pos` 1 then 2 then 3. `ladder_history` is the rungs completed on this apply.
-- After each collect: `ok`, `identityMatches`, `invented: false`, `latency.untaggedAggregate` true, and `latency.p95Ms` equal to the untagged `http_req_duration` aggregate. `artifacts.requestLevelRaw.present` is true (`k6.json.gz`). `cloudwatch.window.source` is `persisted-run` and the window covers only that rung. `terraformOutputs.topology_declaration.app_count` is N.
+- After wait-ready: `ok`, adapterVersion `1.6.1`, and N `appNodes`, each `typical` / 2 workers / `<SHA>`.
+- After each run: `ok: true`, `adapterVersion` `1.6.1`, `ladder` `[300,200,100]`, and `rung_pos` 1 then 2 then 3. `ladder_history` is the rungs completed on this apply.
+- After each collect: `ok`, `identityMatches`, `invented: false`, `measurementSha` equal to `<SHA>`, `latency.untaggedAggregate` true, and `latency.p95Ms` equal to the untagged `http_req_duration` aggregate. `MEASUREMENT_SHA_MISMATCH` means `CWM_MEASUREMENT_SHA` and the app `/api/meta` gitSha disagree. `artifacts.requestLevelRaw.present` is true (`k6.json.gz`). `cloudwatch.window.source` is `persisted-run` and the window covers only that rung. `terraformOutputs.topology_declaration.app_count` is N.
 - Generator: CPU mean over the steady window at or below 70%, and `dropped_iterations` at or below 0.5% of scheduled iterations (target RPS × 1,050). If generator CPU is still missing after the CloudWatch re-collects below, the rung passes this check only when dropped iterations are within that limit and peak VUs stayed under the pre-allocated VU budget.
 - `APP_COUNT_MISMATCH` means the live app count is not the key's count. Do not switch to a fit, holdout, or scale key. `REUSED_KEY` means this test id was pointed at one of those keys. `LADDER_ORDER` means the rung is not the next step of 300 → 200 → 100. `TEST_ID_MISMATCH` means the apply id does not match `typical-p95-{1x|2x|3x}-r{1..3}-YYYYMMDD`.
 

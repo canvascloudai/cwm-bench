@@ -136,6 +136,9 @@ Typical profile (app_profile=typical, app_workers=2, pool 250):
   CWM_LADDER must be 300,200,100 when set. The run metadata records
   ladder, rung_pos, and ladder_history. Scored latency stays the
   untagged whole-run aggregate: these keys do not add a k6 threshold.
+  Collect writes measurementSha from CWM_MEASUREMENT_SHA and each app
+  node's /api/meta gitSha. If both are set and they differ, collect
+  fails with MEASUREMENT_SHA_MISMATCH. Other keys do not record that field.
 
 Burst is a supported scenario. collect must assemble required CloudWatch
 datapoints plus k6 summary.json (latency percentiles and error-class
@@ -147,6 +150,7 @@ Environment (optional):
   CWM_TERRAFORM_DIR     Terraform directory (default: <repo>/terraform)
   CWM_ADAPTER_STATE     Fit-date state file (default: <repo>/.cwm-adapter-state.json)
   CWM_CAMPAIGN_ID       Campaign id stamped on k6 tags
+  CWM_MEASUREMENT_SHA   typical-p95-v1 measurement SHA recorded on collect
   CWM_RUN_ID            Run id (default: <scenario>-<utc-stamp>)
   CWM_WARMUP            k6 warmup (default 5m)
   CWM_DURATION          k6 steady duration (default 15m)

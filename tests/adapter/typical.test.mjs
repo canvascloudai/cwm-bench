@@ -840,7 +840,7 @@ function scaleTerraform(region, appCount) {
 }
 
 test('typical-scale keys are us-east-2 holdouts with the key app count', () => {
-  assert.equal(ADAPTER_VERSION, '1.6.0');
+  assert.equal(ADAPTER_VERSION, '1.6.1');
   for (const [key, appCount, rps] of SCALE_KEYS) {
     const spec = getScenario(key);
     assert.equal(spec.rps, rps);
@@ -964,7 +964,7 @@ test('run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS', async
   });
   assert.equal(result.code, 0, result.stdout);
   assert.equal(result.payload.ok, true);
-  assert.equal(result.payload.adapterVersion, '1.6.0');
+  assert.equal(result.payload.adapterVersion, '1.6.1');
   assert.equal(result.payload.scenario, 'typical-scale-1x-100');
   assert.equal(result.payload.rps, 100);
   assert.equal(result.payload.split, 'holdout');
@@ -1001,7 +1001,7 @@ test('wait-ready lists the nine typical-scale keys', async () => {
   });
   assert.equal(code, 0, stdout.toString());
   const payload = JSON.parse(stdout.toString());
-  assert.equal(payload.adapterVersion, '1.6.0');
+  assert.equal(payload.adapterVersion, '1.6.1');
   for (const [key, appCount, rps] of SCALE_KEYS) {
     assert.ok(payload.supportedScenarios.includes(key), key);
     const spec = payload.scenarios.find((item) => item.key === key);

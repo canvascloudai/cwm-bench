@@ -1,8 +1,9 @@
 # cwm-bench `typical-p95-v1`: P95 model validation holdout (1× / 2× / 3× m5.large, reverse ladder), pre-registration
 
-Status: **FINAL.** Predictions are frozen for the candidate model. The engine baseline is frozen (1.2.18). This commit's SHA is `measurement_sha`. Nothing applied on AWS, nothing filed in Replit. Written 2026-10-10. Owner: Kevin Brown.
+Status: **FINAL.** Predictions are frozen for the candidate model. The engine baseline is frozen (1.2.18). `measurement_sha` is the merge commit of the adapter 1.6.1 provenance fix on main, not `68b5fa2`. Nothing applied on AWS, nothing filed in Replit. Written 2026-10-10. Owner: Kevin Brown.
+Adapter 1.6.1 provenance fix before any apply; predictions and criteria unchanged.
 Rev 2 applies an external review: adds 1×, splits the result into two verdicts that are reported separately, renames the bands as acceptance tolerances, fixes the scoring window, freezes the invalidation and budget rules, and corrects the criterion-(c) wording.
-The candidate model in `predictions/` and the engine baseline in `predictions/engine-baseline/` are frozen with this commit. This commit's SHA is `measurement_sha`. After this freeze, any change to §2–§8 means a new campaign version (`typical-p95-v2`).
+The candidate model in `predictions/` and the engine baseline in `predictions/engine-baseline/` stay frozen. `measurement_sha` is the merge commit of the adapter 1.6.1 provenance fix on main, not `68b5fa2`. After that commit, any change to §2–§8 means a new campaign version (`typical-p95-v2`).
 
 Labels: **[FACT]** in the repo or a saved artifact, cited inline · **[DECISION]** a choice for this campaign · **[ASSUMPTION]** an unverified premise · **[DERIVED]** arithmetic, shown.
 
@@ -122,7 +123,7 @@ All in `typical/p95-v1/` in `canvascloudai/cwm-bench`:
 5. **This prereg** (frozen copy), `simulate_pass_rates.py`, and the decisions table (§12) as approved.
 6. **Dry-run evidence** (no AWS: local k6 against a stub): the per-minute export is present, and `latency.p95Ms` comes from the untagged aggregate.
 
-Every apply uses `app_source_git_ref = measurement_sha`. Nothing in the package changes after that commit.
+`measurement_sha` is the merge commit of the adapter 1.6.1 provenance fix on main, not `68b5fa2`. Every apply uses `app_source_git_ref = measurement_sha`. Predictions and criteria are unchanged. Nothing in the package changes after that commit.
 
 ## 6. Frozen claims
 
