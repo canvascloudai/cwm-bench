@@ -22,7 +22,11 @@ import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
  * typical-scale-{1x,2x,3x}-{100,200,300} are the typical-scale-v1
  * validation keys: the same mix in us-east-2, split holdout, with
  * expectedAppCount 1, 2, or 3. Every other typical key expects 2 app
- * servers. A live count that differs fails with APP_COUNT_MISMATCH.
+ * servers, except typical-p95-{1x,2x,3x}-{300,200,100}, which expect
+ * 1, 2, or 3. A live count that differs fails with APP_COUNT_MISMATCH.
+ *
+ * typical-p95 keys are not aliases of typical-fit, typical-holdout, or
+ * typical-scale. Their ladder is 300 → 200 → 100.
  */
 
 export const SCENARIO_KEYS = Object.freeze([
@@ -53,6 +57,15 @@ export const SCENARIO_KEYS = Object.freeze([
   'typical-scale-3x-100',
   'typical-scale-3x-200',
   'typical-scale-3x-300',
+  'typical-p95-1x-300',
+  'typical-p95-1x-200',
+  'typical-p95-1x-100',
+  'typical-p95-2x-300',
+  'typical-p95-2x-200',
+  'typical-p95-2x-100',
+  'typical-p95-3x-300',
+  'typical-p95-3x-200',
+  'typical-p95-3x-100',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -94,11 +107,43 @@ function typicalScaleScenario(key, appCount, rps) {
     completeness: 'optional',
     requiresCompleteCollect: false,
     aliasOf: null,
+    ladder: [100, 200, 300],
+    enforceLadder: false,
     description:
       `Typical-profile app-count validation at ${rps} total RPS on ${appCount} × m5.large. ` +
       `Same load/typical.js mix as the typical-v1 rungs. Requires app_profile=typical, app_workers=2, pool 250, ` +
       `Terraform region ${TYPICAL_REGION}, and topology app_count=${appCount}. ` +
-      'Split is holdout (validation, not fit). Not a rename of a typical-fit or typical-holdout key.',
+      'Split is holdout (validation, not fit). Not a rename of a typical-fit or typical-holdout key. ' +
+      'Ladder metadata is 100 → 200 → 300 and is not enforced.',
+  };
+}
+
+function typicalP95Scenario(key, appCount, rps) {
+  return {
+    key,
+    kind: 'holdout',
+    rps,
+    split: 'holdout',
+    regionRole: 'primary',
+    requiredRegion: TYPICAL_REGION,
+    workload: { script: 'typical.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'typical',
+    expectedWorkers: 2,
+    expectedAppCount: appCount,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    ladder: [300, 200, 100],
+    enforceLadder: true,
+    scoreUntaggedDuration: true,
+    requestLevelRaw: true,
+    description:
+      `Typical-p95-v1 validation at ${rps} total RPS on ${appCount} × m5.large. ` +
+      `Reverse ladder 300 → 200 → 100 on a fresh seed. Requires app_profile=typical, app_workers=2, pool 250, ` +
+      `Terraform region ${TYPICAL_REGION}, topology app_count=${appCount}, and test id ` +
+      `typical-p95-${appCount}x-r{1..3}-YYYYMMDD. Not a typical-fit, typical-holdout, or typical-scale key. ` +
+      'Scored latency is the untagged whole-run http_req_duration aggregate.',
   };
 }
 
@@ -288,6 +333,15 @@ const DEFINITIONS = {
   'typical-scale-3x-100': typicalScaleScenario('typical-scale-3x-100', 3, 100),
   'typical-scale-3x-200': typicalScaleScenario('typical-scale-3x-200', 3, 200),
   'typical-scale-3x-300': typicalScaleScenario('typical-scale-3x-300', 3, 300),
+  'typical-p95-1x-300': typicalP95Scenario('typical-p95-1x-300', 1, 300),
+  'typical-p95-1x-200': typicalP95Scenario('typical-p95-1x-200', 1, 200),
+  'typical-p95-1x-100': typicalP95Scenario('typical-p95-1x-100', 1, 100),
+  'typical-p95-2x-300': typicalP95Scenario('typical-p95-2x-300', 2, 300),
+  'typical-p95-2x-200': typicalP95Scenario('typical-p95-2x-200', 2, 200),
+  'typical-p95-2x-100': typicalP95Scenario('typical-p95-2x-100', 2, 100),
+  'typical-p95-3x-300': typicalP95Scenario('typical-p95-3x-300', 3, 300),
+  'typical-p95-3x-200': typicalP95Scenario('typical-p95-3x-200', 3, 200),
+  'typical-p95-3x-100': typicalP95Scenario('typical-p95-3x-100', 3, 100),
 };
 
 export function scenariosRequiringCompleteCollect() {

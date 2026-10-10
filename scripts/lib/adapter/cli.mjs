@@ -99,7 +99,10 @@ Scenario keys (kebab-case, discovered from this repo + public CWM rungs):
   typical-second-region, typical-second-region-300,
   typical-scale-1x-100, typical-scale-1x-200, typical-scale-1x-300,
   typical-scale-2x-100, typical-scale-2x-200, typical-scale-2x-300,
-  typical-scale-3x-100, typical-scale-3x-200, typical-scale-3x-300
+  typical-scale-3x-100, typical-scale-3x-200, typical-scale-3x-300,
+  typical-p95-1x-300, typical-p95-1x-200, typical-p95-1x-100,
+  typical-p95-2x-300, typical-p95-2x-200, typical-p95-2x-100,
+  typical-p95-3x-300, typical-p95-3x-200, typical-p95-3x-100
 
 Holdouts:
   later-day      Distinct holdout. Runs only on a later UTC calendar day
@@ -126,6 +129,13 @@ Typical profile (app_profile=typical, app_workers=2, pool 250):
   split holdout, not fit. A live app count other than N fails with
   APP_COUNT_MISMATCH. Every other typical key expects 2 app servers
   and fails the same way on any other count.
+  typical-p95-1x-*, typical-p95-2x-*, and typical-p95-3x-* are the
+  typical-p95-v1 keys (300, then 200, then 100 total RPS) in us-east-2.
+  Test ids are typical-p95-{1x|2x|3x}-r{1..3}-YYYYMMDD, with a letter
+  suffix on a replacement. They are not fit, holdout, or scale keys.
+  CWM_LADDER must be 300,200,100 when set. The run metadata records
+  ladder, rung_pos, and ladder_history. Scored latency stays the
+  untagged whole-run aggregate: these keys do not add a k6 threshold.
 
 Burst is a supported scenario. collect must assemble required CloudWatch
 datapoints plus k6 summary.json (latency percentiles and error-class

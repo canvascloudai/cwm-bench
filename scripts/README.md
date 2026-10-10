@@ -13,9 +13,11 @@ node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs --help
 ```
 
-`wait-ready` always returns `adapterVersion` (`1.5.0`) and `supportedScenarios`.
-`1.5.0` adds `typical-scale-{1x,2x,3x}-{100,200,300}` and
-`APP_COUNT_MISMATCH`. `1.4.0` added `typical-later-day`,
+`wait-ready` always returns `adapterVersion` (`1.6.0`) and `supportedScenarios`.
+`1.6.0` adds `typical-p95-{1x,2x,3x}-{300,200,100}`, the reverse ladder,
+and gzipped k6 request-level output for those keys. `1.5.0` adds
+`typical-scale-{1x,2x,3x}-{100,200,300}` and
+`APP_COUNT_MISMATCH`. Scale-v1 artifacts stay at `1.5.0`. `1.4.0` added `typical-later-day`,
 `typical-later-day-300`, `typical-second-region`, and
 `typical-second-region-300`; those holdout artifacts stay at `1.4.0`.
 The recorded `typical-v1-20260927c` campaign stays at adapter `1.3.0`.
@@ -64,9 +66,10 @@ measured.
 | `typical-later-day-300` | Same later-day holdout at 300 total RPS. Same profile, workers, pool, region, and fit-date check. Not a rename of `typical-holdout-300`. |
 | `typical-second-region` | Typical holdout at 100 total RPS on `load/typical.js` in **us-west-2** only. Same profile, workers, and pool 250. Other typical keys still reject us-west-2. Not the lean `second-region` key. |
 | `typical-second-region-300` | Same second-region holdout at 300 total RPS in **us-west-2** only. `typical-holdout-300` still rejects us-west-2. |
-| `typical-scale-{1x,2x,3x}-{100,200,300}` | Typical-scale-v1 validation at 100 / 200 / 300 total RPS on 1, 2, or 3 app servers. Holdout split, pool 250, **us-east-2**. The key's `expectedAppCount` must match `topology.app_count` and `app_instance_ids` length (`APP_COUNT_MISMATCH`). Other typical keys expect 2. |
+| `typical-scale-{1x,2x,3x}-{100,200,300}` | Typical-scale-v1 validation at 100 / 200 / 300 total RPS on 1, 2, or 3 app servers. Holdout split, pool 250, **us-east-2**. The key's `expectedAppCount` must match `topology.app_count` and `app_instance_ids` length (`APP_COUNT_MISMATCH`). Other typical keys expect 2. Ladder metadata stays 100 → 200 → 300 and is not enforced. |
+| `typical-p95-{1x,2x,3x}-{300,200,100}` | Typical-p95-v1 validation. Holdout split, pool 250, **us-east-2**, app count 1, 2, or 3 (`APP_COUNT_MISMATCH`). Ladder 300 → 200 → 100 is enforced per test id. Test id `typical-p95-{1x|2x|3x}-r{1..3}-YYYYMMDD` (letter suffix on a replacement). Not a fit, holdout, or scale key. Scored p95 is the untagged aggregate. |
 
-`run` reads `/api/meta` before k6. A lean key on a typical stack, or a typical key on a lean stack, fails with `PROFILE_MISMATCH` and does not start k6. A typical key other than `typical-second-region` and `typical-second-region-300` outside us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. Those two keys fail unless the region is us-west-2 (`SECOND_REGION_CONSTRAINT`). `typical-later-day` and `typical-later-day-300` fail with `LATER_DAY_CONSTRAINT` unless the UTC day is after the fit campaign date. A typical key whose live app count is not `expectedAppCount` fails with `APP_COUNT_MISMATCH` (2 for every typical key except the nine `typical-scale-*` keys, which expect 1, 2, or 3). `collect` applies the same day, region, and app-count checks. `wait-ready` includes `appNodes`, one object per app server, with `profile`, `workers`, and `gitSha` from `/api/meta`, and lists the typical holdout keys and the nine `typical-scale-*` keys in `supportedScenarios`. Missing `profile` on the lean app is reported as null there; `run` treats a missing profile as lean so the owned campaign still starts.
+`run` reads `/api/meta` before k6. A lean key on a typical stack, or a typical key on a lean stack, fails with `PROFILE_MISMATCH` and does not start k6. A typical key other than `typical-second-region` and `typical-second-region-300` outside us-east-2 fails with `TYPICAL_REGION_CONSTRAINT`. Those two keys fail unless the region is us-west-2 (`SECOND_REGION_CONSTRAINT`). `typical-later-day` and `typical-later-day-300` fail with `LATER_DAY_CONSTRAINT` unless the UTC day is after the fit campaign date. A typical key whose live app count is not `expectedAppCount` fails with `APP_COUNT_MISMATCH` (2 for every typical key except the nine `typical-scale-*` keys and the nine `typical-p95-*` keys, which expect 1, 2, or 3). A `typical-p95-*` key whose test id is not `typical-p95-{1x|2x|3x}-r{1..3}-YYYYMMDD` fails with `TEST_ID_MISMATCH`. Running a fit, holdout, or scale key under that test id fails with `REUSED_KEY`. The p95 ladder rejects any order other than 300, then 200, then 100 (`LADDER_ORDER`). `collect` applies the same day, region, and app-count checks. `wait-ready` includes `appNodes`, one object per app server, with `profile`, `workers`, and `gitSha` from `/api/meta`, and lists the typical holdout keys, the nine `typical-scale-*` keys, and the nine `typical-p95-*` keys in `supportedScenarios`. Missing `profile` on the lean app is reported as null there; `run` treats a missing profile as lean so the owned campaign still starts.
 
 Public CWM `GET /api/accuracy-benchmark` lists idle / normal / peak /
 burst only. later-day and second-region come from this repo's campaign

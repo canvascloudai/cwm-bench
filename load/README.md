@@ -101,6 +101,18 @@ SCENARIO=typical-scale-2x-300 k6 run load/typical.js
 SCENARIO=typical-scale-3x-100 k6 run load/typical.js
 SCENARIO=typical-scale-3x-200 k6 run load/typical.js
 SCENARIO=typical-scale-3x-300 k6 run load/typical.js
+# P95-model validation (typical-p95-v1). us-east-2, reverse ladder.
+# The adapter runs 300, then 200, then 100, and gzips --out json next to summary.json.
+# Do not add a k6 threshold on http_req_duration.
+SCENARIO=typical-p95-1x-300 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-1x-200 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-1x-100 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-2x-300 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-2x-200 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-2x-100 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-3x-300 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-3x-200 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
+SCENARIO=typical-p95-3x-100 k6 run --out json="$RESULTS_DIR/k6.json" load/typical.js
 ```
 
 Diagnostics at 1000 RPS (Burst holdout). **Re-apply** terraform before app-bound so the nodes actually have `APP_POOL_SIZE=40`.

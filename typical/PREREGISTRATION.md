@@ -267,3 +267,7 @@ Do not refit. Report each rate on its own. A pass at one rate is not a pass at t
 ## 13. Pointer: app-server count campaign
 
 Changing the app-server count is a different topology (section 12.5). That campaign is `typical/scale-v1/PREREGISTRATION.md` (`typical-scale-v1`). Sections 3–9 and 12 of this file are unchanged.
+
+## 14. Pointer: P95 model validation
+
+The P95 model validation holdout is `typical/p95-v1/PREREGISTRATION.md` (`typical-p95-v1`). Section 8 of this file is unchanged.

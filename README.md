@@ -111,13 +111,14 @@ node scripts/worker-adapter.mjs run --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 ```
 
-`wait-ready` returns `adapterVersion` (`1.5.0`) and the full
+`wait-ready` returns `adapterVersion` (`1.6.0`) and the full
 `supportedScenarios` list (`idle`, `normal`, `peak`, `burst`,
 `pool-bound`, `app-bound`, `cpu-only`, `later-day`, `second-region`,
 `typical-fit-20`, `typical-fit-100`, `typical-fit-200`,
 `typical-holdout-300`, `typical-saturation-500`, `typical-later-day`,
 `typical-later-day-300`, `typical-second-region`,
-`typical-second-region-300`, and `typical-scale-{1x,2x,3x}-{100,200,300}`).
+`typical-second-region-300`, `typical-scale-{1x,2x,3x}-{100,200,300}`,
+and `typical-p95-{1x,2x,3x}-{300,200,100}`).
 `later-day` is a real later-UTC-day holdout, not an alias of `normal`.
 `second-region` is a real **us-west-2** holdout, not a rename of the
 us-east-1 run. `typical-*` keys require `app_profile=typical` and two
@@ -126,7 +127,9 @@ and `typical-second-region-300`, which require us-west-2.
 `typical-later-day` and `typical-later-day-300` also require a later UTC
 day than the fit campaign (`CWM_FIT_CAMPAIGN_DATE` or adapter state).
 `typical-scale-*` keys are holdout-split validation in us-east-2 and
-require `topology.app_count` 1, 2, or 3. Every other typical key expects
+require `topology.app_count` 1, 2, or 3. `typical-p95-*` keys are the
+P95-model holdout on the same counts, ladder 300 then 200 then 100.
+Every other typical key expects
 2 app servers. A mismatch fails with `APP_COUNT_MISMATCH` before k6 starts.
 A lean key on a typical stack, or the
 reverse, fails with `PROFILE_MISMATCH` before k6 starts. When the stack

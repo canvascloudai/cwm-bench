@@ -14,6 +14,12 @@ import {
 import { fitDateFrom, loadState, updateAdapterState } from './state.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { runRemoteShell } from './aws.mjs';
+import {
+  assertCampaignIdentity,
+  assertLadderPosition,
+  ladderHistory,
+  resolveLadder,
+} from './ladder.mjs';
 
 const DEFAULT_APP_META_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
 const DEFAULT_APP_META_READINESS_POLL_MS = 5 * 1000;
@@ -54,6 +60,10 @@ function buildK6Command(spec, options) {
     'set +e',
     `k6 run --out json="$RESULTS_DIR/k6.json" load/${spec.workload.script}`,
     'K6_EXIT=$?',
+    // p95 keys gzip the request-level JSON next to summary.json. No k6 threshold is added.
+    ...(spec.requestLevelRaw
+      ? ['if [ -f "$RESULTS_DIR/k6.json" ]; then gzip -nf "$RESULTS_DIR/k6.json"; fi']
+      : []),
     'printf "%s\\n" "$K6_EXIT" > "$RESULTS_DIR/exit.code"',
     'date -u +%Y-%m-%dT%H:%M:%SZ > "$RESULTS_DIR/completed_at"',
     'exit "$K6_EXIT"',
@@ -386,6 +396,9 @@ export async function runScenario(ctx, scenarioKey) {
   assertSecondRegion(spec, region);
   assertTypicalRegion(spec, region);
   assertExpectedAppCount(spec, outputs);
+  const campaignId = assertCampaignIdentity(spec, ctx.env, outputs);
+  const ladderPlan = resolveLadder(spec, ctx.env);
+  const ladderMeta = assertLadderPosition(spec, ladderPlan, ladderHistory(state, campaignId));
 
   const runAws = ctx.deps.runAws;
   if (typeof runAws !== 'function') {
@@ -400,7 +413,6 @@ export async function runScenario(ctx, scenarioKey) {
     assertExpectedPool(spec, meta && meta.poolSize);
   }
 
-  const campaignId = ctx.env.CWM_CAMPAIGN_ID || (outputs.topology && outputs.topology.test_id) || 'unset-campaign';
   const runId = ctx.env.CWM_RUN_ID || `${spec.key}-${now.toISOString().replace(/[:.]/g, '')}`;
   const warmup = ctx.env.CWM_WARMUP || '5m';
   const duration = ctx.env.CWM_DURATION || '15m';
@@ -462,6 +474,22 @@ export async function runScenario(ctx, scenarioKey) {
         next.lastRun = lastRun;
         next.lastRuns = next.lastRuns && typeof next.lastRuns === 'object' ? next.lastRuns : {};
         next.lastRuns[spec.key] = lastRun;
+        if (ladderPlan.ladder) {
+          next.ladderByCampaign = next.ladderByCampaign && typeof next.ladderByCampaign === 'object'
+            ? next.ladderByCampaign
+            : {};
+          const rows = Array.isArray(next.ladderByCampaign[campaignId])
+            ? next.ladderByCampaign[campaignId]
+            : [];
+          rows.push({
+            scenario: spec.key,
+            rps: spec.rps,
+            runId,
+            at: now.toISOString(),
+            rung_pos: ladderMeta.rung_pos,
+          });
+          next.ladderByCampaign[campaignId] = rows;
+        }
       },
       ctx.deps.fs || {}
     );
@@ -483,6 +511,13 @@ export async function runScenario(ctx, scenarioKey) {
     fitCampaignDateUtc: spec.key === 'later-day' ? fitDate : isFitScenario(spec.key) ? today : fitDate,
     campaignId,
     runId,
+    ...(ladderPlan.ladder
+      ? {
+          ladder: ladderPlan.ladder,
+          rung_pos: ladderMeta.rung_pos,
+          ladder_history: ladderMeta.ladder_history,
+        }
+      : {}),
     commandId: execution.startCommandId || execution.commandId,
     statusCommandId: execution.commandId,
     statusPollAttempts: execution.pollAttempts || null,

@@ -166,4 +166,15 @@ export const TYPICAL_RPS = Object.freeze({
   'typical-scale-3x-100': 100,
   'typical-scale-3x-200': 200,
   'typical-scale-3x-300': 300,
+  // typical-p95-v1: same totals, reverse ladder 300 → 200 → 100.
+  // The adapter enforces that order and the key's app count.
+  'typical-p95-1x-300': 300,
+  'typical-p95-1x-200': 200,
+  'typical-p95-1x-100': 100,
+  'typical-p95-2x-300': 300,
+  'typical-p95-2x-200': 200,
+  'typical-p95-2x-100': 100,
+  'typical-p95-3x-300': 300,
+  'typical-p95-3x-200': 200,
+  'typical-p95-3x-100': 100,
 });
