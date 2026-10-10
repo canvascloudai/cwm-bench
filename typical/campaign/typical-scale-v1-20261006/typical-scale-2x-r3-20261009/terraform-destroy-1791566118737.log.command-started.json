@@ -1,0 +1,18 @@
+{
+  "command": "terraform",
+  "args": [
+    "destroy",
+    "-input=false",
+    "-auto-approve",
+    "-var=region=us-east-2",
+    "-var=test_id=typical-scale-2x-r3-20261009",
+    "-var=app_count=2",
+    "-var=ami_id=ami-0d3d85815a9746bc5",
+    "-var=app_source_git_ref=06e4048d9c6db5494dbb85da2911de4943a70383",
+    "-var=app_profile=typical",
+    "-var=app_workers=2"
+  ],
+  "startedAt": "2026-10-09T17:15:18.737Z",
+  "stdoutFile": "terraform-destroy-1791566118737.log.stdout.txt",
+  "stderrFile": "terraform-destroy-1791566118737.log.stderr.txt"
+}

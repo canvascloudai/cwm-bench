@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-volumes",
+    "--filters",
+    "Name=tag:TestId,Values=typical-scale-1x-r1-20261006",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T22:15:56.575Z",
+  "finalResponsePublished": true
+}

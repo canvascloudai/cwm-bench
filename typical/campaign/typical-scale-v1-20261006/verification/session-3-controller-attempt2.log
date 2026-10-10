@@ -1,0 +1,6 @@
+[REDACTED: EncryptionService debug lines removed before publication]
+SESSION_FINISHED rep=1 no-live-stacks=true
+SESSION_FINISHED rep=2 no-live-stacks=true
+SESSION_WAIT rep=3 due=2026-10-08T19:15:11.477Z no-live-stacks=true
+CAMPAIGN_STOPPED Live/unknown resources block the next apply
+Live/unknown resources block the next apply

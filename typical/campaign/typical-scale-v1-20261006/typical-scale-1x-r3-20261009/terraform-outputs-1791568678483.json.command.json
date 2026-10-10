@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "output",
+    "-json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-09T17:58:06.391Z",
+  "finalResponsePublished": true
+}

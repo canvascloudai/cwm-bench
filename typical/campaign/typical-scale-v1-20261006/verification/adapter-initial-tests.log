@@ -1,0 +1,589 @@
+TAP version 13
+# Subtest: k6 error counters use the same steady phase as request counters
+ok 1 - k6 error counters use the same steady phase as request counters
+  ---
+  duration_ms: 2.790932
+  ...
+# Subtest: k6 warmup-only error counters do not contradict a clean steady phase
+ok 2 - k6 warmup-only error counters do not contradict a clean steady phase
+  ---
+  duration_ms: 10.340769
+  ...
+# Subtest: k6 contradiction evidence stays raw and is marked contradictory
+ok 3 - k6 contradiction evidence stays raw and is marked contradictory
+  ---
+  duration_ms: 0.524422
+  ...
+# Subtest: rate-consistent failed requests become explicit unclassified errors
+ok 4 - rate-consistent failed requests become explicit unclassified errors
+  ---
+  duration_ms: 0.300591
+  ...
+# Subtest: k6 counter totals and rates are explicitly flagged when inconsistent
+ok 5 - k6 counter totals and rates are explicitly flagged when inconsistent
+  ---
+  duration_ms: 0.307036
+  ...
+# Subtest: an ELB 5xx can explain a missing target 5xx series
+ok 6 - an ELB 5xx can explain a missing target 5xx series
+  ---
+  duration_ms: 0.602934
+  ...
+# Subtest: pinned cleanup revision is still fetchable locally
+ok 7 - pinned cleanup revision is still fetchable locally
+  ---
+  duration_ms: 295.962122
+  ...
+# Subtest: pinned cleanup revision is reachable from origin when origin exists
+ok 8 - pinned cleanup revision is reachable from origin when origin exists
+  ---
+  duration_ms: 110.315457
+  ...
+# Subtest: Terraform resource addresses from the cleanup pin are still present
+ok 9 - Terraform resource addresses from the cleanup pin are still present
+  ---
+  duration_ms: 11.277711
+  ...
+# Subtest: parseArgs: wait-ready --json
+ok 10 - parseArgs: wait-ready --json
+  ---
+  duration_ms: 1.768131
+  ...
+# Subtest: parseArgs: run --scenario idle --json
+ok 11 - parseArgs: run --scenario idle --json
+  ---
+  duration_ms: 0.18629
+  ...
+# Subtest: parseArgs: collect --scenario=peak --json
+ok 12 - parseArgs: collect --scenario=peak --json
+  ---
+  duration_ms: 0.136853
+  ...
+# Subtest: parseArgs: teardown does not require a scenario
+ok 13 - parseArgs: teardown does not require a scenario
+  ---
+  duration_ms: 0.14973
+  ...
+# Subtest: parseArgs: unknown command throws
+ok 14 - parseArgs: unknown command throws
+  ---
+  duration_ms: 0.615553
+  ...
+# Subtest: parseArgs: run without scenario throws
+ok 15 - parseArgs: run without scenario throws
+  ---
+  duration_ms: 0.185374
+  ...
+# Subtest: parseArgs: --help
+ok 16 - parseArgs: --help
+  ---
+  duration_ms: 0.132358
+  ...
+# Subtest: usage text documents worker commands and holdouts
+ok 17 - usage text documents worker commands and holdouts
+  ---
+  duration_ms: 0.407945
+  ...
+# Subtest: main: unknown command fails with JSON error
+ok 18 - main: unknown command fails with JSON error
+  ---
+  duration_ms: 3.80848
+  ...
+# Subtest: main: missing command fails
+ok 19 - main: missing command fails
+  ---
+  duration_ms: 0.511551
+  ...
+# Subtest: main: unknown scenario fails
+ok 20 - main: unknown scenario fails
+  ---
+  duration_ms: 1.085594
+  ...
+# Subtest: main: --help exits 0
+ok 21 - main: --help exits 0
+  ---
+  duration_ms: 0.286285
+  ...
+# Subtest: adapter version is 1.5.0
+ok 22 - adapter version is 1.5.0
+  ---
+  duration_ms: 1.178384
+  ...
+# Subtest: persisted CloudWatch windows exclude the unstable terminal minute
+ok 23 - persisted CloudWatch windows exclude the unstable terminal minute
+  ---
+  duration_ms: 4.759734
+  ...
+# Subtest: ALB and target-group ARNs map to CloudWatch dimensions
+ok 24 - ALB and target-group ARNs map to CloudWatch dimensions
+  ---
+  duration_ms: 0.209088
+  ...
+# Subtest: collect burst with empty CloudWatch fails COLLECT_INCOMPLETE
+ok 25 - collect burst with empty CloudWatch fails COLLECT_INCOMPLETE
+  ---
+  duration_ms: 6.186595
+  ...
+# Subtest: collect burst with mocked complete CloudWatch and k6 summary succeeds
+ok 26 - collect burst with mocked complete CloudWatch and k6 summary succeeds
+  ---
+  duration_ms: 3.83442
+  ...
+# Subtest: collect burst with complete CloudWatch but missing k6 summary fails
+ok 27 - collect burst with complete CloudWatch but missing k6 summary fails
+  ---
+  duration_ms: 14.656228
+  ...
+# Subtest: collect accepts the explicit run identity after a successful run
+ok 28 - collect accepts the explicit run identity after a successful run
+  ---
+  duration_ms: 9.817146
+  ...
+# Subtest: collect burst does not copy public CWM 2%/9.55% cells even when k6 errors exist
+ok 29 - collect burst does not copy public CWM 2%/9.55% cells even when k6 errors exist
+  ---
+  duration_ms: 4.928295
+  ...
+# Subtest: collect rejects a complete artifact envelope with mismatched identity
+ok 30 - collect rejects a complete artifact envelope with mismatched identity
+  ---
+  duration_ms: 2.027402
+  ...
+# cwm-bench cleanup: terraform destroy with bounded retries
+# directory=/tmp/cwm-destroy-retry-dHiSYK/tf attempts=4 deadline=30s
+# cwm-bench cleanup: destroy attempt 1/4
+# Error: deleting aws_db_subnet_group.main: DependencyViolation: cannot be deleted because it is in use
+# Network interface is currently in use (RDS-managed ENI)
+# cwm-bench cleanup: retryable subnet-group / ENI / SG race; waiting 0s then refresh
+# cwm-bench cleanup: destroy attempt 2/4
+# Destroy complete! Resources: 0 destroyed.
+# cwm-bench cleanup: destroy finished (stack removed; not a campaign result)
+# cwm-bench cleanup: terraform destroy with bounded retries
+# directory=/tmp/cwm-destroy-noretry-8x8btE/tf attempts=5 deadline=30s
+# cwm-bench cleanup: destroy attempt 1/5
+# Error: No valid credential sources found for AWS Provider
+# cwm-bench cleanup: destroy failed with a non-retryable error
+# Subtest: aws_db_instance.main has timeouts.delete of 60m and cleanup-safe flags
+ok 31 - aws_db_instance.main has timeouts.delete of 60m and cleanup-safe flags
+  ---
+  duration_ms: 3.886072
+  ...
+# Subtest: terraform does not detach RDS ENIs or broaden IAM
+ok 32 - terraform does not detach RDS ENIs or broaden IAM
+  ---
+  duration_ms: 41.062732
+  ...
+# Subtest: cleanup-compat.json resource addresses are unchanged
+ok 33 - cleanup-compat.json resource addresses are unchanged
+  ---
+  duration_ms: 1.757324
+  ...
+# Subtest: pinned cleanup revision is still a fetchable ancestor
+ok 34 - pinned cleanup revision is still a fetchable ancestor
+  ---
+  duration_ms: 119.237618
+  ...
+# Subtest: terraform validate still passes without a new provider
+ok 35 - terraform validate still passes without a new provider
+  ---
+  duration_ms: 30728.60645
+  ...
+# Subtest: destroy-retry script is cleanup-only and retries still-in-use races
+ok 36 - destroy-retry script is cleanup-only and retries still-in-use races
+  ---
+  duration_ms: 639.671675
+  ...
+# Subtest: destroy-retry script does not retry non-retryable errors
+ok 37 - destroy-retry script does not retry non-retryable errors
+  ---
+  duration_ms: 331.686652
+  ...
+# Subtest: wait-ready succeeds when terraform output is empty JSON (init, no apply)
+ok 38 - wait-ready succeeds when terraform output is empty JSON (init, no apply)
+  ---
+  duration_ms: 2.552947
+  ...
+# Subtest: wait-ready succeeds with capability JSON when terraform CLI is missing
+ok 39 - wait-ready succeeds with capability JSON when terraform CLI is missing
+  ---
+  duration_ms: 0.488125
+  ...
+# Subtest: wait-ready capability JSON includes adapterVersion and every scenario
+ok 40 - wait-ready capability JSON includes adapterVersion and every scenario
+  ---
+  duration_ms: 1.107092
+  ...
+# Subtest: wait-ready success stdout is a single JSON object
+ok 41 - wait-ready success stdout is a single JSON object
+  ---
+  duration_ms: 0.939991
+  ...
+# Subtest: wait-ready after provision reports health and SSM when mocks succeed
+ok 42 - wait-ready after provision reports health and SSM when mocks succeed
+  ---
+  duration_ms: 4.015517
+  ...
+# Subtest: wait-ready retries normal bootstrap failures until all checks succeed
+ok 43 - wait-ready retries normal bootstrap failures until all checks succeed
+  ---
+  duration_ms: 5.732167
+  ...
+# Subtest: wait-ready returns bounded diagnostics when bootstrap never completes
+ok 44 - wait-ready returns bounded diagnostics when bootstrap never completes
+  ---
+  duration_ms: 1.403222
+  ...
+# Subtest: generator reaches the ALB over a VPC-local security-group path
+ok 45 - generator reaches the ALB over a VPC-local security-group path
+  ---
+  duration_ms: 4.449195
+  ...
+# Subtest: redact strips AWS and database secrets
+ok 46 - redact strips AWS and database secrets
+  ---
+  duration_ms: 2.268452
+  ...
+# Subtest: redact leaves lowercase git SHAs intact
+ok 47 - redact leaves lowercase git SHAs intact
+  ---
+  duration_ms: 0.477978
+  ...
+# Subtest: adapter JSON error redacts leaked credentials from AWS stderr
+ok 48 - adapter JSON error redacts leaked credentials from AWS stderr
+  ---
+  duration_ms: 32.205577
+  ...
+# Subtest: terraform failure with a connection string is redacted
+ok 49 - terraform failure with a connection string is redacted
+  ---
+  duration_ms: 1.249821
+  ...
+# Subtest: run-side app metadata guard retries after a post-reapply connection refusal
+ok 50 - run-side app metadata guard retries after a post-reapply connection refusal
+  ---
+  duration_ms: 6.331421
+  ...
+# Subtest: interrupted-run teardown stops the campaign/run identity through SSM
+ok 51 - interrupted-run teardown stops the campaign/run identity through SSM
+  ---
+  duration_ms: 1.350105
+  ...
+# Subtest: every listed scenario has distinct setup constraints and its own k6 key
+ok 52 - every listed scenario has distinct setup constraints and its own k6 key
+  ---
+  duration_ms: 2.165226
+  ...
+# Subtest: later-day is not an alias of normal on the same UTC day
+ok 53 - later-day is not an alias of normal on the same UTC day
+  ---
+  duration_ms: 5.263924
+  ...
+# Subtest: later-day fails without a fit campaign date (no silent normal run)
+ok 54 - later-day fails without a fit campaign date (no silent normal run)
+  ---
+  duration_ms: 0.154915
+  ...
+# Subtest: second-region rejects us-east-1 and requires us-west-2
+ok 55 - second-region rejects us-east-1 and requires us-west-2
+  ---
+  duration_ms: 0.309368
+  ...
+# Subtest: run later-day on the same day fails and does not send k6
+ok 56 - run later-day on the same day fails and does not send k6
+  ---
+  duration_ms: 33.688962
+  ...
+# Subtest: run later-day on a later UTC day executes SCENARIO=later-day
+ok 57 - run later-day on a later UTC day executes SCENARIO=later-day
+  ---
+  duration_ms: 36.719933
+  ...
+# Subtest: run second-region against us-east-1 fails and does not send k6
+ok 58 - run second-region against us-east-1 fails and does not send k6
+  ---
+  duration_ms: 10.133274
+  ...
+# Subtest: run second-region in us-west-2 executes SCENARIO=second-region
+ok 59 - run second-region in us-west-2 executes SCENARIO=second-region
+  ---
+  duration_ms: 44.172577
+  ...
+# Subtest: run app-bound against pool 250 fails
+ok 60 - run app-bound against pool 250 fails
+  ---
+  duration_ms: 11.938463
+  ...
+# Subtest: run idle records a fit date and uses SCENARIO=idle
+ok 61 - run idle records a fit date and uses SCENARIO=idle
+  ---
+  duration_ms: 3.880466
+  ...
+# Subtest: run launches k6 as a detached process and waits with one run-scoped supervisor
+ok 62 - run launches k6 as a detached process and waits with one run-scoped supervisor
+  ---
+  duration_ms: 1.932747
+  ...
+# Subtest: run reattaches after transient SSM supervisor control loss
+ok 63 - run reattaches after transient SSM supervisor control loss
+  ---
+  duration_ms: 2.821678
+  ...
+# Subtest: run idle is a first-class scenario (not remapped)
+ok 64 - run idle is a first-class scenario (not remapped)
+  ---
+  duration_ms: 1.291471
+  ...
+# Subtest: run normal is a first-class scenario (not remapped)
+ok 65 - run normal is a first-class scenario (not remapped)
+  ---
+  duration_ms: 1.036182
+  ...
+# Subtest: run peak is a first-class scenario (not remapped)
+ok 66 - run peak is a first-class scenario (not remapped)
+  ---
+  duration_ms: 1.062575
+  ...
+# Subtest: run burst is a first-class scenario (not remapped)
+ok 67 - run burst is a first-class scenario (not remapped)
+  ---
+  duration_ms: 1.071794
+  ...
+# Subtest: run pool-bound is a first-class scenario (not remapped)
+ok 68 - run pool-bound is a first-class scenario (not remapped)
+  ---
+  duration_ms: 0.98962
+  ...
+# Subtest: run app-bound is a first-class scenario (not remapped)
+ok 69 - run app-bound is a first-class scenario (not remapped)
+  ---
+  duration_ms: 8.998658
+  ...
+# Subtest: run cpu-only is a first-class scenario (not remapped)
+ok 70 - run cpu-only is a first-class scenario (not remapped)
+  ---
+  duration_ms: 6.582009
+  ...
+# Subtest: run later-day is a first-class scenario (not remapped)
+ok 71 - run later-day is a first-class scenario (not remapped)
+  ---
+  duration_ms: 5.190099
+  ...
+# Subtest: run second-region is a first-class scenario (not remapped)
+ok 72 - run second-region is a first-class scenario (not remapped)
+  ---
+  duration_ms: 13.767449
+  ...
+# Subtest: SSM send-command failure is a nonzero JSON error
+ok 73 - SSM send-command failure is a nonzero JSON error
+  ---
+  duration_ms: 19.281304
+  ...
+# Subtest: SSM invocation Failed status is SSM_EXECUTION_FAILED
+ok 74 - SSM invocation Failed status is SSM_EXECUTION_FAILED
+  ---
+  duration_ms: 7.352934
+  ...
+# Subtest: CloudWatch collection failure is nonzero, retry-bounded, and not fabricated
+ok 75 - CloudWatch collection failure is nonzero, retry-bounded, and not fabricated
+  ---
+  duration_ms: 14.264946
+  ...
+# Subtest: failed SSM run preserves terminal status and remote output in JSON
+ok 76 - failed SSM run preserves terminal status and remote output in JSON
+  ---
+  duration_ms: 7.025949
+  ...
+# Subtest: collect success reports empty CloudWatch datapoints as unmeasured, not invented
+ok 77 - collect success reports empty CloudWatch datapoints as unmeasured, not invented
+  ---
+  duration_ms: 12.44524
+  ...
+# Subtest: wait-ready fails when generator SSM is offline
+ok 78 - wait-ready fails when generator SSM is offline
+  ---
+  duration_ms: 8.853709
+  ...
+# Subtest: wait-ready fails immediately for terminal SSM API errors
+ok 79 - wait-ready fails immediately for terminal SSM API errors
+  ---
+  duration_ms: 1.474529
+  ...
+# Subtest: wait-ready does not retry terminal SSM invocation statuses
+ok 80 - wait-ready does not retry terminal SSM invocation statuses
+  ---
+  duration_ms: 0.954792
+  ...
+# Subtest: lean files and generator template stay byte-identical to main
+ok 81 - lean files and generator template stay byte-identical to main
+  ---
+  duration_ms: 15.162111
+  ...
+# Subtest: rendered lean app user_data matches main and typical only adds profile lines
+ok 82 - rendered lean app user_data matches main and typical only adds profile lines
+  ---
+  duration_ms: 1400.322208
+  ...
+# Subtest: generator user_data template render is unchanged for identical inputs
+ok 83 - generator user_data template render is unchanged for identical inputs
+  ---
+  duration_ms: 1032.462393
+  ...
+# Subtest: cluster pool split uses floor and crashed workers are respawned
+ok 84 - cluster pool split uses floor and crashed workers are respawned
+  ---
+  duration_ms: 0.391458
+  ...
+# Subtest: app tokens verify and the load script signs the same user token
+not ok 85 - app tokens verify and the load script signs the same user token
+  ---
+  duration_ms: 41.387325
+  location: '/tmp/cwm-scale-06e4048-contract/tests/adapter/typical.test.mjs:192:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/cwm-scale-06e4048-contract/tests/adapter/typical.test.mjs:218:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    Test.postRun (node:internal/test_runner/test:889:19)
+    Test.run (node:internal/test_runner/test:835:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: typical scenario catalog has the frozen rungs, pool, workers, and region
+ok 86 - typical scenario catalog has the frozen rungs, pool, workers, and region
+  ---
+  duration_ms: 0.607949
+  ...
+# Subtest: profile mismatch is rejected in both directions before k6
+ok 87 - profile mismatch is rejected in both directions before k6
+  ---
+  duration_ms: 20.54388
+  ...
+# Subtest: typical run refuses the wrong region and the wrong worker count without starting k6
+ok 88 - typical run refuses the wrong region and the wrong worker count without starting k6
+  ---
+  duration_ms: 1.204395
+  ...
+# Subtest: typical run in us-east-2 starts typical.js when profile and pool match
+ok 89 - typical run in us-east-2 starts typical.js when profile and pool match
+  ---
+  duration_ms: 2.028579
+  ...
+# Subtest: wait-ready reports profile, workers, and gitSha from each app node
+ok 90 - wait-ready reports profile, workers, and gitSha from each app node
+  ---
+  duration_ms: 3.339199
+  ...
+# Subtest: typical-later-day uses the fit-campaign date and is not typical-fit-100
+ok 91 - typical-later-day uses the fit-campaign date and is not typical-fit-100
+  ---
+  duration_ms: 0.356156
+  ...
+# Subtest: us-west-2 is accepted only for the typical-second-region keys
+ok 92 - us-west-2 is accepted only for the typical-second-region keys
+  ---
+  duration_ms: 0.538925
+  ...
+# Subtest: run typical-later-day on the fit UTC day does not start k6
+ok 93 - run typical-later-day on the fit UTC day does not start k6
+  ---
+  duration_ms: 0.437563
+  ...
+# Subtest: collect typical-later-day on the fit UTC day fails before AWS
+ok 94 - collect typical-later-day on the fit UTC day fails before AWS
+  ---
+  duration_ms: 3.488795
+  ...
+# Subtest: run typical-later-day on a later UTC day in us-east-2 starts typical.js
+ok 95 - run typical-later-day on a later UTC day in us-east-2 starts typical.js
+  ---
+  duration_ms: 1.406342
+  ...
+# Subtest: typical-later-day in us-west-2 and on a lean stack does not start k6
+ok 96 - typical-later-day in us-west-2 and on a lean stack does not start k6
+  ---
+  duration_ms: 13.03551
+  ...
+# Subtest: run typical-second-region accepts only us-west-2 and keeps other typical keys locked
+ok 97 - run typical-second-region accepts only us-west-2 and keeps other typical keys locked
+  ---
+  duration_ms: 2.425728
+  ...
+# Subtest: wait-ready lists the typical stability holdouts
+ok 98 - wait-ready lists the typical stability holdouts
+  ---
+  duration_ms: 0.651684
+  ...
+# Subtest: run typical-later-day-300 on a later UTC day in us-east-2 starts typical.js at 300 RPS
+ok 99 - run typical-later-day-300 on a later UTC day in us-east-2 starts typical.js at 300 RPS
+  ---
+  duration_ms: 1.453696
+  ...
+# Subtest: run typical-second-region-300 accepts only us-west-2
+ok 100 - run typical-second-region-300 accepts only us-west-2
+  ---
+  duration_ms: 5.437393
+  ...
+# Subtest: typical-scale keys are us-east-2 holdouts with the key app count
+ok 101 - typical-scale keys are us-east-2 holdouts with the key app count
+  ---
+  duration_ms: 6.724934
+  ...
+# Subtest: run typical-scale refuses the wrong app count, region, profile, and pool
+ok 102 - run typical-scale refuses the wrong app count, region, profile, and pool
+  ---
+  duration_ms: 4.007667
+  ...
+# Subtest: run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS
+ok 103 - run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS
+  ---
+  duration_ms: 3.291162
+  ...
+# Subtest: collect typical-scale-3x-300 on a 2-node stack fails APP_COUNT_MISMATCH
+ok 104 - collect typical-scale-3x-300 on a 2-node stack fails APP_COUNT_MISMATCH
+  ---
+  duration_ms: 0.698743
+  ...
+# Subtest: wait-ready lists the nine typical-scale keys
+ok 105 - wait-ready lists the nine typical-scale keys
+  ---
+  duration_ms: 0.888734
+  ...
+# Subtest: terraform/userdata/app.sh.tftpl requires exact URL + SHA and has no branch fallback
+ok 106 - terraform/userdata/app.sh.tftpl requires exact URL + SHA and has no branch fallback
+  ---
+  duration_ms: 2.855143
+  ...
+# Subtest: terraform/userdata/generator.sh.tftpl requires exact URL + SHA and has no branch fallback
+ok 107 - terraform/userdata/generator.sh.tftpl requires exact URL + SHA and has no branch fallback
+  ---
+  duration_ms: 0.633406
+  ...
+# Subtest: terraform variables reject main/master/HEAD as app_source_git_ref
+ok 108 - terraform variables reject main/master/HEAD as app_source_git_ref
+  ---
+  duration_ms: 0.601203
+  ...
+# Subtest: app bootstrap avoids full OS updates and retries transient setup steps
+ok 109 - app bootstrap avoids full OS updates and retries transient setup steps
+  ---
+  duration_ms: 0.668168
+  ...
+1..109
+# tests 109
+# suites 0
+# pass 108
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32244.63131

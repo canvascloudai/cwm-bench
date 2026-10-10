@@ -1,0 +1,12 @@
+{
+  "command": "terraform",
+  "args": [
+    "apply",
+    "-input=false",
+    "-auto-approve",
+    "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-3x-r3-20261008/terraform/private-scale.tfplan"
+  ],
+  "startedAt": "2026-10-08T23:23:57.222Z",
+  "stdoutFile": "terraform-apply.log.stdout.txt",
+  "stderrFile": "terraform-apply.log.stderr.txt"
+}

@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-09T14:09:25.751744+00:00",
+  "creatorApproval": "Approved. Keep all settings unchanged, preserve the failed apply as evidence, use the r3a ID with the actual UTC date. Record the exact RDS engine version for every apply, and note in README-execution.md whether sessions 1\u20132 reported the same 8.0.46 build or a different one.",
+  "failedApply": "typical-scale-3x-r3-20261008",
+  "failedApplyHadNoLoads": true,
+  "immediateAndDelayedCleanupPassed": true,
+  "newApplyId": "typical-scale-3x-r3a-20261009",
+  "exactRecordedVersions": [
+    {
+      "apply": "typical-scale-2x-r1-20261006",
+      "session": 1,
+      "exactEngineVersion": "8.0.46"
+    },
+    {
+      "apply": "typical-scale-1x-r1-20261006",
+      "session": 1,
+      "exactEngineVersion": "8.0.46"
+    },
+    {
+      "apply": "typical-scale-3x-r1-20261006",
+      "session": 1,
+      "exactEngineVersion": "8.0.46"
+    },
+    {
+      "apply": "typical-scale-1x-r2-20261007",
+      "session": 2,
+      "exactEngineVersion": "8.0.46"
+    },
+    {
+      "apply": "typical-scale-3x-r2-20261007",
+      "session": 2,
+      "exactEngineVersion": "8.0.46"
+    },
+    {
+      "apply": "typical-scale-2x-r2-20261007",
+      "session": 2,
+      "exactEngineVersion": "8.0.46"
+    },
+    {
+      "apply": "typical-scale-3x-r3-20261008",
+      "session": 3,
+      "exactEngineVersion": "8.0.46-rds.20260908"
+    }
+  ],
+  "settingsChanged": false,
+  "onlyValidatorAndExecutionReadmeChanged": true
+}

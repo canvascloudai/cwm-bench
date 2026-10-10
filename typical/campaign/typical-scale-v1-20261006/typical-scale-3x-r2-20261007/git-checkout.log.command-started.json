@@ -1,0 +1,11 @@
+{
+  "command": "git",
+  "args": [
+    "checkout",
+    "--detach",
+    "06e4048d9c6db5494dbb85da2911de4943a70383"
+  ],
+  "startedAt": "2026-10-07T20:49:31.563Z",
+  "stdoutFile": "git-checkout.log.stdout.txt",
+  "stderrFile": "git-checkout.log.stderr.txt"
+}

@@ -1,0 +1,17 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-instances",
+    "--filters",
+    "Name=tag:TestId,Values=typical-scale-1x-r3-20261009",
+    "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-09T19:07:51.383Z",
+  "finalResponsePublished": true
+}

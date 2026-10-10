@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: preserves initial proof and separate attempt2 evidence for one timed-out read
+ok 1 - preserves initial proof and separate attempt2 evidence for one timed-out read
+  ---
+  duration_ms: 3.549765
+  ...
+# Subtest: permission errors remain unresolved without retry
+ok 2 - permission errors remain unresolved without retry
+  ---
+  duration_ms: 0.231509
+  ...
+# Subtest: second timeout remains unresolved with no third read
+ok 3 - second timeout remains unresolved with no third read
+  ---
+  duration_ms: 0.262181
+  ...
+# Subtest: a live resource found on retry still blocks cleanup
+ok 4 - a live resource found on retry still blocks cleanup
+  ---
+  duration_ms: 0.269348
+  ...
+# Subtest: nonempty live inventory cannot be cleared by absent retained ARN
+ok 5 - nonempty live inventory cannot be cleared by absent retained ARN
+  ---
+  duration_ms: 0.298084
+  ...
+# Subtest: both region inventories are required
+ok 6 - both region inventories are required
+  ---
+  duration_ms: 0.148116
+  ...
+# Subtest: accepts numeric MySQL 8.0 and documented RDS formats without normalization
+ok 7 - accepts numeric MySQL 8.0 and documented RDS formats without normalization
+  ---
+  duration_ms: 0.851128
+  ...
+# Subtest: rejects other engines, families, malformed versions and ambiguous responses
+ok 8 - rejects other engines, families, malformed versions and ambiguous responses
+  ---
+  duration_ms: 0.805233
+  ...
+# Subtest: README compares exact build strings and retains a failed apply alongside its replacement
+ok 9 - README compares exact build strings and retains a failed apply alongside its replacement
+  ---
+  duration_ms: 78.626374
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 924.135682

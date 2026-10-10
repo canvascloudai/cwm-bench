@@ -1,0 +1,22 @@
+{
+    "CommandId": "3938c93f-ed2f-4751-aed5-a7fadcbe11eb",
+    "InstanceId": "i-022797367c6b970bb",
+    "Comment": "cwm-bench worker-adapter",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-10-07T23:37:02.732Z",
+    "ExecutionElapsedTime": "PT0.005S",
+    "ExecutionEndDateTime": "2026-10-07T23:37:02.732Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "identity={\"campaignId\":\"typical-scale-2x-r2-20261007\",\"runId\":\"typical-scale-2x-300-r2\",\"scenario\":\"typical-scale-2x-300\"}\nstarted_at=2026-10-07T23:16:41Z\ncompleted_at=2026-10-07T23:36:45Z\nexit_code=0\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}

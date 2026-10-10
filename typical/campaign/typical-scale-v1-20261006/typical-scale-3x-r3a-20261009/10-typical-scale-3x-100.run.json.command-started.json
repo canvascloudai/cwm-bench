@@ -1,0 +1,13 @@
+{
+  "command": "node",
+  "args": [
+    "scripts/worker-adapter.mjs",
+    "run",
+    "--scenario",
+    "typical-scale-3x-100",
+    "--json"
+  ],
+  "startedAt": "2026-10-09T14:31:26.183Z",
+  "stdoutFile": "10-typical-scale-3x-100.run.json.stdout.txt",
+  "stderrFile": "10-typical-scale-3x-100.run.json.stderr.txt"
+}

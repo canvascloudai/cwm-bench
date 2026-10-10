@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-08T22:14:36.823348+00:00",
+  "decision": "creator-approved wait for reliable AWS checks",
+  "automaticApply": false,
+  "completedApplies": 6,
+  "completedLoads": 18,
+  "session3ApplyStarted": false,
+  "session3LoadStarted": false,
+  "readOnlyMonitoring": {
+    "intervalMinutes": 30,
+    "maxRounds": 12,
+    "consecutiveHealthyRoundsRequired": 2
+  },
+  "resumeRequires": "full cleanup preflight and actual apply UTC-date ids; unchanged pinned AMI and SHA"
+}

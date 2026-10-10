@@ -1,0 +1,10 @@
+{
+  "command": "git",
+  "args": [
+    "rev-parse",
+    "HEAD"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-09T14:22:02.944Z",
+  "finalResponsePublished": true
+}

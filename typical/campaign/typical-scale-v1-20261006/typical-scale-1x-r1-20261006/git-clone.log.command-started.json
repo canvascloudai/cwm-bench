@@ -1,0 +1,11 @@
+{
+  "command": "git",
+  "args": [
+    "clone",
+    "https://github.com/canvascloudai/cwm-bench.git",
+    "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-1x-r1-20261006"
+  ],
+  "startedAt": "2026-10-06T20:42:51.349Z",
+  "stdoutFile": "git-clone.log.stdout.txt",
+  "stderrFile": "git-clone.log.stderr.txt"
+}

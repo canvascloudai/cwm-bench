@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "state",
+    "list"
+  ],
+  "startedAt": "2026-10-09T15:40:02.278Z",
+  "stdoutFile": "terraform-empty-state-1791560402277.txt.stdout.txt",
+  "stderrFile": "terraform-empty-state-1791560402277.txt.stderr.txt"
+}

@@ -1,0 +1,1192 @@
+[0m[1mdata.aws_availability_zones.available: Reading...[0m[0m
+[0m[1mdata.aws_ssm_parameter.al2023: Reading...[0m[0m
+[0m[1mdata.aws_iam_policy_document.ec2_assume: Reading...[0m[0m
+[0m[1mdata.aws_iam_policy_document.ec2_assume: Read complete after 0s [id=2851119427][0m
+[0m[1mdata.aws_ssm_parameter.al2023: Read complete after 1s [id=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64][0m
+[0m[1mdata.aws_availability_zones.available: Read complete after 1s [id=us-east-2][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+ [36m<=[0m read (data resources)[0m
+
+Terraform will perform the following actions:
+
+[1m  # data.aws_iam_policy_document.app_ssm_db[0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_iam_policy_document" "app_ssm_db" {
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m json          = (known after apply)
+      [32m+[0m[0m minified_json = (known after apply)
+
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "ssm:GetParameter",
+            ]
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m (known after apply),
+            ]
+          [32m+[0m[0m sid       = "ReadDbPassword"
+        }
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions   = [
+              [32m+[0m[0m "kms:Decrypt",
+            ]
+          [32m+[0m[0m resources = [
+              [32m+[0m[0m "*",
+            ]
+          [32m+[0m[0m sid       = "DecryptDbPassword"
+
+          [32m+[0m[0m condition {
+              [32m+[0m[0m test     = "StringEquals"
+              [32m+[0m[0m values   = [
+                  [32m+[0m[0m "ssm.us-east-2.amazonaws.com",
+                ]
+              [32m+[0m[0m variable = "kms:ViaService"
+            }
+        }
+    }
+
+[1m  # aws_cloudwatch_dashboard.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_dashboard" "main" {
+      [32m+[0m[0m dashboard_arn  = (known after apply)
+      [32m+[0m[0m dashboard_body = (known after apply)
+      [32m+[0m[0m dashboard_name = "cwm-bench-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m id             = (known after apply)
+    }
+
+[1m  # aws_db_instance.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_db_instance" "main" {
+      [32m+[0m[0m address                               = (known after apply)
+      [32m+[0m[0m allocated_storage                     = 100
+      [32m+[0m[0m apply_immediately                     = true
+      [32m+[0m[0m arn                                   = (known after apply)
+      [32m+[0m[0m auto_minor_version_upgrade            = true
+      [32m+[0m[0m availability_zone                     = "us-east-2a"
+      [32m+[0m[0m backup_retention_period               = 0
+      [32m+[0m[0m backup_target                         = (known after apply)
+      [32m+[0m[0m backup_window                         = (known after apply)
+      [32m+[0m[0m ca_cert_identifier                    = (known after apply)
+      [32m+[0m[0m character_set_name                    = (known after apply)
+      [32m+[0m[0m copy_tags_to_snapshot                 = false
+      [32m+[0m[0m database_insights_mode                = (known after apply)
+      [32m+[0m[0m db_name                               = "cwmbench"
+      [32m+[0m[0m db_subnet_group_name                  = "cwm-bench-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m dedicated_log_volume                  = false
+      [32m+[0m[0m delete_automated_backups              = true
+      [32m+[0m[0m deletion_protection                   = false
+      [32m+[0m[0m domain_fqdn                           = (known after apply)
+      [32m+[0m[0m endpoint                              = (known after apply)
+      [32m+[0m[0m engine                                = "mysql"
+      [32m+[0m[0m engine_lifecycle_support              = (known after apply)
+      [32m+[0m[0m engine_version                        = "8.0"
+      [32m+[0m[0m engine_version_actual                 = (known after apply)
+      [32m+[0m[0m hosted_zone_id                        = (known after apply)
+      [32m+[0m[0m id                                    = (known after apply)
+      [32m+[0m[0m identifier                            = "cwm-bench-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m identifier_prefix                     = (known after apply)
+      [32m+[0m[0m instance_class                        = "db.r5.large"
+      [32m+[0m[0m iops                                  = (known after apply)
+      [32m+[0m[0m kms_key_id                            = (known after apply)
+      [32m+[0m[0m latest_restorable_time                = (known after apply)
+      [32m+[0m[0m license_model                         = "general-public-license"
+      [32m+[0m[0m listener_endpoint                     = (known after apply)
+      [32m+[0m[0m maintenance_window                    = (known after apply)
+      [32m+[0m[0m master_user_secret                    = (known after apply)
+      [32m+[0m[0m master_user_secret_kms_key_id         = (known after apply)
+      [32m+[0m[0m monitoring_interval                   = 0
+      [32m+[0m[0m monitoring_role_arn                   = (known after apply)
+      [32m+[0m[0m multi_az                              = false
+      [32m+[0m[0m nchar_character_set_name              = (known after apply)
+      [32m+[0m[0m network_type                          = (known after apply)
+      [32m+[0m[0m option_group_name                     = (known after apply)
+      [32m+[0m[0m parameter_group_name                  = "cwm-bench-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m password                              = (sensitive value)
+      [32m+[0m[0m performance_insights_enabled          = false
+      [32m+[0m[0m performance_insights_kms_key_id       = (known after apply)
+      [32m+[0m[0m performance_insights_retention_period = (known after apply)
+      [32m+[0m[0m port                                  = 3306
+      [32m+[0m[0m publicly_accessible                   = false
+      [32m+[0m[0m replica_mode                          = (known after apply)
+      [32m+[0m[0m replicas                              = (known after apply)
+      [32m+[0m[0m resource_id                           = (known after apply)
+      [32m+[0m[0m skip_final_snapshot                   = true
+      [32m+[0m[0m snapshot_identifier                   = (known after apply)
+      [32m+[0m[0m status                                = (known after apply)
+      [32m+[0m[0m storage_encrypted                     = true
+      [32m+[0m[0m storage_throughput                    = (known after apply)
+      [32m+[0m[0m storage_type                          = "gp2"
+      [32m+[0m[0m tags                                  = {
+          [32m+[0m[0m "Name" = "cwm-bench-mysql"
+        }
+      [32m+[0m[0m tags_all                              = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-mysql"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m timezone                              = (known after apply)
+      [32m+[0m[0m username                              = "cwmbench"
+      [32m+[0m[0m vpc_security_group_ids                = (known after apply)
+
+      [32m+[0m[0m timeouts {
+          [32m+[0m[0m create = "40m"
+          [32m+[0m[0m delete = "60m"
+          [32m+[0m[0m update = "80m"
+        }
+    }
+
+[1m  # aws_db_parameter_group.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_db_parameter_group" "main" {
+      [32m+[0m[0m arn          = (known after apply)
+      [32m+[0m[0m description  = "cwm-bench: declared max_connections (default 500)"
+      [32m+[0m[0m family       = "mysql8.0"
+      [32m+[0m[0m id           = (known after apply)
+      [32m+[0m[0m name         = "cwm-bench-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m name_prefix  = (known after apply)
+      [32m+[0m[0m skip_destroy = false
+      [32m+[0m[0m tags         = {
+          [32m+[0m[0m "Name" = "cwm-bench-mysql80"
+        }
+      [32m+[0m[0m tags_all     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-mysql80"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+
+      [32m+[0m[0m parameter {
+          [32m+[0m[0m apply_method = "immediate"
+          [32m+[0m[0m name         = "max_connections"
+          [32m+[0m[0m value        = "500"
+        }
+    }
+
+[1m  # aws_db_subnet_group.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_db_subnet_group" "main" {
+      [32m+[0m[0m arn                     = (known after apply)
+      [32m+[0m[0m description             = "Managed by Terraform"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m name                    = "cwm-bench-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m name_prefix             = (known after apply)
+      [32m+[0m[0m subnet_ids              = (known after apply)
+      [32m+[0m[0m supported_network_types = (known after apply)
+      [32m+[0m[0m tags                    = {
+          [32m+[0m[0m "Name" = "cwm-bench-db-subnets"
+        }
+      [32m+[0m[0m tags_all                = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-db-subnets"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                  = (known after apply)
+    }
+
+[1m  # aws_iam_instance_profile.ec2[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_instance_profile" "ec2" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m create_date = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "cwm-bench-ec2-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m role        = "cwm-bench-ec2-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m tags_all    = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m unique_id   = (known after apply)
+    }
+
+[1m  # aws_iam_role.ec2[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "ec2" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "cwm-bench-ec2-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # aws_iam_role_policy.app_ssm_db[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy" "app_ssm_db" {
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "read-db-password"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m policy      = (known after apply)
+      [32m+[0m[0m role        = (known after apply)
+    }
+
+[1m  # aws_iam_role_policy_attachment.ssm[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ssm" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      [32m+[0m[0m role       = "cwm-bench-ec2-typical-scale-1x-r1-20261006"
+    }
+
+[1m  # aws_instance.app[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_instance" "app" {
+      [32m+[0m[0m ami                                  = "ami-0d3d85815a9746bc5"
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m associate_public_ip_address          = (known after apply)
+      [32m+[0m[0m availability_zone                    = (known after apply)
+      [32m+[0m[0m cpu_core_count                       = (known after apply)
+      [32m+[0m[0m cpu_threads_per_core                 = (known after apply)
+      [32m+[0m[0m disable_api_stop                     = (known after apply)
+      [32m+[0m[0m disable_api_termination              = (known after apply)
+      [32m+[0m[0m ebs_optimized                        = (known after apply)
+      [32m+[0m[0m enable_primary_ipv6                  = (known after apply)
+      [32m+[0m[0m get_password_data                    = false
+      [32m+[0m[0m host_id                              = (known after apply)
+      [32m+[0m[0m host_resource_group_arn              = (known after apply)
+      [32m+[0m[0m iam_instance_profile                 = "cwm-bench-ec2-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_initiated_shutdown_behavior = (known after apply)
+      [32m+[0m[0m instance_lifecycle                   = (known after apply)
+      [32m+[0m[0m instance_state                       = (known after apply)
+      [32m+[0m[0m instance_type                        = "m5.large"
+      [32m+[0m[0m ipv6_address_count                   = (known after apply)
+      [32m+[0m[0m ipv6_addresses                       = (known after apply)
+      [32m+[0m[0m key_name                             = (known after apply)
+      [32m+[0m[0m monitoring                           = true
+      [32m+[0m[0m outpost_arn                          = (known after apply)
+      [32m+[0m[0m password_data                        = (known after apply)
+      [32m+[0m[0m placement_group                      = (known after apply)
+      [32m+[0m[0m placement_partition_number           = (known after apply)
+      [32m+[0m[0m primary_network_interface_id         = (known after apply)
+      [32m+[0m[0m private_dns                          = (known after apply)
+      [32m+[0m[0m private_ip                           = (known after apply)
+      [32m+[0m[0m public_dns                           = (known after apply)
+      [32m+[0m[0m public_ip                            = (known after apply)
+      [32m+[0m[0m secondary_private_ips                = (known after apply)
+      [32m+[0m[0m security_groups                      = (known after apply)
+      [32m+[0m[0m source_dest_check                    = true
+      [32m+[0m[0m spot_instance_request_id             = (known after apply)
+      [32m+[0m[0m subnet_id                            = (known after apply)
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "Name" = "cwm-bench-app-0"
+          [32m+[0m[0m "Role" = "app"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-app-0"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "Role"      = "app"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m tenancy                              = (known after apply)
+      [32m+[0m[0m user_data                            = (known after apply)
+      [32m+[0m[0m user_data_base64                     = (known after apply)
+      [32m+[0m[0m user_data_replace_on_change          = true
+      [32m+[0m[0m vpc_security_group_ids               = (known after apply)
+
+      [32m+[0m[0m capacity_reservation_specification (known after apply)
+
+      [32m+[0m[0m cpu_options (known after apply)
+
+      [32m+[0m[0m ebs_block_device (known after apply)
+
+      [32m+[0m[0m enclave_options (known after apply)
+
+      [32m+[0m[0m ephemeral_block_device (known after apply)
+
+      [32m+[0m[0m instance_market_options (known after apply)
+
+      [32m+[0m[0m maintenance_options (known after apply)
+
+      [32m+[0m[0m metadata_options {
+          [32m+[0m[0m http_endpoint               = "enabled"
+          [32m+[0m[0m http_protocol_ipv6          = "disabled"
+          [32m+[0m[0m http_put_response_hop_limit = 2
+          [32m+[0m[0m http_tokens                 = "required"
+          [32m+[0m[0m instance_metadata_tags      = (known after apply)
+        }
+
+      [32m+[0m[0m network_interface (known after apply)
+
+      [32m+[0m[0m private_dns_name_options (known after apply)
+
+      [32m+[0m[0m root_block_device {
+          [32m+[0m[0m delete_on_termination = true
+          [32m+[0m[0m device_name           = (known after apply)
+          [32m+[0m[0m encrypted             = true
+          [32m+[0m[0m iops                  = (known after apply)
+          [32m+[0m[0m kms_key_id            = (known after apply)
+          [32m+[0m[0m tags_all              = (known after apply)
+          [32m+[0m[0m throughput            = (known after apply)
+          [32m+[0m[0m volume_id             = (known after apply)
+          [32m+[0m[0m volume_size           = 30
+          [32m+[0m[0m volume_type           = "gp2"
+        }
+    }
+
+[1m  # aws_instance.generator[0m will be created
+[0m  [32m+[0m[0m resource "aws_instance" "generator" {
+      [32m+[0m[0m ami                                  = "ami-0d3d85815a9746bc5"
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m associate_public_ip_address          = (known after apply)
+      [32m+[0m[0m availability_zone                    = (known after apply)
+      [32m+[0m[0m cpu_core_count                       = (known after apply)
+      [32m+[0m[0m cpu_threads_per_core                 = (known after apply)
+      [32m+[0m[0m disable_api_stop                     = (known after apply)
+      [32m+[0m[0m disable_api_termination              = (known after apply)
+      [32m+[0m[0m ebs_optimized                        = (known after apply)
+      [32m+[0m[0m enable_primary_ipv6                  = (known after apply)
+      [32m+[0m[0m get_password_data                    = false
+      [32m+[0m[0m host_id                              = (known after apply)
+      [32m+[0m[0m host_resource_group_arn              = (known after apply)
+      [32m+[0m[0m iam_instance_profile                 = "cwm-bench-ec2-typical-scale-1x-r1-20261006"
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_initiated_shutdown_behavior = (known after apply)
+      [32m+[0m[0m instance_lifecycle                   = (known after apply)
+      [32m+[0m[0m instance_state                       = (known after apply)
+      [32m+[0m[0m instance_type                        = "c6i.xlarge"
+      [32m+[0m[0m ipv6_address_count                   = (known after apply)
+      [32m+[0m[0m ipv6_addresses                       = (known after apply)
+      [32m+[0m[0m key_name                             = (known after apply)
+      [32m+[0m[0m monitoring                           = true
+      [32m+[0m[0m outpost_arn                          = (known after apply)
+      [32m+[0m[0m password_data                        = (known after apply)
+      [32m+[0m[0m placement_group                      = (known after apply)
+      [32m+[0m[0m placement_partition_number           = (known after apply)
+      [32m+[0m[0m primary_network_interface_id         = (known after apply)
+      [32m+[0m[0m private_dns                          = (known after apply)
+      [32m+[0m[0m private_ip                           = (known after apply)
+      [32m+[0m[0m public_dns                           = (known after apply)
+      [32m+[0m[0m public_ip                            = (known after apply)
+      [32m+[0m[0m secondary_private_ips                = (known after apply)
+      [32m+[0m[0m security_groups                      = (known after apply)
+      [32m+[0m[0m source_dest_check                    = true
+      [32m+[0m[0m spot_instance_request_id             = (known after apply)
+      [32m+[0m[0m subnet_id                            = (known after apply)
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "Name" = "cwm-bench-generator"
+          [32m+[0m[0m "Role" = "generator"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-generator"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "Role"      = "generator"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m tenancy                              = (known after apply)
+      [32m+[0m[0m user_data                            = (known after apply)
+      [32m+[0m[0m user_data_base64                     = (known after apply)
+      [32m+[0m[0m user_data_replace_on_change          = true
+      [32m+[0m[0m vpc_security_group_ids               = (known after apply)
+
+      [32m+[0m[0m capacity_reservation_specification (known after apply)
+
+      [32m+[0m[0m cpu_options (known after apply)
+
+      [32m+[0m[0m ebs_block_device (known after apply)
+
+      [32m+[0m[0m enclave_options (known after apply)
+
+      [32m+[0m[0m ephemeral_block_device (known after apply)
+
+      [32m+[0m[0m instance_market_options (known after apply)
+
+      [32m+[0m[0m maintenance_options (known after apply)
+
+      [32m+[0m[0m metadata_options {
+          [32m+[0m[0m http_endpoint               = "enabled"
+          [32m+[0m[0m http_protocol_ipv6          = "disabled"
+          [32m+[0m[0m http_put_response_hop_limit = 2
+          [32m+[0m[0m http_tokens                 = "required"
+          [32m+[0m[0m instance_metadata_tags      = (known after apply)
+        }
+
+      [32m+[0m[0m network_interface (known after apply)
+
+      [32m+[0m[0m private_dns_name_options (known after apply)
+
+      [32m+[0m[0m root_block_device {
+          [32m+[0m[0m delete_on_termination = true
+          [32m+[0m[0m device_name           = (known after apply)
+          [32m+[0m[0m encrypted             = true
+          [32m+[0m[0m iops                  = (known after apply)
+          [32m+[0m[0m kms_key_id            = (known after apply)
+          [32m+[0m[0m tags_all              = (known after apply)
+          [32m+[0m[0m throughput            = (known after apply)
+          [32m+[0m[0m volume_id             = (known after apply)
+          [32m+[0m[0m volume_size           = 30
+          [32m+[0m[0m volume_type           = "gp2"
+        }
+    }
+
+[1m  # aws_internet_gateway.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_internet_gateway" "main" {
+      [32m+[0m[0m arn      = (known after apply)
+      [32m+[0m[0m id       = (known after apply)
+      [32m+[0m[0m owner_id = (known after apply)
+      [32m+[0m[0m tags     = {
+          [32m+[0m[0m "Name" = "cwm-bench-igw"
+        }
+      [32m+[0m[0m tags_all = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-igw"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id   = (known after apply)
+    }
+
+[1m  # aws_lb.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb" "main" {
+      [32m+[0m[0m arn                                                          = (known after apply)
+      [32m+[0m[0m arn_suffix                                                   = (known after apply)
+      [32m+[0m[0m client_keep_alive                                            = 3600
+      [32m+[0m[0m desync_mitigation_mode                                       = "defensive"
+      [32m+[0m[0m dns_name                                                     = (known after apply)
+      [32m+[0m[0m drop_invalid_header_fields                                   = false
+      [32m+[0m[0m enable_deletion_protection                                   = false
+      [32m+[0m[0m enable_http2                                                 = true
+      [32m+[0m[0m enable_tls_version_and_cipher_suite_headers                  = false
+      [32m+[0m[0m enable_waf_fail_open                                         = false
+      [32m+[0m[0m enable_xff_client_port                                       = false
+      [32m+[0m[0m enable_zonal_shift                                           = false
+      [32m+[0m[0m enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      [32m+[0m[0m id                                                           = (known after apply)
+      [32m+[0m[0m idle_timeout                                                 = 60
+      [32m+[0m[0m internal                                                     = true
+      [32m+[0m[0m ip_address_type                                              = (known after apply)
+      [32m+[0m[0m load_balancer_type                                           = "application"
+      [32m+[0m[0m name                                                         = "cwm-bench-alb"
+      [32m+[0m[0m name_prefix                                                  = (known after apply)
+      [32m+[0m[0m preserve_host_header                                         = false
+      [32m+[0m[0m security_groups                                              = (known after apply)
+      [32m+[0m[0m subnets                                                      = (known after apply)
+      [32m+[0m[0m tags                                                         = {
+          [32m+[0m[0m "Name" = "cwm-bench-alb"
+        }
+      [32m+[0m[0m tags_all                                                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-alb"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                                                       = (known after apply)
+      [32m+[0m[0m xff_header_processing_mode                                   = "append"
+      [32m+[0m[0m zone_id                                                      = (known after apply)
+
+      [32m+[0m[0m subnet_mapping (known after apply)
+    }
+
+[1m  # aws_lb_listener.http[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "http" {
+      [32m+[0m[0m arn                                                                   = (known after apply)
+      [32m+[0m[0m id                                                                    = (known after apply)
+      [32m+[0m[0m load_balancer_arn                                                     = (known after apply)
+      [32m+[0m[0m port                                                                  = 80
+      [32m+[0m[0m protocol                                                              = "HTTP"
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_header_name               = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_tls_cipher_suite_header_name              = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_tls_version_header_name                   = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_credentials_header_value   = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_headers_header_value       = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_methods_header_value       = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_origin_header_value        = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_expose_headers_header_value      = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_max_age_header_value             = (known after apply)
+      [32m+[0m[0m routing_http_response_content_security_policy_header_value            = (known after apply)
+      [32m+[0m[0m routing_http_response_server_enabled                                  = (known after apply)
+      [32m+[0m[0m routing_http_response_strict_transport_security_header_value          = (known after apply)
+      [32m+[0m[0m routing_http_response_x_content_type_options_header_value             = (known after apply)
+      [32m+[0m[0m routing_http_response_x_frame_options_header_value                    = (known after apply)
+      [32m+[0m[0m ssl_policy                                                            = (known after apply)
+      [32m+[0m[0m tags_all                                                              = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m tcp_idle_timeout_seconds                                              = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = (known after apply)
+          [32m+[0m[0m type             = "forward"
+        }
+
+      [32m+[0m[0m mutual_authentication (known after apply)
+    }
+
+[1m  # aws_lb_target_group.app[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group" "app" {
+      [32m+[0m[0m arn                                = (known after apply)
+      [32m+[0m[0m arn_suffix                         = (known after apply)
+      [32m+[0m[0m connection_termination             = (known after apply)
+      [32m+[0m[0m deregistration_delay               = "30"
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m ip_address_type                    = (known after apply)
+      [32m+[0m[0m lambda_multi_value_headers_enabled = false
+      [32m+[0m[0m load_balancer_arns                 = (known after apply)
+      [32m+[0m[0m load_balancing_algorithm_type      = (known after apply)
+      [32m+[0m[0m load_balancing_anomaly_mitigation  = (known after apply)
+      [32m+[0m[0m load_balancing_cross_zone_enabled  = (known after apply)
+      [32m+[0m[0m name                               = "cwm-bench-app"
+      [32m+[0m[0m name_prefix                        = (known after apply)
+      [32m+[0m[0m port                               = 8080
+      [32m+[0m[0m preserve_client_ip                 = (known after apply)
+      [32m+[0m[0m protocol                           = "HTTP"
+      [32m+[0m[0m protocol_version                   = (known after apply)
+      [32m+[0m[0m proxy_protocol_v2                  = false
+      [32m+[0m[0m slow_start                         = 0
+      [32m+[0m[0m tags                               = {
+          [32m+[0m[0m "Name" = "cwm-bench-app"
+        }
+      [32m+[0m[0m tags_all                           = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-app"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m target_type                        = "instance"
+      [32m+[0m[0m vpc_id                             = (known after apply)
+
+      [32m+[0m[0m health_check {
+          [32m+[0m[0m enabled             = true
+          [32m+[0m[0m healthy_threshold   = 2
+          [32m+[0m[0m interval            = 15
+          [32m+[0m[0m matcher             = "200"
+          [32m+[0m[0m path                = "/health"
+          [32m+[0m[0m port                = "8080"
+          [32m+[0m[0m protocol            = "HTTP"
+          [32m+[0m[0m timeout             = 5
+          [32m+[0m[0m unhealthy_threshold = 3
+        }
+
+      [32m+[0m[0m stickiness (known after apply)
+
+      [32m+[0m[0m target_failover (known after apply)
+
+      [32m+[0m[0m target_group_health (known after apply)
+
+      [32m+[0m[0m target_health_state (known after apply)
+    }
+
+[1m  # aws_lb_target_group_attachment.app[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group_attachment" "app" {
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m port             = 8080
+      [32m+[0m[0m target_group_arn = (known after apply)
+      [32m+[0m[0m target_id        = (known after apply)
+    }
+
+[1m  # aws_route_table.private[0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "private" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = (known after apply)
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "cwm-bench-private"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-private"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # aws_route_table.public[0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "public" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_block                 = "0.0.0.0/0"
+              [32m+[0m[0m gateway_id                 = (known after apply)
+                [90m# (11 unchanged attributes hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "cwm-bench-public"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-public"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # aws_route_table_association.private[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # aws_route_table_association.private[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # aws_route_table_association.public[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # aws_route_table_association.public[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # aws_security_group.alb[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "alb" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "ALB: 80/443 from generator (and optional CIDRs)"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "cwm-bench-alb"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "cwm-bench-alb"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-alb"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # aws_security_group.app[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "app" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "App nodes: 8080 from ALB only"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "cwm-bench-app"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "cwm-bench-app"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-app"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # aws_security_group.generator[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "generator" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Load generator: egress to ALB and package mirrors"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "cwm-bench-generator"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "cwm-bench-generator"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-generator"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # aws_security_group.rds[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "rds" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "RDS: 3306 from app nodes only"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "cwm-bench-rds"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "cwm-bench-rds"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-rds"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # aws_ssm_parameter.db_password[0m will be created
+[0m  [32m+[0m[0m resource "aws_ssm_parameter" "db_password" {
+      [32m+[0m[0m arn            = (known after apply)
+      [32m+[0m[0m data_type      = (known after apply)
+      [32m+[0m[0m description    = "RDS master password for this cwm-bench apply. Not a measurement."
+      [32m+[0m[0m has_value_wo   = (known after apply)
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m insecure_value = (known after apply)
+      [32m+[0m[0m key_id         = (known after apply)
+      [32m+[0m[0m name           = "/cwm-bench/typical-scale-1x-r1-20261006/db-password"
+      [32m+[0m[0m tags_all       = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m tier           = (known after apply)
+      [32m+[0m[0m type           = "SecureString"
+      [32m+[0m[0m value          = (sensitive value)
+      [32m+[0m[0m version        = (known after apply)
+    }
+
+[1m  # aws_subnet.private[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "us-east-2a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.42.10.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "cwm-bench-private-us-east-2a"
+          [32m+[0m[0m "Tier" = "private"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-private-us-east-2a"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Tier"      = "private"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # aws_subnet.private[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "us-east-2b"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.42.11.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "cwm-bench-private-us-east-2b"
+          [32m+[0m[0m "Tier" = "private"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-private-us-east-2b"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Tier"      = "private"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # aws_subnet.public[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "us-east-2a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.42.0.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = true
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "cwm-bench-public-us-east-2a"
+          [32m+[0m[0m "Tier" = "public"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-public-us-east-2a"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Tier"      = "public"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # aws_subnet.public[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "us-east-2b"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.42.1.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = true
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "cwm-bench-public-us-east-2b"
+          [32m+[0m[0m "Tier" = "public"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-public-us-east-2b"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Tier"      = "public"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # aws_vpc.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc" "main" {
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m cidr_block                           = "10.42.0.0/16"
+      [32m+[0m[0m default_network_acl_id               = (known after apply)
+      [32m+[0m[0m default_route_table_id               = (known after apply)
+      [32m+[0m[0m default_security_group_id            = (known after apply)
+      [32m+[0m[0m dhcp_options_id                      = (known after apply)
+      [32m+[0m[0m enable_dns_hostnames                 = true
+      [32m+[0m[0m enable_dns_support                   = true
+      [32m+[0m[0m enable_network_address_usage_metrics = (known after apply)
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_tenancy                     = "default"
+      [32m+[0m[0m ipv6_association_id                  = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block                      = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_network_border_group = (known after apply)
+      [32m+[0m[0m main_route_table_id                  = (known after apply)
+      [32m+[0m[0m owner_id                             = (known after apply)
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "Name" = "cwm-bench-vpc"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Name"      = "cwm-bench-vpc"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.alb_to_app[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "alb_to_app" {
+      [32m+[0m[0m arn                          = (known after apply)
+      [32m+[0m[0m description                  = "ALB to app :8080"
+      [32m+[0m[0m from_port                    = 8080
+      [32m+[0m[0m id                           = (known after apply)
+      [32m+[0m[0m ip_protocol                  = "tcp"
+      [32m+[0m[0m referenced_security_group_id = (known after apply)
+      [32m+[0m[0m security_group_id            = (known after apply)
+      [32m+[0m[0m security_group_rule_id       = (known after apply)
+      [32m+[0m[0m tags_all                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                      = 8080
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.app_http_out[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "app_http_out" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv4              = "0.0.0.0/0"
+      [32m+[0m[0m description            = "package installs (yum mirrors)"
+      [32m+[0m[0m from_port              = 80
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "tcp"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                = 80
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.app_https_out[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "app_https_out" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv4              = "0.0.0.0/0"
+      [32m+[0m[0m description            = "package installs (Node 20, git)"
+      [32m+[0m[0m from_port              = 443
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "tcp"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                = 443
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.app_to_rds[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "app_to_rds" {
+      [32m+[0m[0m arn                          = (known after apply)
+      [32m+[0m[0m description                  = "app to RDS :3306"
+      [32m+[0m[0m from_port                    = 3306
+      [32m+[0m[0m id                           = (known after apply)
+      [32m+[0m[0m ip_protocol                  = "tcp"
+      [32m+[0m[0m referenced_security_group_id = (known after apply)
+      [32m+[0m[0m security_group_id            = (known after apply)
+      [32m+[0m[0m security_group_rule_id       = (known after apply)
+      [32m+[0m[0m tags_all                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                      = 3306
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.generator_all[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "generator_all" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv4              = "0.0.0.0/0"
+      [32m+[0m[0m description            = "k6 to ALB plus package installs"
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "-1"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.alb_http_from_generator[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_ingress_rule" "alb_http_from_generator" {
+      [32m+[0m[0m arn                          = (known after apply)
+      [32m+[0m[0m description                  = "generator to ALB :80"
+      [32m+[0m[0m from_port                    = 80
+      [32m+[0m[0m id                           = (known after apply)
+      [32m+[0m[0m ip_protocol                  = "tcp"
+      [32m+[0m[0m referenced_security_group_id = (known after apply)
+      [32m+[0m[0m security_group_id            = (known after apply)
+      [32m+[0m[0m security_group_rule_id       = (known after apply)
+      [32m+[0m[0m tags_all                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                      = 80
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.alb_https_from_generator[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_ingress_rule" "alb_https_from_generator" {
+      [32m+[0m[0m arn                          = (known after apply)
+      [32m+[0m[0m description                  = "generator to ALB :443 (listener only if acm_certificate_arn is set)"
+      [32m+[0m[0m from_port                    = 443
+      [32m+[0m[0m id                           = (known after apply)
+      [32m+[0m[0m ip_protocol                  = "tcp"
+      [32m+[0m[0m referenced_security_group_id = (known after apply)
+      [32m+[0m[0m security_group_id            = (known after apply)
+      [32m+[0m[0m security_group_rule_id       = (known after apply)
+      [32m+[0m[0m tags_all                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                      = 443
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.app_from_alb[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_ingress_rule" "app_from_alb" {
+      [32m+[0m[0m arn                          = (known after apply)
+      [32m+[0m[0m description                  = "ALB to app :8080"
+      [32m+[0m[0m from_port                    = 8080
+      [32m+[0m[0m id                           = (known after apply)
+      [32m+[0m[0m ip_protocol                  = "tcp"
+      [32m+[0m[0m referenced_security_group_id = (known after apply)
+      [32m+[0m[0m security_group_id            = (known after apply)
+      [32m+[0m[0m security_group_rule_id       = (known after apply)
+      [32m+[0m[0m tags_all                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                      = 8080
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.rds_from_app[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_ingress_rule" "rds_from_app" {
+      [32m+[0m[0m arn                          = (known after apply)
+      [32m+[0m[0m description                  = "app to RDS :3306"
+      [32m+[0m[0m from_port                    = 3306
+      [32m+[0m[0m id                           = (known after apply)
+      [32m+[0m[0m ip_protocol                  = "tcp"
+      [32m+[0m[0m referenced_security_group_id = (known after apply)
+      [32m+[0m[0m security_group_id            = (known after apply)
+      [32m+[0m[0m security_group_rule_id       = (known after apply)
+      [32m+[0m[0m tags_all                     = {
+          [32m+[0m[0m "ManagedBy" = "terraform"
+          [32m+[0m[0m "Project"   = "cwm-bench"
+          [32m+[0m[0m "TestId"    = "typical-scale-1x-r1-20261006"
+          [32m+[0m[0m "Topology"  = "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+        }
+      [32m+[0m[0m to_port                      = 3306
+    }
+
+[1m  # random_password.db[0m will be created
+[0m  [32m+[0m[0m resource "random_password" "db" {
+      [32m+[0m[0m bcrypt_hash = (sensitive value)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m length      = 24
+      [32m+[0m[0m lower       = true
+      [32m+[0m[0m min_lower   = 0
+      [32m+[0m[0m min_numeric = 0
+      [32m+[0m[0m min_special = 0
+      [32m+[0m[0m min_upper   = 0
+      [32m+[0m[0m number      = true
+      [32m+[0m[0m numeric     = true
+      [32m+[0m[0m result      = (sensitive value)
+      [32m+[0m[0m special     = false
+      [32m+[0m[0m upper       = true
+    }
+
+[1mPlan:[0m 41 to add, 0 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m alb_arn               = (known after apply)
+  [32m+[0m[0m alb_dns               = (known after apply)
+  [32m+[0m[0m ami_source            = "variable"
+  [32m+[0m[0m app_instance_ids      = [
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m app_root_volume_ids   = [
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m dashboard_url         = "https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#dashboards:name=cwm-bench-typical-scale-1x-r1-20261006"
+  [32m+[0m[0m generator_instance_id = (known after apply)
+  [32m+[0m[0m generator_ip          = (known after apply)
+  [32m+[0m[0m gp2_notes             = {
+      [32m+[0m[0m app_root_baseline_iops = 90
+      [32m+[0m[0m app_root_gb            = 30
+      [32m+[0m[0m burst_iops             = 3000
+      [32m+[0m[0m rds_baseline_iops      = 300
+      [32m+[0m[0m rds_gb                 = 100
+      [32m+[0m[0m third_error_bucket     = "BurstBalance=0 is iops_throttle, distinct from CPU and DB connection failures"
+    }
+  [32m+[0m[0m rds_endpoint          = (known after apply)
+  [32m+[0m[0m rds_identifier        = "cwm-bench-typical-scale-1x-r1-20261006"
+  [32m+[0m[0m resolved_ami_id       = (sensitive value)
+  [32m+[0m[0m target_group_arn      = (known after apply)
+  [32m+[0m[0m topology_declaration  = {
+      [32m+[0m[0m alb                     = "application"
+      [32m+[0m[0m app_count               = 1
+      [32m+[0m[0m app_instance_type       = "m5.large"
+      [32m+[0m[0m app_pool_size           = 250
+      [32m+[0m[0m db_engine               = "mysql"
+      [32m+[0m[0m db_engine_version       = "8.0"
+      [32m+[0m[0m db_instance_class       = "db.r5.large"
+      [32m+[0m[0m db_multi_az             = false
+      [32m+[0m[0m generator_instance_type = "c6i.xlarge"
+      [32m+[0m[0m mysql_max_connections   = 500
+      [32m+[0m[0m region                  = "us-east-2"
+      [32m+[0m[0m test_id                 = "typical-scale-1x-r1-20261006"
+    }

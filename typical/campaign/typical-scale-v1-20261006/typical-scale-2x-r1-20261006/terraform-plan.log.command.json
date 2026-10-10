@@ -1,0 +1,18 @@
+{
+  "command": "terraform",
+  "args": [
+    "plan",
+    "-input=false",
+    "-var=region=us-east-2",
+    "-var=test_id=typical-scale-2x-r1-20261006",
+    "-var=app_count=2",
+    "-var=ami_id=ami-0d3d85815a9746bc5",
+    "-var=app_source_git_ref=06e4048d9c6db5494dbb85da2911de4943a70383",
+    "-var=app_profile=typical",
+    "-var=app_workers=2",
+    "-out=/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-2x-r1-20261006/terraform/private-scale.tfplan"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T19:08:58.229Z",
+  "finalResponsePublished": true
+}

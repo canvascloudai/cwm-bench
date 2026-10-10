@@ -1,0 +1,23 @@
+{
+  "command": "aws",
+  "args": [
+    "resourcegroupstaggingapi",
+    "get-resources",
+    "--resources-per-page",
+    "1",
+    "--no-paginate",
+    "--tag-filters",
+    "Key=Project,Values=cwm-bench",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json",
+    "--cli-connect-timeout",
+    "10",
+    "--cli-read-timeout",
+    "20"
+  ],
+  "startedAt": "2026-10-08T22:44:49.381Z",
+  "stdoutFile": "tagged-attempt1.json.stdout.txt",
+  "stderrFile": "tagged-attempt1.json.stderr.txt"
+}

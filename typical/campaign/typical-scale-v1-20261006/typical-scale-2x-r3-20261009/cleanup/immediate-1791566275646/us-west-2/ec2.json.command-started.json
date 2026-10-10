@@ -1,0 +1,17 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-instances",
+    "--filters",
+    "Name=tag:TestId,Values=typical-scale-2x-r3-20261009",
+    "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-09T17:18:20.173Z",
+  "stdoutFile": "ec2.json.stdout.txt",
+  "stderrFile": "ec2.json.stderr.txt"
+}

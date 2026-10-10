@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-08T19:55:42.597790+00:00",
+  "reason": "One retained EC2 lookup timed out; other 131 retained ARNs not found; empty live inventories. Controller now retries timed-out direct reads once with separate attempt2 evidence; live/permission/unresolved cases remain blocking. Six mocked safety cases pass.",
+  "pendingApplyStarted": false,
+  "loadStarted": false,
+  "priorSessionsDestroyed": true,
+  "measurementSettingsChanged": false,
+  "amiReResolved": false,
+  "holdoutLockUnchanged": true
+}

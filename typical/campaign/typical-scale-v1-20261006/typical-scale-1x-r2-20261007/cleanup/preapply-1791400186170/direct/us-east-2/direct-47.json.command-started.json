@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-security-group-rules",
+    "--security-group-rule-ids",
+    "sgr-0ffdf1f0a9244847e",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-07T19:12:49.440Z",
+  "stdoutFile": "direct-47.json.stdout.txt",
+  "stderrFile": "direct-47.json.stderr.txt"
+}

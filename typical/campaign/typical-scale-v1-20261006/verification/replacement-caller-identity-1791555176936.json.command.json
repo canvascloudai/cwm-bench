@@ -1,0 +1,14 @@
+{
+  "command": "aws",
+  "args": [
+    "sts",
+    "get-caller-identity",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-09T14:13:16.978Z",
+  "finalResponsePublished": true
+}

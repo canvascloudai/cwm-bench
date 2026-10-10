@@ -1,0 +1,14 @@
+{
+  "command": "aws",
+  "args": [
+    "sts",
+    "get-caller-identity",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-06T18:59:52.420Z",
+  "stdoutFile": "aws-identity.json.stdout.txt",
+  "stderrFile": "aws-identity.json.stderr.txt"
+}

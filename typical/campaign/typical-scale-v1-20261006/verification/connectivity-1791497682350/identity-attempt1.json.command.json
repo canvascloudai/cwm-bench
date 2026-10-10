@@ -1,0 +1,18 @@
+{
+  "command": "aws",
+  "args": [
+    "sts",
+    "get-caller-identity",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json",
+    "--cli-connect-timeout",
+    "10",
+    "--cli-read-timeout",
+    "20"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-08T22:45:08.788Z",
+  "finalResponsePublished": true
+}

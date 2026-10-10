@@ -1,0 +1,9 @@
+[REDACTED: EncryptionService debug lines removed before publication]
+SESSION_FINISHED rep=1 no-live-stacks=true
+SESSION_FINISHED rep=2 no-live-stacks=true
+SESSION_WAIT rep=3 due=2026-10-08T19:15:11.477Z no-live-stacks=true
+APPLY_STARTED typical-scale-3x-r3-20261008 ami=ami-0d3d85815a9746bc5
+DESTROY_STARTED typical-scale-3x-r3-20261008
+DESTROY_FINISHED typical-scale-3x-r3-20261008
+CAMPAIGN_STOPPED MySQL 8.0 minor unavailable/mismatche[REDACTED_PARTIAL]
+MySQL 8.0 minor unavailable/mismatche[REDACTED_PARTIAL]

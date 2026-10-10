@@ -1,0 +1,2 @@
+
+An error occurred (InvalidSecurityGroupRuleId.NotFound) when calling the DescribeSecurityGroupRules operation: The security group rule ID 'sgr-02638fe8979c4a796' does not exist

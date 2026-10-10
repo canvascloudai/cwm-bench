@@ -1,0 +1,18 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "get-command-invocation",
+    "--command-id",
+    "885cfc33-6de5-415f-82da-56b6b0c2fe7c",
+    "--instance-id",
+    "i-0bef1bac1db9d5992",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-07T22:01:09.156Z",
+  "stdoutFile": "aws-2.json.stdout.txt",
+  "stderrFile": "aws-2.json.stderr.txt"
+}

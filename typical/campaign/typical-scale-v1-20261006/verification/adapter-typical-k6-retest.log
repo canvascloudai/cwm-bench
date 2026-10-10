@@ -1,0 +1,135 @@
+TAP version 13
+# Subtest: lean files and generator template stay byte-identical to main
+ok 1 - lean files and generator template stay byte-identical to main
+  ---
+  duration_ms: 15.651631
+  ...
+# Subtest: rendered lean app user_data matches main and typical only adds profile lines
+ok 2 - rendered lean app user_data matches main and typical only adds profile lines
+  ---
+  duration_ms: 1526.71477
+  ...
+# Subtest: generator user_data template render is unchanged for identical inputs
+ok 3 - generator user_data template render is unchanged for identical inputs
+  ---
+  duration_ms: 815.815707
+  ...
+# Subtest: cluster pool split uses floor and crashed workers are respawned
+ok 4 - cluster pool split uses floor and crashed workers are respawned
+  ---
+  duration_ms: 0.355411
+  ...
+# Subtest: app tokens verify and the load script signs the same user token
+ok 5 - app tokens verify and the load script signs the same user token
+  ---
+  duration_ms: 1382.981342
+  ...
+# Subtest: typical scenario catalog has the frozen rungs, pool, workers, and region
+ok 6 - typical scenario catalog has the frozen rungs, pool, workers, and region
+  ---
+  duration_ms: 1.012653
+  ...
+# Subtest: profile mismatch is rejected in both directions before k6
+ok 7 - profile mismatch is rejected in both directions before k6
+  ---
+  duration_ms: 10.309879
+  ...
+# Subtest: typical run refuses the wrong region and the wrong worker count without starting k6
+ok 8 - typical run refuses the wrong region and the wrong worker count without starting k6
+  ---
+  duration_ms: 1.358606
+  ...
+# Subtest: typical run in us-east-2 starts typical.js when profile and pool match
+ok 9 - typical run in us-east-2 starts typical.js when profile and pool match
+  ---
+  duration_ms: 2.037028
+  ...
+# Subtest: wait-ready reports profile, workers, and gitSha from each app node
+ok 10 - wait-ready reports profile, workers, and gitSha from each app node
+  ---
+  duration_ms: 2.264816
+  ...
+# Subtest: typical-later-day uses the fit-campaign date and is not typical-fit-100
+ok 11 - typical-later-day uses the fit-campaign date and is not typical-fit-100
+  ---
+  duration_ms: 0.390955
+  ...
+# Subtest: us-west-2 is accepted only for the typical-second-region keys
+ok 12 - us-west-2 is accepted only for the typical-second-region keys
+  ---
+  duration_ms: 2.357587
+  ...
+# Subtest: run typical-later-day on the fit UTC day does not start k6
+ok 13 - run typical-later-day on the fit UTC day does not start k6
+  ---
+  duration_ms: 0.589661
+  ...
+# Subtest: collect typical-later-day on the fit UTC day fails before AWS
+ok 14 - collect typical-later-day on the fit UTC day fails before AWS
+  ---
+  duration_ms: 1.01995
+  ...
+# Subtest: run typical-later-day on a later UTC day in us-east-2 starts typical.js
+ok 15 - run typical-later-day on a later UTC day in us-east-2 starts typical.js
+  ---
+  duration_ms: 1.285505
+  ...
+# Subtest: typical-later-day in us-west-2 and on a lean stack does not start k6
+ok 16 - typical-later-day in us-west-2 and on a lean stack does not start k6
+  ---
+  duration_ms: 1.407525
+  ...
+# Subtest: run typical-second-region accepts only us-west-2 and keeps other typical keys locked
+ok 17 - run typical-second-region accepts only us-west-2 and keeps other typical keys locked
+  ---
+  duration_ms: 2.008281
+  ...
+# Subtest: wait-ready lists the typical stability holdouts
+ok 18 - wait-ready lists the typical stability holdouts
+  ---
+  duration_ms: 0.765446
+  ...
+# Subtest: run typical-later-day-300 on a later UTC day in us-east-2 starts typical.js at 300 RPS
+ok 19 - run typical-later-day-300 on a later UTC day in us-east-2 starts typical.js at 300 RPS
+  ---
+  duration_ms: 1.663492
+  ...
+# Subtest: run typical-second-region-300 accepts only us-west-2
+ok 20 - run typical-second-region-300 accepts only us-west-2
+  ---
+  duration_ms: 2.384401
+  ...
+# Subtest: typical-scale keys are us-east-2 holdouts with the key app count
+ok 21 - typical-scale keys are us-east-2 holdouts with the key app count
+  ---
+  duration_ms: 0.867819
+  ...
+# Subtest: run typical-scale refuses the wrong app count, region, profile, and pool
+ok 22 - run typical-scale refuses the wrong app count, region, profile, and pool
+  ---
+  duration_ms: 2.82486
+  ...
+# Subtest: run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS
+ok 23 - run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS
+  ---
+  duration_ms: 1.473028
+  ...
+# Subtest: collect typical-scale-3x-300 on a 2-node stack fails APP_COUNT_MISMATCH
+ok 24 - collect typical-scale-3x-300 on a 2-node stack fails APP_COUNT_MISMATCH
+  ---
+  duration_ms: 0.571372
+  ...
+# Subtest: wait-ready lists the nine typical-scale keys
+ok 25 - wait-ready lists the nine typical-scale keys
+  ---
+  duration_ms: 0.478665
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4045.927273

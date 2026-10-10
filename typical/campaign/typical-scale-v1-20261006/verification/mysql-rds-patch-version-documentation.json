@@ -1,0 +1,11 @@
+{
+  "source": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Concepts.VersionMgmt.html",
+  "reportedVersion": "8.0.46-rds.20260908",
+  "documentationExcerpts": [
+    "| 8.0.46-RDS.20260908\\* | Not applicable | 23 September 2026 | 30 September 2027 |",
+    "\\\\* MySQL 5.7 and 8.0 are now only available under RDS Extended Support. For more information, see [Amazon RDS Extended Support with Amazon RDS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html).",
+    "- [RDS Extended Support for RDS for MySQL version 8.0.46-RDS.20260908](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Concepts.VersionMgmt.html#mysql-extended-support-releases-version-8.0.46-RDS.20260908)",
+    "### RDS Extended Support for RDS for MySQL version 8.0.46-RDS.20260908",
+    "RDS Extended Support for RDS for MySQL version 8.0.46-RDS.20260908 is available."
+  ]
+}

@@ -1,0 +1,33 @@
+[REDACTED: EncryptionService debug lines removed before publication]
+APPLY_STARTED typical-scale-2x-r1-20261006 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-scale-2x-r1-20261006 adapter=1.5.0 app_count=2 gitSha=06e4048d9c6db5494dbb85da2911de4943a70383
+RUN_STARTED typical-scale-2x-r1-20261006 typical-scale-2x-100
+RUNG_SAVED typical-scale-2x-r1-20261006 typical-scale-2x-100
+RUN_STARTED typical-scale-2x-r1-20261006 typical-scale-2x-200
+RUNG_SAVED typical-scale-2x-r1-20261006 typical-scale-2x-200
+RUN_STARTED typical-scale-2x-r1-20261006 typical-scale-2x-300
+RUNG_SAVED typical-scale-2x-r1-20261006 typical-scale-2x-300
+DESTROY_STARTED typical-scale-2x-r1-20261006
+DESTROY_FINISHED typical-scale-2x-r1-20261006
+APPLY_STARTED typical-scale-1x-r1-20261006 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-scale-1x-r1-20261006 adapter=1.5.0 app_count=1 gitSha=06e4048d9c6db5494dbb85da2911de4943a70383
+RUN_STARTED typical-scale-1x-r1-20261006 typical-scale-1x-100
+RUNG_SAVED typical-scale-1x-r1-20261006 typical-scale-1x-100
+RUN_STARTED typical-scale-1x-r1-20261006 typical-scale-1x-200
+RUNG_SAVED typical-scale-1x-r1-20261006 typical-scale-1x-200
+RUN_STARTED typical-scale-1x-r1-20261006 typical-scale-1x-300
+RUNG_SAVED typical-scale-1x-r1-20261006 typical-scale-1x-300
+DESTROY_STARTED typical-scale-1x-r1-20261006
+DESTROY_FINISHED typical-scale-1x-r1-20261006
+APPLY_STARTED typical-scale-3x-r1-20261006 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-scale-3x-r1-20261006 adapter=1.5.0 app_count=3 gitSha=06e4048d9c6db5494dbb85da2911de4943a70383
+RUN_STARTED typical-scale-3x-r1-20261006 typical-scale-3x-100
+RUNG_SAVED typical-scale-3x-r1-20261006 typical-scale-3x-100
+RUN_STARTED typical-scale-3x-r1-20261006 typical-scale-3x-200
+RUNG_SAVED typical-scale-3x-r1-20261006 typical-scale-3x-200
+RUN_STARTED typical-scale-3x-r1-20261006 typical-scale-3x-300
+RUNG_SAVED typical-scale-3x-r1-20261006 typical-scale-3x-300
+DESTROY_STARTED typical-scale-3x-r1-20261006
+DESTROY_FINISHED typical-scale-3x-r1-20261006
+SESSION_FINISHED rep=1 no-live-stacks=true
+SESSION_PAUSED rep=1 next=2026-10-07T19:08:58.245Z no-live-stacks=true

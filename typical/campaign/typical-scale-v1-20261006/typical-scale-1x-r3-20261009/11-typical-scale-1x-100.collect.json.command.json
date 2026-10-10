@@ -1,0 +1,13 @@
+{
+  "command": "node",
+  "args": [
+    "scripts/worker-adapter.mjs",
+    "collect",
+    "--scenario",
+    "typical-scale-1x-100",
+    "--json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-09T18:20:09.319Z",
+  "finalResponsePublished": true
+}

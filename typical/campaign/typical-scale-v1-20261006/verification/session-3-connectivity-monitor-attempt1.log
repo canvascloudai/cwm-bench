@@ -1,0 +1,15 @@
+CONNECTIVITY_MONITOR_WAITING read-only=true automatic-apply=false
+[REDACTED: EncryptionService debug lines removed before publication]
+CONNECTIVITY_CHECK_SAVED round=1 healthy=true consecutive=1
+EncryptionService.decrypt called with:
+  - Data type: object
+  - User ID: 1
+  - Is nested call: false
+  - Data is an object with keys: version, keyVersion, iv, tag, data, userId
+  - Converted object to string, length: 356
+  - Attempting to parse JSON...
+  - JSON parse successful
+  - Parsed object keys: version, keyVersion, iv, tag, data, userId
+  - All required properties found in encrypted package
+CONNECTIVITY_CHECK_SAVED round=2 healthy=true consecutive=2
+CONNECTIVITY_RECOVERED full-cleanup-preflight-still-required

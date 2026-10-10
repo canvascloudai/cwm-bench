@@ -1,0 +1,104 @@
+{
+    "Reservations": [
+        {
+            "Groups": [],
+            "Instances": [
+                {
+                    "AmiLaunchIndex": 0,
+                    "ImageId": "ami-0d3d85815a9746bc5",
+                    "InstanceId": "i-0bef1bac1db9d5992",
+                    "InstanceType": "c6i.xlarge",
+                    "LaunchTime": "2026-10-07T20:52:22+00:00",
+                    "Monitoring": {
+                        "State": "enabled"
+                    },
+                    "Placement": {
+                        "AvailabilityZone": "us-east-2a",
+                        "GroupName": "",
+                        "Tenancy": "default"
+                    },
+                    "PrivateDnsName": "",
+                    "ProductCodes": [],
+                    "PublicDnsName": "",
+                    "State": {
+                        "Code": 48,
+                        "Name": "terminated"
+                    },
+                    "StateTransitionReason": "User initiated (2026-10-07 22:02:11 GMT)",
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [],
+                    "ClientToken": "terraform-20261007205221054600000004",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [],
+                    "RootDeviceName": "/dev/xvda",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [],
+                    "StateReason": {
+                        "Code": "Client.UserInitiatedShutdown",
+                        "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                    },
+                    "Tags": [
+                        {
+                            "Key": "TestId",
+                            "Value": "typical-scale-3x-r2-20261007"
+                        },
+                        {
+                            "Key": "Project",
+                            "Value": "cwm-bench"
+                        },
+                        {
+                            "Key": "Role",
+                            "Value": "generator"
+                        },
+                        {
+                            "Key": "Topology",
+                            "Value": "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+                        },
+                        {
+                            "Key": "ManagedBy",
+                            "Value": "terraform"
+                        },
+                        {
+                            "Key": "Name",
+                            "Value": "cwm-bench-generator"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 2,
+                        "ThreadsPerCore": 2
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "pending",
+                        "HttpTokens": "required",
+                        "HttpPutResponseHopLimit": 2,
+                        "HttpEndpoint": "enabled",
+                        "HttpProtocolIpv6": "disabled",
+                        "InstanceMetadataTags": "disabled"
+                    },
+                    "EnclaveOptions": {
+                        "Enabled": false
+                    },
+                    "BootMode": "uefi-preferred",
+                    "PlatformDetails": "Linux/UNIX",
+                    "UsageOperation": "RunInstances",
+                    "UsageOperationUpdateTime": "2026-10-07T20:52:22+00:00",
+                    "MaintenanceOptions": {
+                        "AutoRecovery": "default"
+                    },
+                    "CurrentInstanceBootMode": "uefi"
+                }
+            ],
+            "OwnerId": "REDACTED",
+            "ReservationId": "r-077d6af6e44029d54"
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-security-group-rules",
+    "--filters",
+    "Name=tag:TestId,Values=typical-scale-2x-r3-20261009",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-09T17:35:36.696Z",
+  "stdoutFile": "security-group-rules.json.stdout.txt",
+  "stderrFile": "security-group-rules.json.stderr.txt"
+}

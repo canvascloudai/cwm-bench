@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-09T14:14:47.824921+00:00",
+  "temporaryLogUnavailable": true,
+  "temporaryLogPath": "/tmp/replit-background-tasks/8cf5cc5b-667e-4482-a520-a64a24a91da1.log",
+  "durableAwsCommandOutputsAndJsonPreserved": true,
+  "immediateAndDelayedCleanupProofsPreserved": true,
+  "runOrCollectJsonLost": false,
+  "note": "Temporary helper console log could not be copied after overnight pause. This is disclosed in README-execution.md; no synthetic transcript was created."
+}
