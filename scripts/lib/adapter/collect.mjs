@@ -24,6 +24,7 @@ import {
   parseK6Summary,
 } from './assemble.mjs';
 import { requireRunIdentity } from './identity.mjs';
+import { assertCampaignIdentity, ladderHistory, resolveLadder } from './ladder.mjs';
 
 function parseBoundary(value) {
   if (!value) return null;
@@ -336,6 +337,7 @@ export async function collectScenario(ctx, scenarioKey) {
   assertSecondRegion(spec, region);
   assertTypicalRegion(spec, region);
   assertExpectedAppCount(spec, outputs);
+  assertCampaignIdentity(spec, ctx.env, outputs);
   if (spec.expectedPoolSize != null) {
     assertExpectedPool(spec, Number(outputs.topology && outputs.topology.app_pool_size));
   }
@@ -385,7 +387,23 @@ export async function collectScenario(ctx, scenarioKey) {
     artifacts.identity.runId === runId &&
     artifacts.identity.scenario === spec.key;
 
-  const k6 = parseK6Summary(artifacts.summary);
+  const k6 = parseK6Summary(artifacts.summary, {
+    durationMode: spec.scoreUntaggedDuration ? 'untagged' : 'pick',
+  });
+  const rawFiles = (artifacts.files || []).filter((name) =>
+    name === 'k6.json.gz' || name === 'k6.csv.gz' || name === 'k6.json' || name === 'k6.csv');
+  const ladderPlan = resolveLadder(spec, ctx.env);
+  const history = ladderHistory(state, campaignId);
+  const recorded = history.find((row) => row.runId === runId);
+  const ladderFields = ladderPlan.ladder
+    ? {
+        ladder: ladderPlan.ladder,
+        rung_pos: recorded
+          ? recorded.rung_pos
+          : (ladderPlan.ladder.indexOf(spec.rps) >= 0 ? ladderPlan.ladder.indexOf(spec.rps) + 1 : null),
+        ladder_history: history.map((row) => row.rps),
+      }
+    : {};
   const runFields = assembleRunFields({ spec, outputs, cloudwatch: cloudwatch.metrics, k6 });
   const completeness = evaluateCompleteness({ outputs, cloudwatch: cloudwatch.metrics, k6 });
   if (!artifactIdentityMatches) {
@@ -406,6 +424,7 @@ export async function collectScenario(ctx, scenarioKey) {
     invented: false,
     campaignId,
     runId,
+    ...ladderFields,
     runIdSource: 'env',
     region,
     missing: completeness.missing,
@@ -444,6 +463,10 @@ export async function collectScenario(ctx, scenarioKey) {
       summaryPresent: Boolean(artifacts.summary),
       identityPresent: Boolean(artifacts.identity),
       identityMatches: Boolean(artifactIdentityMatches),
+      requestLevelRaw: {
+        present: rawFiles.some((name) => name.endsWith('.gz')),
+        files: rawFiles,
+      },
       k6,
       command: artifacts.command,
     },

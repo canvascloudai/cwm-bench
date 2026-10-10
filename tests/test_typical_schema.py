@@ -37,6 +37,15 @@ class TypicalSchemaTest(unittest.TestCase):
             "typical-scale-3x-100",
             "typical-scale-3x-200",
             "typical-scale-3x-300",
+            "typical-p95-1x-300",
+            "typical-p95-1x-200",
+            "typical-p95-1x-100",
+            "typical-p95-2x-300",
+            "typical-p95-2x-200",
+            "typical-p95-2x-100",
+            "typical-p95-3x-300",
+            "typical-p95-3x-200",
+            "typical-p95-3x-100",
         ):
             self.assertIn(key, allowed)
         for key in ("idle", "normal", "peak", "burst", "later-day", "second-region"):

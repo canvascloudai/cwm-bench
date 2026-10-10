@@ -27,6 +27,37 @@ function pickK6Metric(metrics, baseName) {
   return (steady || exact || entries[0])[1];
 }
 
+function selectDuration(metrics, mode) {
+  const entries = metricEntries(metrics, 'http_req_duration');
+  const steady = entries.find(([name]) => name.includes('phase:steady'));
+  const exact = entries.find(([name]) => name === 'http_req_duration');
+  const steadySubmetricPresent = Boolean(steady);
+  if (mode === 'untagged') {
+    if (exact) {
+      return {
+        metric: exact[1],
+        name: exact[0],
+        untaggedAggregate: true,
+        steadySubmetricPresent,
+      };
+    }
+    const fallback = steady || entries[0];
+    return {
+      metric: fallback ? fallback[1] : null,
+      name: fallback ? fallback[0] : null,
+      untaggedAggregate: false,
+      steadySubmetricPresent,
+    };
+  }
+  const chosen = steady || exact || entries[0];
+  return {
+    metric: chosen ? chosen[1] : null,
+    name: chosen ? chosen[0] : null,
+    untaggedAggregate: Boolean(chosen && chosen[0] === 'http_req_duration'),
+    steadySubmetricPresent,
+  };
+}
+
 function countFromMetric(metric) {
   if (!metric || !metric.values) return null;
   return numberOrNull(metric.values.count);
@@ -205,7 +236,7 @@ export function assessAlb5xxEvidence(cloudwatch) {
   };
 }
 
-export function parseK6Summary(summary) {
+export function parseK6Summary(summary, options = {}) {
   if (!summary || typeof summary !== 'object') {
     return {
       present: false,
@@ -218,11 +249,14 @@ export function parseK6Summary(summary) {
       goodputRps: null,
       httpReqs: null,
       httpReqFailed: null,
+      droppedIterations: null,
+      peakVus: null,
     };
   }
 
   const metrics = summary.metrics && typeof summary.metrics === 'object' ? summary.metrics : {};
-  const duration = pickK6Metric(metrics, 'http_req_duration');
+  const durationPick = selectDuration(metrics, options.durationMode || 'pick');
+  const duration = durationPick.metric;
   const values = duration && duration.values ? duration.values : {};
   const p50Ms = numberOrNull(values.med ?? values['p(50)']);
   const p95Ms = numberOrNull(values['p(95)']);
@@ -320,6 +354,13 @@ export function parseK6Summary(summary) {
     goodputRps = failRate != null ? rate * (1 - failRate) : rate;
   }
 
+  const droppedMetric = metrics.dropped_iterations;
+  const droppedIterations = droppedMetric && droppedMetric.values
+    ? numberOrNull(droppedMetric.values.count)
+    : 0;
+  const vusMetric = metrics.vus;
+  const peakVus = vusMetric && vusMetric.values ? numberOrNull(vusMetric.values.max) : null;
+
   return {
     present: true,
     latency: {
@@ -327,6 +368,9 @@ export function parseK6Summary(summary) {
       p95Ms,
       p99Ms,
       source: latencyPercentilesPresent ? 'k6' : 'unmeasured',
+      metric: durationPick.name,
+      untaggedAggregate: durationPick.untaggedAggregate && latencyPercentilesPresent,
+      steadySubmetricPresent: durationPick.steadySubmetricPresent,
     },
     latencyPercentilesPresent,
     errorClasses: errorClassEvidence === 'missing' || errorClassEvidence === 'contradictory' ? null : errorClasses,
@@ -344,6 +388,8 @@ export function parseK6Summary(summary) {
     goodputRps,
     httpReqs: reqs && reqs.values ? reqs.values : null,
     httpReqFailed: failed && failed.values ? failed.values : null,
+    droppedIterations,
+    peakVus,
     ...(counterConsistencyResult ? { counterConsistency: counterConsistencyResult } : {}),
   };
 }

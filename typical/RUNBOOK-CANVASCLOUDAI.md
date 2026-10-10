@@ -53,7 +53,7 @@ unset CWM_RUN_ID CWM_WARMUP CWM_DURATION   # use the defaults: 5m warmup, 15m st
 node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
 ```
 
-In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5, the four holdout keys in section 10, and the nine `typical-scale-*` keys in section 11. Record `adapterVersion` (`1.5.0` on this revision). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`. The recorded holdouts remain adapter `1.4.0`.
+In `out/00-capability.json`, confirm that `supportedScenarios` contains the five `typical-*` keys in section 5, the four holdout keys in section 10, the nine `typical-scale-*` keys in section 11, and the nine `typical-p95-*` keys in section 12. Record `adapterVersion` (`1.6.0` on this revision). The recorded `typical-v1-20260927c` campaign remains adapter `1.3.0`. The recorded holdouts remain adapter `1.4.0`. The recorded scale-v1 campaign remains adapter `1.5.0`.
 
 ## 4. Provision (typical profile, us-east-2)
 
@@ -329,3 +329,80 @@ Re-run rules are `typical/scale-v1/PREREGISTRATION.md` §8.2. Errors, saturation
 Destroy with section 8, using `region=us-east-2`, `test_id=$APPLY`, and the same `-var` set (`app_count`, `ami_id`, `app_profile`, `app_workers`, `app_source_git_ref`).
 
 The holdouts ended with the runner's strict safety lock retained: tag inventory still listed resources that direct checks then classified as terminated or not-found (`typical/campaign/typical-holdouts-v1-20261006/README-execution.md`). Between these nine applies, do the section 8 leftover checks (EC2 non-terminated, RDS, volumes, security-group rules). Proceed when every ARN classifies as terminated or not-found, and record that classification on the apply. Do not wait for an empty tag inventory, and do not delete anything by hand outside Terraform.
+
+## 12. P95 model validation (typical-p95-v1)
+
+These nine applies are not part of section 6, section 10, or section 11. The frozen plan is `typical/p95-v1/PREREGISTRATION.md`. The candidate predictions are frozen in `typical/p95-v1/predictions/model-predictions.csv`. Do not recompute them and do not query a live engine to score them. The engine baseline is frozen in `typical/p95-v1/predictions/engine-baseline/` (engine 1.2.18, `predictions.json`). The commit that contains that baseline is `<SHA>` / `measurement_sha`. Do not apply on any other SHA. Do not change instance types, pool size, workers, the request mix, warmup, or duration.
+
+`<AMI>` is one id for all nine applies. Resolve it once before session 1 and record it in the campaign note. This runbook does not name an AMI, because the wiring commit did not query AWS.
+
+```bash
+aws ssm get-parameter \
+  --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 \
+  --region us-east-2 \
+  --query Parameter.Value --output text
+```
+
+Pass that same `-var ami_id=<AMI>` on every apply.
+
+### 12.1 Session order (Latin square, 3 UTC days)
+
+Each config runs once per day and once in each daily slot. A replacement apply goes at the end of the same day if time allows, otherwise first on the next day. A fourth UTC day is only for replacements.
+
+| Slot | Day A | Day B | Day C |
+| --- | --- | --- | --- |
+| 1 | 1×-r1 | 2×-r2 | 3×-r3 |
+| 2 | 2×-r1 | 3×-r2 | 1×-r3 |
+| 3 | 3×-r1 | 1×-r2 | 2×-r3 |
+
+Apply id / `test_id`: `typical-p95-${N}x-r${K}-YYYYMMDD`, where `K` is 1, 2, or 3 and `YYYYMMDD` is the UTC date of that apply. A replacement adds one letter (`r1a`). Parent id: `typical-p95-v1-YYYYMMDD` using the UTC date of the first apply. Each apply is a fresh clone, a fresh terraform state, and the standard seed. Destroy before the next apply.
+
+On every apply the ladder is 300, then 200, then 100, on that same fresh stack. Do not set `CWM_LADDER` to any other order.
+
+### 12.2 One apply
+
+```bash
+APPLY=typical-p95-${N}x-r${K}-YYYYMMDD
+git clone https://github.com/canvascloudai/cwm-bench.git cwm-bench-$APPLY && cd cwm-bench-$APPLY
+git checkout --detach <SHA> && test -f typical/p95-v1/PREREGISTRATION.md && test -f typical/p95-v1/predictions/engine-baseline/predictions.json && mkdir -p out
+export AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 CWM_CAMPAIGN_ID=$APPLY CWM_MEASUREMENT_SHA=<SHA>
+unset CWM_WARMUP CWM_DURATION CWM_FIT_CAMPAIGN_DATE CWM_LADDER
+node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
+cd terraform && terraform init && terraform apply \
+  -var='region=us-east-2' -var="test_id=$APPLY" -var='app_profile=typical' -var='app_workers=2' \
+  -var="app_count=$N" -var="ami_id=<AMI>" -var='app_source_git_ref=<SHA>'
+terraform output -json > ../out/01-terraform-outputs.json && cd ..
+node scripts/worker-adapter.mjs wait-ready --json > out/02-wait-ready.json
+aws rds describe-db-instances --region us-east-2 \
+  --query "DBInstances[?contains(DBInstanceIdentifier,'cwm-bench')].{id:DBInstanceIdentifier,version:EngineVersion}" \
+  > out/03-rds-engine-version.json
+for RPS in 300 200 100; do
+  KEY=typical-p95-${N}x-$RPS
+  export CWM_SCENARIO=$KEY CWM_RUN_ID=$KEY-r$K
+  node scripts/worker-adapter.mjs run --scenario $KEY --json > out/10-$KEY.run.json
+  # Set CWM_RUN_STARTED_AT and CWM_RUN_ENDED_AT from the generator started_at / completed_at
+  # before collect. Unset, collect falls back to a trailing 40-minute window.
+  node scripts/worker-adapter.mjs collect --scenario $KEY --json > out/11-$KEY.collect.json
+done
+```
+
+Record the RDS `EngineVersion` string from `out/03-rds-engine-version.json` on the apply. A version change mid-campaign is a confound, not an invalidation.
+
+Do not change any other variable: instance types, `app_pool_size`, `mysql_max_connections`, `name_prefix`, warmup, or duration. Do not add a k6 threshold. The runner gzips `k6.json` to `k6.json.gz` next to `summary.json`. Event-loop lag and mysql2 pool-wait log lines are not instrumented.
+
+Gates, checked before the next rung where the collect is in hand (`typical/p95-v1/score_p95_v1.py` implements the same rules):
+
+- After apply: `topology_declaration.app_count` is N, `app_instance_ids` has length N, `resolved_ami_id` is `<AMI>`, and `ami_source` is `variable`.
+- After wait-ready: `ok`, adapterVersion `1.6.0`, and N `appNodes`, each `typical` / 2 workers / `<SHA>`.
+- After each run: `ok: true`, `adapterVersion` `1.6.0`, `ladder` `[300,200,100]`, and `rung_pos` 1 then 2 then 3. `ladder_history` is the rungs completed on this apply.
+- After each collect: `ok`, `identityMatches`, `invented: false`, `latency.untaggedAggregate` true, and `latency.p95Ms` equal to the untagged `http_req_duration` aggregate. `artifacts.requestLevelRaw.present` is true (`k6.json.gz`). `cloudwatch.window.source` is `persisted-run` and the window covers only that rung. `terraformOutputs.topology_declaration.app_count` is N.
+- Generator: CPU mean over the steady window at or below 70%, and `dropped_iterations` at or below 0.5% of scheduled iterations (target RPS × 1,050). If generator CPU is still missing after the CloudWatch re-collects below, the rung passes this check only when dropped iterations are within that limit and peak VUs stayed under the pre-allocated VU budget.
+- `APP_COUNT_MISMATCH` means the live app count is not the key's count. Do not switch to a fit, holdout, or scale key. `REUSED_KEY` means this test id was pointed at one of those keys. `LADDER_ORDER` means the rung is not the next step of 300 → 200 → 100. `TEST_ID_MISMATCH` means the apply id does not match `typical-p95-{1x|2x|3x}-r{1..3}-YYYYMMDD`.
+
+### 12.3 Invalidation and pause
+
+Re-run rules are `typical/p95-v1/PREREGISTRATION.md` §7.7. Rungs inside an apply are never re-run. A failed generator check, identity mismatch, missing k6 summary, or incomplete ladder replaces the whole apply (letter suffix). CloudWatch gaps are re-collected up to twice with explicit `CWM_RUN_STARTED_AT` / `CWM_RUN_ENDED_AT`; the k6 summary stays. A steady `http_req_duration` sub-metric, or `latency.p95Ms` that is not the untagged aggregate, invalidates the apply and pauses the campaign. Missing `k6.json.gz` in two or more applies pauses the campaign. At most 6 replacement applies, and a soft cap of $40 total AWS spend. If a seventh replacement would be needed or the next apply would pass $40: pause, destroy any live stack, and ask Kevin whether to raise the budget or stop. The result is `PARTIAL: budget exhausted` only if he stops. Applies on different SHAs are never pooled. Score with `python3 typical/p95-v1/score_p95_v1.py` against the frozen CSV and the frozen engine file. Do not query the live engine.
+
+### 12.4 Destroy
+
+Destroy with section 8, using `region=us-east-2`, `test_id=$APPLY`, and the same `-var` set (`app_count`, `ami_id`, `app_profile`, `app_workers`, `app_source_git_ref`). Run the section 8 leftover checks immediately and again after 15 minutes. Proceed when every ARN classifies as terminated or not-found. Do not delete anything by hand outside Terraform.
