@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-08T22:45:08.800Z",
+  "round": 1,
+  "healthy": true,
+  "consecutive": 1,
+  "results": [
+    {
+      "region": "us-east-2",
+      "service": "tagging",
+      "exitCode": 0,
+      "validResponse": true
+    },
+    {
+      "region": "us-west-2",
+      "service": "tagging",
+      "exitCode": 0,
+      "validResponse": true
+    },
+    {
+      "region": "us-east-2",
+      "service": "sts",
+      "exitCode": 0,
+      "validResponse": true
+    }
+  ],
+  "fullCleanupPreflightStillRequired": true,
+  "automaticApply": false
+}

@@ -1,0 +1,18 @@
+{
+  "command": "aws",
+  "args": [
+    "sts",
+    "get-caller-identity",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json",
+    "--cli-connect-timeout",
+    "10",
+    "--cli-read-timeout",
+    "20"
+  ],
+  "startedAt": "2026-10-08T22:45:06.452Z",
+  "stdoutFile": "identity-attempt1.json.stdout.txt",
+  "stderrFile": "identity-attempt1.json.stderr.txt"
+}

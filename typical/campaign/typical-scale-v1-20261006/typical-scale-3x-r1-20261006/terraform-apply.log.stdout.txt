@@ -1,0 +1,196 @@
+[0m[1mrandom_password.db: Creating...[0m[0m
+[0m[1mrandom_password.db: Creation complete after 0s [id=none][0m
+[0m[1maws_vpc.main: Creating...[0m[0m
+[0m[1maws_db_parameter_group.main: Creating...[0m[0m
+[0m[1maws_ssm_parameter.db_password: Creating...[0m[0m
+[0m[1maws_iam_role.ec2: Creating...[0m[0m
+[0m[1maws_ssm_parameter.db_password: Creation complete after 1s [id=/cwm-bench/typical-scale-3x-r1-20261006/db-password][0m
+[0m[1mdata.aws_iam_policy_document.app_ssm_db: Reading...[0m[0m
+[0m[1mdata.aws_iam_policy_document.app_ssm_db: Read complete after 0s [id=2778282314][0m
+[0m[1maws_iam_role.ec2: Creation complete after 1s [id=cwm-bench-ec2-typical-scale-3x-r1-20261006][0m
+[0m[1maws_iam_role_policy_attachment.ssm: Creating...[0m[0m
+[0m[1maws_iam_instance_profile.ec2: Creating...[0m[0m
+[0m[1maws_iam_role_policy.app_ssm_db: Creating...[0m[0m
+[0m[1maws_iam_role_policy_attachment.ssm: Creation complete after 0s [id=cwm-bench-ec2-typical-scale-3x-r1-20261006-20261006222034120400000001][0m
+[0m[1maws_iam_role_policy.app_ssm_db: Creation complete after 0s [id=cwm-bench-ec2-typical-scale-3x-r1-20261006:read-db-password][0m
+[0m[1maws_db_parameter_group.main: Creation complete after 2s [id=cwm-bench-typical-scale-3x-r1-20261006][0m
+[0m[1maws_iam_instance_profile.ec2: Creation complete after 6s [id=cwm-bench-ec2-typical-scale-3x-r1-20261006][0m
+[0m[1maws_vpc.main: Still creating... [10s elapsed][0m[0m
+[0m[1maws_vpc.main: Creation complete after 13s [id=vpc-07f5ebc84ba9c947d][0m
+[0m[1maws_internet_gateway.main: Creating...[0m[0m
+[0m[1maws_security_group.generator: Creating...[0m[0m
+[0m[1maws_security_group.app: Creating...[0m[0m
+[0m[1maws_route_table.private: Creating...[0m[0m
+[0m[1maws_security_group.rds: Creating...[0m[0m
+[0m[1maws_security_group.alb: Creating...[0m[0m
+[0m[1maws_subnet.private[0]: Creating...[0m[0m
+[0m[1maws_subnet.public[0]: Creating...[0m[0m
+[0m[1maws_subnet.public[1]: Creating...[0m[0m
+[0m[1maws_lb_target_group.app: Creating...[0m[0m
+[0m[1maws_internet_gateway.main: Creation complete after 0s [id=igw-08768bd0693b92f44][0m
+[0m[1maws_subnet.private[1]: Creating...[0m[0m
+[0m[1maws_route_table.private: Creation complete after 0s [id=rtb-0a91ce6505de08a03][0m
+[0m[1maws_route_table.public: Creating...[0m[0m
+[0m[1maws_subnet.private[0]: Creation complete after 0s [id=subnet-031e33c3d3be3c8a1][0m
+[0m[1maws_lb_target_group.app: Creation complete after 1s [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/f1b63505c12e9c07][0m
+[0m[1maws_subnet.private[1]: Creation complete after 1s [id=subnet-0afa699084e1ee6e1][0m
+[0m[1maws_route_table_association.private[1]: Creating...[0m[0m
+[0m[1maws_db_subnet_group.main: Creating...[0m[0m
+[0m[1maws_route_table_association.private[0]: Creating...[0m[0m
+[0m[1maws_route_table_association.private[1]: Creation complete after 0s [id=rtbassoc-0749c3c150784ad99][0m
+[0m[1maws_route_table_association.private[0]: Creation complete after 0s [id=rtbassoc-0ddaa33e331119610][0m
+[0m[1maws_route_table.public: Creation complete after 2s [id=rtb-0d1587f66a900f7a4][0m
+[0m[1maws_security_group.rds: Creation complete after 2s [id=sg-01c399ed629dc3297][0m
+[0m[1maws_security_group.alb: Creation complete after 2s [id=sg-0348b36d51a171568][0m
+[0m[1maws_lb.main: Creating...[0m[0m
+[0m[1maws_security_group.generator: Creation complete after 2s [id=sg-0dd463ab4838041a2][0m
+[0m[1maws_vpc_security_group_egress_rule.generator_all: Creating...[0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_http_from_generator: Creating...[0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_https_from_generator: Creating...[0m[0m
+[0m[1maws_security_group.app: Creation complete after 2s [id=sg-0bf8de1f085e7a4a9][0m
+[0m[1maws_vpc_security_group_egress_rule.app_to_rds: Creating...[0m[0m
+[0m[1maws_vpc_security_group_egress_rule.app_http_out: Creating...[0m[0m
+[0m[1maws_vpc_security_group_egress_rule.alb_to_app: Creating...[0m[0m
+[0m[1maws_db_subnet_group.main: Creation complete after 1s [id=cwm-bench-typical-scale-3x-r1-20261006][0m
+[0m[1maws_vpc_security_group_ingress_rule.app_from_alb: Creating...[0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_http_from_generator: Creation complete after 0s [id=sgr-037206d76fa96bf79][0m
+[0m[1maws_vpc_security_group_egress_rule.generator_all: Creation complete after 0s [id=sgr-003c3d291f2503c97][0m
+[0m[1maws_vpc_security_group_egress_rule.app_https_out: Creating...[0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.rds_from_app: Creating...[0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_https_from_generator: Creation complete after 0s [id=sgr-0ded16be8ede55a83][0m
+[0m[1maws_vpc_security_group_egress_rule.app_http_out: Creation complete after 0s [id=sgr-009789b510430d523][0m
+[0m[1maws_db_instance.main: Creating...[0m[0m
+[0m[1maws_vpc_security_group_egress_rule.alb_to_app: Creation complete after 0s [id=sgr-02021467a21dcf20f][0m
+[0m[1maws_vpc_security_group_egress_rule.app_to_rds: Creation complete after 0s [id=sgr-0a32783c78ab9f8d8][0m
+[0m[1maws_vpc_security_group_egress_rule.app_https_out: Creation complete after 0s [id=sgr-00e08c892694ffd0a][0m
+[0m[1maws_vpc_security_group_ingress_rule.rds_from_app: Creation complete after 1s [id=sgr-044077faa4eb90e8e][0m
+[0m[1maws_vpc_security_group_ingress_rule.app_from_alb: Creation complete after 1s [id=sgr-02884103ec55e5e0d][0m
+[0m[1maws_subnet.public[1]: Still creating... [10s elapsed][0m[0m
+[0m[1maws_subnet.public[0]: Still creating... [10s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [10s elapsed][0m[0m
+[0m[1maws_subnet.public[1]: Creation complete after 13s [id=subnet-0557db4dd24f12d58][0m
+[0m[1maws_subnet.public[0]: Creation complete after 14s [id=subnet-08055d4272b807655][0m
+[0m[1maws_route_table_association.public[1]: Creating...[0m[0m
+[0m[1maws_route_table_association.public[0]: Creating...[0m[0m
+[0m[1maws_route_table_association.public[1]: Creation complete after 1s [id=rtbassoc-048e4524a27bd0535][0m
+[0m[1maws_route_table_association.public[0]: Creation complete after 1s [id=rtbassoc-07733abab51340834][0m
+[0m[1maws_lb.main: Still creating... [20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [20s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [30s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [40s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [50s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [1m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [1m0s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [1m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [1m10s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [1m20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [1m20s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [1m30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [1m30s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [1m40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [1m40s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [1m50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [1m50s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [2m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [2m0s elapsed][0m[0m
+[0m[1maws_lb.main: Still creating... [2m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [2m10s elapsed][0m[0m
+[0m[1maws_lb.main: Creation complete after 2m12s [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/4e0a6c0912a47e89][0m
+[0m[1maws_lb_listener.http: Creating...[0m[0m
+[0m[1maws_instance.generator: Creating...[0m[0m
+[0m[1maws_lb_listener.http: Creation complete after 1s [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:listener/app/cwm-bench-alb/4e0a6c0912a47e89/fe2aa69b03336a2d][0m
+[0m[1maws_db_instance.main: Still creating... [2m20s elapsed][0m[0m
+[0m[1maws_instance.generator: Still creating... [10s elapsed][0m[0m
+[0m[1maws_instance.generator: Creation complete after 14s [id=i-0bb04313e2d1b2c24][0m
+[0m[1maws_db_instance.main: Still creating... [2m30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [2m40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [2m50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [3m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [3m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [3m20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [3m30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [3m40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [3m50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [4m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [4m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [4m20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [4m30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [4m40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [4m50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [5m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [5m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [5m20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [5m30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [5m40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [5m50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [6m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still creating... [6m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Creation complete after 6m18s [id=db-KQTXV5OQB2YHQZXMJ3C6XCCPOE][0m
+[0m[1maws_instance.app[2]: Creating...[0m[0m
+[0m[1maws_instance.app[1]: Creating...[0m[0m
+[0m[1maws_instance.app[0]: Creating...[0m[0m
+[0m[1maws_instance.app[2]: Still creating... [10s elapsed][0m[0m
+[0m[1maws_instance.app[1]: Still creating... [10s elapsed][0m[0m
+[0m[1maws_instance.app[0]: Still creating... [10s elapsed][0m[0m
+[0m[1maws_instance.app[1]: Creation complete after 14s [id=i-02377d5322f41bc83][0m
+[0m[1maws_instance.app[2]: Creation complete after 14s [id=i-062cbfc37226941cf][0m
+[0m[1maws_instance.app[0]: Creation complete after 14s [id=i-09cac582fb5d2b061][0m
+[0m[1maws_lb_target_group_attachment.app[2]: Creating...[0m[0m
+[0m[1maws_lb_target_group_attachment.app[1]: Creating...[0m[0m
+[0m[1maws_lb_target_group_attachment.app[0]: Creating...[0m[0m
+[0m[1maws_cloudwatch_dashboard.main: Creating...[0m[0m
+[0m[1maws_lb_target_group_attachment.app[2]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/f1b63505c12e9c07-20261006222720642800000008][0m
+[0m[1maws_lb_target_group_attachment.app[0]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/f1b63505c12e9c07-20261006222720659700000009][0m
+[0m[1maws_lb_target_group_attachment.app[1]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/f1b63505c12e9c07-2026100622272074870000000a][0m
+[0m[1maws_cloudwatch_dashboard.main: Creation complete after 2s [id=cwm-bench-typical-scale-3x-r1-20261006][0m
+[0m[1m[32m
+Apply complete! Resources: 45 added, 0 changed, 0 destroyed.
+[0m[0m[1m[32m
+Outputs:
+
+[0malb_arn = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/4e0a6c0912a47e89"
+alb_dns = "internal-cwm-bench-alb-730075678.us-east-2.elb.amazonaws.com"
+ami_source = "variable"
+app_instance_ids = [
+  "i-09cac582fb5d2b061",
+  "i-02377d5322f41bc83",
+  "i-062cbfc37226941cf",
+]
+app_root_volume_ids = [
+  "vol-009cfd632d96685ca",
+  "vol-01dbf1ce8b616ec53",
+  "vol-0771769bae226814b",
+]
+dashboard_url = "https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#dashboards:name=cwm-bench-typical-scale-3x-r1-20261006"
+generator_instance_id = "i-0bb04313e2d1b2c24"
+generator_ip = "3.144.112.25"
+gp2_notes = {
+  "app_root_baseline_iops" = 90
+  "app_root_gb" = 30
+  "burst_iops" = 3000
+  "rds_baseline_iops" = 300
+  "rds_gb" = 100
+  "third_error_bucket" = "BurstBalance=0 is iops_throttle, distinct from CPU and DB connection failures"
+}
+rds_endpoint = "cwm-bench-typical-scale-3x-r1-20261006.cbqk8seu0evo.us-east-2.rds.amazonaws.com"
+rds_identifier = "cwm-bench-typical-scale-3x-r1-20261006"
+resolved_ami_id = <sensitive>
+target_group_arn = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/f1b63505c12e9c07"
+topology_declaration = {
+  "alb" = "application"
+  "app_count" = 3
+  "app_instance_type" = "m5.large"
+  "app_pool_size" = 250
+  "db_engine" = "mysql"
+  "db_engine_version" = "8.0"
+  "db_instance_class" = "db.r5.large"
+  "db_multi_az" = false
+  "generator_instance_type" = "c6i.xlarge"
+  "mysql_max_connections" = 500
+  "region" = "us-east-2"
+  "test_id" = "typical-scale-3x-r1-20261006"
+}

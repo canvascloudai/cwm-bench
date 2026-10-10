@@ -1,0 +1,17 @@
+{
+  "scenario": "typical-scale-1x-100",
+  "attempt": 1,
+  "runId": "typical-scale-1x-100-r3",
+  "completed": true,
+  "collectOk": true,
+  "retry": false,
+  "retryReason": null,
+  "historyPerturbed": false,
+  "runError": null,
+  "collectError": null,
+  "bounds": {
+    "start": "2026-10-09T17:58:59Z",
+    "end": "2026-10-09T18:19:00Z",
+    "complete": true
+  }
+}

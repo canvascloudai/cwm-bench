@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-08T23:17:32.678370+00:00",
+  "decision": "resume full cleanup preflight after two consecutive healthy read-only rounds",
+  "connectivityEvidence": ".local/private-cwm-scale/typical-scale-v1-20261006/out/verification/connectivity-1791497682350",
+  "completedAppliesDestroyed": 6,
+  "pendingApplyStarted": false,
+  "loadAttemptConsumed": false,
+  "amiUnchanged": true,
+  "revisionUnchanged": true,
+  "holdoutLockUnchanged": true,
+  "fullCleanupGateStillRequired": true
+}

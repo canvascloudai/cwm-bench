@@ -1,6 +1,6 @@
 # Results
 
-Raw results land here. The v1 owned campaign is summarized in `holdout/REPORT.md`. The typical campaign is summarized in `typical/REPORT.md` and `holdout/exports/typical-v1-20260927c.summary.md`, with collect JSON under `typical/campaign/`. The engine 1.2.5 after-fit holdout is in that report and in `typical/scores-after-fit.json`. The day and region holdouts `typical-holdouts-v1-20261006` are the last section of `typical/REPORT.md`, `holdout/exports/typical-holdouts-v1-20261006.summary.md`, and `typical/campaign/typical-holdouts-v1-20261006/`. This directory is still empty of run JSON on purpose (CI rejects `isExample: false` here).
+Raw results land here. The v1 owned campaign is summarized in `holdout/REPORT.md`. The typical campaign is summarized in `typical/REPORT.md` and `holdout/exports/typical-v1-20260927c.summary.md`, with collect JSON under `typical/campaign/`. The engine 1.2.5 after-fit holdout is in that report and in `typical/scores-after-fit.json`. The day and region holdouts `typical-holdouts-v1-20261006` are in `typical/REPORT.md`, `holdout/exports/typical-holdouts-v1-20261006.summary.md`, and `typical/campaign/typical-holdouts-v1-20261006/`. The app-server count campaign `typical-scale-v1-20261006` is the last section of `typical/REPORT.md`, `holdout/exports/typical-scale-v1-20261006.summary.md`, and `typical/campaign/typical-scale-v1-20261006/`. This directory is still empty of run JSON on purpose (CI rejects `isExample: false` here).
 
 ## Convention
 

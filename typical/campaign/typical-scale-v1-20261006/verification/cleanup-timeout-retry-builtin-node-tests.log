@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: preserves initial proof and separate attempt2 evidence for one timed-out read
+ok 1 - preserves initial proof and separate attempt2 evidence for one timed-out read
+  ---
+  duration_ms: 104.539992
+  ...
+# Subtest: permission errors remain unresolved without retry
+ok 2 - permission errors remain unresolved without retry
+  ---
+  duration_ms: 0.383455
+  ...
+# Subtest: second timeout remains unresolved with no third read
+ok 3 - second timeout remains unresolved with no third read
+  ---
+  duration_ms: 0.523845
+  ...
+# Subtest: a live resource found on retry still blocks cleanup
+ok 4 - a live resource found on retry still blocks cleanup
+  ---
+  duration_ms: 0.357612
+  ...
+# Subtest: nonempty live inventory cannot be cleared by absent retained ARN
+ok 5 - nonempty live inventory cannot be cleared by absent retained ARN
+  ---
+  duration_ms: 0.344828
+  ...
+# Subtest: both region inventories are required
+ok 6 - both region inventories are required
+  ---
+  duration_ms: 0.174888
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16472.004175

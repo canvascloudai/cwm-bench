@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-08T19:22:40.481180+00:00",
+  "reason": "Read-only tagging inventory exceeded 120-second timeout; AWS HTTPS connectivity diagnostic succeeded. Explicit pre-apply inspection authorizes one preflight retry.",
+  "applyStarted": false,
+  "loadStarted": false,
+  "priorSessionsDestroyed": true,
+  "measurementSettingsChanged": false,
+  "amiReResolved": false,
+  "holdoutLockUnchanged": true
+}

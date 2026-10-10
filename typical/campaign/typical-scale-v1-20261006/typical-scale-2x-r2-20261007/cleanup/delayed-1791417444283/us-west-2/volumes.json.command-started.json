@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-volumes",
+    "--filters",
+    "Name=tag:TestId,Values=typical-scale-2x-r2-20261007",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-07T23:57:50.738Z",
+  "stdoutFile": "volumes.json.stdout.txt",
+  "stderrFile": "volumes.json.stderr.txt"
+}

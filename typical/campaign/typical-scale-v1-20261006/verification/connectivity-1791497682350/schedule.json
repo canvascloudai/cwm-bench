@@ -1,0 +1,8 @@
+{
+  "createdAt": "2026-10-08T22:14:42.351Z",
+  "firstCheckAt": "2026-10-08T22:44:42.351Z",
+  "intervalMinutes": 30,
+  "maxRounds": 12,
+  "requiredConsecutiveHealthyRounds": 2,
+  "automaticApply": false
+}

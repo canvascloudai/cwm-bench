@@ -1,0 +1,136 @@
+{
+  "alb_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/5595e9b384b406fe"
+  },
+  "alb_dns": {
+    "sensitive": false,
+    "type": "string",
+    "value": "internal-cwm-bench-alb-1704356177.us-east-2.elb.amazonaws.com"
+  },
+  "ami_source": {
+    "sensitive": false,
+    "type": "string",
+    "value": "variable"
+  },
+  "app_instance_ids": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "i-066e323c6d0b9fd29",
+      "i-0aa5cff17753be624"
+    ]
+  },
+  "app_root_volume_ids": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "vol-0dbe8c3c7138dc2cd",
+      "vol-010d402c374348597"
+    ]
+  },
+  "dashboard_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#dashboards:name=cwm-bench-typical-scale-2x-r2-20261007"
+  },
+  "generator_instance_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "i-022797367c6b970bb"
+  },
+  "generator_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "18.218.92.81"
+  },
+  "gp2_notes": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "app_root_baseline_iops": "number",
+        "app_root_gb": "number",
+        "burst_iops": "number",
+        "rds_baseline_iops": "number",
+        "rds_gb": "number",
+        "third_error_bucket": "string"
+      }
+    ],
+    "value": {
+      "app_root_baseline_iops": 90,
+      "app_root_gb": 30,
+      "burst_iops": 3000,
+      "rds_baseline_iops": 300,
+      "rds_gb": 100,
+      "third_error_bucket": "BurstBalance=0 is iops_throttle, distinct from CPU and DB connection failures"
+    }
+  },
+  "rds_endpoint": {
+    "sensitive": false,
+    "type": "string",
+    "value": "cwm-bench-typical-scale-2x-r2-20261007.cbqk8seu0evo.us-east-2.rds.amazonaws.com"
+  },
+  "rds_identifier": {
+    "sensitive": false,
+    "type": "string",
+    "value": "cwm-bench-typical-scale-2x-r2-20261007"
+  },
+  "resolved_ami_id": {
+    "sensitive": true,
+    "type": "string",
+    "value": "ami-0d3d85815a9746bc5"
+  },
+  "target_group_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/0dadc953dbf5287e"
+  },
+  "topology_declaration": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "alb": "string",
+        "app_count": "number",
+        "app_instance_type": "string",
+        "app_pool_size": "number",
+        "db_engine": "string",
+        "db_engine_version": "string",
+        "db_instance_class": "string",
+        "db_multi_az": "bool",
+        "generator_instance_type": "string",
+        "mysql_max_connections": "number",
+        "region": "string",
+        "test_id": "string"
+      }
+    ],
+    "value": {
+      "alb": "application",
+      "app_count": 2,
+      "app_instance_type": "m5.large",
+      "app_pool_size": 250,
+      "db_engine": "mysql",
+      "db_engine_version": "8.0",
+      "db_instance_class": "db.r5.large",
+      "db_multi_az": false,
+      "generator_instance_type": "c6i.xlarge",
+      "mysql_max_connections": 500,
+      "region": "us-east-2",
+      "test_id": "typical-scale-2x-r2-20261007"
+    }
+  }
+}

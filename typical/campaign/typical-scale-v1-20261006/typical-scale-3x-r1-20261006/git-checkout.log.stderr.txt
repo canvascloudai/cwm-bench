@@ -1,0 +1,1 @@
+HEAD is now at 06e4048 Merge pull request #17 from canvascloudai/cursor/typical-scale-v1-c98c

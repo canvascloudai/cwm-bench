@@ -1,0 +1,18 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "get-command-invocation",
+    "--command-id",
+    "2e34bc2f-3889-4054-979d-d1c3cc2d2e4b",
+    "--instance-id",
+    "i-0bb04313e2d1b2c24",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T23:10:24.958Z",
+  "finalResponsePublished": true
+}

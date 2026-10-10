@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-08T18:34:45.731935+00:00",
+  "event": "Read-only due-time observer lost on workspace restart.",
+  "nextSession": 3,
+  "due": "2026-10-08T19:15:11.477Z",
+  "dueNow": false,
+  "priorSessionsDestroyed": true,
+  "historicalLockUnchanged": true,
+  "loadInterrupted": false,
+  "loadRepeated": false,
+  "timerLogSurvived": false
+}

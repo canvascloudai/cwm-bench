@@ -1,0 +1,11 @@
+{
+  "commandId": "9edd422f-b8d6-4ec2-96c0-c56ed2dd3a68",
+  "status": "Success",
+  "stdout": "identity={\"campaignId\":\"typical-scale-1x-r2-20261007\",\"runId\":\"typical-scale-1x-200-r2\",\"scenario\":\"typical-scale-1x-200\"}\nstarted_at=2026-10-07T19:44:37Z\ncompleted_at=2026-10-07T20:04:41Z\nexit_code=0\n",
+  "stderr": "",
+  "responseCode": 0,
+  "statusDetails": "Success",
+  "executionStartDateTime": "2026-10-07T20:04:58.083Z",
+  "executionEndDateTime": "2026-10-07T20:04:58.083Z",
+  "ok": true
+}

@@ -1,0 +1,11 @@
+{
+  "command": "terraform",
+  "args": [
+    "init",
+    "-reconfigure",
+    "-input=false"
+  ],
+  "startedAt": "2026-10-09T14:22:05.011Z",
+  "stdoutFile": "terraform-init-1791555722905.log.stdout.txt",
+  "stderrFile": "terraform-init-1791555722905.log.stderr.txt"
+}

@@ -1,0 +1,434 @@
+{
+  "parent": "typical-scale-v1-20261006",
+  "revision": "06e4048d9c6db5494dbb85da2911de4943a70383",
+  "sessions": [
+    "2026-10-06T19:08:58.245Z",
+    "2026-10-07T19:15:11.477Z"
+  ],
+  "slots": [
+    {
+      "campaign": "typical-scale-2x-r1-20261006",
+      "n": 2,
+      "rep": 1,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-2x-r1-20261006",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-2x-r1-20261006",
+      "schema": "cwm_s_typical_scale_2x_r1_20261006",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "attempts": [
+        {
+          "scenario": "typical-scale-2x-100",
+          "attempt": 1,
+          "runId": "typical-scale-2x-100-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T19:16:56Z",
+            "end": "2026-10-06T19:36:57Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-2x-200",
+          "attempt": 1,
+          "runId": "typical-scale-2x-200-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T19:38:17Z",
+            "end": "2026-10-06T19:58:20Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-2x-300",
+          "attempt": 1,
+          "runId": "typical-scale-2x-300-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T19:59:35Z",
+            "end": "2026-10-06T20:19:39Z",
+            "complete": true
+          }
+        }
+      ],
+      "finished": true
+    },
+    {
+      "campaign": "typical-scale-1x-r1-20261006",
+      "n": 1,
+      "rep": 1,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-1x-r1-20261006",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-1x-r1-20261006",
+      "schema": "cwm_s_typical_scale_1x_r1_20261006",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "attempts": [
+        {
+          "scenario": "typical-scale-1x-100",
+          "attempt": 1,
+          "runId": "typical-scale-1x-100-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T20:51:30Z",
+            "end": "2026-10-06T21:11:31Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-1x-200",
+          "attempt": 1,
+          "runId": "typical-scale-1x-200-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T21:12:55Z",
+            "end": "2026-10-06T21:32:59Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-1x-300",
+          "attempt": 1,
+          "runId": "typical-scale-1x-300-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T21:34:44Z",
+            "end": "2026-10-06T21:54:47Z",
+            "complete": true
+          }
+        }
+      ],
+      "finished": true
+    },
+    {
+      "campaign": "typical-scale-3x-r1-20261006",
+      "n": 3,
+      "rep": 1,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-3x-r1-20261006",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-3x-r1-20261006",
+      "schema": "cwm_s_typical_scale_3x_r1_20261006",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "attempts": [
+        {
+          "scenario": "typical-scale-3x-100",
+          "attempt": 1,
+          "runId": "typical-scale-3x-100-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T22:28:39Z",
+            "end": "2026-10-06T22:48:40Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-3x-200",
+          "attempt": 1,
+          "runId": "typical-scale-3x-200-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T22:50:02Z",
+            "end": "2026-10-06T23:10:06Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-3x-300",
+          "attempt": 1,
+          "runId": "typical-scale-3x-300-r1",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-06T23:11:24Z",
+            "end": "2026-10-06T23:31:28Z",
+            "complete": true
+          }
+        }
+      ],
+      "finished": true
+    },
+    {
+      "campaign": "typical-scale-1x-r2-20261007",
+      "n": 1,
+      "rep": 2,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-1x-r2-20261007",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-1x-r2-20261007",
+      "schema": "cwm_s_typical_scale_1x_r2_20261007",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "attempts": [
+        {
+          "scenario": "typical-scale-1x-100",
+          "attempt": 1,
+          "runId": "typical-scale-1x-100-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T19:23:16Z",
+            "end": "2026-10-07T19:43:17Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-1x-200",
+          "attempt": 1,
+          "runId": "typical-scale-1x-200-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T19:44:37Z",
+            "end": "2026-10-07T20:04:41Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-1x-300",
+          "attempt": 1,
+          "runId": "typical-scale-1x-300-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T20:05:53Z",
+            "end": "2026-10-07T20:25:57Z",
+            "complete": true
+          }
+        }
+      ],
+      "finished": true
+    },
+    {
+      "campaign": "typical-scale-3x-r2-20261007",
+      "n": 3,
+      "rep": 2,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-3x-r2-20261007",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-3x-r2-20261007",
+      "schema": "cwm_s_typical_scale_3x_r2_20261007",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "attempts": [
+        {
+          "scenario": "typical-scale-3x-100",
+          "attempt": 1,
+          "runId": "typical-scale-3x-100-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T20:58:16Z",
+            "end": "2026-10-07T21:18:17Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-3x-200",
+          "attempt": 1,
+          "runId": "typical-scale-3x-200-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T21:19:29Z",
+            "end": "2026-10-07T21:39:33Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-3x-300",
+          "attempt": 1,
+          "runId": "typical-scale-3x-300-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T21:40:49Z",
+            "end": "2026-10-07T22:00:53Z",
+            "complete": true
+          }
+        }
+      ],
+      "finished": true
+    },
+    {
+      "campaign": "typical-scale-2x-r2-20261007",
+      "n": 2,
+      "rep": 2,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-2x-r2-20261007",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-2x-r2-20261007",
+      "schema": "cwm_s_typical_scale_2x_r2_20261007",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "attempts": [
+        {
+          "scenario": "typical-scale-2x-100",
+          "attempt": 1,
+          "runId": "typical-scale-2x-100-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T22:34:09Z",
+            "end": "2026-10-07T22:54:10Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-2x-200",
+          "attempt": 1,
+          "runId": "typical-scale-2x-200-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T22:55:31Z",
+            "end": "2026-10-07T23:15:35Z",
+            "complete": true
+          }
+        },
+        {
+          "scenario": "typical-scale-2x-300",
+          "attempt": 1,
+          "runId": "typical-scale-2x-300-r2",
+          "completed": true,
+          "collectOk": true,
+          "retry": false,
+          "retryReason": null,
+          "historyPerturbed": false,
+          "runError": null,
+          "collectError": null,
+          "bounds": {
+            "start": "2026-10-07T23:16:41Z",
+            "end": "2026-10-07T23:36:45Z",
+            "complete": true
+          }
+        }
+      ],
+      "finished": true
+    },
+    {
+      "campaign": "typical-scale-3x-r3-20261008",
+      "n": 3,
+      "rep": 3,
+      "repeat": false,
+      "region": "us-east-2",
+      "repo": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-3x-r3-20261008",
+      "out": "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/out/typical-scale-3x-r3-20261008",
+      "schema": "cwm_s_typical_scale_3x_r3_20261008",
+      "applyAttempted": false,
+      "applied": false,
+      "destroyed": false,
+      "attempts": []
+    }
+  ],
+  "account": "REDACTED",
+  "ami": "ami-0d3d85815a9746bc5",
+  "holdoutLockHash": "1c8ee08ef9a17a249ccfda5122ddbc6687f89413bf2e2b7c7a5101a8fd3e3df5",
+  "lastEvent": {
+    "at": "2026-10-08T19:19:33.455Z",
+    "text": "CAMPAIGN_STOPPED AWS query failed: tagged.json"
+  },
+  "stopped": "AWS query failed: tagged.json"
+}

@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-security-group-rules",
+    "--filters",
+    "Name=tag:TestId,Values=typical-scale-3x-r3a-20261009",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-09T15:55:43.592Z",
+  "finalResponsePublished": true
+}

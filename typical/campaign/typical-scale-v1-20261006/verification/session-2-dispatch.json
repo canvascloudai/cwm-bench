@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-07T19:09:21.576557+00:00",
+  "due": "2026-10-07T19:08:58.245Z",
+  "session": 2,
+  "order": [
+    1,
+    3,
+    2
+  ],
+  "parent": "typical-scale-v1-20261006",
+  "revision": "06e4048d9c6db5494dbb85da2911de4943a70383",
+  "ami": "ami-0d3d85815a9746bc5",
+  "priorSessionDestroyed": true,
+  "holdoutLockUnchanged": true
+}

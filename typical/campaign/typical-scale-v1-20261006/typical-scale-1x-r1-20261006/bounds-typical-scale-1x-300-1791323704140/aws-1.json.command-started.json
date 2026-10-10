@@ -1,0 +1,24 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--instance-ids",
+    "i-06dc283bf14a85996",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--comment",
+    "cwm-bench worker-adapter",
+    "--timeout-seconds",
+    "60",
+    "--parameters",
+    "{\"commands\":[\"set -eu\\nDIR='/opt/cwm-bench/results/raw/typical-scale-1x-r1-20261006/typical-scale-1x-300-r1'\\nprintf \\\"identity=%s\\\\n\\\" \\\"$(cat \\\"$DIR/identity.json\\\")\\\"\\nprintf \\\"started_at=%s\\\\n\\\" \\\"$(cat \\\"$DIR/started_at\\\")\\\"\\nif [ -f \\\"$DIR/completed_at\\\" ]; then printf \\\"completed_at=%s\\\\n\\\" \\\"$(cat \\\"$DIR/completed_at\\\")\\\"; fi\\nif [ -f \\\"$DIR/exit.code\\\" ]; then printf \\\"exit_code=%s\\\\n\\\" \\\"$(cat \\\"$DIR/exit.code\\\")\\\"; fi\"]}",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-06T21:55:04.146Z",
+  "stdoutFile": "aws-1.json.stdout.txt",
+  "stderrFile": "aws-1.json.stderr.txt"
+}

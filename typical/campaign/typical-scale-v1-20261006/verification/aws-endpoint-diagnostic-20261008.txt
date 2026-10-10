@@ -1,0 +1,6 @@
+2026-10-08T19:21:14Z
+77.112.94.14    STREAM tagging.us-east-2.amazonaws.com
+77.112.94.14    DGRAM  
+77.112.94.14    RAW    
+Tagging endpoint: HTTP 404; connect=0.097096; TLS=0.258757; total=0.322909
+STS endpoint: HTTP 302; connect=0.094893; TLS=0.170538; total=0.240182

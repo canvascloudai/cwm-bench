@@ -1,0 +1,23 @@
+{
+  "command": "aws",
+  "args": [
+    "resourcegroupstaggingapi",
+    "get-resources",
+    "--resources-per-page",
+    "1",
+    "--no-paginate",
+    "--tag-filters",
+    "Key=Project,Values=cwm-bench",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json",
+    "--cli-connect-timeout",
+    "10",
+    "--cli-read-timeout",
+    "20"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-08T23:15:22.103Z",
+  "finalResponsePublished": true
+}

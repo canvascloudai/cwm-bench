@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "version",
+    "-json"
+  ],
+  "startedAt": "2026-10-08T19:17:04.080Z",
+  "stdoutFile": "terraform-version-1791487024061.json.stdout.txt",
+  "stderrFile": "terraform-version-1791487024061.json.stderr.txt"
+}

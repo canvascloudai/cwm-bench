@@ -1,0 +1,12 @@
+{
+  "command": "terraform",
+  "args": [
+    "apply",
+    "-input=false",
+    "-auto-approve",
+    "/home/runner/workspace/.local/private-cwm-scale/typical-scale-v1-20261006/checkout-typical-scale-3x-r1-20261006/terraform/private-scale.tfplan"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-06T22:27:22.443Z",
+  "finalResponsePublished": true
+}

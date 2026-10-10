@@ -1,0 +1,2 @@
+
+An error occurred (InvalidSubnetID.NotFound) when calling the DescribeSubnets operation: The subnet ID 'subnet-060a69a7ac0207f7f' does not exist

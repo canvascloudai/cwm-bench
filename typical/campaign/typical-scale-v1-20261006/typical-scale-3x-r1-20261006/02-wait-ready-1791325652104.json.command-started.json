@@ -1,0 +1,11 @@
+{
+  "command": "node",
+  "args": [
+    "scripts/worker-adapter.mjs",
+    "wait-ready",
+    "--json"
+  ],
+  "startedAt": "2026-10-06T22:27:32.105Z",
+  "stdoutFile": "02-wait-ready-1791325652104.json.stdout.txt",
+  "stderrFile": "02-wait-ready-1791325652104.json.stderr.txt"
+}

@@ -2,7 +2,7 @@
 
 Campaign `typical-v1-20260927c`, one attempt per key, region us-east-2, adapter 1.3.0. The app booted from measurement commit `6aa574d7ff9d3080b88b221bcd59f7d218ae37f0`. Both app nodes reported that git SHA, profile `typical`, and 2 workers.
 
-The before-fit numbers below were checked against the collect JSON in `typical/campaign/typical-v1-20260927c/` and against `typical/PREDICTIONS.md`. Reproduce those scores with `python3 typical/score.py`. Exact floats are in `typical/scores.json` and `holdout/exports/typical-v1-20260927c.summary.md`. The after-fit result is the next section. Its numbers come only from `typical/scores-after-fit.json`. The day and region holdouts are the last section. Their numbers come from `typical/scores-holdouts-v1-20261006.json`.
+The before-fit numbers below were checked against the collect JSON in `typical/campaign/typical-v1-20260927c/` and against `typical/PREDICTIONS.md`. Reproduce those scores with `python3 typical/score.py`. Exact floats are in `typical/scores.json` and `holdout/exports/typical-v1-20260927c.summary.md`. The after-fit result is the next section. Its numbers come only from `typical/scores-after-fit.json`. The day and region holdouts follow that section. Their numbers come from `typical/scores-holdouts-v1-20261006.json`. The app-server count change is the last section. Its numbers come from `typical/scores-scale-v1-20261006.json` and `holdout/exports/typical-scale-v1-20261006.summary.md`.
 
 Two earlier setup attempts (`typical-v1-20260927` and `typical-v1-20260927b`) stopped in preflight before Terraform init or apply: one failed on a checkout verification problem and the other on a region comparison bug in the capability check, and neither provisioned a stack or produced measurements. `typical-v1-20260927c` is the only measured campaign, and each scenario key ran once.
 
@@ -291,4 +291,106 @@ Measured cost is missing on every rung. Both cost figures are references, not a 
 - **Cleanup.** Destroy finished at 03:14:22Z (east) and 04:10:51Z (west). Both Terraform states are empty, and direct checks found no live instances, volumes, rules, or RDS. The strict tag inventory still listed 14 ARNs in the east and 16 in the west at 04:26Z. Each was classified `terminated` (3 per region) or `not-found` (east 15 including earlier subnets, west 13). The runner exited 1 and its strict safety lock is retained. Same tag-lag pattern as typical-v1.
 - **`artifacts.files` listing.** Every new collect contains stray `}`, `},`, `]` and `],` entries (44 to 48 per file) beside the 8 real file names. The same junk is in the typical-v1 1.3.0 collects. Summary and identity are present, and k6 counters are consistent.
 - **Capability `primaryRegion`.** The capability document says `us-east-1`. The typical keys enforced us-east-2 and us-west-2 as section 12 requires.
+
+## App-server count change (typical-scale-v1-20261006)
+
+Campaign `typical-scale-v1-20261006` measures the frozen typical-v1 workload on 1, 2, and 3 × m5.large app servers at 100, 200, and 300 RPS. It was preregistered in `typical/scale-v1/PREREGISTRATION.md` at merge commit `06e4048d9c6db5494dbb85da2911de4943a70383`. Predictions are the engine 1.2.14 freeze in `typical/scale-v1/predictions/predictions.json`. The calibration id is unchanged: `aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0`. AMI `ami-0d3d85815a9746bc5` is pinned. Adapter 1.5.0. Region us-east-2. Nothing was refit. `typical/scores-after-fit.json`, `typical/after-fit/score_export.py`, `typical/scale-v1/predictions/`, `typical/scale-v1/PREREGISTRATION.md` §2–§8, and `typical/PREREGISTRATION.md` §8 are unchanged.
+
+Nine scored applies, three repetitions each, ladder 100 → 200 → 300: 27 rungs. Sessions are S1 2026-10-06, S2 2026-10-07, and S3 2026-10-09 (the 3× rep is the `r3a` replacement). Evidence is in `typical/campaign/typical-scale-v1-20261006/`. The per-cell table, composites, deltas, and claims below are the figures in `holdout/exports/typical-scale-v1-20261006.summary.md` and `typical/scores-scale-v1-20261006.json`. Per-rung rows are in `holdout/exports/typical-scale-v1-20261006.metrics.csv`.
+
+### Integrity
+
+Integrity passed. All 27 rungs completed on attempt 1. The scorer's checks passed: adapter 1.5.0, `app_count` equal to N, CloudWatch windows from the persisted run, pinned AMI `ami-0d3d85815a9746bc5`, and pinned SHA `06e4048d9c6db5494dbb85da2911de4943a70383`. The scores file records `integrity.passed: true`, `failures: []`, 27 rungs, and 10 apply directories. The tenth apply is the no-load failed `typical-scale-3x-r3-20261008`, kept in the evidence and not scored as a rung.
+
+### Transition verdicts
+
+Both verdicts are **Does not predict the change**.
+
+- **2→1.** Failing: 300 p95 direction (meas up, pred none); 300 err direction (meas up, pred none); 300 C8 errors (pred +0.0000 pp vs meas +0.0146 pp); P95 magnitude within ×/÷2 at 1/3 rungs (judged only where measured direction is up/down: 100:none, 200:none, 300:up).
+- **2→3.** Failing: 300 p95 direction (meas down, pred none); P95 magnitude within ×/÷2 at 1/3 rungs (judged only where measured direction is up/down: 100:none, 200:none, 300:down).
+
+CPU direction and magnitude passed at every rung (100, 200, and 300, both transitions). P95 at 300 RPS did not. Measured change was +129.9% (2→1) and -49.8% (2→3). CWM's predicted direction was none (+41.6% and -13.9%, inside the 1.899 detection band). The 1×-300 error rise of +0.0146 pp failed C8.
+
+### Absolute scores (median of 3 reps)
+
+Displayed cells are the export summary's rounding. Exact floats are in the scores JSON. `total connector` and `total no-egress` are the page-style composites; the bracket is the min–max of the three per-rep totals. `no-cost` is the median cell without cost. `meas.cost` is the list-price reference (0.3585 / 0.4545 / 0.5505 USD per hour for 1× / 2× / 3×), not a measured bill. The no-egress cost prediction is the same reference, so that cost score is 100.
+
+| Cell | kind | CPU % | P50 ms | P95 ms | goodput rps | err % | DB CPU % | total connector [min–max] | total no-egress [min–max] | no-cost | P99 diag |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1x-100 | owned-scaled | 9.97 / 9.98 | 3.52 / 4.52 | 9.13 / 11.01 | 87.62 / 87.56 | 0.0029 / 0 | 12.37 / 11.4 | 85.2 [77.6–89.6] | 89.1 [81.5–93.6] | 87.9 | 97.0 |
+| 1x-200 | owned-scaled | 17.88 / 19.50 | 4.00 / 4.17 | 37.45 / 14.56 | 175.11 / 175.05 | 0.0067 / 0 | 19.02 / 18.6 | 74.2 [72.0–76.0] | 82.1 [79.8–83.8] | 80.1 | 80.8 |
+| 1x-300 | owned-scaled | 27.49 / 29.03 | 4.18 / 4.17 | 94.99 / 18.11 | 262.58 / 262.54 | 0.0168 / 0 | 26.70 / 25.8 | 64.5 [64.0–65.0] | 74.5 [74.0–75.0] | 71.7 | 60.4 |
+| 2x-100 | owned | 4.93 / 5.21 | 4.76 / 4.88 | 8.36 / 9.23 | 87.62 / 87.62 | 0.0038 / 0 | 11.91 / 11.4 | 92.5 [91.2–93.9] | 95.7 [94.4–97.1] | 95.2 | 93.2 |
+| 2x-200 | owned | 9.33 / 9.98 | 5.03 / 4.52 | 15.09 / 11.01 | 175.12 / 175.11 | 0.0024 / 0 | 18.80 / 18.6 | 83.6 [74.8–89.5] | 89.8 [81.1–95.8] | 88.7 | 96.7 |
+| 2x-300 | owned | 13.83 / 14.74 | 5.11 / 4.17 | 41.31 / 12.78 | 262.60 / 262.60 | 0.0022 / 0 | 26.33 / 25.8 | 68.4 [68.1–70.9] | 77.7 [77.5–80.3] | 75.3 | 83.8 |
+| 3x-100 | owned-scaled | 3.49 / 3.63 | 4.85 / 5.00 | 8.74 / 8.64 | 87.62 / 87.68 | 0.0000 / 0 | 11.66 / 11.4 | 95.8 [94.0–95.8] | 98.4 [96.6–98.4] | 98.2 | 91.3 |
+| 3x-200 | owned-scaled | 6.64 / 6.80 | 4.80 / 4.76 | 12.05 / 9.83 | 175.11 / 175.18 | 0.0052 / 0 | 18.56 / 18.6 | 89.6 [85.3–89.8] | 94.7 [90.4–94.9] | 94.1 | 93.5 |
+| 3x-300 | owned-scaled | 9.35 / 9.98 | 4.56 / 4.52 | 20.74 / 11.01 | 262.61 / 262.67 | 0.0035 / 0 | 25.44 / 25.8 | 79.0 [77.1–81.4] | 86.8 [84.9–89.2] | 85.3 | 92.4 |
+
+### C9 diminishing returns
+
+- 100 RPS: gain12 1.09, gain23 0.96 (pred 1.19/1.07); 2→1 P95 none, 2→3 P95 none (pred none); DB none/none → measured DR **does not hold**, CWM captures: True
+- 200 RPS: gain12 2.48, gain23 1.25 (pred 1.32/1.12); 2→1 P95 none, 2→3 P95 none (pred none); DB none/none → measured DR **does not hold**, CWM captures: True
+- 300 RPS: gain12 2.30, gain23 1.99 (pred 1.42/1.16); 2→1 P95 up, 2→3 P95 down (pred none); DB none/none → measured DR **holds**, CWM captures: False
+
+Diminishing returns holds at 300 RPS (gain 2.30× vs 1.99×, DB CPU flat). CWM does not capture it. It does not hold at 100 or 200 RPS.
+
+### C1 baseline
+
+`BASELINE_DRIFT` is a reported flag, not a campaign failure. Two flags are set, both low:
+
+- 100: cpu 4.926 in [4.792, 6.258], p50 4.759 in [3.776, 6.528], p95 8.364 in [5.947, 12.56], thr 87.62 in [87.62, 87.63], err 0.003804 in [0, 0.005753], db 11.91 in [9.806, 15.79]
+- 200: cpu 9.334 in [9.119, 10.89], p50 5.028 in [3.841, 5.531], p95 15.09 in [6.003, 21.65], thr 175.1 in [175.1, 175.2], err 0.002379 in [0.003286, 0.009086] **BASELINE_DRIFT**, db 18.8 in [15.79, 21.83]
+- 300: cpu 13.83 in [14.56, 16.91] **BASELINE_DRIFT**, p50 5.105 in [4.126, 5.797], p95 41.31 in [14.17, 97.08], thr 262.6 in [262.5, 262.7], err 0.002221 in [0.0009077, 0.009565], db 26.33 in [22.71, 36.95]
+
+### C12 connection limits
+
+Zero `too_many_connections` and zero `queue_full` errors in every cell. The 3× peak was 243 connections, against `max_connections` 500. CWM predicted `errorRate` 0 in every cell. Pool warnings are on 1× (250 ceiling) and 3× (750 vs 500).
+
+| cell | budget | too_many_connections | queue_full | per-rep errors (classes) | DB conn max per rep | spike minute UTC per rep |
+|---|---|---|---|---|---|---|
+| 1x-100 | 250 | 0 | 0 | {'unclassified': 1}; {'unclassified': 3}; {'unclassified': 4} | 89, 38, 19 | 21:00, 19:30, 18:15 |
+| 1x-200 | 250 | 0 | 0 | {'unclassified': 24}; {'unclassified': 13}; {'unclassified': 14} | 113, 211, 89 | 21:30, 20:00, 18:30 |
+| 1x-300 | 250 | 0 | 0 | {'unclassified': 56}; {'unclassified': 53}; {'unclassified': 37} | 123, 210, 90 | 21:47, 20:06, 18:46 |
+| 2x-100 | 500 | 0 | 0 | {'unclassified': 7}; {'unclassified': 2}; {'unclassified': 4} | 39, 21, 19 | 19:33, 22:48, 16:22 |
+| 2x-200 | 500 | 0 | 0 | {'unclassified': 5}; {'unclassified': 4}; {'unclassified': 8} | 41, 153, 43 | 19:45, 23:02, 16:45 |
+| 2x-300 | 500 | 0 | 0 | {'unclassified': 7}; {'unclassified': 6}; {'unclassified': 12} | 72, 158, 336 | 20:15, 23:30, 17:03 |
+| 3x-100 | 750 | 0 | 0 | none; {'unclassified': 3}; none | 24, 28, 26 | 22:45, 21:11, 14:45 |
+| 3x-200 | 750 | 0 | 0 | {'unclassified': 13}; {'unclassified': 11}; {'unclassified': 10} | 243, 83, 162 | 23:05, 21:30, 15:00 |
+| 3x-300 | 750 | 0 | 0 | {'unclassified': 12}; {'unclassified': 7}; {'unclassified': 11} | 243, 84, 212 | 23:17, 21:42, 15:30 |
+
+### C13 naive per-node CPU reference
+
+The §5.3 reference equals CWM's frozen CPU in all 9 cells to 3 decimals, so C13 results are identical to C3/C4. Direction and ±20% magnitude pass at all 6 transition rungs.
+
+### RDS engine version (possible confound)
+
+Sessions 1–2 reported `8.0.46`. Session 3 (rep 3) reported `8.0.46-rds.20260908`. The scores file records `rdsSameBuildAcrossSessions: false`. The export summary marks that as a possible confound limited to session 3. `typical/campaign/typical-scale-v1-20261006/README-execution.md` lists the verbatim versions and says it does not interpret performance.
+
+Session 3 started after three stopped preflight attempts from AWS CLI read timeouts. The original 3× apply, `typical-scale-3x-r3-20261008`, started at 2026-10-08T23:23:57.099Z, reported `8.0.46-rds.20260908`, passed app readiness, and ran no load: the controller's numeric-only version check rejected that identifier. It was destroyed. The creator approved one fresh replacement, `typical-scale-3x-r3a-20261009` (apply start 2026-10-09T14:22:23.079Z), with the same Terraform defaults, AMI, SHA, profile, workers, pool, connection limit, and ladder. The scored session-3 applies are that replacement plus `typical-scale-2x-r3-20261009` and `typical-scale-1x-r3-20261009`, all on 2026-10-09.
+
+| Apply | EngineVersion | Apply start |
+| --- | --- | --- |
+| typical-scale-1x-r1-20261006 | `8.0.46` | 2026-10-06T20:43:17.954Z |
+| typical-scale-1x-r2-20261007 | `8.0.46` | 2026-10-07T19:15:11.477Z |
+| typical-scale-1x-r3-20261009 | `8.0.46-rds.20260908` | 2026-10-09T17:50:52.232Z |
+| typical-scale-2x-r1-20261006 | `8.0.46` | 2026-10-06T19:08:58.245Z |
+| typical-scale-2x-r2-20261007 | `8.0.46` | 2026-10-07T22:26:05.538Z |
+| typical-scale-2x-r3-20261009 | `8.0.46-rds.20260908` | 2026-10-09T16:03:40.054Z |
+| typical-scale-3x-r1-20261006 | `8.0.46` | 2026-10-06T22:20:29.188Z |
+| typical-scale-3x-r2-20261007 | `8.0.46` | 2026-10-07T20:49:50.510Z |
+| typical-scale-3x-r3-20261008 | `8.0.46-rds.20260908` | 2026-10-08T23:23:57.099Z |
+| typical-scale-3x-r3a-20261009 | `8.0.46-rds.20260908` | 2026-10-09T14:22:23.079Z |
+
+### Reproduction
+
+`python3 typical/scale-v1/score_scale.py typical/campaign/typical-scale-v1-20261006 <repo> <dest>` scores the evidence against the frozen predictions. It loads `rel`, `errs`, and `W` from `typical/after-fit/score_export.py` unchanged. That command reproduces `typical/scores-scale-v1-20261006.json` and `holdout/exports/typical-scale-v1-20261006.metrics.csv`.
+
+### Later P95 recalibration
+
+These 27 rungs are validation of the frozen 1.2.14 predictions. A future P95 recalibration fitted on this campaign would make these runs fit data rather than holdouts. That recalibration would need a new holdout run. This publish leaves the engine, the calibration id, and `calibrate/coefficients.yaml` unchanged.
+
+### Redaction
+
+The committed tree is the redacted campaign archive. The account id, IAM user ARNs, IAM unique ids, and app-node public IPs and DNS names are `REDACTED`. The note is `typical/campaign/typical-scale-v1-20261006/REDACTION.md`. Instance ids, ALB DNS, the RDS identifier and endpoint, the AMI, and `generator_ip` are kept, as in `typical-holdouts-v1-20261006`.
 

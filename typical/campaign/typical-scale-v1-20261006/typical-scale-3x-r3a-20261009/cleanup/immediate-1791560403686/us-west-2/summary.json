@@ -1,0 +1,12 @@
+{
+  "region": "us-west-2",
+  "checkedAt": "2026-10-09T15:40:27.569Z",
+  "campaigns": [
+    "typical-scale-3x-r3a-20261009"
+  ],
+  "taggedArns": [],
+  "liveInstanceIds": [],
+  "volumeIds": [],
+  "ruleIds": [],
+  "rdsIds": []
+}
