@@ -1,6 +1,6 @@
 # typical-p95-v1 candidate predictions
 
-Frozen candidate model for `typical/p95-v1`. These files are the scored predictor. The engine baseline is not here; it belongs in `engine-baseline/` after the MCP freeze.
+Frozen candidate model for `typical/p95-v1`. These files are the scored predictor. The engine baseline is frozen in `engine-baseline/` (engine 1.2.18).
 
 | File | Role |
 | --- | --- |
@@ -8,4 +8,4 @@ Frozen candidate model for `typical/p95-v1`. These files are the scored predicto
 | `predict_p95.py` | Stdlib only. No fitting. `python3 predict_p95.py` prints `model-predictions.csv`. |
 | `model-predictions.csv` | The nine cell central values `score_p95_v1.py` reads. It does not recompute them from the formula at score time. |
 
-`engine-baseline/` is intentionally empty apart from its README.
+`engine-baseline/` holds the frozen engine 1.2.18 baseline. `score_p95_v1.py` loads `engine-baseline/predictions.json`.

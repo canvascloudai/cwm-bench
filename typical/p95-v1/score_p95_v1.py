@@ -2,7 +2,7 @@
 """Score typical-p95-v1 from local files only.
 
 Candidate centrals come from predictions/model-predictions.csv.
-Engine centrals come from a frozen file under predictions/engine-baseline/.
+Engine centrals come from predictions/engine-baseline/predictions.json.
 This script does not query a live engine and does not refit.
 
 Usage:
@@ -787,7 +787,7 @@ def main(argv):
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--evidence")
     parser.add_argument("--predictions", default=str(HERE / "predictions" / "model-predictions.csv"))
-    parser.add_argument("--engine", default=str(HERE / "predictions" / "engine-baseline" / "engine-predictions.json"))
+    parser.add_argument("--engine", default=str(HERE / "predictions" / "engine-baseline" / "predictions.json"))
     parser.add_argument("--out")
     args = parser.parse_args(argv)
     if args.dry_run:

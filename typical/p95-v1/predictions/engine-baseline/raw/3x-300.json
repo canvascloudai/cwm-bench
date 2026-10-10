@@ -1,0 +1,69 @@
+{
+ "cell": "3x-300",
+ "simulationId": "1f7983e4-d77a-4614-8312-8142a812993f",
+ "nodes": 3,
+ "rps": 300,
+ "engineVersion": "1.2.18",
+ "calibrationEvidence": {
+  "kind": "owned-scaled",
+  "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+  "fitSourceEngine": "1.2.3",
+  "equivalentTwoServerFitLoadRps": 200
+ },
+ "effectiveConfigHash": "d962a197ad8cc191aa9d9309f0b0cf44c794db7fc57ceed67c8062cf6386736f",
+ "predictionEffectiveConfigHash": "d962a197ad8cc191aa9d9309f0b0cf44c794db7fc57ceed67c8062cf6386736f",
+ "appCpuPerHost": 9.978,
+ "appCpuMean": 9.978,
+ "appCpuByResource": {
+  "app-1": 9.978,
+  "app-2": 9.978,
+  "app-3": 9.978
+ },
+ "dbCpu": 25.8,
+ "latencyP50": 4.522396967213114,
+ "latencyP95": 11.009235083606534,
+ "latencyP99": 87.10211997786887,
+ "stepResponseRounded": {
+  "latencyP50": 4.522397,
+  "latencyP95": 11.009235,
+  "latencyP99": 87.10212
+ },
+ "throughput": 262.66776,
+ "errorRate": 0,
+ "errorBreakdown": "all 13 components 0",
+ "costPerHour": 0.98,
+ "costBreakdownTotal": 0.976022,
+ "egressCostPerHour": 0.425522,
+ "currentStep": 6,
+ "connectionDemand": {
+  "loadDerivedConnections": 60,
+  "connectionPressure": 0.12,
+  "declaredFleetConnectionBudget": 750,
+  "declaredFleetConnectionPressure": 1.5
+ },
+ "predictionEvidence": {
+  "appCpu": {
+   "low": 3.9912,
+   "central": 9.978,
+   "high": 15.9648
+  },
+  "latencyP50": {
+   "low": 2.261198483606557,
+   "central": 4.522396967213114,
+   "high": 6.7835954508196705
+  },
+  "latencyP95": {
+   "low": 5.504617541803267,
+   "central": 11.009235083606534,
+   "high": 16.5138526254098
+  },
+  "latencyP99": {
+   "low": 43.55105998893443,
+   "central": 87.10211997786887,
+   "high": 130.6531799668033
+  },
+  "loadScope": "within measured load",
+  "evidenceLevel": "scaled from measured"
+ },
+ "harvestPath": "create (full predictionEvidence) + step (compact) + cost_breakdown; no enum rejection this time"
+}

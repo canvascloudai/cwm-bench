@@ -1,8 +1,8 @@
 # cwm-bench `typical-p95-v1`: P95 model validation holdout (1× / 2× / 3× m5.large, reverse ladder), pre-registration
 
-Status: **FINAL.** Predictions are frozen for the candidate model; the engine baseline freeze is pending. Nothing applied on AWS, nothing filed in Replit. Written 2026-10-10. Owner: Kevin Brown.
+Status: **FINAL.** Predictions are frozen for the candidate model. The engine baseline is frozen (1.2.18). This commit's SHA is `measurement_sha`. Nothing applied on AWS, nothing filed in Replit. Written 2026-10-10. Owner: Kevin Brown.
 Rev 2 applies an external review: adds 1×, splits the result into two verdicts that are reported separately, renames the bands as acceptance tolerances, fixes the scoring window, freezes the invalidation and budget rules, and corrects the criterion-(c) wording.
-The candidate model in `predictions/` is frozen with this FINAL copy. `measurement_sha` is the later evidence-package commit that also contains the filled engine baseline (`predictions/engine-baseline/`). That package is committed only after Kevin approves §12. After that freeze, any change to §2–§8 means a new campaign version (`typical-p95-v2`).
+The candidate model in `predictions/` and the engine baseline in `predictions/engine-baseline/` are frozen with this commit. This commit's SHA is `measurement_sha`. After this freeze, any change to §2–§8 means a new campaign version (`typical-p95-v2`).
 
 Labels: **[FACT]** in the repo or a saved artifact, cited inline · **[DECISION]** a choice for this campaign · **[ASSUMPTION]** an unverified premise · **[DERIVED]** arithmetic, shown.
 
@@ -116,7 +116,7 @@ Predicted server-change ratios, R = P95(fewer servers) / P95(more servers):
 ### 5.4 Evidence package: one commit before the first apply; its SHA is `measurement_sha` [DECISION]
 All in `typical/p95-v1/` in `canvascloudai/cwm-bench`:
 1. **Predictor 1:** `predictions/recommended-params.json` (byte-identical to the model folder copy, sha256 recorded), `predict_p95.py` (stdlib only, no fitting) and its output `predictions/model-predictions.csv`.
-2. **Predictor 2:** `predictions/engine-baseline/`, the 9 MCP request/response JSONs plus `engine-version.txt` with the returned version and calibration id. That directory stays empty until the MCP freeze (`predictions/engine-baseline/README.md`).
+2. **Predictor 2:** `predictions/engine-baseline/predictions.json` (engine 1.2.18, nine `latencyP95` centrals), `FROZEN.md`, `call-log.json` (simulation ids), `payloads/` (exact create request bodies), and `raw/` (harvested response fields per cell). Full raw response bodies were not saved as separate files. See `predictions/engine-baseline/README.md`.
 3. **Instrumentation choices:** k6 per-minute export format; whether event-loop lag and pool wait are on (D7) and how they are sampled; the ladder parameter `[300,200,100]`; warmup 5m / steady 15m; a note that k6 has no thresholds (§4.1).
 4. **Scoring code:** `score_p95_v1.py` (medians, tolerance check, page scores, criteria a/b/c, server-change criteria, invalidation checks), with this prereg's numbers as constants. It is tested on scale-v1 data, and the test must reproduce the §5.3 scale-v1 medians.
 5. **This prereg** (frozen copy), `simulate_pass_rates.py`, and the decisions table (§12) as approved.

@@ -332,7 +332,7 @@ The holdouts ended with the runner's strict safety lock retained: tag inventory 
 
 ## 12. P95 model validation (typical-p95-v1)
 
-These nine applies are not part of section 6, section 10, or section 11. The frozen plan is `typical/p95-v1/PREREGISTRATION.md`. The candidate predictions are frozen in `typical/p95-v1/predictions/model-predictions.csv`. Do not recompute them and do not query a live engine to score them. The engine baseline is `typical/p95-v1/predictions/engine-baseline/`. Leave that directory empty until the MCP freeze writes the 9 cells (same graphs as `typical/scale-v1/predictions/create-payload-<N>x-<RPS>.json` at the matching N and RPS) and the `engineVersion` that freeze returns. The commit that contains the filled baseline is `<SHA>` / `measurement_sha`. Do not apply before that commit exists. Do not change instance types, pool size, workers, the request mix, warmup, or duration.
+These nine applies are not part of section 6, section 10, or section 11. The frozen plan is `typical/p95-v1/PREREGISTRATION.md`. The candidate predictions are frozen in `typical/p95-v1/predictions/model-predictions.csv`. Do not recompute them and do not query a live engine to score them. The engine baseline is frozen in `typical/p95-v1/predictions/engine-baseline/` (engine 1.2.18, `predictions.json`). The commit that contains that baseline is `<SHA>` / `measurement_sha`. Do not apply on any other SHA. Do not change instance types, pool size, workers, the request mix, warmup, or duration.
 
 `<AMI>` is one id for all nine applies. Resolve it once before session 1 and record it in the campaign note. This runbook does not name an AMI, because the wiring commit did not query AWS.
 
@@ -364,7 +364,7 @@ On every apply the ladder is 300, then 200, then 100, on that same fresh stack. 
 ```bash
 APPLY=typical-p95-${N}x-r${K}-YYYYMMDD
 git clone https://github.com/canvascloudai/cwm-bench.git cwm-bench-$APPLY && cd cwm-bench-$APPLY
-git checkout --detach <SHA> && test -f typical/p95-v1/PREREGISTRATION.md && test -f typical/p95-v1/predictions/engine-baseline/engine-version.txt && mkdir -p out
+git checkout --detach <SHA> && test -f typical/p95-v1/PREREGISTRATION.md && test -f typical/p95-v1/predictions/engine-baseline/predictions.json && mkdir -p out
 export AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 CWM_CAMPAIGN_ID=$APPLY CWM_MEASUREMENT_SHA=<SHA>
 unset CWM_WARMUP CWM_DURATION CWM_FIT_CAMPAIGN_DATE CWM_LADDER
 node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json

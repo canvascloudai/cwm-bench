@@ -17,6 +17,7 @@ from score_p95_v1 import (  # noqa: E402
     TOL_HIGH,
     TOL_LOW,
     dry_run,
+    load_engine_predictions,
     load_model_predictions,
     page_score,
     scale_v1_p95_medians,
@@ -36,6 +37,14 @@ class PredictorTest(unittest.TestCase):
     def test_predict_p95_reproduces_csv_exactly(self):
         out = subprocess.check_output([sys.executable, str(PREDICT), str(PARAMS)], text=True)
         self.assertEqual(out, PREDICTIONS.read_text())
+
+    def test_committed_engine_baseline_loads(self):
+        engine = load_engine_predictions(ROOT / "typical/p95-v1/predictions/engine-baseline/predictions.json")
+        self.assertEqual(engine["engineVersion"], "1.2.18")
+        self.assertEqual(engine["calibrationId"], "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0")
+        self.assertEqual(len(engine["cells"]), 9)
+        self.assertTrue(all(value is not None for value in engine["cells"].values()))
+        self.assertEqual(engine["cells"][(1, 300)], 18.108189870491724)
 
     def test_scale_v1_medians_match_prereg(self):
         self.assertEqual(scale_v1_p95_medians(ROOT), SCALE_V1_P95_MEDIANS)
