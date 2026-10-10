@@ -92,7 +92,7 @@ function bothDurations() {
 }
 
 test('typical-p95 keys are a reverse ladder and are not scale keys', () => {
-  assert.equal(ADAPTER_VERSION, '1.6.0');
+  assert.equal(ADAPTER_VERSION, '1.6.1');
   for (const [key, appCount, rps] of [
     ['typical-p95-1x-300', 1, 300],
     ['typical-p95-1x-200', 1, 200],
@@ -139,7 +139,7 @@ test('p95 apply runs 300 then 200 then 100 and records ladder metadata', async (
     deps: { ...deps, runAws: first },
   });
   assert.equal(start.code, 0, start.stdout);
-  assert.equal(start.payload.adapterVersion, '1.6.0');
+  assert.equal(start.payload.adapterVersion, '1.6.1');
   assert.deepEqual(start.payload.ladder, [300, 200, 100]);
   assert.equal(start.payload.rung_pos, 1);
   assert.deepEqual(start.payload.ladder_history, [300]);
@@ -269,7 +269,9 @@ test('p95 collect scores the untagged aggregate and a scale collect does not swi
   const picked = parseK6Summary(summary);
   assert.equal(picked.latency.p95Ms, 40);
 
-  async function collect(scenario, campaignId, appCount) {
+  const sha = '68b5fa2cc68190717d639bf180d9039a5634e812';
+
+  async function collect(scenario, campaignId, appCount, provenance = {}) {
     const dir = `/opt/cwm-bench/results/raw/${campaignId}/${scenario}-r1`;
     const identity = { campaignId, runId: `${scenario}-r1`, scenario };
     const listing = [
@@ -286,16 +288,27 @@ test('p95 collect scores the untagged aggregate and a scale collect does not swi
     ].join('\n');
     const aws = createAwsMock({
       ...ssmOnlineHandlers({ meta: { poolSize: 250, profile: 'typical', workers: 2 } }),
-      'ssm.get-command-invocation': async () => ({
-        code: 0,
-        stdout: JSON.stringify({
-          Status: 'Success',
-          StandardOutputContent: listing,
-          StandardErrorContent: '',
-          ResponseCode: 0,
-        }),
-        stderr: '',
-      }),
+      'ssm.get-command-invocation': async (args) => {
+        const commandId = args[args.indexOf('--command-id') + 1];
+        const send = aws.calls.find((call) =>
+          call[0] === 'ssm' && call[1] === 'send-command' && call.includes(commandId));
+        const script = send
+          ? JSON.parse(send[send.indexOf('--parameters') + 1]).commands.join('\n')
+          : '';
+        const meta = { poolSize: 250, profile: 'typical', workers: 2 };
+        if (provenance.gitSha) meta.gitSha = provenance.gitSha;
+        const stdout = script.includes('/api/meta') ? JSON.stringify(meta) : listing;
+        return {
+          code: 0,
+          stdout: JSON.stringify({
+            Status: 'Success',
+            StandardOutputContent: stdout,
+            StandardErrorContent: '',
+            ResponseCode: 0,
+          }),
+          stderr: '',
+        };
+      },
     });
     return runWith(['collect', '--scenario', scenario, '--json'], {
       now: () => new Date('2026-10-12T03:00:00.000Z'),
@@ -308,20 +321,97 @@ test('p95 collect scores the untagged aggregate and a scale collect does not swi
         CWM_CAMPAIGN_ID: campaignId,
         CWM_SCENARIO: scenario,
         CWM_RUN_ID: `${scenario}-r1`,
+        ...(provenance.measurementSha ? { CWM_MEASUREMENT_SHA: provenance.measurementSha } : {}),
       },
     });
   }
 
-  const p95 = await collect('typical-p95-1x-300', APPLY, 1);
+  const p95 = await collect('typical-p95-1x-300', APPLY, 1, { gitSha: sha, measurementSha: sha });
   assert.equal(p95.code, 0, p95.stdout);
   assert.equal(p95.payload.latency.p95Ms, 106.48);
   assert.equal(p95.payload.latency.untaggedAggregate, true);
   assert.equal(p95.payload.latency.metric, 'http_req_duration');
+  assert.equal(p95.payload.measurementSha, sha);
   assert.equal(p95.payload.artifacts.requestLevelRaw.present, true);
   assert.ok(p95.payload.artifacts.requestLevelRaw.files.includes('k6.json.gz'));
 
-  const scale = await collect('typical-scale-1x-300', 'typical-scale-1x-r1-20261012', 1);
+  const fromEnv = await collect('typical-p95-1x-300', APPLY, 1, { measurementSha: sha });
+  assert.equal(fromEnv.code, 0, fromEnv.stdout);
+  assert.equal(fromEnv.payload.measurementSha, sha);
+
+  const fromApp = await collect('typical-p95-1x-300', APPLY, 1, { gitSha: sha.toUpperCase() });
+  assert.equal(fromApp.code, 0, fromApp.stdout);
+  assert.equal(fromApp.payload.measurementSha, sha);
+
+  const scale = await collect('typical-scale-1x-300', 'typical-scale-1x-r1-20261012', 1, {
+    gitSha: sha,
+    measurementSha: sha,
+  });
   assert.equal(scale.code, 0, scale.stdout);
   assert.equal(scale.payload.latency.p95Ms, 40);
   assert.equal(scale.payload.latency.untaggedAggregate, false);
+  assert.equal(Object.hasOwn(scale.payload, 'measurementSha'), false);
+});
+
+test('p95 collect rejects a measurement SHA that disagrees with the app gitSha', async () => {
+  const summary = bothDurations();
+  const sha = '68b5fa2cc68190717d639bf180d9039a5634e812';
+  const other = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+  const campaignId = APPLY;
+  const scenario = 'typical-p95-1x-300';
+  const dir = `/opt/cwm-bench/results/raw/${campaignId}/${scenario}-r1`;
+  const listing = [
+    `ARTIFACT_DIR=${dir}`,
+    'summary.json',
+    'k6.json.gz',
+    'identity.json',
+    '---SUMMARY_JSON---',
+    JSON.stringify(summary),
+    '---END_SUMMARY_JSON---',
+    '---IDENTITY_JSON---',
+    JSON.stringify({ campaignId, runId: `${scenario}-r1`, scenario }),
+    '---END_IDENTITY_JSON---',
+  ].join('\n');
+  const aws = createAwsMock({
+    ...ssmOnlineHandlers({ meta: { poolSize: 250, profile: 'typical', workers: 2, gitSha: sha } }),
+    'ssm.get-command-invocation': async (args) => {
+      const commandId = args[args.indexOf('--command-id') + 1];
+      const send = aws.calls.find((call) =>
+        call[0] === 'ssm' && call[1] === 'send-command' && call.includes(commandId));
+      const script = send
+        ? JSON.parse(send[send.indexOf('--parameters') + 1]).commands.join('\n')
+        : '';
+      const stdout = script.includes('/api/meta')
+        ? JSON.stringify({ poolSize: 250, profile: 'typical', workers: 2, gitSha: sha })
+        : listing;
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          Status: 'Success',
+          StandardOutputContent: stdout,
+          StandardErrorContent: '',
+          ResponseCode: 0,
+        }),
+        stderr: '',
+      };
+    },
+  });
+  const mismatch = await runWith(['collect', '--scenario', scenario, '--json'], {
+    now: () => new Date('2026-10-12T03:10:00.000Z'),
+    deps: {
+      runAws: aws,
+      runTerraform: async () => ({ code: 0, stdout: p95Terraform(1, campaignId), stderr: '' }),
+      fs: memoryFs(),
+    },
+    env: {
+      CWM_CAMPAIGN_ID: campaignId,
+      CWM_SCENARIO: scenario,
+      CWM_RUN_ID: `${scenario}-r1`,
+      CWM_MEASUREMENT_SHA: other,
+    },
+  });
+  assert.equal(mismatch.code, 1);
+  assert.equal(mismatch.payload.error.code, 'MEASUREMENT_SHA_MISMATCH');
+  assert.match(mismatch.payload.error.message, new RegExp(sha));
+  assert.match(mismatch.payload.error.message, new RegExp(other));
 });

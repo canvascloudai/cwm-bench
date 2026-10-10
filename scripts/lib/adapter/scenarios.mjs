@@ -138,6 +138,7 @@ function typicalP95Scenario(key, appCount, rps) {
     enforceLadder: true,
     scoreUntaggedDuration: true,
     requestLevelRaw: true,
+    recordMeasurementSha: true,
     description:
       `Typical-p95-v1 validation at ${rps} total RPS on ${appCount} × m5.large. ` +
       `Reverse ladder 300 → 200 → 100 on a fresh seed. Requires app_profile=typical, app_workers=2, pool 250, ` +

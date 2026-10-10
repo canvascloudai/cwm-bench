@@ -25,6 +25,75 @@ import {
 } from './assemble.mjs';
 import { requireRunIdentity } from './identity.mjs';
 import { assertCampaignIdentity, ladderHistory, resolveLadder } from './ladder.mjs';
+import { metaFromStdout } from './ready.mjs';
+
+const APP_META_COMMAND = [
+  'set -euo pipefail',
+  'curl -fsS --max-time 5 http://127.0.0.1:8080/health',
+  'curl -fsS --max-time 5 http://127.0.0.1:8080/api/meta',
+].join('\n');
+
+function normalizeSha(value) {
+  const text = String(value ?? '').trim();
+  if (!/^[0-9a-fA-F]{7,40}$/.test(text)) return null;
+  return text.toLowerCase();
+}
+
+async function measurementShaForCollect(ctx, spec, outputs, region) {
+  if (!spec.recordMeasurementSha) return undefined;
+  const runAws = ctx.deps.runAws;
+  if (typeof runAws !== 'function') {
+    const err = new Error('AWS runner is not configured; cannot attest the measurement SHA');
+    err.code = 'AWS_UNAVAILABLE';
+    throw err;
+  }
+  const nodes = [];
+  for (const instanceId of outputs.appInstanceIds) {
+    const invocation = await runRemoteShell(runAws, {
+      instanceId,
+      region,
+      commands: [APP_META_COMMAND],
+      timeoutSeconds: 60,
+      waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+      pollMs: ctx.deps.ssmPollMs || 1000,
+      comment: 'cwm-bench collect app gitSha',
+      now: ctx.deps.nowMs,
+      wait: ctx.deps.wait,
+      throwOnFailure: true,
+    });
+    const meta = metaFromStdout(invocation.stdout);
+    nodes.push({
+      instanceId,
+      gitSha: meta && Object.prototype.hasOwnProperty.call(meta, 'gitSha') ? meta.gitSha : null,
+    });
+  }
+  const attested = nodes.map((node) => normalizeSha(node.gitSha));
+  const unique = [...new Set(attested.filter(Boolean))];
+  const described = nodes.map((node) => `${node.instanceId}=${node.gitSha || 'missing'}`).join(', ');
+  if (unique.length > 1 || (unique.length === 1 && attested.some((sha) => !sha))) {
+    const err = new Error(`app nodes do not attest one gitSha (${described})`);
+    err.code = 'MEASUREMENT_SHA_MISMATCH';
+    throw err;
+  }
+  const attestedSha = unique[0] || null;
+  const envSha = normalizeSha(ctx.env.CWM_MEASUREMENT_SHA);
+  if (envSha && attestedSha && envSha !== attestedSha) {
+    const err = new Error(
+      `CWM_MEASUREMENT_SHA ${envSha} disagrees with the app /api/meta gitSha ${attestedSha}`,
+    );
+    err.code = 'MEASUREMENT_SHA_MISMATCH';
+    throw err;
+  }
+  const sha = attestedSha || envSha;
+  if (!sha) {
+    const err = new Error(
+      'typical-p95 collect has no measurement SHA: app /api/meta did not attest gitSha and CWM_MEASUREMENT_SHA is unset',
+    );
+    err.code = 'MEASUREMENT_SHA_MISSING';
+    throw err;
+  }
+  return sha;
+}
 
 function parseBoundary(value) {
   if (!value) return null;
@@ -348,6 +417,7 @@ export async function collectScenario(ctx, scenarioKey) {
     throw err;
   }
 
+  const measurementSha = await measurementShaForCollect(ctx, spec, outputs, region);
   const { campaignId, runId } = identity;
   const window = collectionWindow(ctx.now(), ctx.env, null);
 
@@ -424,6 +494,7 @@ export async function collectScenario(ctx, scenarioKey) {
     invented: false,
     campaignId,
     runId,
+    ...(measurementSha ? { measurementSha } : {}),
     ...ladderFields,
     runIdSource: 'env',
     region,

@@ -13,7 +13,8 @@ node scripts/worker-adapter.mjs collect --scenario <scenario-key> --json
 node scripts/worker-adapter.mjs --help
 ```
 
-`wait-ready` always returns `adapterVersion` (`1.6.0`) and `supportedScenarios`.
+`wait-ready` always returns `adapterVersion` (`1.6.1`) and `supportedScenarios`.
+`1.6.1` records `measurementSha` on typical-p95-v1 collects only.
 `1.6.0` adds `typical-p95-{1x,2x,3x}-{300,200,100}`, the reverse ladder,
 and gzipped k6 request-level output for those keys. `1.5.0` adds
 `typical-scale-{1x,2x,3x}-{100,200,300}` and
