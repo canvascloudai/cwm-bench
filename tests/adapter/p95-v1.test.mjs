@@ -70,6 +70,42 @@ async function runWith(argv, options) {
   return { code, payload, stdout: stdout.toString() };
 }
 
+function p95CollectAws(listing, gitSha) {
+  const scripts = new Map();
+  let seq = 0;
+  return createAwsMock({
+    ...ssmOnlineHandlers({ meta: { poolSize: 250, profile: 'typical', workers: 2 } }),
+    'ssm.send-command': async (args) => {
+      seq += 1;
+      const commandId = `p95-cmd-${seq}`;
+      const parameters = JSON.parse(args[args.indexOf('--parameters') + 1]);
+      scripts.set(commandId, (parameters.commands || []).join('\n'));
+      return {
+        code: 0,
+        stdout: JSON.stringify({ Command: { CommandId: commandId } }),
+        stderr: '',
+      };
+    },
+    'ssm.get-command-invocation': async (args) => {
+      const commandId = args[args.indexOf('--command-id') + 1];
+      const script = scripts.get(commandId) || '';
+      const meta = { poolSize: 250, profile: 'typical', workers: 2 };
+      if (gitSha) meta.gitSha = gitSha;
+      const stdout = script.includes('/api/meta') ? JSON.stringify(meta) : listing;
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          Status: 'Success',
+          StandardOutputContent: stdout,
+          StandardErrorContent: '',
+          ResponseCode: 0,
+        }),
+        stderr: '',
+      };
+    },
+  });
+}
+
 function k6Script(aws) {
   const scripts = aws.calls
     .filter((args) => args[0] === 'ssm' && args[1] === 'send-command')
@@ -286,30 +322,7 @@ test('p95 collect scores the untagged aggregate and a scale collect does not swi
       JSON.stringify(identity),
       '---END_IDENTITY_JSON---',
     ].join('\n');
-    const aws = createAwsMock({
-      ...ssmOnlineHandlers({ meta: { poolSize: 250, profile: 'typical', workers: 2 } }),
-      'ssm.get-command-invocation': async (args) => {
-        const commandId = args[args.indexOf('--command-id') + 1];
-        const send = aws.calls.find((call) =>
-          call[0] === 'ssm' && call[1] === 'send-command' && call.includes(commandId));
-        const script = send
-          ? JSON.parse(send[send.indexOf('--parameters') + 1]).commands.join('\n')
-          : '';
-        const meta = { poolSize: 250, profile: 'typical', workers: 2 };
-        if (provenance.gitSha) meta.gitSha = provenance.gitSha;
-        const stdout = script.includes('/api/meta') ? JSON.stringify(meta) : listing;
-        return {
-          code: 0,
-          stdout: JSON.stringify({
-            Status: 'Success',
-            StandardOutputContent: stdout,
-            StandardErrorContent: '',
-            ResponseCode: 0,
-          }),
-          stderr: '',
-        };
-      },
-    });
+    const aws = p95CollectAws(listing, provenance.gitSha);
     return runWith(['collect', '--scenario', scenario, '--json'], {
       now: () => new Date('2026-10-12T03:00:00.000Z'),
       deps: {
@@ -372,30 +385,7 @@ test('p95 collect rejects a measurement SHA that disagrees with the app gitSha',
     JSON.stringify({ campaignId, runId: `${scenario}-r1`, scenario }),
     '---END_IDENTITY_JSON---',
   ].join('\n');
-  const aws = createAwsMock({
-    ...ssmOnlineHandlers({ meta: { poolSize: 250, profile: 'typical', workers: 2, gitSha: sha } }),
-    'ssm.get-command-invocation': async (args) => {
-      const commandId = args[args.indexOf('--command-id') + 1];
-      const send = aws.calls.find((call) =>
-        call[0] === 'ssm' && call[1] === 'send-command' && call.includes(commandId));
-      const script = send
-        ? JSON.parse(send[send.indexOf('--parameters') + 1]).commands.join('\n')
-        : '';
-      const stdout = script.includes('/api/meta')
-        ? JSON.stringify({ poolSize: 250, profile: 'typical', workers: 2, gitSha: sha })
-        : listing;
-      return {
-        code: 0,
-        stdout: JSON.stringify({
-          Status: 'Success',
-          StandardOutputContent: stdout,
-          StandardErrorContent: '',
-          ResponseCode: 0,
-        }),
-        stderr: '',
-      };
-    },
-  });
+  const aws = p95CollectAws(listing, sha);
   const mismatch = await runWith(['collect', '--scenario', scenario, '--json'], {
     now: () => new Date('2026-10-12T03:10:00.000Z'),
     deps: {
