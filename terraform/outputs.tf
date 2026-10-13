@@ -54,6 +54,21 @@ output "rds_identifier" {
   value       = aws_db_instance.main.identifier
 }
 
+output "generator_instance_ids" {
+  description = "All load-generator instance ids, primary first (generator_count)."
+  value       = concat([aws_instance.generator.id], aws_instance.generator_extra[*].id)
+}
+
+output "rds_resource_id" {
+  description = "RDS DbiResourceId, the Performance Insights identifier."
+  value       = aws_db_instance.main.resource_id
+}
+
+output "performance_insights_enabled" {
+  description = "Whether RDS Performance Insights is on."
+  value       = var.performance_insights_enabled
+}
+
 output "generator_instance_id" {
   description = "Load-generator instance id. Discard a run if this host's CPU exceeds ~70%."
   value       = aws_instance.generator.id

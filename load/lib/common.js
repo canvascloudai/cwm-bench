@@ -177,4 +177,61 @@ export const TYPICAL_RPS = Object.freeze({
   'typical-p95-3x-300': 300,
   'typical-p95-3x-200': 200,
   'typical-p95-3x-100': 100,
+  // typical-dbsat-v1: ascending 300 → 1500 on 2, 3, or 4 app servers.
+  'typical-dbsat-2x-300': 300,
+  'typical-dbsat-2x-500': 500,
+  'typical-dbsat-2x-700': 700,
+  'typical-dbsat-2x-900': 900,
+  'typical-dbsat-2x-1100': 1100,
+  'typical-dbsat-2x-1300': 1300,
+  'typical-dbsat-2x-1500': 1500,
+  'typical-dbsat-3x-300': 300,
+  'typical-dbsat-3x-500': 500,
+  'typical-dbsat-3x-700': 700,
+  'typical-dbsat-3x-900': 900,
+  'typical-dbsat-3x-1100': 1100,
+  'typical-dbsat-3x-1300': 1300,
+  'typical-dbsat-3x-1500': 1500,
+  'typical-dbsat-4x-300': 300,
+  'typical-dbsat-4x-500': 500,
+  'typical-dbsat-4x-700': 700,
+  'typical-dbsat-4x-900': 900,
+  'typical-dbsat-4x-1100': 1100,
+  'typical-dbsat-4x-1300': 1300,
+  'typical-dbsat-4x-1500': 1500,
 });
+
+/**
+ * Optional generator split (typical-dbsat-v1, two generators). K6_SEGMENT is
+ * this generator's execution segment ("0:1/2" or "1/2:1"); both generators
+ * share K6_SEGMENT_SEQUENCE ("0,1/2,1"). Unset means one generator.
+ */
+export function executionSegmentOptions() {
+  const segment = __ENV.K6_SEGMENT || '';
+  const sequence = __ENV.K6_SEGMENT_SEQUENCE || '';
+  if (!segment) return {};
+  if (!sequence) throw new Error('K6_SEGMENT requires K6_SEGMENT_SEQUENCE');
+  return { executionSegment: segment, executionSegmentSequence: sequence };
+}
+
+/**
+ * typical-dbsat-v1 VU allocation scales with the target rate:
+ * preAllocatedVUs = ceil(rps × VU_PRE_S), maxVUs = ceil(rps × VU_MAX_S).
+ * Defaults 0.5 s / 2.5 s; the dry run may change them once, then they are
+ * frozen in the prereg evidence package. Other keys keep vuBudget().
+ */
+export function scaledVuBudget(rps, preSeconds = 0.5, maxSeconds = 2.5) {
+  const pre = Math.max(20, Math.ceil(rps * Number(preSeconds)));
+  const max = Math.max(pre, Math.ceil(rps * Number(maxSeconds)));
+  return { preAllocatedVUs: pre, maxVUs: max };
+}
+
+/** arrivalScenarios with typical-dbsat-v1 RPS-scaled VUs. */
+export function dbsatArrivalScenarios(rps, warmup, duration, preSeconds, maxSeconds) {
+  const scenarios = arrivalScenarios(rps, warmup, duration);
+  const vu = scaledVuBudget(rps, preSeconds, maxSeconds);
+  for (const name of Object.keys(scenarios)) {
+    scenarios[name] = { ...scenarios[name], ...vu };
+  }
+  return scenarios;
+}

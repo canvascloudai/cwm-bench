@@ -1,0 +1,358 @@
+{
+ "simulationId": "9a166708-c763-4eba-9da7-f83b28edbcb7",
+ "scenarioHash": "3ff7d413d736d29038c24d35cb30d2fa50230122afd191280a71a8c2e8e9c2af",
+ "effectiveConfigHash": "3326bc5b2953e710188c82ef60b47187035b49c9170b12e69d7de45f381b4692",
+ "predictionEffectiveConfigHash": "3326bc5b2953e710188c82ef60b47187035b49c9170b12e69d7de45f381b4692",
+ "engineVersion": "1.2.21",
+ "calibrationEvidence": {
+  "kind": "modeled",
+  "note": "typical application reference/scaling model; owned typical fit not applied: resources: expected 4, actual 6; minInstances: expected 2, actual 4; maxInstances: expected 2, actual 4; compute count: expected 2, actual 4; connections: expected exactly ALB\u2192each app\u2192database (4 distinct edges); traffic: expected 20\u2013500 RPS, actual 1100. Diagnostic modeled output, not validated critical/saturation evidence. Owned typical predictions require the matching workload/topology through the 300 RPS holdout; unmatched 500 RPS traffic remains generic and diagnostic.",
+  "latencyBasis": "P50/P95 assumed internal-LB baseline with modeled path effects; P99 uncalibrated (generic P99, no owned in-VPC fit); residual generic paths unverified (not measured end-to-end)",
+  "latencyP99Basis": "uncalibrated (generic P99, no owned in-VPC fit)"
+ },
+ "predictionEvidence": {
+  "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Owned typical fit applies only to the matching workload/topology within 20\u2013300 RPS (20/100/200 fit, 300 independent holdout). Generic fallback is diagnostic modeled output, not validated critical/saturation evidence; traffic alone does not establish calibration. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: uncalibrated (generic P99, no owned in-VPC fit); not an owned workload fit; generic app-weight estimates are unverified for this application.",
+  "appCpu": {
+   "low": 25,
+   "high": 100,
+   "central": 100
+  },
+  "version": 1,
+  "appWeight": "typical",
+  "loadScope": "beyond measured load",
+  "sourceIds": [
+   "catalog:aws:m5.large",
+   "cwm-industry-guidance-placeholder-v1",
+   "cwm-generic-p99-unverified"
+  ],
+  "formulaIds": [
+   "app-weight-v1",
+   "app-host-cpu-vcpu-v1",
+   "internal-lb-percentile-v1",
+   "cwm-generic-p99-unverified"
+  ],
+  "latencyP50": {
+   "low": 2.75,
+   "high": 33,
+   "central": 11,
+   "evidenceLevel": "reference estimate"
+  },
+  "latencyP95": {
+   "low": 8.25,
+   "high": 99,
+   "central": 33,
+   "evidenceLevel": "reference estimate"
+  },
+  "latencyP99": {
+   "low": 97.5,
+   "high": 1170,
+   "central": 390,
+   "evidenceLevel": "reference estimate"
+  },
+  "evidenceLevel": "reference estimate",
+  "legacyGeneric": false,
+  "appCpuByResource": [
+   {
+    "low": 25,
+    "high": 100,
+    "central": 100,
+    "resourceId": "app-1",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   },
+   {
+    "low": 25,
+    "high": 100,
+    "central": 100,
+    "resourceId": "app-2",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   },
+   {
+    "low": 25,
+    "high": 100,
+    "central": 100,
+    "resourceId": "app-3",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   },
+   {
+    "low": 25,
+    "high": 100,
+    "central": 100,
+    "resourceId": "app-4",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   }
+  ],
+  "appWeightDefaulted": false,
+  "latencyPercentileStatus": "modeled"
+ },
+ "appWeight": "typical",
+ "appWeightDefaulted": false,
+ "replayIdentity": {
+  "scenarioHash": "3ff7d413d736d29038c24d35cb30d2fa50230122afd191280a71a8c2e8e9c2af",
+  "effectiveConfigHash": "7b489a10498e72fd81d6b5ac03374e91a9d71827d73ba4c6639c08efea83d357"
+ },
+ "currentStep": 6,
+ "traffic": 1100,
+ "latencyP50": 11,
+ "latencyP95": 33,
+ "latencyP99": 390,
+ "latencyP99Basis": "uncalibrated (generic P99, no owned in-VPC fit)",
+ "errorRate": 10,
+ "throughput": 990,
+ "goodputRps": 990,
+ "goodputSemantics": "post_step_point_rate",
+ "goodputProvenance": {
+  "kind": "derived",
+  "sourceFields": [
+   "metrics.throughput"
+  ]
+ },
+ "goodputWindow": {
+  "status": "unavailable",
+  "provenance": {
+   "kind": "unavailable",
+   "reason": "persisted goodput points do not include recorded simulation-clock interval bounds"
+  }
+ },
+ "offeredRps": 1100,
+ "costPerHour": 2.25,
+ "residualCostPerHour": 0,
+ "residualCostDefinition": "Unavailable, parked, or stopped resource costs only. Healthy or degraded idle resources, including ALBs, are excluded; totalCostPerHour remains the complete billed total.",
+ "latencyBasis": "P50/P95 assumed internal-LB baseline with modeled path effects; P99 uncalibrated (generic P99, no owned in-VPC fit); residual generic paths unverified (not measured end-to-end)",
+ "metricId": "53628",
+ "resources": [
+  {
+   "id": "alb",
+   "name": "ALB (Application Load Balancer)",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 5,
+   "recoveryProgress": {
+    "state": "healthy",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": null,
+     "completedSteps": 0,
+     "requiredSteps": 0,
+     "remainingSteps": 0
+    }
+   }
+  },
+  {
+   "id": "app-1",
+   "name": "app-1",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "critical",
+   "cpuPercent": 100,
+   "routedRps": 275,
+   "availabilityState": "degraded",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "cooling_down",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": "warning",
+     "completedSteps": 0,
+     "requiredSteps": 4,
+     "remainingSteps": 4
+    }
+   }
+  },
+  {
+   "id": "app-2",
+   "name": "app-2",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "critical",
+   "cpuPercent": 100,
+   "routedRps": 275,
+   "availabilityState": "degraded",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "cooling_down",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": "warning",
+     "completedSteps": 0,
+     "requiredSteps": 4,
+     "remainingSteps": 4
+    }
+   }
+  },
+  {
+   "id": "app-3",
+   "name": "app-3",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "critical",
+   "cpuPercent": 100,
+   "routedRps": 275,
+   "availabilityState": "degraded",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "cooling_down",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": "warning",
+     "completedSteps": 0,
+     "requiredSteps": 4,
+     "remainingSteps": 4
+    }
+   }
+  },
+  {
+   "id": "app-4",
+   "name": "app-4",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "critical",
+   "cpuPercent": 100,
+   "routedRps": 275,
+   "availabilityState": "degraded",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "cooling_down",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": "warning",
+     "completedSteps": 0,
+     "requiredSteps": 4,
+     "remainingSteps": 4
+    }
+   }
+  },
+  {
+   "id": "db",
+   "name": "db",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 40.4,
+   "availabilityState": "available",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "healthy",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": null,
+     "completedSteps": 0,
+     "requiredSteps": 0,
+     "remainingSteps": 0
+    }
+   }
+  }
+ ],
+ "events": [],
+ "loadBalancers": [
+  {
+   "resourceId": "alb",
+   "routedRps": 1100
+  }
+ ],
+ "errorBreakdown": {
+  "dbFailure": 0,
+  "ociStorage": 0,
+  "cpuOverload": 10,
+  "computeFailure": 0,
+  "poolSaturation": 0,
+  "queueAbsorption": 0,
+  "capacityOverload": 0,
+  "databasePressure": 0,
+  "dependencyFailure": 0,
+  "benchmarkReferenceFit": 0
+ },
+ "databaseConnectionDemand": [
+  {
+   "resourceId": "db",
+   "loadDerivedConnections": 220,
+   "loadDerivedBasis": "load-derived estimate; not observed live DB connections",
+   "connectionPressure": 0.44,
+   "declaredFleetConnectionBudget": 1000,
+   "declaredFleetConnectionPressure": 2,
+   "declaredFleetConnectionBudgetBasis": "ASSUMPTION / maximum declared fleet \u00d7 app pool size; not observed live DB connections",
+   "declaredFleetConnectionBudgetTiers": [
+    {
+     "poolSize": 250,
+     "resourceId": "app-1",
+     "resourceIds": [
+      "app-1"
+     ],
+     "resourceName": "app-1",
+     "instanceCount": 1,
+     "fleetSizeBasis": "single_resource_default",
+     "connectionBudget": 250
+    },
+    {
+     "poolSize": 250,
+     "resourceId": "app-2",
+     "resourceIds": [
+      "app-2"
+     ],
+     "resourceName": "app-2",
+     "instanceCount": 1,
+     "fleetSizeBasis": "single_resource_default",
+     "connectionBudget": 250
+    },
+    {
+     "poolSize": 250,
+     "resourceId": "app-3",
+     "resourceIds": [
+      "app-3"
+     ],
+     "resourceName": "app-3",
+     "instanceCount": 1,
+     "fleetSizeBasis": "single_resource_default",
+     "connectionBudget": 250
+    },
+    {
+     "poolSize": 250,
+     "resourceId": "app-4",
+     "resourceIds": [
+      "app-4"
+     ],
+     "resourceName": "app-4",
+     "instanceCount": 1,
+     "fleetSizeBasis": "single_resource_default",
+     "connectionBudget": 250
+    }
+   ],
+   "assumption": "ASSUMPTION / maximum declared fleet \u00d7 app pool size; not observed live DB connections"
+  }
+ ],
+ "auroraFailovers": []
+}

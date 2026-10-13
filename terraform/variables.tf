@@ -167,3 +167,20 @@ variable "app_source_git_ref" {
     error_message = "app_source_git_ref must be a git commit SHA (7-40 hex chars). Branch names including main, master, and HEAD are rejected."
   }
 }
+
+variable "performance_insights_enabled" {
+  type        = bool
+  description = "Enable RDS Performance Insights (free 7-day retention). typical-dbsat-v1 requires true; every earlier campaign ran with false."
+  default     = false
+}
+
+variable "generator_count" {
+  type        = number
+  description = "Load generators. 1 is the existing topology. typical-dbsat-v1 may use 2; each runs half the arrival rate via k6 execution segments."
+  default     = 1
+
+  validation {
+    condition     = contains([1, 2], var.generator_count)
+    error_message = "generator_count must be 1 or 2."
+  }
+}

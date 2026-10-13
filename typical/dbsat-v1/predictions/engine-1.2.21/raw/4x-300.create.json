@@ -1,0 +1,365 @@
+{
+ "id": "1e6b65e2-8f33-4b1d-a39b-8ed2f74bbc82",
+ "name": "typical-dbsat-v1 engine-1.2.21 freeze 4x 300",
+ "engineVersion": "1.2.21",
+ "predictionEffectiveConfigHash": "3cf83e5e2bb964c664c0fe3f0522a789f491cfcf77075ca7a46ffa8f9f1753a7",
+ "calibrationEvidence": {
+  "kind": "modeled",
+  "note": "typical application reference/scaling model; owned typical fit not applied: resources: expected 4, actual 6; minInstances: expected 2, actual 4; maxInstances: expected 2, actual 4; compute count: expected 2, actual 4; connections: expected exactly ALB\u2192each app\u2192database (4 distinct edges). Diagnostic modeled output, not validated critical/saturation evidence. Owned typical predictions require the matching workload/topology through the 300 RPS holdout; unmatched 500 RPS traffic remains generic and diagnostic.",
+  "latencyBasis": "P50/P95 assumed internal-LB baseline with modeled path effects; P99 uncalibrated (generic P99, no owned in-VPC fit); residual generic paths unverified (not measured end-to-end)",
+  "latencyP99Basis": "uncalibrated (generic P99, no owned in-VPC fit)"
+ },
+ "predictionEvidence": {
+  "note": "typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Owned typical fit applies only to the matching workload/topology within 20\u2013300 RPS (20/100/200 fit, 300 independent holdout). Generic fallback is diagnostic modeled output, not validated critical/saturation evidence; traffic alone does not establish calibration. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: uncalibrated (generic P99, no owned in-VPC fit); not an owned workload fit; generic app-weight estimates are unverified for this application.",
+  "appCpu": {
+   "low": 14.944,
+   "high": 59.776,
+   "central": 29.888
+  },
+  "version": 1,
+  "appWeight": "typical",
+  "loadScope": "not calibrated",
+  "sourceIds": [
+   "catalog:aws:m5.large",
+   "cwm-industry-guidance-placeholder-v1",
+   "cwm-generic-p99-unverified"
+  ],
+  "formulaIds": [
+   "app-weight-v1",
+   "app-host-cpu-vcpu-v1",
+   "internal-lb-percentile-v1",
+   "cwm-generic-p99-unverified"
+  ],
+  "latencyP50": {
+   "low": 8.361074688865244,
+   "high": 33.44429875546098,
+   "central": 16.72214937773049,
+   "evidenceLevel": "reference estimate"
+  },
+  "latencyP95": {
+   "low": 21.073454022237154,
+   "high": 84.29381608894862,
+   "central": 42.14690804447431,
+   "evidenceLevel": "reference estimate"
+  },
+  "latencyP99": {
+   "low": 96,
+   "high": 384,
+   "central": 192,
+   "evidenceLevel": "reference estimate"
+  },
+  "evidenceLevel": "reference estimate",
+  "legacyGeneric": false,
+  "appCpuByResource": [
+   {
+    "low": 14.944,
+    "high": 59.776,
+    "central": 29.888,
+    "resourceId": "app-1",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   },
+   {
+    "low": 14.944,
+    "high": 59.776,
+    "central": 29.888,
+    "resourceId": "app-2",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   },
+   {
+    "low": 14.944,
+    "high": 59.776,
+    "central": 29.888,
+    "resourceId": "app-3",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   },
+   {
+    "low": 14.944,
+    "high": 59.776,
+    "central": 29.888,
+    "resourceId": "app-4",
+    "evidenceLevel": "reference estimate",
+    "legacyGeneric": false
+   }
+  ],
+  "appWeightDefaulted": false,
+  "latencyPercentileStatus": "modeled"
+ },
+ "appWeight": "typical",
+ "appWeightDefaulted": false,
+ "status": "stopped",
+ "traffic": 300,
+ "scenarioHash": "3ff7d413d736d29038c24d35cb30d2fa50230122afd191280a71a8c2e8e9c2af",
+ "effectiveConfigHash": "3cf83e5e2bb964c664c0fe3f0522a789f491cfcf77075ca7a46ffa8f9f1753a7",
+ "replayIdentity": {
+  "scenarioHash": "3ff7d413d736d29038c24d35cb30d2fa50230122afd191280a71a8c2e8e9c2af",
+  "effectiveConfigHash": "7b489a10498e72fd81d6b5ac03374e91a9d71827d73ba4c6639c08efea83d357"
+ },
+ "resources": [
+  {
+   "id": "alb",
+   "name": "ALB (Application Load Balancer)",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 3.5
+  },
+  {
+   "id": "app-1",
+   "name": "app-1",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 29.888
+  },
+  {
+   "id": "app-2",
+   "name": "app-2",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 29.888
+  },
+  {
+   "id": "app-3",
+   "name": "app-3",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 29.888
+  },
+  {
+   "id": "app-4",
+   "name": "app-4",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 29.888
+  },
+  {
+   "id": "db",
+   "name": "db",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 8.5
+  }
+ ],
+ "effectiveMaxInstances": 4,
+ "effectiveMinInstances": 4,
+ "autoscalingConfig": {
+  "maxInstances": 4,
+  "minInstances": 4,
+  "cooldownSeconds": 300,
+  "scaleInCpuThreshold": 30,
+  "scaleOutCpuThreshold": 70,
+  "scaleOutLatencyThreshold": 200,
+  "scaleInThroughputThreshold": 25,
+  "scaleOutThroughputThreshold": 75
+ },
+ "normalizedConfig": {
+  "resources": [
+   {
+    "id": "alb",
+    "name": "ALB (Application Load Balancer)",
+    "type": "network",
+    "provider": "aws",
+    "location": {
+     "regionKey": "use2"
+    },
+    "behaviorModel": {
+     "latencyPath": "generic/flat-rate",
+     "description": "Generic flat-rate model: resource contributes to cost but does not participate in the latency simulation path."
+    },
+    "resolvedCostMultiplier": 1
+   },
+   {
+    "id": "app-1",
+    "name": "app-1",
+    "type": "compute",
+    "provider": "aws",
+    "location": {
+     "regionKey": "use2"
+    },
+    "resolvedSku": "m5.large",
+    "predictionShapeResolution": {
+     "shape": {
+      "label": "m5.large",
+      "vcpus": 2,
+      "ram": 8,
+      "maxThroughput": 2000
+     }
+    },
+    "behaviorModel": {
+     "latencyPath": "generic-compute/load-saturation",
+     "description": "Generic compute saturation model: base latency scaled by load, provider tail, and instance warm-up. capacityGB is retained disk capacity per VM; stopped disk billing multiplies it by representedVmCount (one for each materialized autoscaling member). Deleted resources incur no retained disk charge."
+    },
+    "resolvedCostMultiplier": 1,
+    "resolvedHourlyRate": 0.096,
+    "representedVmCount": 1,
+    "resolvedFleetHourlyRate": 0.096,
+    "rateProvenance": {
+     "basis": "estimated",
+     "resolution": "base-rate-multiplier",
+     "lastVerified": "2026-06-01",
+     "region": "us-east-1"
+    },
+    "effectiveVmInstanceCount": 1,
+    "resolvedMaxThroughputRps": 2000,
+    "capacityProvenance": "provider_catalog",
+    "effectiveCpuCapacityRps": 2000
+   },
+   {
+    "id": "app-2",
+    "name": "app-2",
+    "type": "compute",
+    "provider": "aws",
+    "location": {
+     "regionKey": "use2"
+    },
+    "resolvedSku": "m5.large",
+    "predictionShapeResolution": {
+     "shape": {
+      "label": "m5.large",
+      "vcpus": 2,
+      "ram": 8,
+      "maxThroughput": 2000
+     }
+    },
+    "behaviorModel": {
+     "latencyPath": "generic-compute/load-saturation",
+     "description": "Generic compute saturation model: base latency scaled by load, provider tail, and instance warm-up. capacityGB is retained disk capacity per VM; stopped disk billing multiplies it by representedVmCount (one for each materialized autoscaling member). Deleted resources incur no retained disk charge."
+    },
+    "resolvedCostMultiplier": 1,
+    "resolvedHourlyRate": 0.096,
+    "representedVmCount": 1,
+    "resolvedFleetHourlyRate": 0.096,
+    "rateProvenance": {
+     "basis": "estimated",
+     "resolution": "base-rate-multiplier",
+     "lastVerified": "2026-06-01",
+     "region": "us-east-1"
+    },
+    "effectiveVmInstanceCount": 1,
+    "resolvedMaxThroughputRps": 2000,
+    "capacityProvenance": "provider_catalog",
+    "effectiveCpuCapacityRps": 2000
+   },
+   {
+    "id": "app-3",
+    "name": "app-3",
+    "type": "compute",
+    "provider": "aws",
+    "location": {
+     "regionKey": "use2"
+    },
+    "resolvedSku": "m5.large",
+    "predictionShapeResolution": {
+     "shape": {
+      "label": "m5.large",
+      "vcpus": 2,
+      "ram": 8,
+      "maxThroughput": 2000
+     }
+    },
+    "behaviorModel": {
+     "latencyPath": "generic-compute/load-saturation",
+     "description": "Generic compute saturation model: base latency scaled by load, provider tail, and instance warm-up. capacityGB is retained disk capacity per VM; stopped disk billing multiplies it by representedVmCount (one for each materialized autoscaling member). Deleted resources incur no retained disk charge."
+    },
+    "resolvedCostMultiplier": 1,
+    "resolvedHourlyRate": 0.096,
+    "representedVmCount": 1,
+    "resolvedFleetHourlyRate": 0.096,
+    "rateProvenance": {
+     "basis": "estimated",
+     "resolution": "base-rate-multiplier",
+     "lastVerified": "2026-06-01",
+     "region": "us-east-1"
+    },
+    "effectiveVmInstanceCount": 1,
+    "resolvedMaxThroughputRps": 2000,
+    "capacityProvenance": "provider_catalog",
+    "effectiveCpuCapacityRps": 2000
+   },
+   {
+    "id": "app-4",
+    "name": "app-4",
+    "type": "compute",
+    "provider": "aws",
+    "location": {
+     "regionKey": "use2"
+    },
+    "resolvedSku": "m5.large",
+    "predictionShapeResolution": {
+     "shape": {
+      "label": "m5.large",
+      "vcpus": 2,
+      "ram": 8,
+      "maxThroughput": 2000
+     }
+    },
+    "behaviorModel": {
+     "latencyPath": "generic-compute/load-saturation",
+     "description": "Generic compute saturation model: base latency scaled by load, provider tail, and instance warm-up. capacityGB is retained disk capacity per VM; stopped disk billing multiplies it by representedVmCount (one for each materialized autoscaling member). Deleted resources incur no retained disk charge."
+    },
+    "resolvedCostMultiplier": 1,
+    "resolvedHourlyRate": 0.096,
+    "representedVmCount": 1,
+    "resolvedFleetHourlyRate": 0.096,
+    "rateProvenance": {
+     "basis": "estimated",
+     "resolution": "base-rate-multiplier",
+     "lastVerified": "2026-06-01",
+     "region": "us-east-1"
+    },
+    "effectiveVmInstanceCount": 1,
+    "resolvedMaxThroughputRps": 2000,
+    "capacityProvenance": "provider_catalog",
+    "effectiveCpuCapacityRps": 2000
+   },
+   {
+    "id": "db",
+    "name": "db",
+    "type": "database",
+    "provider": "aws",
+    "location": {
+     "regionKey": "use2"
+    },
+    "resolvedSku": "db.r5.large",
+    "behaviorModel": {
+     "latencyPath": "database/connection-saturation",
+     "description": "Database connection-saturation model: latency driven by connection pool pressure and query load."
+    },
+    "resolvedCostMultiplier": 2,
+    "resolvedHourlyRate": 0.24,
+    "rateProvenance": {
+     "basis": "estimated",
+     "resolution": "base-rate-multiplier",
+     "lastVerified": "2026-06-01",
+     "region": "us-east-1"
+    },
+    "resolvedStorageTier": "db.r5.large",
+    "resolvedConnectionLimit": 500
+   }
+  ]
+ },
+ "hpaAudit": {
+  "targetSupplied": false,
+  "suppliedField": null,
+  "requestedTargetCpu": null,
+  "effectiveScaleOutCpuPercent": 70,
+  "effectiveScaleInCpuPercent": 30,
+  "defaulted": true,
+  "provider": "aws",
+  "resourceCategory": "other",
+  "defaultExplanation": "No caller CPU target was supplied; the simulation's effective autoscaling policy is 70% scale-out / 30% scale-in."
+ }
+}

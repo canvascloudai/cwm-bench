@@ -26,6 +26,7 @@ import {
 import { requireRunIdentity } from './identity.mjs';
 import { assertCampaignIdentity, ladderHistory, resolveLadder } from './ladder.mjs';
 import { metaFromStdout } from './ready.mjs';
+import { collectDbsatExtras } from './dbsat-collect.mjs';
 
 const APP_META_COMMAND = [
   'set -euo pipefail',
@@ -480,6 +481,14 @@ export async function collectScenario(ctx, scenarioKey) {
     completeness.complete = false;
     completeness.missing.unshift('artifacts:identity.json');
   }
+  let dbsat = null;
+  if (spec.steadyP95AtCollect) {
+    dbsat = await collectDbsatExtras(ctx, spec, outputs, region, window, identity, recorded);
+    if (dbsat.missing.length > 0) {
+      completeness.complete = false;
+      completeness.missing.push(...dbsat.missing);
+    }
+  }
   const knownGap = spec.requiresCompleteCollect ? !completeness.complete : false;
 
   const payload = {
@@ -550,6 +559,7 @@ export async function collectScenario(ctx, scenarioKey) {
     burstBalanceMin: runFields.burstBalanceMin,
     concurrency: runFields.concurrency,
     iopsThrottle: runFields.iopsThrottle,
+    ...(dbsat ? { dbsat: dbsat.fields } : {}),
   };
 
   if (spec.requiresCompleteCollect && !completeness.complete) {

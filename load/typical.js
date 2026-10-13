@@ -24,6 +24,8 @@ import {
   DEFAULT_WARMUP,
   DEFAULT_DURATION,
   arrivalScenarios,
+  dbsatArrivalScenarios,
+  executionSegmentOptions,
   envOr,
   requireTarget,
   recordErrorClass,
@@ -79,7 +81,10 @@ if (__ENV.CWM_TOKEN_SELFTEST === '1') {
 export const options = {
   discardResponseBodies: false,
   summaryTrendStats: SUMMARY_TREND_STATS,
-  scenarios: arrivalScenarios(rps, warmup, duration),
+  ...executionSegmentOptions(),
+  scenarios: scenarioName.startsWith('typical-dbsat-')
+    ? dbsatArrivalScenarios(rps, warmup, duration, envOr('VU_PRE_S', '0.5'), envOr('VU_MAX_S', '2.5'))
+    : arrivalScenarios(rps, warmup, duration),
   tags: {
     campaign_id: envOr('CAMPAIGN_ID', 'unset-campaign'),
     run_id: envOr('RUN_ID', 'unset-run'),

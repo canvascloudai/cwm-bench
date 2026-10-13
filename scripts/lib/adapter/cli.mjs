@@ -102,7 +102,8 @@ Scenario keys (kebab-case, discovered from this repo + public CWM rungs):
   typical-scale-3x-100, typical-scale-3x-200, typical-scale-3x-300,
   typical-p95-1x-300, typical-p95-1x-200, typical-p95-1x-100,
   typical-p95-2x-300, typical-p95-2x-200, typical-p95-2x-100,
-  typical-p95-3x-300, typical-p95-3x-200, typical-p95-3x-100
+  typical-p95-3x-300, typical-p95-3x-200, typical-p95-3x-100,
+  typical-dbsat-{2x|3x|4x}-{300|500|700|900|1100|1300|1500}
 
 Holdouts:
   later-day      Distinct holdout. Runs only on a later UTC calendar day
@@ -129,6 +130,13 @@ Typical profile (app_profile=typical, app_workers=2, pool 250):
   split holdout, not fit. A live app count other than N fails with
   APP_COUNT_MISMATCH. Every other typical key expects 2 app servers
   and fails the same way on any other count.
+  typical-dbsat-{2x,3x,4x}-* are the typical-dbsat-v1 keys, ascending
+  300 → 1500 total RPS in us-east-2 with app_count 2, 3, or 4. Test ids are
+  typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD (r = discovery rep,
+  c1 = confirmation, d1 = dry run). They may run on two generators
+  (generator_count=2), record steady P95, Performance Insights wait events
+  and app pool-wait metrics on collect, and report a controller breach stop
+  (teardown with CWM_STOP_REASON) as a partial "overload observation" step.
   typical-p95-1x-*, typical-p95-2x-*, and typical-p95-3x-* are the
   typical-p95-v1 keys (300, then 200, then 100 total RPS) in us-east-2.
   Test ids are typical-p95-{1x|2x|3x}-r{1..3}-YYYYMMDD, with a letter
@@ -150,7 +158,9 @@ Environment (optional):
   CWM_TERRAFORM_DIR     Terraform directory (default: <repo>/terraform)
   CWM_ADAPTER_STATE     Fit-date state file (default: <repo>/.cwm-adapter-state.json)
   CWM_CAMPAIGN_ID       Campaign id stamped on k6 tags
-  CWM_MEASUREMENT_SHA   typical-p95-v1 measurement SHA recorded on collect
+  CWM_MEASUREMENT_SHA   typical-p95-v1 / dbsat-v1 measurement SHA recorded on collect
+  CWM_STOP_REASON       teardown only: controller breach stop; marks the step partial
+  CWM_VU_PRE_S / CWM_VU_MAX_S  typical-dbsat VUs per RPS (default 0.5 / 2.5)
   CWM_RUN_ID            Run id (default: <scenario>-<utc-stamp>)
   CWM_WARMUP            k6 warmup (default 5m)
   CWM_DURATION          k6 steady duration (default 15m)
