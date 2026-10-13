@@ -11,6 +11,15 @@ export const SCALE_LADDER = Object.freeze([100, 200, 300]);
 
 export const P95_TEST_ID_RE = /^typical-p95-(1x|2x|3x)-r[1-3][a-z]?-\d{8}$/;
 
+/**
+ * typical-dbsat-v1: ascending 300 → 1500. Enforced as a prefix: an apply may
+ * stop early (breach, or a confirmation apply that ends at S_next), but it may
+ * never skip, reorder, or re-run a step.
+ */
+export const DBSAT_LADDER = Object.freeze([300, 500, 700, 900, 1100, 1300, 1500]);
+/** Discovery r1/r2, confirmation c1, dry run d1; optional replacement letter. */
+export const DBSAT_TEST_ID_RE = /^typical-dbsat-(2x|3x|4x)-(r[12]|c1|d1)([a-z]?)-\d{8}$/;
+
 export function parseLadder(value) {
   if (value == null || value === '') return null;
   const parts = String(value).split(/[,\s]+/).filter(Boolean).map((item) => Number(item));
@@ -96,8 +105,39 @@ function unenforcedMetadata(spec, plan, done) {
   };
 }
 
+function assertDbsatTestId(spec, id) {
+  const dbsat = typeof spec.key === 'string' && spec.key.startsWith('typical-dbsat-');
+  if (dbsat) {
+    const match = DBSAT_TEST_ID_RE.exec(id);
+    if (!match) {
+      const err = new Error(
+        `scenario ${spec.key} requires test id typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD; got ${id || 'unset'}`,
+      );
+      err.code = 'TEST_ID_MISMATCH';
+      throw err;
+    }
+    if (Number(match[1][0]) !== spec.expectedAppCount) {
+      const err = new Error(
+        `scenario ${spec.key} expects ${spec.expectedAppCount} app server(s); test id ${id} is ${match[1]}`,
+      );
+      err.code = 'TEST_ID_MISMATCH';
+      throw err;
+    }
+    return true;
+  }
+  if (DBSAT_TEST_ID_RE.test(id)) {
+    const err = new Error(
+      `test id ${id} is a typical-dbsat apply; refusing scenario ${spec.key}. Other campaign keys are not reused on it.`,
+    );
+    err.code = 'REUSED_KEY';
+    throw err;
+  }
+  return false;
+}
+
 export function assertP95TestId(spec, campaignId) {
   const id = campaignId == null ? '' : String(campaignId);
+  if (assertDbsatTestId(spec, id)) return id;
   const p95 = typeof spec.key === 'string' && spec.key.startsWith('typical-p95-');
   if (p95) {
     const match = P95_TEST_ID_RE.exec(id);
@@ -140,8 +180,10 @@ export function assertCampaignIdentity(spec, env, outputs) {
   const fromTf = outputs && outputs.topology && outputs.topology.test_id
     ? String(outputs.topology.test_id)
     : '';
-  const p95Scenario = typeof spec.key === 'string' && spec.key.startsWith('typical-p95-');
-  const p95Id = P95_TEST_ID_RE.test(fromEnv) || P95_TEST_ID_RE.test(fromTf);
+  const p95Scenario = typeof spec.key === 'string'
+    && (spec.key.startsWith('typical-p95-') || spec.key.startsWith('typical-dbsat-'));
+  const p95Id = P95_TEST_ID_RE.test(fromEnv) || P95_TEST_ID_RE.test(fromTf)
+    || DBSAT_TEST_ID_RE.test(fromEnv) || DBSAT_TEST_ID_RE.test(fromTf);
   if ((p95Scenario || p95Id) && fromEnv && fromTf && fromEnv !== fromTf) {
     const err = new Error(
       `CWM_CAMPAIGN_ID ${fromEnv} does not match terraform test_id ${fromTf}`,

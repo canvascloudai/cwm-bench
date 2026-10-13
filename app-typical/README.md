@@ -48,3 +48,7 @@ cd app-typical && npm ci --omit=dev --ignore-scripts && npm run check
 ```
 
 A MySQL 8.0 correctness check (row counts, a second seed, response shapes) is `node tests/typical/correctness.mjs` when Docker is available.
+
+## `/api/metrics` (typical-dbsat-v1)
+
+Per-minute mysql2 pool acquire-wait histograms (log buckets, ratio 1.001), queued share, queue-limit rejects, pool queue depth and event-loop delay p99/max, merged across workers by the primary over cluster IPC and kept for 240 minutes. Only completed UTC minutes are reported. Unauthenticated and read-only like `/api/meta`; the adapter reads it on each node over SSM at `127.0.0.1:8080`. Every query now acquires through the timed pool (`src/metrics.js`), so this app version has a new measurement SHA.

@@ -18,6 +18,8 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 const { poolSizePerWorker, handleWorkerExit } = require('./pool');
 const { signToken, verifyToken, TOKEN_EXP } = require('./token');
+const { monitorEventLoopDelay } = require('node:perf_hooks');
+const { createAggregator, instrumentPool } = require('./metrics');
 
 const PORT = Number(process.env.PORT || 8080);
 const GIT_SHA = process.env.APP_GIT_SHA || 'unknown';
@@ -152,13 +154,21 @@ function placeholders(values) {
 }
 
 let pool = null;
+let timedPool = null;
 
+// Every query acquires through the timed pool so acquire wait is measured
+// (typical-dbsat-v1). Same behaviour as pool.execute: acquire, execute,
+// release.
 async function query(sql, params) {
+  let conn;
   try {
-    const [rows] = await pool.execute(sql, params);
+    conn = await timedPool.getConnection();
+    const [rows] = await conn.execute(sql, params);
     return rows;
   } catch (err) {
     throw wrapMysqlError(err);
+  } finally {
+    if (conn) conn.release();
   }
 }
 
@@ -196,6 +206,27 @@ app.get('/api/meta', (_req, res) => {
     gitSha: GIT_SHA,
     node: process.version,
   });
+});
+
+// Per-minute pool acquire-wait histograms, queue depth and event-loop delay,
+// merged across workers by the primary. Unauthenticated, read-only, served
+// only on the private app port.
+let metricsRequestId = 0;
+const metricsPending = new Map();
+app.get('/api/metrics', (_req, res) => {
+  if (!process.send) return res.json({ minutes: [] });
+  metricsRequestId += 1;
+  const id = metricsRequestId;
+  const timer = setTimeout(() => {
+    metricsPending.delete(id);
+    sendError(res, 503, 'internal', 'metrics unavailable');
+  }, 2000);
+  metricsPending.set(id, (body) => {
+    clearTimeout(timer);
+    res.json({ service: 'cwm-bench-app', gitSha: GIT_SHA, ...body });
+  });
+  process.send({ type: 'cwm-metrics-req', id });
+  return undefined;
 });
 
 app.use((req, res, next) => {
@@ -350,7 +381,7 @@ app.post('/api/articles/:slug/comments', async (req, res, next) => {
   const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
   let conn;
   try {
-    conn = await pool.getConnection();
+    conn = await timedPool.getConnection();
     await conn.beginTransaction();
     const found = await execOn(
       conn,
@@ -461,6 +492,15 @@ function startPrimary() {
     if (restarts === before) return;
     process.stdout.write(`${JSON.stringify({ msg: 'worker respawned', restarts })}\n`);
   });
+  const aggregator = createAggregator();
+  cluster.on('message', (worker, message) => {
+    if (!message || typeof message !== 'object') return;
+    if (message.type === 'cwm-metrics' && Array.isArray(message.rows)) {
+      for (const row of message.rows) aggregator.add(row);
+    } else if (message.type === 'cwm-metrics-req') {
+      worker.send({ type: 'cwm-metrics-res', id: message.id, minutes: aggregator.snapshot() });
+    }
+  });
   for (let i = 0; i < APP_WORKERS; i += 1) cluster.fork();
   process.stdout.write(`${JSON.stringify({
     msg: 'cwm-bench-typical primary',
@@ -486,6 +526,30 @@ async function startWorker() {
     dateStrings: true,
     timezone: 'Z',
   });
+  timedPool = instrumentPool(pool);
+  const eld = monitorEventLoopDelay({ resolution: 10 });
+  eld.enable();
+  process.on('message', (message) => {
+    if (message && message.type === 'cwm-metrics-res') {
+      const done = metricsPending.get(message.id);
+      if (done) {
+        metricsPending.delete(message.id);
+        done({ minutes: message.minutes });
+      }
+    }
+  });
+  setInterval(() => {
+    timedPool.rotate();
+    const rows = timedPool.drain();
+    if (rows.length === 0) return;
+    // Event-loop delay is sampled per completed minute (1 s tick precision).
+    const last = rows[rows.length - 1];
+    last.eventLoopDelayP99Ms = eld.percentile(99) / 1e6;
+    last.eventLoopDelayMaxMs = eld.max / 1e6;
+    for (const row of rows) row.workers = 1;
+    eld.reset();
+    if (process.send) process.send({ type: 'cwm-metrics', rows });
+  }, 1000).unref();
   app.listen(PORT, '0.0.0.0', () => {
     process.stdout.write(`${JSON.stringify({
       msg: 'cwm-bench-typical listening',

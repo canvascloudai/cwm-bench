@@ -1,4 +1,5 @@
 import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
+import { DBSAT_LADDER } from './ladder.mjs';
 
 /**
  * Campaign matrix implemented by this adapter.
@@ -27,6 +28,11 @@ import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
  *
  * typical-p95 keys are not aliases of typical-fit, typical-holdout, or
  * typical-scale. Their ladder is 300 → 200 → 100.
+ *
+ * typical-dbsat-{2x,3x,4x}-{300,500,700,900,1100,1300,1500} are the
+ * typical-dbsat-v1 DB-breakpoint discovery keys (us-east-2, app_count 2/3/4,
+ * ascending prefix-enforced ladder). Primary latency is steady-window P95
+ * computed at collect; the whole-step untagged aggregate is kept alongside.
  */
 
 export const SCENARIO_KEYS = Object.freeze([
@@ -66,6 +72,27 @@ export const SCENARIO_KEYS = Object.freeze([
   'typical-p95-3x-300',
   'typical-p95-3x-200',
   'typical-p95-3x-100',
+  'typical-dbsat-2x-300',
+  'typical-dbsat-2x-500',
+  'typical-dbsat-2x-700',
+  'typical-dbsat-2x-900',
+  'typical-dbsat-2x-1100',
+  'typical-dbsat-2x-1300',
+  'typical-dbsat-2x-1500',
+  'typical-dbsat-3x-300',
+  'typical-dbsat-3x-500',
+  'typical-dbsat-3x-700',
+  'typical-dbsat-3x-900',
+  'typical-dbsat-3x-1100',
+  'typical-dbsat-3x-1300',
+  'typical-dbsat-3x-1500',
+  'typical-dbsat-4x-300',
+  'typical-dbsat-4x-500',
+  'typical-dbsat-4x-700',
+  'typical-dbsat-4x-900',
+  'typical-dbsat-4x-1100',
+  'typical-dbsat-4x-1300',
+  'typical-dbsat-4x-1500',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -145,6 +172,41 @@ function typicalP95Scenario(key, appCount, rps) {
       `Terraform region ${TYPICAL_REGION}, topology app_count=${appCount}, and test id ` +
       `typical-p95-${appCount}x-r{1..3}-YYYYMMDD. Not a typical-fit, typical-holdout, or typical-scale key. ` +
       'Scored latency is the untagged whole-run http_req_duration aggregate.',
+  };
+}
+
+function typicalDbsatScenario(key, appCount, rps) {
+  return {
+    key,
+    kind: 'discovery',
+    rps,
+    split: 'discovery',
+    regionRole: 'primary',
+    requiredRegion: TYPICAL_REGION,
+    workload: { script: 'typical.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'typical',
+    expectedWorkers: 2,
+    expectedAppCount: appCount,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    ladder: DBSAT_LADDER.slice(),
+    enforceLadder: true,
+    scoreUntaggedDuration: true,
+    requestLevelRaw: true,
+    recordMeasurementSha: true,
+    steadyP95AtCollect: true,
+    performanceInsights: true,
+    poolMetrics: true,
+    partialStep: true,
+    multiGenerator: true,
+    description:
+      `Typical-dbsat-v1 discovery at ${rps} total RPS on ${appCount} × m5.large. ` +
+      `Ascending ladder ${DBSAT_LADDER.join(' → ')} (prefix-enforced; may stop early on breach). ` +
+      `Requires app_profile=typical, app_workers=2, pool 250, Terraform region ${TYPICAL_REGION}, ` +
+      `topology app_count=${appCount}, and test id typical-dbsat-${appCount}x-{r1|r2|c1|d1}[letter]-YYYYMMDD. ` +
+      'Primary latency is steady-window P95 from request samples; the untagged whole-step aggregate is reported too.',
   };
 }
 
@@ -343,6 +405,27 @@ const DEFINITIONS = {
   'typical-p95-3x-300': typicalP95Scenario('typical-p95-3x-300', 3, 300),
   'typical-p95-3x-200': typicalP95Scenario('typical-p95-3x-200', 3, 200),
   'typical-p95-3x-100': typicalP95Scenario('typical-p95-3x-100', 3, 100),
+  'typical-dbsat-2x-300': typicalDbsatScenario('typical-dbsat-2x-300', 2, 300),
+  'typical-dbsat-2x-500': typicalDbsatScenario('typical-dbsat-2x-500', 2, 500),
+  'typical-dbsat-2x-700': typicalDbsatScenario('typical-dbsat-2x-700', 2, 700),
+  'typical-dbsat-2x-900': typicalDbsatScenario('typical-dbsat-2x-900', 2, 900),
+  'typical-dbsat-2x-1100': typicalDbsatScenario('typical-dbsat-2x-1100', 2, 1100),
+  'typical-dbsat-2x-1300': typicalDbsatScenario('typical-dbsat-2x-1300', 2, 1300),
+  'typical-dbsat-2x-1500': typicalDbsatScenario('typical-dbsat-2x-1500', 2, 1500),
+  'typical-dbsat-3x-300': typicalDbsatScenario('typical-dbsat-3x-300', 3, 300),
+  'typical-dbsat-3x-500': typicalDbsatScenario('typical-dbsat-3x-500', 3, 500),
+  'typical-dbsat-3x-700': typicalDbsatScenario('typical-dbsat-3x-700', 3, 700),
+  'typical-dbsat-3x-900': typicalDbsatScenario('typical-dbsat-3x-900', 3, 900),
+  'typical-dbsat-3x-1100': typicalDbsatScenario('typical-dbsat-3x-1100', 3, 1100),
+  'typical-dbsat-3x-1300': typicalDbsatScenario('typical-dbsat-3x-1300', 3, 1300),
+  'typical-dbsat-3x-1500': typicalDbsatScenario('typical-dbsat-3x-1500', 3, 1500),
+  'typical-dbsat-4x-300': typicalDbsatScenario('typical-dbsat-4x-300', 4, 300),
+  'typical-dbsat-4x-500': typicalDbsatScenario('typical-dbsat-4x-500', 4, 500),
+  'typical-dbsat-4x-700': typicalDbsatScenario('typical-dbsat-4x-700', 4, 700),
+  'typical-dbsat-4x-900': typicalDbsatScenario('typical-dbsat-4x-900', 4, 900),
+  'typical-dbsat-4x-1100': typicalDbsatScenario('typical-dbsat-4x-1100', 4, 1100),
+  'typical-dbsat-4x-1300': typicalDbsatScenario('typical-dbsat-4x-1300', 4, 1300),
+  'typical-dbsat-4x-1500': typicalDbsatScenario('typical-dbsat-4x-1500', 4, 1500),
 };
 
 export function scenariosRequiringCompleteCollect() {

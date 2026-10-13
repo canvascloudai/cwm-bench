@@ -41,6 +41,11 @@ export function extractOutputs(values) {
   return {
     albDns: values.alb_dns || null,
     generatorInstanceId: values.generator_instance_id || null,
+    generatorInstanceIds: Array.isArray(values.generator_instance_ids) && values.generator_instance_ids.length > 0
+      ? values.generator_instance_ids
+      : (values.generator_instance_id ? [values.generator_instance_id] : []),
+    rdsResourceId: values.rds_resource_id || null,
+    performanceInsightsEnabled: values.performance_insights_enabled === true,
     appInstanceIds: Array.isArray(values.app_instance_ids) ? values.app_instance_ids : [],
     resolvedAmiId: values.resolved_ami_id || null,
     amiSource: values.ami_source || null,

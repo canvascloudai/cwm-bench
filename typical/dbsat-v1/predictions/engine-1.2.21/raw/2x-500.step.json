@@ -1,0 +1,274 @@
+{
+ "simulationId": "b4ce0b8f-fef2-4a6a-879e-e62a115d196c",
+ "scenarioHash": "0ec9e78d0a4fc6582100761d0b2b74c94b56f6a61dd48afafcc259cd6e2b16dd",
+ "effectiveConfigHash": "163bf89cca23d2048b44742de99292eebeeb4f7f36b81afc211e45e26aad7702",
+ "predictionEffectiveConfigHash": "163bf89cca23d2048b44742de99292eebeeb4f7f36b81afc211e45e26aad7702",
+ "engineVersion": "1.2.21",
+ "calibrationEvidence": {
+  "kind": "owned",
+  "note": "Owned typical Node CRUD fit from typical-v1-20260927c (engine 1.2.3, fit rungs typical-fit-20, typical-fit-100, typical-fit-200); one day and one region, 20\u2013200 RPS fit, 300 RPS independent holdout. Applies only to the matching workload/topology within 20\u2013300 RPS. At 301\u2013500 RPS it is an unvalidated extrapolation for diagnostic use only, not measured or validated critical/saturation evidence. Not evidence for generic typical applications. Cost is list price, not a measured bill.",
+  "latencyBasis": "P95 uses typical-p95-v1, validated on independent holdouts (not fit data): m5.large, 1\u20133 app servers, 100\u2013300 total RPS, at most 300 RPS per node, db.r5.large. Holdout DB CPU stayed at or below about 28% with no connection errors. Not validated below 100 or above 300 total RPS or under database saturation. The 300 total-RPS cap and linear per-node extension above 300 RPS are extrapolations, not measurements. Evidence: https://github.com/canvascloudai/cwm-bench/pull/21. P50/P99 extrapolated from the owned typical in-VPC internal-ALB k6 fit; diagnostic prediction beyond the 300 RPS holdout, not measured or validated at this load (P50 held at its 300 RPS projection)",
+  "calibrationId": "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+  "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)"
+ },
+ "predictionEvidence": {
+  "note": "P95 uses typical-p95-v1, validated on independent holdouts (not fit data): m5.large, 1\u20133 app servers, 100\u2013300 total RPS, at most 300 RPS per node, db.r5.large. Holdout DB CPU stayed at or below about 28% with no connection errors. Not validated below 100 or above 300 total RPS or under database saturation. The 300 total-RPS cap and linear per-node extension above 300 RPS are extrapolations, not measurements. Evidence: https://github.com/canvascloudai/cwm-bench/pull/21. The following original typical-v1 fit notes describe non-P95 metrics only. typical application; basis provenance, not observed simulated output. Assumption intervals, not statistical confidence intervals. Owned typical fit applies only to the matching workload/topology within 20\u2013300 RPS (20/100/200 fit, 300 independent holdout). At 301\u2013500 RPS the existing owned fit is extrapolated for diagnostic use only; those loads were not measured, validated, or used to fit. P50 is held at its 300 RPS projection. Assumed in-VPC/internal-LB baseline; other provider/network paths are not measured. P99: owned typical in-VPC k6 P99 fit (unweighted diagnostic); typical fit uses only 20/100/200 RPS; 300 RPS is an independent holdout; 500 RPS is a diagnostic extrapolation, neither used to fit.",
+  "appCpu": {
+   "low": 6.066,
+   "high": 48.528,
+   "central": 24.264
+  },
+  "version": 1,
+  "appWeight": "typical",
+  "loadScope": "beyond measured load",
+  "sourceIds": [
+   "aws-crud/typical:typical-v1-20260927c:6aa574d7ff9d3080b88b221bcd59f7d218ae37f0",
+   "typical-p95-v1",
+   "catalog:aws:m5.large",
+   "aws-m5-published-size-specification"
+  ],
+  "formulaIds": [
+   "app-weight-v1",
+   "owned-typical-app-cpu-ols-v1",
+   "owned-typical-percentile-ols-v1",
+   "typical-p95-v1",
+   "owned-typical-p99-ols-v1"
+  ],
+  "latencyP50": {
+   "low": 1.0413052151639342,
+   "high": 8.330441721311473,
+   "central": 4.165220860655737,
+   "evidenceLevel": "scaled from measured"
+  },
+  "latencyP95": {
+   "low": 51.65764812769184,
+   "high": 97.33234830839115,
+   "central": 72.96277984137267,
+   "evidenceLevel": "scaled from measured"
+  },
+  "latencyP99": {
+   "low": 25.806921643647552,
+   "high": 206.45537314918042,
+   "central": 103.22768657459021,
+   "evidenceLevel": "scaled from measured"
+  },
+  "evidenceLevel": "scaled from measured",
+  "legacyGeneric": false,
+  "appCpuByResource": [
+   {
+    "low": 6.066,
+    "high": 48.528,
+    "central": 24.264,
+    "resourceId": "app-1",
+    "evidenceLevel": "scaled from measured",
+    "legacyGeneric": false
+   },
+   {
+    "low": 6.066,
+    "high": 48.528,
+    "central": 24.264,
+    "resourceId": "app-2",
+    "evidenceLevel": "scaled from measured",
+    "legacyGeneric": false
+   }
+  ],
+  "appWeightDefaulted": false,
+  "latencyPercentileStatus": "modeled"
+ },
+ "appWeight": "typical",
+ "appWeightDefaulted": false,
+ "replayIdentity": {
+  "scenarioHash": "0ec9e78d0a4fc6582100761d0b2b74c94b56f6a61dd48afafcc259cd6e2b16dd",
+  "effectiveConfigHash": "7b489a10498e72fd81d6b5ac03374e91a9d71827d73ba4c6639c08efea83d357"
+ },
+ "currentStep": 6,
+ "traffic": 500,
+ "latencyP50": 4.1652207,
+ "latencyP95": 72.962776,
+ "latencyP99": 103.227684,
+ "latencyP99Basis": "owned typical in-VPC k6 P99 fit (unweighted diagnostic)",
+ "errorRate": 0,
+ "throughput": 437.58838,
+ "goodputRps": 437.58838,
+ "goodputSemantics": "post_step_point_rate",
+ "goodputProvenance": {
+  "kind": "derived",
+  "sourceFields": [
+   "metrics.throughput"
+  ]
+ },
+ "goodputWindow": {
+  "status": "unavailable",
+  "provenance": {
+   "kind": "unavailable",
+   "reason": "persisted goodput points do not include recorded simulation-clock interval bounds"
+  }
+ },
+ "offeredRps": 500,
+ "costPerHour": 1.16,
+ "residualCostPerHour": 0,
+ "residualCostDefinition": "Unavailable, parked, or stopped resource costs only. Healthy or degraded idle resources, including ALBs, are excluded; totalCostPerHour remains the complete billed total.",
+ "latencyBasis": "P95 uses typical-p95-v1, validated on independent holdouts (not fit data): m5.large, 1\u20133 app servers, 100\u2013300 total RPS, at most 300 RPS per node, db.r5.large. Holdout DB CPU stayed at or below about 28% with no connection errors. Not validated below 100 or above 300 total RPS or under database saturation. The 300 total-RPS cap and linear per-node extension above 300 RPS are extrapolations, not measurements. Evidence: https://github.com/canvascloudai/cwm-bench/pull/21. P50/P99 extrapolated from the owned typical in-VPC internal-ALB k6 fit; diagnostic prediction beyond the 300 RPS holdout, not measured or validated at this load (P50 held at its 300 RPS projection)",
+ "metricId": "53527",
+ "resources": [
+  {
+   "id": "alb",
+   "name": "ALB (Application Load Balancer)",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 4.1,
+   "recoveryProgress": {
+    "state": "healthy",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": null,
+     "completedSteps": 0,
+     "requiredSteps": 0,
+     "remainingSteps": 0
+    }
+   }
+  },
+  {
+   "id": "app-1",
+   "name": "app-1",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 24.264,
+   "routedRps": 250,
+   "availabilityState": "available",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "healthy",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": null,
+     "completedSteps": 0,
+     "requiredSteps": 0,
+     "remainingSteps": 0
+    }
+   }
+  },
+  {
+   "id": "app-2",
+   "name": "app-2",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 24.264,
+   "routedRps": 250,
+   "availabilityState": "available",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "healthy",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": null,
+     "completedSteps": 0,
+     "requiredSteps": 0,
+     "remainingSteps": 0
+    }
+   }
+  },
+  {
+   "id": "db",
+   "name": "db",
+   "location": {
+    "regionKey": "use2"
+   },
+   "status": "healthy",
+   "cpuPercent": 40.3,
+   "availabilityState": "available",
+   "isRoutable": true,
+   "recoveryProgress": {
+    "state": "healthy",
+    "parkWindow": {
+     "totalSteps": 0,
+     "completedSteps": 0,
+     "remainingSteps": 0
+    },
+    "cooldown": {
+     "target": null,
+     "completedSteps": 0,
+     "requiredSteps": 0,
+     "remainingSteps": 0
+    }
+   }
+  }
+ ],
+ "events": [],
+ "loadBalancers": [
+  {
+   "resourceId": "alb",
+   "routedRps": 500
+  }
+ ],
+ "errorBreakdown": {
+  "dbFailure": 0,
+  "ociStorage": 0,
+  "cpuOverload": 0,
+  "runtimeMemory": 0,
+  "computeFailure": 0,
+  "poolSaturation": 0,
+  "queueAbsorption": 0,
+  "sessionAffinity": 0,
+  "capacityOverload": 0,
+  "databasePressure": 0,
+  "dependencyFailure": 0,
+  "startupBackpressure": 0,
+  "benchmarkReferenceFit": 0
+ },
+ "databaseConnectionDemand": [
+  {
+   "resourceId": "db",
+   "loadDerivedConnections": 100,
+   "loadDerivedBasis": "load-derived estimate; not observed live DB connections",
+   "connectionPressure": 0.2,
+   "declaredFleetConnectionBudget": 500,
+   "declaredFleetConnectionPressure": 1,
+   "declaredFleetConnectionBudgetBasis": "ASSUMPTION / maximum declared fleet \u00d7 app pool size; not observed live DB connections",
+   "declaredFleetConnectionBudgetTiers": [
+    {
+     "poolSize": 250,
+     "resourceId": "app-1",
+     "resourceIds": [
+      "app-1"
+     ],
+     "resourceName": "app-1",
+     "instanceCount": 1,
+     "fleetSizeBasis": "single_resource_default",
+     "connectionBudget": 250
+    },
+    {
+     "poolSize": 250,
+     "resourceId": "app-2",
+     "resourceIds": [
+      "app-2"
+     ],
+     "resourceName": "app-2",
+     "instanceCount": 1,
+     "fleetSizeBasis": "single_resource_default",
+     "connectionBudget": 250
+    }
+   ],
+   "assumption": "ASSUMPTION / maximum declared fleet \u00d7 app pool size; not observed live DB connections"
+  }
+ ],
+ "auroraFailovers": []
+}

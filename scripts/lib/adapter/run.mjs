@@ -81,8 +81,9 @@ function buildK6Command(spec, options) {
     `export DURATION=${shellQuote(options.duration)}`,
     `export RESULTS_DIR=${shellQuote(resultsDir)}`,
     `export ${spec.workload.envName}=${shellQuote(spec.workload.envValue)}`,
+    ...Object.entries(options.extraEnv || {}).map(([name, value]) => `export ${name}=${shellQuote(value)}`),
     'mkdir -p "$RESULTS_DIR"',
-    'rm -f "$RESULTS_DIR/exit.code" "$RESULTS_DIR/completed_at" "$RESULTS_DIR/pid" "$RESULTS_DIR/started_at" "$RESULTS_DIR/runner.log"',
+    'rm -f "$RESULTS_DIR/exit.code" "$RESULTS_DIR/completed_at" "$RESULTS_DIR/pid" "$RESULTS_DIR/started_at" "$RESULTS_DIR/runner.log" "$RESULTS_DIR/stopped.json"',
     `printf '%s\\n' ${shellQuote(identity)} > "$RESULTS_DIR/identity.json"`,
     'date -u +%Y-%m-%dT%H:%M:%SZ > "$RESULTS_DIR/started_at"',
     `nohup setsid sh -c ${shellQuote(runnerScript)} > "$RESULTS_DIR/runner.log" 2>&1 < /dev/null &`,
@@ -100,6 +101,9 @@ function buildK6StatusCommand(options) {
     'set -u',
     '# ADAPTER_K6_STATUS',
     `DIR=${shellQuote(resultsDir)}`,
+    'if [ -f "$DIR/stopped.json" ] && [ -f "$DIR/exit.code" ]; then',
+    '  printf "ADAPTER_K6_STOPPED %s\\n" "$(tr -d "\\n" < "$DIR/stopped.json")"',
+    'fi',
     'if [ -f "$DIR/exit.code" ]; then',
     '  CODE="$(tr -d "[:space:]" < "$DIR/exit.code")"',
     '  printf "ADAPTER_K6_COMPLETE exit=%s\\n" "$CODE"',
@@ -130,6 +134,9 @@ function buildK6WaitCommand(options, timeoutMs) {
     `DIR=${shellQuote(resultsDir)}`,
     `DEADLINE=$(($(date +%s) + ${timeoutSeconds}))`,
     'while :; do',
+    '  if [ -f "$DIR/stopped.json" ] && [ -f "$DIR/exit.code" ]; then',
+    '    printf "ADAPTER_K6_STOPPED %s\\n" "$(tr -d "\\n" < "$DIR/stopped.json")"',
+    '  fi',
     '  if [ -f "$DIR/exit.code" ]; then',
     '    CODE="$(tr -d "[:space:]" < "$DIR/exit.code")"',
     '    printf "ADAPTER_K6_COMPLETE exit=%s\\n" "$CODE"',
@@ -165,6 +172,31 @@ function teardownCommand(options = {}) {
     ].join('\n');
   }
   const resultsDir = `/opt/cwm-bench/results/raw/${options.campaignId}/${options.runId}`;
+  if (options.stopReason) {
+    // typical-dbsat-v1 breach stop: mark the step, SIGINT only the k6 child so
+    // k6 writes summary.json and the runner still gzips k6.json and writes
+    // exit.code. Falls back to the hard kill below after 120 s.
+    const marker = JSON.stringify({ reason: String(options.stopReason), at: options.stoppedAt || null });
+    return [
+      'set -u',
+      `DIR=${shellQuote(resultsDir)}`,
+      'if [ -f "$DIR/exit.code" ]; then printf "%s\\n" "ADAPTER_STOP_NOOP (k6 already completed)"; exit 0; fi',
+      `printf '%s\\n' ${shellQuote(marker)} > "$DIR/stopped.json"`,
+      'if [ -f "$DIR/pid" ]; then',
+      '  PID="$(tr -d "[:space:]" < "$DIR/pid")"',
+      '  pkill -INT -P "$PID" -x k6 >/dev/null 2>&1 || true',
+      '  for _ in $(seq 1 120); do [ -f "$DIR/exit.code" ] && break; sleep 1; done',
+      '  if [ ! -f "$DIR/exit.code" ]; then',
+      '    kill -KILL -- "-$PID" >/dev/null 2>&1 || true',
+      '    printf "ADAPTER_STOP_KILLED pid=%s\\n" "$PID"',
+      '  else',
+      '    printf "ADAPTER_STOP_GRACEFUL pid=%s\\n" "$PID"',
+      '  fi',
+      'else',
+      '  printf "%s\\n" "ADAPTER_STOP_NOOP (k6 was not started)"',
+      'fi',
+    ].join('\n');
+  }
   return [
     'set -u',
     `DIR=${shellQuote(resultsDir)}`,
@@ -271,8 +303,20 @@ async function readAppMeta(runAws, instanceId, region, ctx) {
   }
 }
 
+function parseStopMarker(text) {
+  const match = String(text || '').match(/ADAPTER_K6_STOPPED (\{.*\})/);
+  if (!match) return null;
+  try {
+    return JSON.parse(match[1]);
+  } catch {
+    return { reason: 'unparsed' };
+  }
+}
+
 function parseK6Status(text) {
   const value = String(text || '');
+  const stopped = parseStopMarker(value);
+  if (stopped) return { state: 'stopped', stop: stopped };
   const complete = value.match(/ADAPTER_K6_COMPLETE exit=(-?\d+)/);
   if (complete) {
     return { state: 'complete', exitCode: Number(complete[1]) };
@@ -330,6 +374,18 @@ async function waitForK6(ctx, runAws, options) {
     // A failed/timed-out SSM invocation may still have emitted the terminal
     // marker before control was lost. Trust the run-scoped marker first.
     const status = parseK6Status(invocation?.stdout);
+    if (status.state === 'stopped') {
+      // Controller-requested stop (breach). A valid overload observation, not
+      // a failed run; the step is partial.
+      return {
+        ...invocation,
+        ok: true,
+        status: 'Stopped',
+        responseCode: null,
+        partial: status.stop,
+        pollAttempts: attempts,
+      };
+    }
     if (status.state === 'complete') {
       const ok = status.exitCode === 0;
       return {
@@ -417,45 +473,63 @@ export async function runScenario(ctx, scenarioKey) {
   const warmup = ctx.env.CWM_WARMUP || '5m';
   const duration = ctx.env.CWM_DURATION || '15m';
 
+  const generators = generatorPlan(spec, outputs);
+  const vuEnv = spec.multiGenerator
+    ? { VU_PRE_S: ctx.env.CWM_VU_PRE_S || '0.5', VU_MAX_S: ctx.env.CWM_VU_MAX_S || '2.5' }
+    : {};
+
   let execution;
+  const executions = [];
   try {
-    const start = await runRemoteShell(runAws, {
-      instanceId: outputs.generatorInstanceId,
-      region,
-      commands: [buildK6Command(spec, { campaignId, runId, warmup, duration })],
-      timeoutSeconds: Number(ctx.env.CWM_SSM_TIMEOUT || 3600),
-      waitTimeoutMs: ctx.deps.ssmWaitMs || Number(ctx.env.CWM_SSM_WAIT_MS || 3600_000),
-      pollMs: ctx.deps.ssmPollMs || 2000,
-      comment: `cwm-bench run ${spec.key}`,
-      now: ctx.deps.nowMs,
-      wait: ctx.deps.wait,
-      throwOnFailure: true,
-    });
-    execution = await waitForK6(ctx, runAws, {
-      campaignId,
-      runId,
-      instanceId: outputs.generatorInstanceId,
-      region,
-      scenario: spec.key,
-    });
-    execution.startCommandId = start.commandId;
-  } finally {
-    try {
-      await runRemoteShell(runAws, {
-        instanceId: outputs.generatorInstanceId,
+    const starts = [];
+    for (const generator of generators) {
+      starts.push(await runRemoteShell(runAws, {
+        instanceId: generator.instanceId,
         region,
-        commands: [teardownCommand({ campaignId, runId })],
-        timeoutSeconds: 60,
-        waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
-        pollMs: ctx.deps.ssmPollMs || 1000,
-        comment: `cwm-bench teardown ${spec.key}`,
+        commands: [buildK6Command(spec, {
+          campaignId, runId, warmup, duration, extraEnv: { ...vuEnv, ...generator.env },
+        })],
+        timeoutSeconds: Number(ctx.env.CWM_SSM_TIMEOUT || 3600),
+        waitTimeoutMs: ctx.deps.ssmWaitMs || Number(ctx.env.CWM_SSM_WAIT_MS || 3600_000),
+        pollMs: ctx.deps.ssmPollMs || 2000,
+        comment: `cwm-bench run ${spec.key}`,
         now: ctx.deps.nowMs,
         wait: ctx.deps.wait,
+        throwOnFailure: true,
+      }));
+    }
+    for (let index = 0; index < generators.length; index += 1) {
+      const result = await waitForK6(ctx, runAws, {
+        campaignId,
+        runId,
+        instanceId: generators[index].instanceId,
+        region,
+        scenario: spec.key,
       });
-    } catch {
-      // Teardown is best-effort; the original error (if any) is more important.
+      result.startCommandId = starts[index].commandId;
+      executions.push(result);
+    }
+    execution = executions.find((item) => !item.ok) || executions.find((item) => item.partial) || executions[0];
+  } finally {
+    for (const generator of generators) {
+      try {
+        await runRemoteShell(runAws, {
+          instanceId: generator.instanceId,
+          region,
+          commands: [teardownCommand({ campaignId, runId })],
+          timeoutSeconds: 60,
+          waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
+          pollMs: ctx.deps.ssmPollMs || 1000,
+          comment: `cwm-bench teardown ${spec.key}`,
+          now: ctx.deps.nowMs,
+          wait: ctx.deps.wait,
+        });
+      } catch {
+        // Teardown is best-effort; the original error (if any) is more important.
+      }
     }
   }
+  const partial = spec.partialStep ? (executions.find((item) => item.partial) || {}).partial || null : null;
 
   if (execution.ok) {
     await updateAdapterState(
@@ -487,6 +561,7 @@ export async function runScenario(ctx, scenarioKey) {
             runId,
             at: now.toISOString(),
             rung_pos: ladderMeta.rung_pos,
+            ...(partial ? { partial: true } : {}),
           });
           next.ladderByCampaign[campaignId] = rows;
         }
@@ -518,6 +593,13 @@ export async function runScenario(ctx, scenarioKey) {
           ladder_history: ladderMeta.ladder_history,
         }
       : {}),
+    ...(spec.partialStep
+      ? {
+          stepStatus: partial ? 'overload observation' : 'complete',
+          partialStep: partial,
+          generators: generators.map((item) => item.instanceId),
+        }
+      : {}),
     commandId: execution.startCommandId || execution.commandId,
     statusCommandId: execution.commandId,
     statusPollAttempts: execution.pollAttempts || null,
@@ -533,6 +615,29 @@ export async function runScenario(ctx, scenarioKey) {
     invented: false,
     teardown: { k6Stopped: true },
   };
+}
+
+/**
+ * Generators for one run. typical-dbsat keys may use two generators
+ * (terraform generator_count=2): each runs half the arrival rate via k6
+ * execution segments. Every other key uses the single generator.
+ */
+export function generatorPlan(spec, outputs) {
+  const ids = Array.isArray(outputs.generatorInstanceIds) && outputs.generatorInstanceIds.length > 0
+    ? outputs.generatorInstanceIds
+    : [outputs.generatorInstanceId];
+  if (!spec.multiGenerator || ids.length === 1) {
+    return [{ instanceId: ids[0], env: {} }];
+  }
+  if (ids.length !== 2) {
+    const err = new Error(`typical-dbsat supports 1 or 2 generators; terraform reported ${ids.length}`);
+    err.code = 'GENERATOR_COUNT_UNSUPPORTED';
+    throw err;
+  }
+  return [
+    { instanceId: ids[0], env: { K6_SEGMENT: '0:1/2', K6_SEGMENT_SEQUENCE: '0,1/2,1' } },
+    { instanceId: ids[1], env: { K6_SEGMENT: '1/2:1', K6_SEGMENT_SEQUENCE: '0,1/2,1' } },
+  ];
 }
 
 export async function teardownScenario(ctx) {
@@ -553,14 +658,32 @@ export async function teardownScenario(ctx) {
     throw err;
   }
 
+  const stopReason = ctx.env.CWM_STOP_REASON || null;
+  const ids = Array.isArray(outputs.generatorInstanceIds) && outputs.generatorInstanceIds.length > 1
+    ? outputs.generatorInstanceIds.slice(1)
+    : [];
+  for (const instanceId of ids) {
+    await runRemoteShell(runAws, {
+      instanceId,
+      region,
+      commands: [teardownCommand({ campaignId, runId, stopReason, stoppedAt: ctx.env.CWM_STOPPED_AT })],
+      timeoutSeconds: 180,
+      waitTimeoutMs: ctx.deps.ssmWaitMs || 180_000,
+      pollMs: ctx.deps.ssmPollMs || 1000,
+      comment: 'cwm-bench interrupted-run teardown (secondary generator)',
+      now: ctx.deps.nowMs,
+      wait: ctx.deps.wait,
+      throwOnFailure: true,
+    });
+  }
   const invocation = await runRemoteShell(runAws, {
     instanceId: outputs.generatorInstanceId,
     region,
-    commands: [teardownCommand({ campaignId, runId })],
+    commands: [teardownCommand({ campaignId, runId, stopReason, stoppedAt: ctx.env.CWM_STOPPED_AT })],
     timeoutSeconds: 60,
     waitTimeoutMs: ctx.deps.ssmWaitMs || 60_000,
     pollMs: ctx.deps.ssmPollMs || 1000,
-    comment: 'cwm-bench interrupted-run teardown',
+    comment: stopReason ? `cwm-bench breach stop (${stopReason})` : 'cwm-bench interrupted-run teardown',
     now: ctx.deps.nowMs,
     wait: ctx.deps.wait,
     throwOnFailure: true,
@@ -575,8 +698,8 @@ export async function teardownScenario(ctx) {
     commandId: invocation.commandId,
     remoteStdout: invocation.stdout,
     remoteStderr: invocation.stderr,
-    teardown: { k6Stopped: true },
+    teardown: { k6Stopped: true, ...(stopReason ? { stopReason } : {}) },
   };
 }
 
-export { buildK6Command, readAppMeta, teardownCommand };
+export { buildK6Command, readAppMeta, teardownCommand, parseK6Status };

@@ -9,7 +9,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "check": "node --check src/server.js && node --check src/pool.js && node --check src/token.js"
+    "check": "node --check src/server.js && node --check src/pool.js && node --check src/token.js && node --check src/metrics.js"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",

@@ -406,3 +406,68 @@ Re-run rules are `typical/p95-v1/PREREGISTRATION.md` §7.7. Rungs inside an appl
 ### 12.4 Destroy
 
 Destroy with section 8, using `region=us-east-2`, `test_id=$APPLY`, and the same `-var` set (`app_count`, `ami_id`, `app_profile`, `app_workers`, `app_source_git_ref`). Run the section 8 leftover checks immediately and again after 15 minutes. Proceed when every ARN classifies as terminated or not-found. Do not delete anything by hand outside Terraform.
+
+## 13. DB breakpoint discovery (typical-dbsat-v1)
+
+Separate from sections 6, 10, 11 and 12. The frozen plan is `typical/dbsat-v1/PREREGISTRATION.md` (r4). Controller 1.1.0 behaviour (breach stop, recovery, confirmation mode, spend guard, pause-and-ask) is `typical/dbsat-v1/CONTROLLER-SPEC.md`; the controller is yours, not in this repo. Engine 1.2.21 predictions are frozen in `typical/dbsat-v1/predictions/engine-1.2.21/` and are descriptive only: do not query a live engine during the campaign. Score only with `python3 typical/dbsat-v1/score_dbsat_v1.py`.
+
+`<SHA>` / `measurement_sha` is the merge commit of the dbsat-v1 wiring PR on main (it changes `app-typical/`, so the p95-v1 SHA is not valid here). `<AMI>` is resolved once as in section 12 and reused on every apply.
+
+### 13.1 Dry run first (unscored, before the campaign)
+
+One apply, `APPLY=typical-dbsat-4x-d1-YYYYMMDD`, `N=4`, `-var generator_count=1`, the full ladder 300 → 1500 with section 13.3 commands. Check generator validity on every step (CONTROLLER-SPEC §5). If any step is generator-invalid, first raise `CWM_VU_PRE_S` / `CWM_VU_MAX_S`; if steps are still invalid, the whole campaign uses `-var generator_count=2`. Commit the dry-run evidence and the decision (generator count and VU values) before session 1. Those values are frozen after that.
+
+### 13.2 Session order (Latin square)
+
+| Slot | Day 1 | Day 2 | Day 3 (optional) |
+| --- | --- | --- | --- |
+| 1 | 2×-r1 | 4×-r2 | overflow / replacements |
+| 2 | 3×-r1 | 2×-r2 | |
+| 3 | 4×-r1 | 3×-r2 | |
+
+Apply id / `test_id`: `typical-dbsat-${N}x-r${K}-YYYYMMDD` (K = 1 or 2; a replacement adds a letter, `r1a`). Parent id `typical-dbsat-v1-YYYYMMDD` (UTC date of the first apply). Rep k of N+1 is paired with rep k of N (same day where possible). Confirmation applies are `typical-dbsat-${N}x-c1-YYYYMMDD`, run back to back on one UTC day in the order 2× → 3× → 4× (CONTROLLER-SPEC §3).
+
+### 13.3 One apply
+
+```bash
+APPLY=typical-dbsat-${N}x-r${K}-YYYYMMDD
+git clone https://github.com/canvascloudai/cwm-bench.git cwm-bench-$APPLY && cd cwm-bench-$APPLY
+git checkout --detach <SHA> && test -f typical/dbsat-v1/PREREGISTRATION.md && test -f typical/dbsat-v1/predictions/engine-1.2.21/predictions.json && mkdir -p out
+export AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 CWM_CAMPAIGN_ID=$APPLY CWM_MEASUREMENT_SHA=<SHA>
+export CWM_VU_PRE_S=<frozen> CWM_VU_MAX_S=<frozen>
+unset CWM_WARMUP CWM_DURATION CWM_FIT_CAMPAIGN_DATE CWM_LADDER CWM_STOP_REASON
+node scripts/worker-adapter.mjs wait-ready --json > out/00-capability.json
+cd terraform && terraform init && terraform apply \
+  -var='region=us-east-2' -var="test_id=$APPLY" -var='app_profile=typical' -var='app_workers=2' \
+  -var="app_count=$N" -var="ami_id=<AMI>" -var='app_source_git_ref=<SHA>' \
+  -var='performance_insights_enabled=true' -var="generator_count=<frozen>"
+terraform output -json > ../out/01-terraform-outputs.json && cd ..
+node scripts/worker-adapter.mjs wait-ready --json > out/02-wait-ready.json
+aws rds describe-db-instances --region us-east-2 \
+  --query "DBInstances[?contains(DBInstanceIdentifier,'cwm-bench')].{id:DBInstanceIdentifier,version:EngineVersion,pi:PerformanceInsightsEnabled}" \
+  > out/03-rds-engine-version.json
+# controller: idle baseline (04) and pre-ladder 100 RPS probe (05), CONTROLLER-SPEC §2
+for RPS in 300 500 700 900 1100 1300 1500; do
+  KEY=typical-dbsat-${N}x-$RPS
+  export CWM_SCENARIO=$KEY CWM_RUN_ID=$KEY-r$K
+  node scripts/worker-adapter.mjs run --scenario $KEY --json > out/10-$KEY.run.json   # controller watches per-minute breach meanwhile
+  # Set CWM_RUN_STARTED_AT / CWM_RUN_ENDED_AT, then wait ≥ 1 minute past the end so the last pool-metrics minute is closed.
+  node scripts/worker-adapter.mjs collect --scenario $KEY --json > out/11-$KEY.collect.json
+  # stop the sweep if the run returned stepStatus "overload observation"
+done
+```
+
+Gates (in addition to section 12.2, with adapterVersion `1.7.0` and the dbsat ladder):
+
+- After apply: `performance_insights_enabled` true, `rds_resource_id` set, `generator_instance_ids` has `generator_count` entries, `app_instance_ids` has N.
+- After each run: `ladder` `[300,500,700,900,1100,1300,1500]`, `rung_pos` 1…7 in order, `stepStatus` `complete` or `overload observation`, `generators` equals `generator_instance_ids`.
+- After each collect: `complete` true (otherwise re-collect up to twice; see `missing`), `measurementSha` equal to `<SHA>`, `dbsat.steadyP95.present`, `dbsat.performanceInsights.available`, `dbsat.poolMetrics.available` on every node with gitSha `<SHA>`, `dbsat.partialStep.stepStatus` matching the run.
+- `TEST_ID_MISMATCH` means the apply id is not `typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD`.
+
+### 13.4 Breach, recovery, replacement, budget
+
+As CONTROLLER-SPEC §1–§4 and prereg §7. In short: 3 consecutive steady minutes > 5% errors or > 2 s P95 stop the step and the sweep (`teardown` with `CWM_STOP_REASON=breach`). A workload-triggered breach or a recovery failure is valid overload evidence and **never** authorizes a replacement. Replacements (letter suffix, at most 6) only for collection failure, a generator-invalid step, data still missing after re-collects, or infra/harness errors. Soft cap **$60** projected: pause and ask Kevin, never auto-stop. Destroy per section 8 with the same `-var` set, including `performance_insights_enabled` and `generator_count`.
+
+### 13.5 IAM
+
+The runner identity additionally needs `pi:GetResourceMetrics` (plus `pi:DescribeDimensionKeys`, `pi:ListAvailableResourceMetrics`) on `arn:aws:pi:us-east-2:<ACCOUNT>:metrics/rds/*`, and `rds:DescribeDBInstances`. Policy JSON: CONTROLLER-SPEC §6.

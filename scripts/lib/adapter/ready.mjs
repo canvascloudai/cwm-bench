@@ -26,7 +26,7 @@ function capabilityPayload() {
       description: spec.description,
     })),
     matrixNote:
-      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical and app_workers=2. They require us-east-2, except typical-second-region and typical-second-region-300, which require us-west-2. typical-later-day and typical-later-day-300 also require a later UTC day than the fit campaign. typical-scale-{1x,2x,3x}-{100,200,300} are us-east-2 validation keys and require topology app_count 1, 2, or 3. typical-p95-{1x,2x,3x}-{300,200,100} are the typical-p95-v1 keys, reverse ladder 300→200→100, and are not fit, holdout, or scale keys. Every other typical key expects 2 app servers (APP_COUNT_MISMATCH).',
+      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical and app_workers=2. They require us-east-2, except typical-second-region and typical-second-region-300, which require us-west-2. typical-later-day and typical-later-day-300 also require a later UTC day than the fit campaign. typical-scale-{1x,2x,3x}-{100,200,300} are us-east-2 validation keys and require topology app_count 1, 2, or 3. typical-p95-{1x,2x,3x}-{300,200,100} are the typical-p95-v1 keys, reverse ladder 300→200→100, and are not fit, holdout, or scale keys. typical-dbsat-{2x,3x,4x}-{300..1500} are the typical-dbsat-v1 keys, ascending ladder 300→1500, app_count 2, 3, or 4. Every other typical key expects 2 app servers (APP_COUNT_MISMATCH).',
     primaryRegion: PRIMARY_REGION,
     secondRegion: SECOND_REGION,
     knownGaps: [],
@@ -271,14 +271,19 @@ export async function waitReady(ctx) {
   const generatorSsm = await retryReadiness(
     'generator SSM',
     async () => {
-      const info = await describeSsmInstance(runAws, outputs.generatorInstanceId, region);
-      if (!info.reachable) {
-        throw pendingReadiness(
-          `generator ${outputs.generatorInstanceId} SSM`,
-          { instanceId: outputs.generatorInstanceId, ...info },
-        );
+      // Every generator (generator_count 1 or 2) must be reachable.
+      const ids = Array.isArray(outputs.generatorInstanceIds) && outputs.generatorInstanceIds.length > 0
+        ? outputs.generatorInstanceIds
+        : [outputs.generatorInstanceId];
+      let first = null;
+      for (const instanceId of ids) {
+        const info = await describeSsmInstance(runAws, instanceId, region);
+        if (!info.reachable) {
+          throw pendingReadiness(`generator ${instanceId} SSM`, { instanceId, ...info });
+        }
+        first = first || info;
       }
-      return info;
+      return first;
     },
     controller,
   );
@@ -306,10 +311,13 @@ export async function waitReady(ctx) {
     1,
     Math.min(ctx.deps.ssmWaitMs || 120_000, controller.deadline - controller.clock()),
   );
-  await retryReadiness(
-    'generator bootstrap',
+  const generatorIds = Array.isArray(outputs.generatorInstanceIds) && outputs.generatorInstanceIds.length > 0
+    ? outputs.generatorInstanceIds
+    : [outputs.generatorInstanceId];
+  for (const generatorId of generatorIds) await retryReadiness(
+    `generator bootstrap ${generatorId}`,
     () => runRemoteShell(runAws, {
-      instanceId: outputs.generatorInstanceId,
+      instanceId: generatorId,
       region,
       commands: [generatorReadyCommand()],
       timeoutSeconds: 120,

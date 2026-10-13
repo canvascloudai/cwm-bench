@@ -87,7 +87,10 @@ resource "aws_db_instance" "main" {
   password = random_password.db.result
   port     = 3306
 
-  performance_insights_enabled = false
+  # typical-dbsat-v1 needs per-minute wait events (db.load by
+  # db.wait_event_type). Off by default so existing campaigns are unchanged.
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_enabled ? 7 : null
 
   # skip_final_snapshot / deletion_protection stay as-is so cleanup can
   # destroy. deletion_protection must remain false.
