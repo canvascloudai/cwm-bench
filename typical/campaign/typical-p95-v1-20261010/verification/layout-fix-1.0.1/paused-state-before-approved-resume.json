@@ -1,0 +1,40 @@
+{
+  "parent": "typical-p95-v1-20261010",
+  "revision": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "controllerHash": "9ef67307d95b8286406698f0c19784d470899e1b3b97f00ee1ecc8c62dbc2a1b",
+  "slots": [
+    {
+      "campaign": "typical-p95-1x-r1-20261010",
+      "n": 1,
+      "rep": 1,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-1x-r1-20261010",
+      "schema": "p95_122333bc9e8be5c95a077c0e",
+      "applyAttempted": false,
+      "applied": false,
+      "destroyed": false,
+      "delayed": false,
+      "exportedBytes": 0,
+      "rungs": [],
+      "pauseReason": "Plan failed; original command evidence retaine[REDACTED_PARTIAL]"
+    }
+  ],
+  "days": {},
+  "missingRawApplies": [],
+  "spendGuard": {
+    "conservativeUpperBoundUsd": 2,
+    "actualBillingClaim": false,
+    "capUsd": 40,
+    "replacementsUsed": 0,
+    "cleanupReserveUsd": 2
+  },
+  "account": "REDACTED",
+  "ami": "ami-0d3d85815a9746bc5",
+  "paused": "Plan failed; original command evidence retaine[REDACTED_PARTIAL]",
+  "lastEvent": {
+    "at": "2026-10-10T15:44:08.039Z",
+    "text": "CAMPAIGN_PAUSED Plan failed; original command evidence retaine[REDACTED_PARTIAL]"
+  }
+}

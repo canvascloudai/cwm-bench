@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "get-parameter",
+    "--name",
+    "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-10T15:34:43.464Z",
+  "finalResponsePublished": true
+}

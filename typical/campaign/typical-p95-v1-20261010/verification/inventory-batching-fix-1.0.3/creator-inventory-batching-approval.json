@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-12T18:33:25.641Z",
+  "approval": "Batch the tag filter in chunks of <=20, with every ID and both regions still checked. Add an offline test with 21+ IDs. Record the controller hash, then resume 1x and then 2x.",
+  "oldControllerHash": "5bc213b090271323a2b072784b4aaec405bf915b9a68077cc3b2860e83f0f1d2",
+  "newControllerHash": "374e8eba727b96eafddcf8e15f90e90ef37b05ce8caa984e8fce2afbeaa4c848",
+  "measurementShaUnchanged": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "pinnedAmiUnchanged": "ami-0d3d85815a9746bc5",
+  "frozenHistoricalHelpersUnchanged": true,
+  "offlineTest": {
+    "passed": 10,
+    "fixtureIds": 43,
+    "batchSizes": [
+      20,
+      20,
+      3
+    ],
+    "regions": [
+      "us-east-2",
+      "us-west-2"
+    ],
+    "directRetainedChecksPreserved": true,
+    "failedBatchBlocksConfirmation": true
+  },
+  "noAwsDryRunPassed": true,
+  "replacementsUsed": 1,
+  "noWorkloadRetry": true,
+  "resumeOrder": [
+    1,
+    2
+  ]
+}

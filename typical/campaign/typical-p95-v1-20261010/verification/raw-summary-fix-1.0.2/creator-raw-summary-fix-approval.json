@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-10T16:57:26.310Z",
+  "approval": "Fix, validate, and resume with replacement",
+  "requirements": "Preserve invalid 1x-r1 and its 300-rung JSONs; exclude from scoring; explicitly record lost gzip; dry test multiline summary and gzip hash verification before parse/destroy; controller 1.0.2 hash; replacement 1 of 6",
+  "oldControllerHash": "1529969249738610238063c418138f1f98cda513c267e96bded28cbe60459037",
+  "newControllerHash": "5bc213b090271323a2b072784b4aaec405bf915b9a68077cc3b2860e83f0f1d2",
+  "measurementShaUnchanged": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "pinnedAmiUnchanged": "ami-0d3d85815a9746bc5",
+  "offlineTestsPassed": 9,
+  "rawOrderDryTest": {
+    "noAwsOrDatabaseCalls": true,
+    "syntheticFixtureOnly": true,
+    "realGzipStreamSaved": true,
+    "bytes": 71,
+    "sha256": "6487347b4c9860fa0f90957b130e5b23e771fec547034b283c692b661e913e00",
+    "gzipCrcVerified": true,
+    "multilineSummaryParsed": true,
+    "trace": [
+      "download-start",
+      "download-complete-and-sha256-checked",
+      "summary-parse",
+      "destroy-simulated-no-AWS"
+    ],
+    "passed": true
+  },
+  "previousCleanupConfirmed": true
+}

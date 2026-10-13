@@ -1,0 +1,10 @@
+{
+  "command": "git",
+  "args": [
+    "rev-parse",
+    "HEAD"
+  ],
+  "startedAt": "2026-10-12T16:36:03.116Z",
+  "stdoutFile": "git-sha-1791822963116.txt.stdout.txt",
+  "stderrFile": "git-sha-1791822963116.txt.stderr.txt"
+}

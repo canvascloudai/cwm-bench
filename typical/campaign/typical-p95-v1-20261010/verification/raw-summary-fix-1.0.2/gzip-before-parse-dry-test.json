@@ -1,0 +1,16 @@
+{
+  "noAwsOrDatabaseCalls": true,
+  "syntheticFixtureOnly": true,
+  "realGzipStreamSaved": true,
+  "bytes": 71,
+  "sha256": "6487347b4c9860fa0f90957b130e5b23e771fec547034b283c692b661e913e00",
+  "gzipCrcVerified": true,
+  "multilineSummaryParsed": true,
+  "trace": [
+    "download-start",
+    "download-complete-and-sha256-checked",
+    "summary-parse",
+    "destroy-simulated-no-AWS"
+  ],
+  "passed": true
+}

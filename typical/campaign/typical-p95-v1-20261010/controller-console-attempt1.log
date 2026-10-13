@@ -1,0 +1,15 @@
+Encryption service initialized with key version 1
+Key fingerprints - canonical: 2400e3e3, legacy: none
+EncryptionService.decrypt called with:
+  - Data type: object
+  - User ID: 1
+  - Is nested call: false
+  - Data is an object with keys: version, keyVersion, iv, tag, data, userId
+  - Converted object to string, length: 356
+  - Attempting to parse JSON...
+  - JSON parse successful
+  - Parsed object keys: version, keyVersion, iv, tag, data, userId
+  - All required properties found in encrypted package
+CAMPAIGN_PAUSED Plan failed; original command evidence retaine[REDACTED_PARTIAL]
+
+CONTROLLER_EXIT=3 UTC=2026-10-10T15:44:08Z

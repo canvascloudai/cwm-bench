@@ -1,0 +1,24 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--instance-ids",
+    "i-REDACTED0096",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--comment",
+    "cwm-bench worker-adapter",
+    "--timeout-seconds",
+    "900",
+    "--parameters",
+    "{\"commands\":[\"set -euo pipefail\\ncurl --fail --silent --show-error --connect-timeout 20 --max-time 840 --request PUT --header 'Content-Type: application/octet-stream' --upload-file '/opt/cwm-bench/results/raw/typical-p95-3x-r1-20261010/typical-p95-3x-300-r1/k6.json.gz' '[REDACTED]' >/dev/null\\nprintf 'RAW_UPLOAD_COMPLETE\\\\n'\"]}",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-10T19:21:56.952Z",
+  "stdoutFile": "aws-1.json.stdout.txt",
+  "stderrFile": "aws-1.json.stderr.txt"
+}

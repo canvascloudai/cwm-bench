@@ -1,0 +1,210 @@
+{
+  "noAwsOrDatabaseCalls": true,
+  "measurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "controllerVersion": "1.0.3",
+  "controllerHash": "374e8eba727b96eafddcf8e15f90e90ef37b05ce8caa984e8fce2afbeaa4c848",
+  "trace": [
+    "apply:1:r1",
+    "run:1:300",
+    "download:1:300",
+    "run:1:200",
+    "download:1:200",
+    "run:1:100",
+    "download:1:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:2:r1",
+    "run:2:300",
+    "download:2:300",
+    "run:2:200",
+    "download:2:200",
+    "run:2:100",
+    "download:2:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:3:r1",
+    "run:3:300",
+    "download:3:300",
+    "run:3:200",
+    "download:3:200",
+    "run:3:100",
+    "download:3:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:2:r2",
+    "run:2:300",
+    "download:2:300",
+    "run:2:200",
+    "download:2:200",
+    "run:2:100",
+    "download:2:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:3:r2",
+    "run:3:300",
+    "download:3:300",
+    "run:3:200",
+    "download:3:200",
+    "run:3:100",
+    "download:3:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:1:r2",
+    "run:1:300",
+    "download:1:300",
+    "run:1:200",
+    "download:1:200",
+    "run:1:100",
+    "download:1:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:3:r3",
+    "run:3:300",
+    "download:3:300",
+    "run:3:200",
+    "download:3:200",
+    "run:3:100",
+    "download:3:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:1:r3",
+    "run:1:300",
+    "download:1:300",
+    "run:1:200",
+    "download:1:200",
+    "run:1:100",
+    "download:1:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions",
+    "apply:2:r3",
+    "run:2:300",
+    "download:2:300",
+    "run:2:200",
+    "download:2:200",
+    "run:2:100",
+    "download:2:100",
+    "destroy",
+    "cleanup:both-regions",
+    "wait:15-minutes",
+    "cleanup:both-regions"
+  ],
+  "sourceManifest": [
+    {
+      "path": "scripts/run-cwm-bench-p95.ts",
+      "sha256": "48534fa2f66b02ed5b297d8273f0a0a6b3457c787318e05a0427c0b01e439ede"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-contract.ts",
+      "sha256": "49cc92bc70916698d03e04a920e11cdaef32a1017e98adb5118020be9490e3a7"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-raw.ts",
+      "sha256": "f8d37eeed3b2b340f67c83ffebd4470898419e04edbdf7c3a1af8326f1ff27eb"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-contract.node-test.ts",
+      "sha256": "e697aa52eeae7ed17ff92a214c9f96b0f0dd099e0d08cb26efc19738c2876a18"
+    },
+    {
+      "path": "scripts/cwm-bench-holdout-io.ts",
+      "sha256": "438b71a00c545baf70d93d82e4d009666128d7e243dc3ea4ad7e2856dd5565b1"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-provenance-dry-run.ts",
+      "sha256": "e92a641420d36378453fd3e98c31fdd7a594f9cad82b89844c08b2462230ba7d"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-staging.ts",
+      "sha256": "d45310aa218e2630fa68b318a29c73bd0648f218216ffe8710212806487f814c"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-cloud.ts",
+      "sha256": "92b7dbfa419248b49bb4eb5f941efcedbe8696561d5f131eb3282a20e2f83e1b"
+    },
+    {
+      "path": "scripts/cwm-bench-process-lock.ts",
+      "sha256": "295dcd0e3dceb965aa4d674395ed871500de81a4733cfca8fd9e213f03e01825"
+    },
+    {
+      "path": "scripts/cwm-bench-holdout-contract.ts",
+      "sha256": "f9a3635b71637b0ecda4c6f52a9d82b4355664ec87ba5db7eeda3b58f3b15838"
+    },
+    {
+      "path": "scripts/cwm-bench-typical-contract.ts",
+      "sha256": "9a8a1dd4a8fb3e56e4bccc44a270ca08be0b9482bb755fea3fd41b5482657e37"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-contract.ts",
+      "sha256": "23fa718ce04673b3122625b10636ab44a0c0538d34111d1834d1cb961665801d"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-cloud.ts",
+      "sha256": "7102e90bb656b493b07ae9440df7b118e491cd2c887db598d70260fcc4057f80"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-cleanup.ts",
+      "sha256": "31befaa854b482eb2068f6bd316806fa7b4a5dc387d5305ee974b516e62409bf"
+    },
+    {
+      "path": "scripts/cwm-bench-holdout-cleanup.ts",
+      "sha256": "31ee5b3fdb18542341b25d64a0206c782a21766bfc67f5bcc56b0caef288fdd2"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-evidence.ts",
+      "sha256": "2eae9b581204b04639531cbecc8482333b8b84c82b17802a15b0d50c34e43c2b"
+    }
+  ],
+  "policy": {
+    "controllerVersion": "1.0.3",
+    "repository": "https://github.com/canvascloudai/cwm-bench.git",
+    "revision": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+    "version": "1.6.1",
+    "region": "us-east-2",
+    "order": [
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        1
+      ],
+      [
+        3,
+        1,
+        2
+      ]
+    ],
+    "rates": [
+      300,
+      200,
+      100
+    ],
+    "replacements": 6,
+    "budgetUsd": 40,
+    "hourlyCeilingUsd": 2,
+    "overheadReserveUsd": 2,
+    "cleanupReserveUsd": 2,
+    "nextApplyReserveHours": 2,
+    "transferUsdPerGiB": 0.12
+  },
+  "liveLadderDriverExercised": true
+}

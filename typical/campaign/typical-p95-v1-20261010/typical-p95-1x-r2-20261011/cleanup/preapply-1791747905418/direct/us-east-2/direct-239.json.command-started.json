@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-volumes",
+    "--volume-ids",
+    "vol-REDACTED0135",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-11T19:55:22.065Z",
+  "stdoutFile": "direct-239.json.stdout.txt",
+  "stderrFile": "direct-239.json.stderr.txt"
+}

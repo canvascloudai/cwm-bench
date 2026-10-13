@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-10T16:39:53.111Z",
+  "cause": "External raw-summary parser accepts only one line of pretty-printed JSON",
+  "singleLineParsed": false,
+  "fullSavedSummaryParses": true,
+  "summaryHasMetrics": true,
+  "runJsonPreserved": true,
+  "collectJsonPreserved": true,
+  "collectMeasurementShaMatchesPin": true,
+  "rawGzipDownloaded": false,
+  "rawGzipSizeReportedByGenerator": 45234464,
+  "rungsAttempted": [
+    "typical-p95-1x-300"
+  ],
+  "noAwsCalls": true,
+  "noScoring": true
+}

@@ -1,0 +1,27 @@
+{
+  "measurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "adapterVersion": "1.6.1",
+  "files": [
+    {
+      "file": "typical/RUNBOOK-CANVASCLOUDAI.md",
+      "sha256": "a89a70f7181d05daa51bca641be4619aec76560874c0c2ce454667fd5337b805"
+    },
+    {
+      "file": "typical/p95-v1/PREREGISTRATION.md",
+      "sha256": "66ab42acbb6787a80c60a540aa95196cf5716d621449ec2b1f4c2c3e2f1278f9"
+    },
+    {
+      "file": "typical/p95-v1/predictions/model-predictions.csv",
+      "sha256": "bc11d76ebe96c5f235cdf4d937ade28f9634abd79f94fd34c54177e925a05819"
+    },
+    {
+      "file": "typical/p95-v1/predictions/engine-baseline/predictions.json",
+      "sha256": "220244e5ede47432a6bf7fe5c03eb4aaa20894c39e84490010911e7cff60a75e"
+    },
+    {
+      "file": "typical/p95-v1/predictions/engine-baseline/FROZEN.md",
+      "sha256": "bb5b871386791cc973ec5756b0ed6f0adbe4e5e154027b5bce09c769e673cd2f"
+    }
+  ],
+  "noEngineQueries": true
+}

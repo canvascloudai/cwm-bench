@@ -1,0 +1,10 @@
+{
+  "command": "git",
+  "args": [
+    "diff",
+    "--exit-code"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-11T18:08:46.212Z",
+  "finalResponsePublished": true
+}

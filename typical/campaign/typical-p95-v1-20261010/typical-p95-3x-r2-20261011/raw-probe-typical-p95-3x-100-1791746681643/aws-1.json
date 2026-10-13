@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "27e824b2-7a3a-48bc-ad7b-dfc2ab8eebdb",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "cwm-bench worker-adapter",
+        "ExpiresAfter": "2026-10-11T20:25:43.738000+00:00",
+        "Parameters": {
+            "commands": [
+                "set -euo pipefail\nDIR='/opt/cwm-bench/results/raw/typical-p95-3x-r2-20261011/typical-p95-3x-100-r2'\nif [ -f \"$DIR/summary.json\" ]; then printf \"SUMMARY_BEGIN\\n\"; cat \"$DIR/summary.json\"; printf \"\\nSUMMARY_END\\n\"; fi\nif [ -f \"$DIR/k6.json.gz\" ]; then\n printf \"BYTES=%s\\n\" \"$(stat -c %s \"$DIR/k6.json.gz\")\"\n printf \"SHA256=%s\\n\" \"$(sha256sum \"$DIR/k6.json.gz\" | cut -d \" \" -f 1)\"\nfi"
+            ]
+        },
+        "InstanceIds": [
+            "i-REDACTED0052"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-10-11T19:24:43.738000+00:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 60,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

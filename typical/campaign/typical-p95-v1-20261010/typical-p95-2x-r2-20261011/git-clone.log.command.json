@@ -1,0 +1,11 @@
+{
+  "command": "git",
+  "args": [
+    "clone",
+    "https://github.com/canvascloudai/cwm-bench.git",
+    "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r2-20261011/cwm-bench"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-11T16:21:09.328Z",
+  "finalResponsePublished": true
+}

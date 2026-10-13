@@ -1,0 +1,67 @@
+{
+  "version": "1.0.2",
+  "sha256": "5bc213b090271323a2b072784b4aaec405bf915b9a68077cc3b2860e83f0f1d2",
+  "files": [
+    {
+      "path": "scripts/run-cwm-bench-p95.ts",
+      "sha256": "afec6fefab9a8a3339888771139b559c12064b96eebe1ee3c9365b641d7cef3c"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-contract.ts",
+      "sha256": "db6a9550919fc37e5f1236709d4b3a3a6f0dd68fa07d2f72d476fde95ba41cda"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-raw.ts",
+      "sha256": "f8d37eeed3b2b340f67c83ffebd4470898419e04edbdf7c3a1af8326f1ff27eb"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-contract.node-test.ts",
+      "sha256": "37fba1a42157e68d362b741f0529e3da1aa8dd7c9de34a4fd8d31a8d4ffd39ae"
+    },
+    {
+      "path": "scripts/cwm-bench-holdout-io.ts",
+      "sha256": "438b71a00c545baf70d93d82e4d009666128d7e243dc3ea4ad7e2856dd5565b1"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-provenance-dry-run.ts",
+      "sha256": "e92a641420d36378453fd3e98c31fdd7a594f9cad82b89844c08b2462230ba7d"
+    },
+    {
+      "path": "scripts/cwm-bench-p95-staging.ts",
+      "sha256": "d45310aa218e2630fa68b318a29c73bd0648f218216ffe8710212806487f814c"
+    },
+    {
+      "path": "scripts/cwm-bench-process-lock.ts",
+      "sha256": "295dcd0e3dceb965aa4d674395ed871500de81a4733cfca8fd9e213f03e01825"
+    },
+    {
+      "path": "scripts/cwm-bench-holdout-contract.ts",
+      "sha256": "f9a3635b71637b0ecda4c6f52a9d82b4355664ec87ba5db7eeda3b58f3b15838"
+    },
+    {
+      "path": "scripts/cwm-bench-typical-contract.ts",
+      "sha256": "9a8a1dd4a8fb3e56e4bccc44a270ca08be0b9482bb755fea3fd41b5482657e37"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-contract.ts",
+      "sha256": "23fa718ce04673b3122625b10636ab44a0c0538d34111d1834d1cb961665801d"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-cloud.ts",
+      "sha256": "7102e90bb656b493b07ae9440df7b118e491cd2c887db598d70260fcc4057f80"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-cleanup.ts",
+      "sha256": "31befaa854b482eb2068f6bd316806fa7b4a5dc387d5305ee974b516e62409bf"
+    },
+    {
+      "path": "scripts/cwm-bench-holdout-cleanup.ts",
+      "sha256": "31ee5b3fdb18542341b25d64a0206c782a21766bfc67f5bcc56b0caef288fdd2"
+    },
+    {
+      "path": "scripts/cwm-bench-scale-evidence.ts",
+      "sha256": "2eae9b581204b04639531cbecc8482333b8b84c82b17802a15b0d50c34e43c2b"
+    }
+  ],
+  "outsideBenchmarkRepo": true
+}

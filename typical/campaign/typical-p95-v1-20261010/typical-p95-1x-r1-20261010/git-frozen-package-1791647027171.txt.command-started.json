@@ -1,0 +1,10 @@
+{
+  "command": "git",
+  "args": [
+    "diff",
+    "--exit-code"
+  ],
+  "startedAt": "2026-10-10T15:43:47.172Z",
+  "stdoutFile": "git-frozen-package-1791647027171.txt.stdout.txt",
+  "stderrFile": "git-frozen-package-1791647027171.txt.stderr.txt"
+}

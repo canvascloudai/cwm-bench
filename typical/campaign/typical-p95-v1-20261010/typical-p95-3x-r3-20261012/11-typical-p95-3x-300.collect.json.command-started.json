@@ -1,0 +1,13 @@
+{
+  "command": "node",
+  "args": [
+    "scripts/worker-adapter.mjs",
+    "collect",
+    "--scenario",
+    "typical-p95-3x-300",
+    "--json"
+  ],
+  "startedAt": "2026-10-12T17:06:47.976Z",
+  "stdoutFile": "11-typical-p95-3x-300.collect.json.stdout.txt",
+  "stderrFile": "11-typical-p95-3x-300.collect.json.stderr.txt"
+}

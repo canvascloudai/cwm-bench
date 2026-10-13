@@ -1,0 +1,26 @@
+{
+  "region": "us-east-2",
+  "checkedAt": "2026-10-10T21:57:45.759Z",
+  "campaigns": [
+    "typical-p95-1x-r1a-20261010"
+  ],
+  "taggedArns": [
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0f661785e2ec5bb92",
+    "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0068",
+    "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0065",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06f388235a47c10a4",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0be3f12f1381daa90",
+    "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0176",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-006dba55aacdcc295",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b999bd55033bb620",
+    "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0146",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08fa167c641e8c772",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e83f5515dad117dc",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bac54e4fd8e9d0c2",
+    "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bcbb7968ae273be5"
+  ],
+  "liveInstanceIds": [],
+  "volumeIds": [],
+  "ruleIds": [],
+  "rdsIds": []
+}

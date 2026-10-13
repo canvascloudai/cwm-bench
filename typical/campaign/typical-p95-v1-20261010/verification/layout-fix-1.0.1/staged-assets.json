@@ -1,0 +1,36 @@
+{
+  "noAwsOrDatabaseCalls": true,
+  "measurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "assets": [
+    {
+      "asset": "app/src/server.js",
+      "sha256": "b19fe09a4ac4f29b282971fe4d2d6e362c6a076156637ad8d2d0f4586c94b7a9",
+      "unchanged": true
+    },
+    {
+      "asset": "app/package.json",
+      "sha256": "c2003aa81d096e51921fc718c0657a11e64b092555bcc91bc1ae19ad509f9311",
+      "unchanged": true
+    },
+    {
+      "asset": "app/seed/seed.sql",
+      "sha256": "0dd5e5ba340b885f4fc03af917ea900875ba096bbf44a0709cdcb7b93758235d",
+      "unchanged": true
+    },
+    {
+      "asset": "load/scenarios.js",
+      "sha256": "62015feee74f8824b064c7098b27e4a3c01fc2f9dedbfd9f5afa9b67e4245f80",
+      "unchanged": true
+    },
+    {
+      "asset": "load/diagnostics.js",
+      "sha256": "bdfd3f9b6dea70a85cfbf48a2f461c4b3e0cb52b65e0dec071a2b028113aabad",
+      "unchanged": true
+    },
+    {
+      "asset": "load/lib/common.js",
+      "sha256": "dde4f38fbad86478c778207955004f26c70f1e771df6aae2c715d048e1393e41",
+      "unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "54a9ff20-df12-4bb9-82fc-ab88cfcd8d02",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "cwm-bench worker-adapter",
+        "ExpiresAfter": "2026-10-11T22:05:15.866000+00:00",
+        "Parameters": {
+            "commands": [
+                "set -euo pipefail\ncurl --fail --silent --show-error --connect-timeout 20 --max-time 840 --request PUT --header 'Content-Type: application/octet-stream' --upload-file '/opt/cwm-bench/results/raw/typical-p95-1x-r2-20261011/typical-p95-1x-200-r2/k6.json.gz' '[REDACTED]' >/dev/null\nprintf 'RAW_UPLOAD_COMPLETE\\n'"
+            ]
+        },
+        "InstanceIds": [
+            "i-REDACTED0048"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-10-11T20:50:15.866000+00:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 900,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

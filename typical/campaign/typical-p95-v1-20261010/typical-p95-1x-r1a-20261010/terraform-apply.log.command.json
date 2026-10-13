@@ -1,0 +1,12 @@
+{
+  "command": "terraform",
+  "args": [
+    "apply",
+    "-input=false",
+    "-auto-approve",
+    "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1a-20261010/terraform/private-p95.tfplan"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-10T20:45:47.364Z",
+  "finalResponsePublished": true
+}

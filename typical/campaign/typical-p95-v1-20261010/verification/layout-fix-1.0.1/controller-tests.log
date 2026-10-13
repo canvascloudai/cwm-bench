@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+ok 1 - external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+  ---
+  duration_ms: 146.519574
+  ...
+# Subtest: pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+ok 2 - pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+  ---
+  duration_ms: 2.185816
+  ...
+# Subtest: live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+ok 3 - live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+  ---
+  duration_ms: 0.587077
+  ...
+# Subtest: generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+ok 4 - generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+  ---
+  duration_ms: 0.280203
+  ...
+# Subtest: budget refuses seventh replacement or over-cap reservation without stopping the campaign
+ok 5 - budget refuses seventh replacement or over-cap reservation without stopping the campaign
+  ---
+  duration_ms: 0.296593
+  ...
+# Subtest: definition violation pauses, ladder identity cannot alias or reorder
+ok 6 - definition violation pauses, ladder identity cannot alias or reorder
+  ---
+  duration_ms: 0.362418
+  ...
+# Subtest: gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+ok 7 - gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+  ---
+  duration_ms: 68.310584
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2195.634707

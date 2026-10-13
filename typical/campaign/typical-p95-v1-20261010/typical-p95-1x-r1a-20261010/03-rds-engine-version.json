@@ -1,0 +1,120 @@
+{
+    "DBInstances": [
+        {
+            "DBInstanceIdentifier": "cwm-bench-typical-p95-1x-r1a-20261010",
+            "DBInstanceClass": "db.r5.large",
+            "Engine": "mysql",
+            "DBInstanceStatus": "available",
+            "MasterUsername": "cwmbench",
+            "DBName": "cwmbench",
+            "Endpoint": {
+                "Address": "cwm-bench-typical-p95-1x-r1a-20261010.REDACTED.us-east-2.rds.amazonaws.com",
+                "Port": 3306,
+                "HostedZoneId": "Z2XHWR1WZ565X2"
+            },
+            "AllocatedStorage": 100,
+            "InstanceCreateTime": "2026-10-10T20:43:17.315000+00:00",
+            "PreferredBackupWindow": "04:05-04:35",
+            "BackupRetentionPeriod": 0,
+            "DBSecurityGroups": [],
+            "VpcSecurityGroups": [
+                {
+                    "VpcSecurityGroupId": "sg-REDACTED0218",
+                    "Status": "active"
+                }
+            ],
+            "DBParameterGroups": [
+                {
+                    "DBParameterGroupName": "cwm-bench-typical-p95-1x-r1a-20261010",
+                    "ParameterApplyStatus": "in-sync"
+                }
+            ],
+            "AvailabilityZone": "us-east-2a",
+            "DBSubnetGroup": {
+                "DBSubnetGroupName": "cwm-bench-typical-p95-1x-r1a-20261010",
+                "DBSubnetGroupDescription": "Managed by Terraform",
+                "VpcId": "vpc-REDACTED0217",
+                "SubnetGroupStatus": "Complete",
+                "Subnets": [
+                    {
+                        "SubnetIdentifier": "subnet-REDACTED0226",
+                        "SubnetAvailabilityZone": {
+                            "Name": "us-east-2a"
+                        },
+                        "SubnetOutpost": {},
+                        "SubnetStatus": "Active"
+                    },
+                    {
+                        "SubnetIdentifier": "subnet-REDACTED0225",
+                        "SubnetAvailabilityZone": {
+                            "Name": "us-east-2b"
+                        },
+                        "SubnetOutpost": {},
+                        "SubnetStatus": "Active"
+                    }
+                ]
+            },
+            "PreferredMaintenanceWindow": "sun:10:05-sun:10:35",
+            "PendingModifiedValues": {},
+            "MultiAZ": false,
+            "EngineVersion": "8.0.46-rds.20260908",
+            "AutoMinorVersionUpgrade": true,
+            "ReadReplicaDBInstanceIdentifiers": [],
+            "LicenseModel": "general-public-license",
+            "OptionGroupMemberships": [
+                {
+                    "OptionGroupName": "default:mysql-8-0",
+                    "Status": "in-sync"
+                }
+            ],
+            "PubliclyAccessible": false,
+            "StorageType": "gp2",
+            "DbInstancePort": 0,
+            "StorageEncrypted": true,
+            "KmsKeyId": "arn:aws:kms:us-east-2:REDACTED:key/REDACTED0001",
+            "DbiResourceId": "db-REDACTED0003",
+            "CACertificateIdentifier": "rds-ca-rsa2048-g1",
+            "DomainMemberships": [],
+            "CopyTagsToSnapshot": false,
+            "MonitoringInterval": 0,
+            "DBInstanceArn": "arn:aws:rds:us-east-2:REDACTED:db:cwm-bench-typical-p95-1x-r1a-20261010",
+            "IAMDatabaseAuthenticationEnabled": false,
+            "PerformanceInsightsEnabled": false,
+            "DeletionProtection": false,
+            "AssociatedRoles": [],
+            "TagList": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-1x-r1a-20261010"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-1x-m5.large-db.r5.large-mysql80-single-az"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "cwm-bench-mysql"
+                }
+            ],
+            "CustomerOwnedIpEnabled": false,
+            "ActivityStreamStatus": "stopped",
+            "BackupTarget": "region",
+            "NetworkType": "IPV4",
+            "StorageThroughput": 0,
+            "CertificateDetails": {
+                "CAIdentifier": "rds-ca-rsa2048-g1",
+                "ValidTill": "2027-10-10T20:41:24+00:00"
+            },
+            "DedicatedLogVolume": false,
+            "IsStorageConfigUpgradeAvailable": false
+        }
+    ]
+}

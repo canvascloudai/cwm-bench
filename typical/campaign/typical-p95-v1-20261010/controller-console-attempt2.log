@@ -1,0 +1,20 @@
+Encryption service initialized with key version 1
+Key fingerprints - canonical: 2400e3e3, legacy: none
+EncryptionService.decrypt called with:
+  - Data type: object
+  - User ID: 1
+  - Is nested call: false
+  - Data is an object with keys: version, keyVersion, iv, tag, data, userId
+  - Converted object to string, length: 356
+  - Attempting to parse JSON...
+  - JSON parse successful
+  - Parsed object keys: version, keyVersion, iv, tag, data, userId
+  - All required properties found in encrypted package
+APPLY_STARTED typical-p95-1x-r1-20261010 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-p95-1x-r1-20261010 adapter=1.6.1 apps=1 profile=typical workers=2 SHA=0815668ced5c219313b02efba0279ef2ae55fa0c
+RUN_STARTED typical-p95-1x-r1-20261010 typical-p95-1x-300
+APPLY_INVALID typical-p95-1x-r1-20261010 reason=Expected property name or '}' in JSON at position [REDACTED_PARTIAL]
+DESTROY_STARTED typical-p95-1x-r1-20261010
+DESTROY_FINISHED typical-p95-1x-r1-20261010
+DELAYED_CLEANUP_CONFIRMED typical-p95-1x-r1-20261010
+CAMPAIGN_PAUSED Interrupted; cleanup require[REDACTED_PARTIAL]

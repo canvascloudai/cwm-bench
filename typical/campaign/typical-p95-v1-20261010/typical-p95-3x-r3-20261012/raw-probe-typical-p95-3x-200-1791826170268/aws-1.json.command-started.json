@@ -1,0 +1,24 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--instance-ids",
+    "i-REDACTED0038",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--comment",
+    "cwm-bench worker-adapter",
+    "--timeout-seconds",
+    "60",
+    "--parameters",
+    "{\"commands\":[\"set -euo pipefail\\nDIR='/opt/cwm-bench/results/raw/typical-p95-3x-r3-20261012/typical-p95-3x-200-r3'\\nif [ -f \\\"$DIR/summary.json\\\" ]; then printf \\\"SUMMARY_BEGIN\\\\n\\\"; cat \\\"$DIR/summary.json\\\"; printf \\\"\\\\nSUMMARY_END\\\\n\\\"; fi\\nif [ -f \\\"$DIR/k6.json.gz\\\" ]; then\\n printf \\\"BYTES=%s\\\\n\\\" \\\"$(stat -c %s \\\"$DIR/k6.json.gz\\\")\\\"\\n printf \\\"SHA256=%s\\\\n\\\" \\\"$(sha256sum \\\"$DIR/k6.json.gz\\\" | cut -d \\\" \\\" -f 1)\\\"\\nfi\"]}",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-12T17:29:30.270Z",
+  "stdoutFile": "aws-1.json.stdout.txt",
+  "stderrFile": "aws-1.json.stderr.txt"
+}

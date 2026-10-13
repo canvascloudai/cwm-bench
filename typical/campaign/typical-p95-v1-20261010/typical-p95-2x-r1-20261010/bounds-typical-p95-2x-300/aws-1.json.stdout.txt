@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "a7364158-1bf4-491f-a12b-2707393f88b4",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "cwm-bench worker-adapter",
+        "ExpiresAfter": "2026-10-10T18:37:31.735000+00:00",
+        "Parameters": {
+            "commands": [
+                "set -euo pipefail\nDIR='/opt/cwm-bench/results/raw/typical-p95-2x-r1-20261010/typical-p95-2x-300-r1'\nprintf \"identity=%s\\n\" \"$(cat \"$DIR/identity.json\")\"\nprintf \"started_at=%s\\n\" \"$(cat \"$DIR/started_at\")\"\nprintf \"completed_at=%s\\n\" \"$(cat \"$DIR/completed_at\")\"\nprintf \"exit_code=%s\\n\" \"$(cat \"$DIR/exit.code\")\""
+            ]
+        },
+        "InstanceIds": [
+            "i-REDACTED0049"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-10-10T17:36:31.735000+00:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 60,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-10T15:34:20.683Z",
+  "approval": "Approved. Keep it outside the cwm-bench repo and record its version or hash in the evidence.",
+  "required": [
+    "300→200→100",
+    "no rung retries",
+    "whole applies only",
+    "up to 6 replacements",
+    "$40 cap; pause and ask, do not stop",
+    "section 12 session order",
+    "download every gzip",
+    "no-AWS dry run first"
+  ],
+  "frozenMeasurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c"
+}

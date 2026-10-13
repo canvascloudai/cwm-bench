@@ -1,0 +1,2059 @@
+[0m[1mrandom_password.db: Refreshing state... [id=none][0m
+[0m[1mdata.aws_iam_policy_document.ec2_assume: Reading...[0m[0m
+[0m[1mdata.aws_ssm_parameter.al2023: Reading...[0m[0m
+[0m[1mdata.aws_availability_zones.available: Reading...[0m[0m
+[0m[1maws_db_parameter_group.main: Refreshing state... [id=cwm-bench-typical-p95-3x-r1-20261010][0m
+[0m[1maws_ssm_parameter.db_password: Refreshing state... [id=/cwm-bench/typical-p95-3x-r1-20261010/db-password][0m
+[0m[1maws_vpc.main: Refreshing state... [id=vpc-REDACTED0187][0m
+[0m[1mdata.aws_iam_policy_document.ec2_assume: Read complete after 0s [id=2851119427][0m
+[0m[1maws_iam_role.ec2: Refreshing state... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010][0m
+[0m[1mdata.aws_ssm_parameter.al2023: Read complete after 0s [id=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64][0m
+[0m[1mdata.aws_availability_zones.available: Read complete after 0s [id=us-east-2][0m
+[0m[1mdata.aws_iam_policy_document.app_ssm_db: Reading...[0m[0m
+[0m[1mdata.aws_iam_policy_document.app_ssm_db: Read complete after 0s [id=3400323259][0m
+[0m[1maws_iam_role_policy.app_ssm_db: Refreshing state... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010:read-db-password][0m
+[0m[1maws_iam_role_policy_attachment.ssm: Refreshing state... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010-20261010185201273400000001][0m
+[0m[1maws_iam_instance_profile.ec2: Refreshing state... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010][0m
+[0m[1maws_security_group.app: Refreshing state... [id=sg-REDACTED0194][0m
+[0m[1maws_internet_gateway.main: Refreshing state... [id=igw-REDACTED0188][0m
+[0m[1maws_subnet.private[0]: Refreshing state... [id=subnet-REDACTED0190][0m
+[0m[1maws_subnet.private[1]: Refreshing state... [id=subnet-REDACTED0196][0m
+[0m[1maws_security_group.rds: Refreshing state... [id=sg-REDACTED0193][0m
+[0m[1maws_route_table.private: Refreshing state... [id=rtb-REDACTED0189][0m
+[0m[1maws_security_group.alb: Refreshing state... [id=sg-REDACTED0195][0m
+[0m[1maws_security_group.generator: Refreshing state... [id=sg-REDACTED0192][0m
+[0m[1maws_lb_target_group.app: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004][0m
+[0m[1maws_subnet.public[0]: Refreshing state... [id=subnet-REDACTED0199][0m
+[0m[1maws_subnet.public[1]: Refreshing state... [id=subnet-REDACTED0200][0m
+[0m[1maws_route_table.public: Refreshing state... [id=rtb-REDACTED0191][0m
+[0m[1maws_vpc_security_group_egress_rule.app_https_out: Refreshing state... [id=sgr-06cee3afdd061ef51][0m
+[0m[1maws_db_subnet_group.main: Refreshing state... [id=cwm-bench-typical-p95-3x-r1-20261010][0m
+[0m[1maws_vpc_security_group_egress_rule.app_http_out: Refreshing state... [id=sgr-0d5c1b38269c0b1ac][0m
+[0m[1maws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-REDACTED0197][0m
+[0m[1maws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-REDACTED0198][0m
+[0m[1maws_vpc_security_group_ingress_rule.rds_from_app: Refreshing state... [id=sgr-0a68202aec9d6a126][0m
+[0m[1maws_vpc_security_group_egress_rule.app_to_rds: Refreshing state... [id=sgr-06429d0011b444e2c][0m
+[0m[1maws_vpc_security_group_egress_rule.generator_all: Refreshing state... [id=sgr-05eb9d72c65838aeb][0m
+[0m[1maws_vpc_security_group_ingress_rule.app_from_alb: Refreshing state... [id=sgr-02e33cdb82a814409][0m
+[0m[1maws_vpc_security_group_egress_rule.alb_to_app: Refreshing state... [id=sgr-05e2aa83ca79b50a1][0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_https_from_generator: Refreshing state... [id=sgr-0de04dab0532f1c66][0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_http_from_generator: Refreshing state... [id=sgr-060f2cc5b5538ebf0][0m
+[0m[1maws_lb.main: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003][0m
+[0m[1maws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-REDACTED0201][0m
+[0m[1maws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-REDACTED0202][0m
+[0m[1maws_db_instance.main: Refreshing state... [id=db-REDACTED0002][0m
+[0m[1maws_instance.app[1]: Refreshing state... [id=i-REDACTED0079][0m
+[0m[1maws_instance.app[0]: Refreshing state... [id=i-REDACTED0089][0m
+[0m[1maws_instance.app[2]: Refreshing state... [id=i-REDACTED0050][0m
+[0m[1maws_lb_listener.http: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:listener/app/cwm-bench-alb/REDACTED0003/218c43c64183d386][0m
+[0m[1maws_instance.generator: Refreshing state... [id=i-REDACTED0096][0m
+[0m[1maws_lb_target_group_attachment.app[2]: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-2026101018584773970000000a][0m
+[0m[1maws_lb_target_group_attachment.app[0]: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-20261010185847722500000009][0m
+[0m[1maws_lb_target_group_attachment.app[1]: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-20261010185847656900000008][0m
+[0m[1maws_cloudwatch_dashboard.main: Refreshing state... [id=cwm-bench-typical-p95-3x-r1-20261010][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [31m-[0m destroy[0m
+
+Terraform will perform the following actions:
+
+[1m  # aws_cloudwatch_dashboard.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_cloudwatch_dashboard" "main" {
+      [31m-[0m[0m dashboard_arn  = "arn:aws:cloudwatch::REDACTED:dashboard/cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m dashboard_body = jsonencode(
+            {
+              [31m-[0m[0m widgets = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 2
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m markdown = <<-EOT
+                                # cwm-bench typical-p95-3x-r1-20261010
+                                Canonical topology metrics. These widgets are empty of meaning until a campaign runs.
+                                **Do not** treat this dashboard as a measured result by itself.
+                                BurstBalance = 0 is the **iops_throttle** bucket — not CPU, not DB connections.
+                            EOT
+                        }
+                      [31m-[0m[0m type       = "text"
+                      [31m-[0m[0m width      = 24
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 0
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EC2",
+                                  [31m-[0m[0m "CPUUtilization",
+                                  [31m-[0m[0m "InstanceId",
+                                  [31m-[0m[0m "i-REDACTED0089",
+                                ],
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EC2",
+                                  [31m-[0m[0m "CPUUtilization",
+                                  [31m-[0m[0m "InstanceId",
+                                  [31m-[0m[0m "i-REDACTED0079",
+                                ],
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EC2",
+                                  [31m-[0m[0m "CPUUtilization",
+                                  [31m-[0m[0m "InstanceId",
+                                  [31m-[0m[0m "i-REDACTED0050",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Average"
+                          [31m-[0m[0m title   = "EC2 CPUUtilization per app node"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 2
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/RDS",
+                                  [31m-[0m[0m "CPUUtilization",
+                                  [31m-[0m[0m "DBInstanceIdentifier",
+                                  [31m-[0m[0m "cwm-bench-typical-p95-3x-r1-20261010",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Average"
+                          [31m-[0m[0m title   = "RDS CPUUtilization"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 12
+                      [31m-[0m[0m y          = 2
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/RDS",
+                                  [31m-[0m[0m "DatabaseConnections",
+                                  [31m-[0m[0m "DBInstanceIdentifier",
+                                  [31m-[0m[0m "cwm-bench-typical-p95-3x-r1-20261010",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Average"
+                          [31m-[0m[0m title   = "RDS DatabaseConnections"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 8
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/RDS",
+                                  [31m-[0m[0m "BurstBalance",
+                                  [31m-[0m[0m "DBInstanceIdentifier",
+                                  [31m-[0m[0m "cwm-bench-typical-p95-3x-r1-20261010",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Minimum"
+                          [31m-[0m[0m title   = "RDS BurstBalance (gp2). 0 => iops_throttle bucket"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 12
+                      [31m-[0m[0m y          = 8
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/RDS",
+                                  [31m-[0m[0m "FreeableMemory",
+                                  [31m-[0m[0m "DBInstanceIdentifier",
+                                  [31m-[0m[0m "cwm-bench-typical-p95-3x-r1-20261010",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Average"
+                          [31m-[0m[0m title   = "RDS FreeableMemory"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 14
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EBS",
+                                  [31m-[0m[0m "BurstBalance",
+                                  [31m-[0m[0m "VolumeId",
+                                  [31m-[0m[0m "vol-REDACTED0122",
+                                ],
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EBS",
+                                  [31m-[0m[0m "BurstBalance",
+                                  [31m-[0m[0m "VolumeId",
+                                  [31m-[0m[0m "vol-REDACTED0120",
+                                ],
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EBS",
+                                  [31m-[0m[0m "BurstBalance",
+                                  [31m-[0m[0m "VolumeId",
+                                  [31m-[0m[0m "vol-REDACTED0141",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Minimum"
+                          [31m-[0m[0m title   = "App EBS BurstBalance (gp2 root). 0 => iops_throttle bucket"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 12
+                      [31m-[0m[0m y          = 14
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/ApplicationELB",
+                                  [31m-[0m[0m "RequestCount",
+                                  [31m-[0m[0m "LoadBalancer",
+                                  [31m-[0m[0m "app/cwm-bench-alb/REDACTED0003",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Sum"
+                          [31m-[0m[0m title   = "ALB RequestCount"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 20
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/ApplicationELB",
+                                  [31m-[0m[0m "TargetResponseTime",
+                                  [31m-[0m[0m "LoadBalancer",
+                                  [31m-[0m[0m "app/cwm-bench-alb/REDACTED0003",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "p95"
+                          [31m-[0m[0m title   = "ALB TargetResponseTime"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 12
+                      [31m-[0m[0m y          = 20
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/ApplicationELB",
+                                  [31m-[0m[0m "HTTPCode_Target_2XX_Count",
+                                  [31m-[0m[0m "LoadBalancer",
+                                  [31m-[0m[0m "app/cwm-bench-alb/REDACTED0003",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Sum"
+                          [31m-[0m[0m title   = "ALB HTTPCode_Target_2XX"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 8
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 26
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/ApplicationELB",
+                                  [31m-[0m[0m "HTTPCode_Target_5XX_Count",
+                                  [31m-[0m[0m "LoadBalancer",
+                                  [31m-[0m[0m "app/cwm-bench-alb/REDACTED0003",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Sum"
+                          [31m-[0m[0m title   = "ALB HTTPCode_Target_5XX"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 8
+                      [31m-[0m[0m x          = 8
+                      [31m-[0m[0m y          = 26
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/ApplicationELB",
+                                  [31m-[0m[0m "HTTPCode_ELB_5XX_Count",
+                                  [31m-[0m[0m "LoadBalancer",
+                                  [31m-[0m[0m "app/cwm-bench-alb/REDACTED0003",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Sum"
+                          [31m-[0m[0m title   = "ALB HTTPCode_ELB_5XX"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 8
+                      [31m-[0m[0m x          = 16
+                      [31m-[0m[0m y          = 26
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m height     = 6
+                      [31m-[0m[0m properties = {
+                          [31m-[0m[0m metrics = [
+                              [31m-[0m[0m [
+                                  [31m-[0m[0m "AWS/EC2",
+                                  [31m-[0m[0m "CPUUtilization",
+                                  [31m-[0m[0m "InstanceId",
+                                  [31m-[0m[0m "i-REDACTED0096",
+                                ],
+                            ]
+                          [31m-[0m[0m period  = 60
+                          [31m-[0m[0m region  = "us-east-2"
+                          [31m-[0m[0m stat    = "Average"
+                          [31m-[0m[0m title   = "Generator CPUUtilization (run invalid if ~70%+)"
+                        }
+                      [31m-[0m[0m type       = "metric"
+                      [31m-[0m[0m width      = 12
+                      [31m-[0m[0m x          = 0
+                      [31m-[0m[0m y          = 32
+                    },
+                ]
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m dashboard_name = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m id             = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+    }
+
+[1m  # aws_db_instance.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_db_instance" "main" {
+      [31m-[0m[0m address                               = "cwm-bench-typical-p95-3x-r1-20261010.REDACTED.us-east-2.rds.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m allocated_storage                     = 100 [90m-> null[0m[0m
+      [31m-[0m[0m apply_immediately                     = true [90m-> null[0m[0m
+      [31m-[0m[0m arn                                   = "arn:aws:rds:us-east-2:REDACTED:db:cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m auto_minor_version_upgrade            = true [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                     = "us-east-2a" [90m-> null[0m[0m
+      [31m-[0m[0m backup_retention_period               = 0 [90m-> null[0m[0m
+      [31m-[0m[0m backup_target                         = "region" [90m-> null[0m[0m
+      [31m-[0m[0m backup_window                         = "10:15-10:45" [90m-> null[0m[0m
+      [31m-[0m[0m ca_cert_identifier                    = "rds-ca-rsa2048-g1" [90m-> null[0m[0m
+      [31m-[0m[0m copy_tags_to_snapshot                 = false [90m-> null[0m[0m
+      [31m-[0m[0m customer_owned_ip_enabled             = false [90m-> null[0m[0m
+      [31m-[0m[0m database_insights_mode                = "standard" [90m-> null[0m[0m
+      [31m-[0m[0m db_name                               = "cwmbench" [90m-> null[0m[0m
+      [31m-[0m[0m db_subnet_group_name                  = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m dedicated_log_volume                  = false [90m-> null[0m[0m
+      [31m-[0m[0m delete_automated_backups              = true [90m-> null[0m[0m
+      [31m-[0m[0m deletion_protection                   = false [90m-> null[0m[0m
+      [31m-[0m[0m domain_dns_ips                        = [] [90m-> null[0m[0m
+      [31m-[0m[0m enabled_cloudwatch_logs_exports       = [] [90m-> null[0m[0m
+      [31m-[0m[0m endpoint                              = "cwm-bench-typical-p95-3x-r1-20261010.REDACTED.us-east-2.rds.amazonaws.com:3306" [90m-> null[0m[0m
+      [31m-[0m[0m engine                                = "mysql" [90m-> null[0m[0m
+      [31m-[0m[0m engine_lifecycle_support              = "open-source-rds-extended-support" [90m-> null[0m[0m
+      [31m-[0m[0m engine_version                        = "8.0" [90m-> null[0m[0m
+      [31m-[0m[0m engine_version_actual                 = "8.0.46-rds.20260908" [90m-> null[0m[0m
+      [31m-[0m[0m hosted_zone_id                        = "Z2XHWR1WZ565X2" [90m-> null[0m[0m
+      [31m-[0m[0m iam_database_authentication_enabled   = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                    = "db-REDACTED0002" [90m-> null[0m[0m
+      [31m-[0m[0m identifier                            = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m instance_class                        = "db.r5.large" [90m-> null[0m[0m
+      [31m-[0m[0m iops                                  = 0 [90m-> null[0m[0m
+      [31m-[0m[0m kms_key_id                            = "arn:aws:kms:us-east-2:REDACTED:key/REDACTED0001" [90m-> null[0m[0m
+      [31m-[0m[0m license_model                         = "general-public-license" [90m-> null[0m[0m
+      [31m-[0m[0m listener_endpoint                     = [] [90m-> null[0m[0m
+      [31m-[0m[0m maintenance_window                    = "sat:07:24-sat:07:54" [90m-> null[0m[0m
+      [31m-[0m[0m master_user_secret                    = [] [90m-> null[0m[0m
+      [31m-[0m[0m max_allocated_storage                 = 0 [90m-> null[0m[0m
+      [31m-[0m[0m monitoring_interval                   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m multi_az                              = false [90m-> null[0m[0m
+      [31m-[0m[0m network_type                          = "IPV4" [90m-> null[0m[0m
+      [31m-[0m[0m option_group_name                     = "default:mysql-8-0" [90m-> null[0m[0m
+      [31m-[0m[0m parameter_group_name                  = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m password                              = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m performance_insights_enabled          = false [90m-> null[0m[0m
+      [31m-[0m[0m performance_insights_retention_period = 0 [90m-> null[0m[0m
+      [31m-[0m[0m port                                  = 3306 [90m-> null[0m[0m
+      [31m-[0m[0m publicly_accessible                   = false [90m-> null[0m[0m
+      [31m-[0m[0m replicas                              = [] [90m-> null[0m[0m
+      [31m-[0m[0m resource_id                           = "db-REDACTED0002" [90m-> null[0m[0m
+      [31m-[0m[0m skip_final_snapshot                   = true [90m-> null[0m[0m
+      [31m-[0m[0m status                                = "available" [90m-> null[0m[0m
+      [31m-[0m[0m storage_encrypted                     = true [90m-> null[0m[0m
+      [31m-[0m[0m storage_throughput                    = 0 [90m-> null[0m[0m
+      [31m-[0m[0m storage_type                          = "gp2" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                  = {
+          [31m-[0m[0m "Name" = "cwm-bench-mysql"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                              = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-mysql"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m username                              = "cwmbench" [90m-> null[0m[0m
+      [31m-[0m[0m vpc_security_group_ids                = [
+          [31m-[0m[0m "sg-REDACTED0193",
+        ] [90m-> null[0m[0m
+        [90m# (15 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m timeouts {
+          [31m-[0m[0m create = "40m" [90m-> null[0m[0m
+          [31m-[0m[0m delete = "60m" [90m-> null[0m[0m
+          [31m-[0m[0m update = "80m" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_db_parameter_group.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_db_parameter_group" "main" {
+      [31m-[0m[0m arn          = "arn:aws:rds:us-east-2:REDACTED:pg:cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m description  = "cwm-bench: declared max_connections (default 500)" [90m-> null[0m[0m
+      [31m-[0m[0m family       = "mysql8.0" [90m-> null[0m[0m
+      [31m-[0m[0m id           = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m name         = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m skip_destroy = false [90m-> null[0m[0m
+      [31m-[0m[0m tags         = {
+          [31m-[0m[0m "Name" = "cwm-bench-mysql80"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-mysql80"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+
+      [31m-[0m[0m parameter {
+          [31m-[0m[0m apply_method = "immediate" [90m-> null[0m[0m
+          [31m-[0m[0m name         = "max_connections" [90m-> null[0m[0m
+          [31m-[0m[0m value        = "500" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_db_subnet_group.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_db_subnet_group" "main" {
+      [31m-[0m[0m arn                     = "arn:aws:rds:us-east-2:REDACTED:subgrp:cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m description             = "Managed by Terraform" [90m-> null[0m[0m
+      [31m-[0m[0m id                      = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m name                    = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_ids              = [
+          [31m-[0m[0m "subnet-REDACTED0190",
+          [31m-[0m[0m "subnet-REDACTED0196",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m supported_network_types = [
+          [31m-[0m[0m "IPV4",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m tags                    = {
+          [31m-[0m[0m "Name" = "cwm-bench-db-subnets"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-db-subnets"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                  = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_iam_instance_profile.ec2[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_instance_profile" "ec2" {
+      [31m-[0m[0m arn         = "arn:aws:iam::REDACTED:instance-profile/cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m create_date = "2026-10-10T18:52:01Z" [90m-> null[0m[0m
+      [31m-[0m[0m id          = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m name        = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m path        = "/" [90m-> null[0m[0m
+      [31m-[0m[0m role        = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m tags        = {} [90m-> null[0m[0m
+      [31m-[0m[0m tags_all    = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m unique_id   = "REDACTED" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_iam_role.ec2[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role" "ec2" {
+      [31m-[0m[0m arn                   = "arn:aws:iam::REDACTED:role/cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m assume_role_policy    = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = "sts:AssumeRole"
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Principal = {
+                          [31m-[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m create_date           = "2026-10-10T18:52:00Z" [90m-> null[0m[0m
+      [31m-[0m[0m force_detach_policies = false [90m-> null[0m[0m
+      [31m-[0m[0m id                    = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m managed_policy_arns   = [
+          [31m-[0m[0m "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m max_session_duration  = 3600 [90m-> null[0m[0m
+      [31m-[0m[0m name                  = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m path                  = "/" [90m-> null[0m[0m
+      [31m-[0m[0m tags                  = {} [90m-> null[0m[0m
+      [31m-[0m[0m tags_all              = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m unique_id             = "REDACTED" [90m-> null[0m[0m
+        [90m# (3 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m inline_policy {
+          [31m-[0m[0m name   = "read-db-password" [90m-> null[0m[0m
+          [31m-[0m[0m policy = jsonencode(
+                {
+                  [31m-[0m[0m Statement = [
+                      [31m-[0m[0m {
+                          [31m-[0m[0m Action   = "ssm:GetParameter"
+                          [31m-[0m[0m Effect   = "Allow"
+                          [31m-[0m[0m Resource = "arn:aws:ssm:us-east-2:REDACTED:parameter/cwm-bench/typical-p95-3x-r1-20261010/db-password"
+                          [31m-[0m[0m Sid      = "ReadDbPassword"
+                        },
+                      [31m-[0m[0m {
+                          [31m-[0m[0m Action    = "kms:Decrypt"
+                          [31m-[0m[0m Condition = {
+                              [31m-[0m[0m StringEquals = {
+                                  [31m-[0m[0m "kms:ViaService" = "ssm.us-east-2.amazonaws.com"
+                                }
+                            }
+                          [31m-[0m[0m Effect    = "Allow"
+                          [31m-[0m[0m Resource  = "*"
+                          [31m-[0m[0m Sid       = "DecryptDbPassword"
+                        },
+                    ]
+                  [31m-[0m[0m Version   = "2012-10-17"
+                }
+            ) [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_iam_role_policy.app_ssm_db[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy" "app_ssm_db" {
+      [31m-[0m[0m id          = "cwm-bench-ec2-typical-p95-3x-r1-20261010:read-db-password" [90m-> null[0m[0m
+      [31m-[0m[0m name        = "read-db-password" [90m-> null[0m[0m
+      [31m-[0m[0m policy      = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = "ssm:GetParameter"
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "arn:aws:ssm:us-east-2:REDACTED:parameter/cwm-bench/typical-p95-3x-r1-20261010/db-password"
+                      [31m-[0m[0m Sid      = "ReadDbPassword"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = "kms:Decrypt"
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m StringEquals = {
+                              [31m-[0m[0m "kms:ViaService" = "ssm.us-east-2.amazonaws.com"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "*"
+                      [31m-[0m[0m Sid       = "DecryptDbPassword"
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m role        = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_iam_role_policy_attachment.ssm[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "ssm" {
+      [31m-[0m[0m id         = "cwm-bench-ec2-typical-p95-3x-r1-20261010-20261010185201273400000001" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+    }
+
+[1m  # aws_instance.app[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_instance" "app" {
+      [31m-[0m[0m ami                                  = "ami-0d3d85815a9746bc5" [90m-> null[0m[0m
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0089" [90m-> null[0m[0m
+      [31m-[0m[0m associate_public_ip_address          = true [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                    = "us-east-2a" [90m-> null[0m[0m
+      [31m-[0m[0m cpu_core_count                       = 1 [90m-> null[0m[0m
+      [31m-[0m[0m cpu_threads_per_core                 = 2 [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_stop                     = false [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_termination              = false [90m-> null[0m[0m
+      [31m-[0m[0m ebs_optimized                        = false [90m-> null[0m[0m
+      [31m-[0m[0m get_password_data                    = false [90m-> null[0m[0m
+      [31m-[0m[0m hibernation                          = false [90m-> null[0m[0m
+      [31m-[0m[0m iam_instance_profile                 = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "i-REDACTED0089" [90m-> null[0m[0m
+      [31m-[0m[0m instance_initiated_shutdown_behavior = "stop" [90m-> null[0m[0m
+      [31m-[0m[0m instance_state                       = "running" [90m-> null[0m[0m
+      [31m-[0m[0m instance_type                        = "m5.large" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_address_count                   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_addresses                       = [] [90m-> null[0m[0m
+      [31m-[0m[0m monitoring                           = true [90m-> null[0m[0m
+      [31m-[0m[0m placement_partition_number           = 0 [90m-> null[0m[0m
+      [31m-[0m[0m primary_network_interface_id         = "eni-REDACTED0203" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns                          = "ip-REDACTED.us-east-2.compute.internal" [90m-> null[0m[0m
+      [31m-[0m[0m private_ip                           = "192.0.2.8" [90m-> null[0m[0m
+      [31m-[0m[0m public_dns                           = "ec2-REDACTED.us-east-2.compute.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m public_ip                            = "192.0.2.9" [90m-> null[0m[0m
+      [31m-[0m[0m secondary_private_ips                = [] [90m-> null[0m[0m
+      [31m-[0m[0m security_groups                      = [] [90m-> null[0m[0m
+      [31m-[0m[0m source_dest_check                    = true [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id                            = "subnet-REDACTED0199" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "Name" = "cwm-bench-app-0"
+          [31m-[0m[0m "Role" = "app"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-app-0"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "Role"      = "app"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tenancy                              = "default" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_base64                     = "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" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_replace_on_change          = true [90m-> null[0m[0m
+      [31m-[0m[0m vpc_security_group_ids               = [
+          [31m-[0m[0m "sg-REDACTED0194",
+        ] [90m-> null[0m[0m
+        [90m# (7 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m capacity_reservation_specification {
+          [31m-[0m[0m capacity_reservation_preference = "open" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m cpu_options {
+          [31m-[0m[0m core_count       = 1 [90m-> null[0m[0m
+          [31m-[0m[0m threads_per_core = 2 [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m enclave_options {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m maintenance_options {
+          [31m-[0m[0m auto_recovery = "default" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m metadata_options {
+          [31m-[0m[0m http_endpoint               = "enabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_protocol_ipv6          = "disabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_put_response_hop_limit = 2 [90m-> null[0m[0m
+          [31m-[0m[0m http_tokens                 = "required" [90m-> null[0m[0m
+          [31m-[0m[0m instance_metadata_tags      = "disabled" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m private_dns_name_options {
+          [31m-[0m[0m enable_resource_name_dns_a_record    = false [90m-> null[0m[0m
+          [31m-[0m[0m enable_resource_name_dns_aaaa_record = false [90m-> null[0m[0m
+          [31m-[0m[0m hostname_type                        = "ip-name" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m root_block_device {
+          [31m-[0m[0m delete_on_termination = true [90m-> null[0m[0m
+          [31m-[0m[0m device_name           = "/dev/xvda" [90m-> null[0m[0m
+          [31m-[0m[0m encrypted             = true [90m-> null[0m[0m
+          [31m-[0m[0m iops                  = 100 [90m-> null[0m[0m
+          [31m-[0m[0m kms_key_id            = "arn:aws:kms:us-east-2:REDACTED:key/REDACTED0002" [90m-> null[0m[0m
+          [31m-[0m[0m tags                  = {} [90m-> null[0m[0m
+          [31m-[0m[0m tags_all              = {
+              [31m-[0m[0m "ManagedBy" = "terraform"
+              [31m-[0m[0m "Project"   = "cwm-bench"
+              [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+              [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+            } [90m-> null[0m[0m
+          [31m-[0m[0m throughput            = 0 [90m-> null[0m[0m
+          [31m-[0m[0m volume_id             = "vol-REDACTED0122" [90m-> null[0m[0m
+          [31m-[0m[0m volume_size           = 30 [90m-> null[0m[0m
+          [31m-[0m[0m volume_type           = "gp2" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_instance.app[1][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_instance" "app" {
+      [31m-[0m[0m ami                                  = "ami-0d3d85815a9746bc5" [90m-> null[0m[0m
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0079" [90m-> null[0m[0m
+      [31m-[0m[0m associate_public_ip_address          = true [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                    = "us-east-2b" [90m-> null[0m[0m
+      [31m-[0m[0m cpu_core_count                       = 1 [90m-> null[0m[0m
+      [31m-[0m[0m cpu_threads_per_core                 = 2 [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_stop                     = false [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_termination              = false [90m-> null[0m[0m
+      [31m-[0m[0m ebs_optimized                        = false [90m-> null[0m[0m
+      [31m-[0m[0m get_password_data                    = false [90m-> null[0m[0m
+      [31m-[0m[0m hibernation                          = false [90m-> null[0m[0m
+      [31m-[0m[0m iam_instance_profile                 = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "i-REDACTED0079" [90m-> null[0m[0m
+      [31m-[0m[0m instance_initiated_shutdown_behavior = "stop" [90m-> null[0m[0m
+      [31m-[0m[0m instance_state                       = "running" [90m-> null[0m[0m
+      [31m-[0m[0m instance_type                        = "m5.large" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_address_count                   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_addresses                       = [] [90m-> null[0m[0m
+      [31m-[0m[0m monitoring                           = true [90m-> null[0m[0m
+      [31m-[0m[0m placement_partition_number           = 0 [90m-> null[0m[0m
+      [31m-[0m[0m primary_network_interface_id         = "eni-REDACTED0204" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns                          = "ip-REDACTED.us-east-2.compute.internal" [90m-> null[0m[0m
+      [31m-[0m[0m private_ip                           = "192.0.2.10" [90m-> null[0m[0m
+      [31m-[0m[0m public_dns                           = "ec2-REDACTED.us-east-2.compute.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m public_ip                            = "192.0.2.11" [90m-> null[0m[0m
+      [31m-[0m[0m secondary_private_ips                = [] [90m-> null[0m[0m
+      [31m-[0m[0m security_groups                      = [] [90m-> null[0m[0m
+      [31m-[0m[0m source_dest_check                    = true [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id                            = "subnet-REDACTED0200" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "Name" = "cwm-bench-app-1"
+          [31m-[0m[0m "Role" = "app"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-app-1"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "Role"      = "app"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tenancy                              = "default" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_base64                     = "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" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_replace_on_change          = true [90m-> null[0m[0m
+      [31m-[0m[0m vpc_security_group_ids               = [
+          [31m-[0m[0m "sg-REDACTED0194",
+        ] [90m-> null[0m[0m
+        [90m# (7 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m capacity_reservation_specification {
+          [31m-[0m[0m capacity_reservation_preference = "open" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m cpu_options {
+          [31m-[0m[0m core_count       = 1 [90m-> null[0m[0m
+          [31m-[0m[0m threads_per_core = 2 [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m enclave_options {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m maintenance_options {
+          [31m-[0m[0m auto_recovery = "default" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m metadata_options {
+          [31m-[0m[0m http_endpoint               = "enabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_protocol_ipv6          = "disabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_put_response_hop_limit = 2 [90m-> null[0m[0m
+          [31m-[0m[0m http_tokens                 = "required" [90m-> null[0m[0m
+          [31m-[0m[0m instance_metadata_tags      = "disabled" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m private_dns_name_options {
+          [31m-[0m[0m enable_resource_name_dns_a_record    = false [90m-> null[0m[0m
+          [31m-[0m[0m enable_resource_name_dns_aaaa_record = false [90m-> null[0m[0m
+          [31m-[0m[0m hostname_type                        = "ip-name" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m root_block_device {
+          [31m-[0m[0m delete_on_termination = true [90m-> null[0m[0m
+          [31m-[0m[0m device_name           = "/dev/xvda" [90m-> null[0m[0m
+          [31m-[0m[0m encrypted             = true [90m-> null[0m[0m
+          [31m-[0m[0m iops                  = 100 [90m-> null[0m[0m
+          [31m-[0m[0m kms_key_id            = "arn:aws:kms:us-east-2:REDACTED:key/REDACTED0002" [90m-> null[0m[0m
+          [31m-[0m[0m tags                  = {} [90m-> null[0m[0m
+          [31m-[0m[0m tags_all              = {
+              [31m-[0m[0m "ManagedBy" = "terraform"
+              [31m-[0m[0m "Project"   = "cwm-bench"
+              [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+              [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+            } [90m-> null[0m[0m
+          [31m-[0m[0m throughput            = 0 [90m-> null[0m[0m
+          [31m-[0m[0m volume_id             = "vol-REDACTED0120" [90m-> null[0m[0m
+          [31m-[0m[0m volume_size           = 30 [90m-> null[0m[0m
+          [31m-[0m[0m volume_type           = "gp2" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_instance.app[2][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_instance" "app" {
+      [31m-[0m[0m ami                                  = "ami-0d3d85815a9746bc5" [90m-> null[0m[0m
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0050" [90m-> null[0m[0m
+      [31m-[0m[0m associate_public_ip_address          = true [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                    = "us-east-2a" [90m-> null[0m[0m
+      [31m-[0m[0m cpu_core_count                       = 1 [90m-> null[0m[0m
+      [31m-[0m[0m cpu_threads_per_core                 = 2 [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_stop                     = false [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_termination              = false [90m-> null[0m[0m
+      [31m-[0m[0m ebs_optimized                        = false [90m-> null[0m[0m
+      [31m-[0m[0m get_password_data                    = false [90m-> null[0m[0m
+      [31m-[0m[0m hibernation                          = false [90m-> null[0m[0m
+      [31m-[0m[0m iam_instance_profile                 = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "i-REDACTED0050" [90m-> null[0m[0m
+      [31m-[0m[0m instance_initiated_shutdown_behavior = "stop" [90m-> null[0m[0m
+      [31m-[0m[0m instance_state                       = "running" [90m-> null[0m[0m
+      [31m-[0m[0m instance_type                        = "m5.large" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_address_count                   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_addresses                       = [] [90m-> null[0m[0m
+      [31m-[0m[0m monitoring                           = true [90m-> null[0m[0m
+      [31m-[0m[0m placement_partition_number           = 0 [90m-> null[0m[0m
+      [31m-[0m[0m primary_network_interface_id         = "eni-REDACTED0205" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns                          = "ip-REDACTED.us-east-2.compute.internal" [90m-> null[0m[0m
+      [31m-[0m[0m private_ip                           = "192.0.2.12" [90m-> null[0m[0m
+      [31m-[0m[0m public_dns                           = "ec2-REDACTED.us-east-2.compute.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m public_ip                            = "192.0.2.13" [90m-> null[0m[0m
+      [31m-[0m[0m secondary_private_ips                = [] [90m-> null[0m[0m
+      [31m-[0m[0m security_groups                      = [] [90m-> null[0m[0m
+      [31m-[0m[0m source_dest_check                    = true [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id                            = "subnet-REDACTED0199" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "Name" = "cwm-bench-app-2"
+          [31m-[0m[0m "Role" = "app"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-app-2"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "Role"      = "app"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tenancy                              = "default" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_base64                     = "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" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_replace_on_change          = true [90m-> null[0m[0m
+      [31m-[0m[0m vpc_security_group_ids               = [
+          [31m-[0m[0m "sg-REDACTED0194",
+        ] [90m-> null[0m[0m
+        [90m# (7 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m capacity_reservation_specification {
+          [31m-[0m[0m capacity_reservation_preference = "open" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m cpu_options {
+          [31m-[0m[0m core_count       = 1 [90m-> null[0m[0m
+          [31m-[0m[0m threads_per_core = 2 [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m enclave_options {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m maintenance_options {
+          [31m-[0m[0m auto_recovery = "default" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m metadata_options {
+          [31m-[0m[0m http_endpoint               = "enabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_protocol_ipv6          = "disabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_put_response_hop_limit = 2 [90m-> null[0m[0m
+          [31m-[0m[0m http_tokens                 = "required" [90m-> null[0m[0m
+          [31m-[0m[0m instance_metadata_tags      = "disabled" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m private_dns_name_options {
+          [31m-[0m[0m enable_resource_name_dns_a_record    = false [90m-> null[0m[0m
+          [31m-[0m[0m enable_resource_name_dns_aaaa_record = false [90m-> null[0m[0m
+          [31m-[0m[0m hostname_type                        = "ip-name" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m root_block_device {
+          [31m-[0m[0m delete_on_termination = true [90m-> null[0m[0m
+          [31m-[0m[0m device_name           = "/dev/xvda" [90m-> null[0m[0m
+          [31m-[0m[0m encrypted             = true [90m-> null[0m[0m
+          [31m-[0m[0m iops                  = 100 [90m-> null[0m[0m
+          [31m-[0m[0m kms_key_id            = "arn:aws:kms:us-east-2:REDACTED:key/REDACTED0002" [90m-> null[0m[0m
+          [31m-[0m[0m tags                  = {} [90m-> null[0m[0m
+          [31m-[0m[0m tags_all              = {
+              [31m-[0m[0m "ManagedBy" = "terraform"
+              [31m-[0m[0m "Project"   = "cwm-bench"
+              [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+              [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+            } [90m-> null[0m[0m
+          [31m-[0m[0m throughput            = 0 [90m-> null[0m[0m
+          [31m-[0m[0m volume_id             = "vol-REDACTED0141" [90m-> null[0m[0m
+          [31m-[0m[0m volume_size           = 30 [90m-> null[0m[0m
+          [31m-[0m[0m volume_type           = "gp2" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_instance.generator[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_instance" "generator" {
+      [31m-[0m[0m ami                                  = "ami-0d3d85815a9746bc5" [90m-> null[0m[0m
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0096" [90m-> null[0m[0m
+      [31m-[0m[0m associate_public_ip_address          = true [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                    = "us-east-2a" [90m-> null[0m[0m
+      [31m-[0m[0m cpu_core_count                       = 2 [90m-> null[0m[0m
+      [31m-[0m[0m cpu_threads_per_core                 = 2 [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_stop                     = false [90m-> null[0m[0m
+      [31m-[0m[0m disable_api_termination              = false [90m-> null[0m[0m
+      [31m-[0m[0m ebs_optimized                        = false [90m-> null[0m[0m
+      [31m-[0m[0m get_password_data                    = false [90m-> null[0m[0m
+      [31m-[0m[0m hibernation                          = false [90m-> null[0m[0m
+      [31m-[0m[0m iam_instance_profile                 = "cwm-bench-ec2-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "i-REDACTED0096" [90m-> null[0m[0m
+      [31m-[0m[0m instance_initiated_shutdown_behavior = "stop" [90m-> null[0m[0m
+      [31m-[0m[0m instance_state                       = "running" [90m-> null[0m[0m
+      [31m-[0m[0m instance_type                        = "c6i.xlarge" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_address_count                   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_addresses                       = [] [90m-> null[0m[0m
+      [31m-[0m[0m monitoring                           = true [90m-> null[0m[0m
+      [31m-[0m[0m placement_partition_number           = 0 [90m-> null[0m[0m
+      [31m-[0m[0m primary_network_interface_id         = "eni-REDACTED0206" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns                          = "ip-REDACTED.us-east-2.compute.internal" [90m-> null[0m[0m
+      [31m-[0m[0m private_ip                           = "192.0.2.14" [90m-> null[0m[0m
+      [31m-[0m[0m public_dns                           = "ec2-REDACTED.us-east-2.compute.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m public_ip                            = "192.0.2.7" [90m-> null[0m[0m
+      [31m-[0m[0m secondary_private_ips                = [] [90m-> null[0m[0m
+      [31m-[0m[0m security_groups                      = [] [90m-> null[0m[0m
+      [31m-[0m[0m source_dest_check                    = true [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id                            = "subnet-REDACTED0199" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "Name" = "cwm-bench-generator"
+          [31m-[0m[0m "Role" = "generator"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-generator"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "Role"      = "generator"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tenancy                              = "default" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_base64                     = "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" [90m-> null[0m[0m
+      [31m-[0m[0m user_data_replace_on_change          = true [90m-> null[0m[0m
+      [31m-[0m[0m vpc_security_group_ids               = [
+          [31m-[0m[0m "sg-REDACTED0192",
+        ] [90m-> null[0m[0m
+        [90m# (7 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m capacity_reservation_specification {
+          [31m-[0m[0m capacity_reservation_preference = "open" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m cpu_options {
+          [31m-[0m[0m core_count       = 2 [90m-> null[0m[0m
+          [31m-[0m[0m threads_per_core = 2 [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m enclave_options {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m maintenance_options {
+          [31m-[0m[0m auto_recovery = "default" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m metadata_options {
+          [31m-[0m[0m http_endpoint               = "enabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_protocol_ipv6          = "disabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_put_response_hop_limit = 2 [90m-> null[0m[0m
+          [31m-[0m[0m http_tokens                 = "required" [90m-> null[0m[0m
+          [31m-[0m[0m instance_metadata_tags      = "disabled" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m private_dns_name_options {
+          [31m-[0m[0m enable_resource_name_dns_a_record    = false [90m-> null[0m[0m
+          [31m-[0m[0m enable_resource_name_dns_aaaa_record = false [90m-> null[0m[0m
+          [31m-[0m[0m hostname_type                        = "ip-name" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m root_block_device {
+          [31m-[0m[0m delete_on_termination = true [90m-> null[0m[0m
+          [31m-[0m[0m device_name           = "/dev/xvda" [90m-> null[0m[0m
+          [31m-[0m[0m encrypted             = true [90m-> null[0m[0m
+          [31m-[0m[0m iops                  = 100 [90m-> null[0m[0m
+          [31m-[0m[0m kms_key_id            = "arn:aws:kms:us-east-2:REDACTED:key/REDACTED0002" [90m-> null[0m[0m
+          [31m-[0m[0m tags                  = {} [90m-> null[0m[0m
+          [31m-[0m[0m tags_all              = {
+              [31m-[0m[0m "ManagedBy" = "terraform"
+              [31m-[0m[0m "Project"   = "cwm-bench"
+              [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+              [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+            } [90m-> null[0m[0m
+          [31m-[0m[0m throughput            = 0 [90m-> null[0m[0m
+          [31m-[0m[0m volume_id             = "vol-REDACTED0158" [90m-> null[0m[0m
+          [31m-[0m[0m volume_size           = 30 [90m-> null[0m[0m
+          [31m-[0m[0m volume_type           = "gp2" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_internet_gateway.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_internet_gateway" "main" {
+      [31m-[0m[0m arn      = "arn:aws:ec2:us-east-2:REDACTED:internet-gateway/igw-REDACTED0188" [90m-> null[0m[0m
+      [31m-[0m[0m id       = "igw-REDACTED0188" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m tags     = {
+          [31m-[0m[0m "Name" = "cwm-bench-igw"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-igw"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id   = "vpc-REDACTED0187" [90m-> null[0m[0m
+    }
+
+[1m  # aws_lb.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_lb" "main" {
+      [31m-[0m[0m arn                                                          = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003" [90m-> null[0m[0m
+      [31m-[0m[0m arn_suffix                                                   = "app/cwm-bench-alb/REDACTED0003" [90m-> null[0m[0m
+      [31m-[0m[0m client_keep_alive                                            = 3600 [90m-> null[0m[0m
+      [31m-[0m[0m desync_mitigation_mode                                       = "defensive" [90m-> null[0m[0m
+      [31m-[0m[0m dns_name                                                     = "internal-cwm-bench-alb-REDACTED.us-east-2.elb.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m drop_invalid_header_fields                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_cross_zone_load_balancing                             = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_deletion_protection                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_http2                                                 = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_tls_version_and_cipher_suite_headers                  = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_waf_fail_open                                         = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_xff_client_port                                       = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_zonal_shift                                           = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                                           = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003" [90m-> null[0m[0m
+      [31m-[0m[0m idle_timeout                                                 = 60 [90m-> null[0m[0m
+      [31m-[0m[0m internal                                                     = true [90m-> null[0m[0m
+      [31m-[0m[0m ip_address_type                                              = "ipv4" [90m-> null[0m[0m
+      [31m-[0m[0m load_balancer_type                                           = "application" [90m-> null[0m[0m
+      [31m-[0m[0m name                                                         = "cwm-bench-alb" [90m-> null[0m[0m
+      [31m-[0m[0m preserve_host_header                                         = false [90m-> null[0m[0m
+      [31m-[0m[0m security_groups                                              = [
+          [31m-[0m[0m "sg-REDACTED0195",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m subnets                                                      = [
+          [31m-[0m[0m "subnet-REDACTED0190",
+          [31m-[0m[0m "subnet-REDACTED0196",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m tags                                                         = {
+          [31m-[0m[0m "Name" = "cwm-bench-alb"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-alb"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                                       = "vpc-REDACTED0187" [90m-> null[0m[0m
+      [31m-[0m[0m xff_header_processing_mode                                   = "append" [90m-> null[0m[0m
+      [31m-[0m[0m zone_id                                                      = "Z3AADJGX6KTTL2" [90m-> null[0m[0m
+        [90m# (3 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m access_logs {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+            [90m# (2 unchanged attributes hidden)[0m[0m
+        }
+
+      [31m-[0m[0m connection_logs {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+            [90m# (2 unchanged attributes hidden)[0m[0m
+        }
+
+      [31m-[0m[0m subnet_mapping {
+          [31m-[0m[0m subnet_id            = "subnet-REDACTED0190" [90m-> null[0m[0m
+            [90m# (4 unchanged attributes hidden)[0m[0m
+        }
+      [31m-[0m[0m subnet_mapping {
+          [31m-[0m[0m subnet_id            = "subnet-REDACTED0196" [90m-> null[0m[0m
+            [90m# (4 unchanged attributes hidden)[0m[0m
+        }
+    }
+
+[1m  # aws_lb_listener.http[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_lb_listener" "http" {
+      [31m-[0m[0m arn                                                                 = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:listener/app/cwm-bench-alb/REDACTED0003/218c43c64183d386" [90m-> null[0m[0m
+      [31m-[0m[0m id                                                                  = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:listener/app/cwm-bench-alb/REDACTED0003/218c43c64183d386" [90m-> null[0m[0m
+      [31m-[0m[0m load_balancer_arn                                                   = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003" [90m-> null[0m[0m
+      [31m-[0m[0m port                                                                = 80 [90m-> null[0m[0m
+      [31m-[0m[0m protocol                                                            = "HTTP" [90m-> null[0m[0m
+      [31m-[0m[0m routing_http_response_server_enabled                                = true [90m-> null[0m[0m
+      [31m-[0m[0m tags                                                                = {} [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                                            = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+        [90m# (11 unchanged attributes hidden)[0m[0m
+
+      [31m-[0m[0m default_action {
+          [31m-[0m[0m order            = 1 [90m-> null[0m[0m
+          [31m-[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+          [31m-[0m[0m type             = "forward" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # aws_lb_target_group.app[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_lb_target_group" "app" {
+      [31m-[0m[0m arn                                = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+      [31m-[0m[0m arn_suffix                         = "targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+      [31m-[0m[0m deregistration_delay               = "30" [90m-> null[0m[0m
+      [31m-[0m[0m id                                 = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+      [31m-[0m[0m ip_address_type                    = "ipv4" [90m-> null[0m[0m
+      [31m-[0m[0m lambda_multi_value_headers_enabled = false [90m-> null[0m[0m
+      [31m-[0m[0m load_balancer_arns                 = [
+          [31m-[0m[0m "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m load_balancing_algorithm_type      = "round_robin" [90m-> null[0m[0m
+      [31m-[0m[0m load_balancing_anomaly_mitigation  = "off" [90m-> null[0m[0m
+      [31m-[0m[0m load_balancing_cross_zone_enabled  = "use_load_balancer_configuration" [90m-> null[0m[0m
+      [31m-[0m[0m name                               = "cwm-bench-app" [90m-> null[0m[0m
+      [31m-[0m[0m port                               = 8080 [90m-> null[0m[0m
+      [31m-[0m[0m protocol                           = "HTTP" [90m-> null[0m[0m
+      [31m-[0m[0m protocol_version                   = "HTTP1" [90m-> null[0m[0m
+      [31m-[0m[0m proxy_protocol_v2                  = false [90m-> null[0m[0m
+      [31m-[0m[0m slow_start                         = 0 [90m-> null[0m[0m
+      [31m-[0m[0m tags                               = {
+          [31m-[0m[0m "Name" = "cwm-bench-app"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                           = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-app"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m target_type                        = "instance" [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                             = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+
+      [31m-[0m[0m health_check {
+          [31m-[0m[0m enabled             = true [90m-> null[0m[0m
+          [31m-[0m[0m healthy_threshold   = 2 [90m-> null[0m[0m
+          [31m-[0m[0m interval            = 15 [90m-> null[0m[0m
+          [31m-[0m[0m matcher             = "200" [90m-> null[0m[0m
+          [31m-[0m[0m path                = "/health" [90m-> null[0m[0m
+          [31m-[0m[0m port                = "8080" [90m-> null[0m[0m
+          [31m-[0m[0m protocol            = "HTTP" [90m-> null[0m[0m
+          [31m-[0m[0m timeout             = 5 [90m-> null[0m[0m
+          [31m-[0m[0m unhealthy_threshold = 3 [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m stickiness {
+          [31m-[0m[0m cookie_duration = 86400 [90m-> null[0m[0m
+          [31m-[0m[0m enabled         = false [90m-> null[0m[0m
+          [31m-[0m[0m type            = "lb_cookie" [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m target_failover {}
+
+      [31m-[0m[0m target_group_health {
+          [31m-[0m[0m dns_failover {
+              [31m-[0m[0m minimum_healthy_targets_count      = "1" [90m-> null[0m[0m
+              [31m-[0m[0m minimum_healthy_targets_percentage = "off" [90m-> null[0m[0m
+            }
+          [31m-[0m[0m unhealthy_state_routing {
+              [31m-[0m[0m minimum_healthy_targets_count      = 1 [90m-> null[0m[0m
+              [31m-[0m[0m minimum_healthy_targets_percentage = "off" [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m target_health_state {}
+    }
+
+[1m  # aws_lb_target_group_attachment.app[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_lb_target_group_attachment" "app" {
+      [31m-[0m[0m id               = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-20261010185847722500000009" [90m-> null[0m[0m
+      [31m-[0m[0m port             = 8080 [90m-> null[0m[0m
+      [31m-[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+      [31m-[0m[0m target_id        = "i-REDACTED0089" [90m-> null[0m[0m
+    }
+
+[1m  # aws_lb_target_group_attachment.app[1][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_lb_target_group_attachment" "app" {
+      [31m-[0m[0m id               = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-20261010185847656900000008" [90m-> null[0m[0m
+      [31m-[0m[0m port             = 8080 [90m-> null[0m[0m
+      [31m-[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+      [31m-[0m[0m target_id        = "i-REDACTED0079" [90m-> null[0m[0m
+    }
+
+[1m  # aws_lb_target_group_attachment.app[2][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_lb_target_group_attachment" "app" {
+      [31m-[0m[0m id               = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-2026101018584773970000000a" [90m-> null[0m[0m
+      [31m-[0m[0m port             = 8080 [90m-> null[0m[0m
+      [31m-[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+      [31m-[0m[0m target_id        = "i-REDACTED0050" [90m-> null[0m[0m
+    }
+
+[1m  # aws_route_table.private[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table" "private" {
+      [31m-[0m[0m arn              = "arn:aws:ec2:us-east-2:REDACTED:route-table/rtb-REDACTED0189" [90m-> null[0m[0m
+      [31m-[0m[0m id               = "rtb-REDACTED0189" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id         = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m propagating_vgws = [] [90m-> null[0m[0m
+      [31m-[0m[0m route            = [] [90m-> null[0m[0m
+      [31m-[0m[0m tags             = {
+          [31m-[0m[0m "Name" = "cwm-bench-private"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all         = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-private"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id           = "vpc-REDACTED0187" [90m-> null[0m[0m
+    }
+
+[1m  # aws_route_table.public[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table" "public" {
+      [31m-[0m[0m arn              = "arn:aws:ec2:us-east-2:REDACTED:route-table/rtb-REDACTED0191" [90m-> null[0m[0m
+      [31m-[0m[0m id               = "rtb-REDACTED0191" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id         = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m propagating_vgws = [] [90m-> null[0m[0m
+      [31m-[0m[0m route            = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_block                 = "0.0.0.0/0"
+              [31m-[0m[0m gateway_id                 = "igw-REDACTED0188"
+                [90m# (11 unchanged attributes hidden)[0m[0m
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m tags             = {
+          [31m-[0m[0m "Name" = "cwm-bench-public"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all         = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-public"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id           = "vpc-REDACTED0187" [90m-> null[0m[0m
+    }
+
+[1m  # aws_route_table_association.private[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "private" {
+      [31m-[0m[0m id             = "rtbassoc-REDACTED0198" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-REDACTED0189" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-REDACTED0190" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_route_table_association.private[1][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "private" {
+      [31m-[0m[0m id             = "rtbassoc-REDACTED0197" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-REDACTED0189" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-REDACTED0196" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_route_table_association.public[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "public" {
+      [31m-[0m[0m id             = "rtbassoc-REDACTED0201" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-REDACTED0191" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-REDACTED0199" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_route_table_association.public[1][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "public" {
+      [31m-[0m[0m id             = "rtbassoc-REDACTED0202" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-REDACTED0191" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-REDACTED0200" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_security_group.alb[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_security_group" "alb" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group/sg-REDACTED0195" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "ALB: 80/443 from generator (and optional CIDRs)" [90m-> null[0m[0m
+      [31m-[0m[0m egress                 = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = []
+              [31m-[0m[0m description      = "ALB to app :8080"
+              [31m-[0m[0m from_port        = 8080
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = [
+                  [31m-[0m[0m "sg-REDACTED0194",
+                ]
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 8080
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sg-REDACTED0195" [90m-> null[0m[0m
+      [31m-[0m[0m ingress                = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = []
+              [31m-[0m[0m description      = "generator to ALB :443 (listener only if acm_certificate_arn is set)"
+              [31m-[0m[0m from_port        = 443
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = [
+                  [31m-[0m[0m "sg-REDACTED0192",
+                ]
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 443
+            },
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = []
+              [31m-[0m[0m description      = "generator to ALB :80"
+              [31m-[0m[0m from_port        = 80
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = [
+                  [31m-[0m[0m "sg-REDACTED0192",
+                ]
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 80
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m name                   = "cwm-bench-alb" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id               = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m revoke_rules_on_delete = false [90m-> null[0m[0m
+      [31m-[0m[0m tags                   = {
+          [31m-[0m[0m "Name" = "cwm-bench-alb"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-alb"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                 = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_security_group.app[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_security_group" "app" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group/sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "App nodes: 8080 from ALB only" [90m-> null[0m[0m
+      [31m-[0m[0m egress                 = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = [
+                  [31m-[0m[0m "0.0.0.0/0",
+                ]
+              [31m-[0m[0m description      = "package installs (Node 20, git)"
+              [31m-[0m[0m from_port        = 443
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = []
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 443
+            },
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = [
+                  [31m-[0m[0m "0.0.0.0/0",
+                ]
+              [31m-[0m[0m description      = "package installs (yum mirrors)"
+              [31m-[0m[0m from_port        = 80
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = []
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 80
+            },
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = []
+              [31m-[0m[0m description      = "app to RDS :3306"
+              [31m-[0m[0m from_port        = 3306
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = [
+                  [31m-[0m[0m "sg-REDACTED0193",
+                ]
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 3306
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m ingress                = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = []
+              [31m-[0m[0m description      = "ALB to app :8080"
+              [31m-[0m[0m from_port        = 8080
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = [
+                  [31m-[0m[0m "sg-REDACTED0195",
+                ]
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 8080
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m name                   = "cwm-bench-app" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id               = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m revoke_rules_on_delete = false [90m-> null[0m[0m
+      [31m-[0m[0m tags                   = {
+          [31m-[0m[0m "Name" = "cwm-bench-app"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-app"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                 = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_security_group.generator[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_security_group" "generator" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group/sg-REDACTED0192" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "Load generator: egress to ALB and package mirrors" [90m-> null[0m[0m
+      [31m-[0m[0m egress                 = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = [
+                  [31m-[0m[0m "0.0.0.0/0",
+                ]
+              [31m-[0m[0m description      = "k6 to ALB plus package installs"
+              [31m-[0m[0m from_port        = 0
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "-1"
+              [31m-[0m[0m security_groups  = []
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 0
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sg-REDACTED0192" [90m-> null[0m[0m
+      [31m-[0m[0m ingress                = [] [90m-> null[0m[0m
+      [31m-[0m[0m name                   = "cwm-bench-generator" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id               = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m revoke_rules_on_delete = false [90m-> null[0m[0m
+      [31m-[0m[0m tags                   = {
+          [31m-[0m[0m "Name" = "cwm-bench-generator"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-generator"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                 = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_security_group.rds[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_security_group" "rds" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group/sg-REDACTED0193" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "RDS: 3306 from app nodes only" [90m-> null[0m[0m
+      [31m-[0m[0m egress                 = [] [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sg-REDACTED0193" [90m-> null[0m[0m
+      [31m-[0m[0m ingress                = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_blocks      = []
+              [31m-[0m[0m description      = "app to RDS :3306"
+              [31m-[0m[0m from_port        = 3306
+              [31m-[0m[0m ipv6_cidr_blocks = []
+              [31m-[0m[0m prefix_list_ids  = []
+              [31m-[0m[0m protocol         = "tcp"
+              [31m-[0m[0m security_groups  = [
+                  [31m-[0m[0m "sg-REDACTED0194",
+                ]
+              [31m-[0m[0m self             = false
+              [31m-[0m[0m to_port          = 3306
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m name                   = "cwm-bench-rds" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id               = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m revoke_rules_on_delete = false [90m-> null[0m[0m
+      [31m-[0m[0m tags                   = {
+          [31m-[0m[0m "Name" = "cwm-bench-rds"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-rds"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                 = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_ssm_parameter.db_password[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_ssm_parameter" "db_password" {
+      [31m-[0m[0m arn             = "arn:aws:ssm:us-east-2:REDACTED:parameter/cwm-bench/typical-p95-3x-r1-20261010/db-password" [90m-> null[0m[0m
+      [31m-[0m[0m data_type       = "text" [90m-> null[0m[0m
+      [31m-[0m[0m description     = "RDS master password for this cwm-bench apply. Not a measurement." [90m-> null[0m[0m
+      [31m-[0m[0m id              = "/cwm-bench/typical-p95-3x-r1-20261010/db-password" [90m-> null[0m[0m
+      [31m-[0m[0m key_id          = "alias/aws/ssm" [90m-> null[0m[0m
+      [31m-[0m[0m name            = "/cwm-bench/typical-p95-3x-r1-20261010/db-password" [90m-> null[0m[0m
+      [31m-[0m[0m tags            = {} [90m-> null[0m[0m
+      [31m-[0m[0m tags_all        = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tier            = "Standard" [90m-> null[0m[0m
+      [31m-[0m[0m type            = "SecureString" [90m-> null[0m[0m
+      [31m-[0m[0m value           = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m version         = 1 [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # aws_subnet.private[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "private" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0190" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-2a" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use2-az1" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.42.10.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-REDACTED0190" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = false [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "Name" = "cwm-bench-private-us-east-2a"
+          [31m-[0m[0m "Tier" = "private"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-private-us-east-2a"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Tier"      = "private"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # aws_subnet.private[1][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "private" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0196" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-2b" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use2-az2" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.42.11.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-REDACTED0196" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = false [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "Name" = "cwm-bench-private-us-east-2b"
+          [31m-[0m[0m "Tier" = "private"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-private-us-east-2b"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Tier"      = "private"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # aws_subnet.public[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "public" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0199" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-2a" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use2-az1" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.42.0.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-REDACTED0199" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = true [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "Name" = "cwm-bench-public-us-east-2a"
+          [31m-[0m[0m "Tier" = "public"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-public-us-east-2a"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Tier"      = "public"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # aws_subnet.public[1][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "public" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0200" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-2b" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use2-az2" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.42.1.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-REDACTED0200" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = true [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "Name" = "cwm-bench-public-us-east-2b"
+          [31m-[0m[0m "Tier" = "public"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-public-us-east-2b"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Tier"      = "public"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-REDACTED0187" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # aws_vpc.main[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc" "main" {
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-2:REDACTED:vpc/vpc-REDACTED0187" [90m-> null[0m[0m
+      [31m-[0m[0m assign_generated_ipv6_cidr_block     = false [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                           = "10.42.0.0/16" [90m-> null[0m[0m
+      [31m-[0m[0m default_network_acl_id               = "acl-REDACTED0207" [90m-> null[0m[0m
+      [31m-[0m[0m default_route_table_id               = "rtb-REDACTED0208" [90m-> null[0m[0m
+      [31m-[0m[0m default_security_group_id            = "sg-REDACTED0209" [90m-> null[0m[0m
+      [31m-[0m[0m dhcp_options_id                      = "dopt-011f1e9bb29c2a9cd" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns_hostnames                 = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns_support                   = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_network_address_usage_metrics = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "vpc-REDACTED0187" [90m-> null[0m[0m
+      [31m-[0m[0m instance_tenancy                     = "default" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_netmask_length                  = 0 [90m-> null[0m[0m
+      [31m-[0m[0m main_route_table_id                  = "rtb-REDACTED0208" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                             = "REDACTED" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "Name" = "cwm-bench-vpc"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Name"      = "cwm-bench-vpc"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.alb_to_app[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_egress_rule" "alb_to_app" {
+      [31m-[0m[0m arn                          = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05e2aa83ca79b50a1" [90m-> null[0m[0m
+      [31m-[0m[0m description                  = "ALB to app :8080" [90m-> null[0m[0m
+      [31m-[0m[0m from_port                    = 8080 [90m-> null[0m[0m
+      [31m-[0m[0m id                           = "sgr-05e2aa83ca79b50a1" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol                  = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m referenced_security_group_id = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id            = "sg-REDACTED0195" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id       = "sgr-05e2aa83ca79b50a1" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                      = 8080 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.app_http_out[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_egress_rule" "app_http_out" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d5c1b38269c0b1ac" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_ipv4              = "0.0.0.0/0" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "package installs (yum mirrors)" [90m-> null[0m[0m
+      [31m-[0m[0m from_port              = 80 [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sgr-0d5c1b38269c0b1ac" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol            = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id      = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id = "sgr-0d5c1b38269c0b1ac" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                = 80 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.app_https_out[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_egress_rule" "app_https_out" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06cee3afdd061ef51" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_ipv4              = "0.0.0.0/0" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "package installs (Node 20, git)" [90m-> null[0m[0m
+      [31m-[0m[0m from_port              = 443 [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sgr-06cee3afdd061ef51" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol            = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id      = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id = "sgr-06cee3afdd061ef51" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                = 443 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.app_to_rds[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_egress_rule" "app_to_rds" {
+      [31m-[0m[0m arn                          = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06429d0011b444e2c" [90m-> null[0m[0m
+      [31m-[0m[0m description                  = "app to RDS :3306" [90m-> null[0m[0m
+      [31m-[0m[0m from_port                    = 3306 [90m-> null[0m[0m
+      [31m-[0m[0m id                           = "sgr-06429d0011b444e2c" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol                  = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m referenced_security_group_id = "sg-REDACTED0193" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id            = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id       = "sgr-06429d0011b444e2c" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                      = 3306 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_egress_rule.generator_all[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_egress_rule" "generator_all" {
+      [31m-[0m[0m arn                    = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05eb9d72c65838aeb" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_ipv4              = "0.0.0.0/0" [90m-> null[0m[0m
+      [31m-[0m[0m description            = "k6 to ALB plus package installs" [90m-> null[0m[0m
+      [31m-[0m[0m id                     = "sgr-05eb9d72c65838aeb" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol            = "-1" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id      = "sg-REDACTED0192" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id = "sgr-05eb9d72c65838aeb" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all               = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.alb_http_from_generator[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_ingress_rule" "alb_http_from_generator" {
+      [31m-[0m[0m arn                          = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-060f2cc5b5538ebf0" [90m-> null[0m[0m
+      [31m-[0m[0m description                  = "generator to ALB :80" [90m-> null[0m[0m
+      [31m-[0m[0m from_port                    = 80 [90m-> null[0m[0m
+      [31m-[0m[0m id                           = "sgr-060f2cc5b5538ebf0" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol                  = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m referenced_security_group_id = "sg-REDACTED0192" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id            = "sg-REDACTED0195" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id       = "sgr-060f2cc5b5538ebf0" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                      = 80 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.alb_https_from_generator[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_ingress_rule" "alb_https_from_generator" {
+      [31m-[0m[0m arn                          = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0de04dab0532f1c66" [90m-> null[0m[0m
+      [31m-[0m[0m description                  = "generator to ALB :443 (listener only if acm_certificate_arn is set)" [90m-> null[0m[0m
+      [31m-[0m[0m from_port                    = 443 [90m-> null[0m[0m
+      [31m-[0m[0m id                           = "sgr-0de04dab0532f1c66" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol                  = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m referenced_security_group_id = "sg-REDACTED0192" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id            = "sg-REDACTED0195" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id       = "sgr-0de04dab0532f1c66" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                      = 443 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.app_from_alb[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_ingress_rule" "app_from_alb" {
+      [31m-[0m[0m arn                          = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02e33cdb82a814409" [90m-> null[0m[0m
+      [31m-[0m[0m description                  = "ALB to app :8080" [90m-> null[0m[0m
+      [31m-[0m[0m from_port                    = 8080 [90m-> null[0m[0m
+      [31m-[0m[0m id                           = "sgr-02e33cdb82a814409" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol                  = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m referenced_security_group_id = "sg-REDACTED0195" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id            = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id       = "sgr-02e33cdb82a814409" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                      = 8080 [90m-> null[0m[0m
+    }
+
+[1m  # aws_vpc_security_group_ingress_rule.rds_from_app[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc_security_group_ingress_rule" "rds_from_app" {
+      [31m-[0m[0m arn                          = "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a68202aec9d6a126" [90m-> null[0m[0m
+      [31m-[0m[0m description                  = "app to RDS :3306" [90m-> null[0m[0m
+      [31m-[0m[0m from_port                    = 3306 [90m-> null[0m[0m
+      [31m-[0m[0m id                           = "sgr-0a68202aec9d6a126" [90m-> null[0m[0m
+      [31m-[0m[0m ip_protocol                  = "tcp" [90m-> null[0m[0m
+      [31m-[0m[0m referenced_security_group_id = "sg-REDACTED0194" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_id            = "sg-REDACTED0193" [90m-> null[0m[0m
+      [31m-[0m[0m security_group_rule_id       = "sgr-0a68202aec9d6a126" [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                     = {
+          [31m-[0m[0m "ManagedBy" = "terraform"
+          [31m-[0m[0m "Project"   = "cwm-bench"
+          [31m-[0m[0m "TestId"    = "typical-p95-3x-r1-20261010"
+          [31m-[0m[0m "Topology"  = "alb-3x-m5.large-db.r5.large-mysql80-single-az"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m to_port                      = 3306 [90m-> null[0m[0m
+    }
+
+[1m  # random_password.db[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "random_password" "db" {
+      [31m-[0m[0m bcrypt_hash = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m id          = "none" [90m-> null[0m[0m
+      [31m-[0m[0m length      = 24 [90m-> null[0m[0m
+      [31m-[0m[0m lower       = true [90m-> null[0m[0m
+      [31m-[0m[0m min_lower   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m min_numeric = 0 [90m-> null[0m[0m
+      [31m-[0m[0m min_special = 0 [90m-> null[0m[0m
+      [31m-[0m[0m min_upper   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m number      = true [90m-> null[0m[0m
+      [31m-[0m[0m numeric     = true [90m-> null[0m[0m
+      [31m-[0m[0m result      = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m special     = false [90m-> null[0m[0m
+      [31m-[0m[0m upper       = true [90m-> null[0m[0m
+    }
+
+[1mPlan:[0m 0 to add, 0 to change, 45 to destroy.
+[0m
+Changes to Outputs:
+  [31m-[0m[0m alb_arn               = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003" [90m-> null[0m[0m
+  [31m-[0m[0m alb_dns               = "internal-cwm-bench-alb-REDACTED.us-east-2.elb.amazonaws.com" [90m-> null[0m[0m
+  [31m-[0m[0m ami_source            = "variable" [90m-> null[0m[0m
+  [31m-[0m[0m app_instance_ids      = [
+      [31m-[0m[0m "i-REDACTED0089",
+      [31m-[0m[0m "i-REDACTED0079",
+      [31m-[0m[0m "i-REDACTED0050",
+    ] [90m-> null[0m[0m
+  [31m-[0m[0m app_root_volume_ids   = [
+      [31m-[0m[0m "vol-REDACTED0122",
+      [31m-[0m[0m "vol-REDACTED0120",
+      [31m-[0m[0m "vol-REDACTED0141",
+    ] [90m-> null[0m[0m
+  [31m-[0m[0m dashboard_url         = "https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#dashboards:name=cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+  [31m-[0m[0m generator_instance_id = "i-REDACTED0096" [90m-> null[0m[0m
+  [31m-[0m[0m generator_ip          = "192.0.2.7" [90m-> null[0m[0m
+  [31m-[0m[0m gp2_notes             = {
+      [31m-[0m[0m app_root_baseline_iops = 90
+      [31m-[0m[0m app_root_gb            = 30
+      [31m-[0m[0m burst_iops             = 3000
+      [31m-[0m[0m rds_baseline_iops      = 300
+      [31m-[0m[0m rds_gb                 = 100
+      [31m-[0m[0m third_error_bucket     = "BurstBalance=0 is iops_throttle, distinct from CPU and DB connection failures"
+    } [90m-> null[0m[0m
+  [31m-[0m[0m rds_endpoint          = "cwm-bench-typical-p95-3x-r1-20261010.REDACTED.us-east-2.rds.amazonaws.com" [90m-> null[0m[0m
+  [31m-[0m[0m rds_identifier        = "cwm-bench-typical-p95-3x-r1-20261010" [90m-> null[0m[0m
+  [31m-[0m[0m resolved_ami_id       = (sensitive value) [90m-> null[0m[0m
+  [31m-[0m[0m target_group_arn      = "arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004" [90m-> null[0m[0m
+  [31m-[0m[0m topology_declaration  = {
+      [31m-[0m[0m alb                     = "application"
+      [31m-[0m[0m app_count               = 3
+      [31m-[0m[0m app_instance_type       = "m5.large"
+      [31m-[0m[0m app_pool_size           = 250
+      [31m-[0m[0m db_engine               = "mysql"
+      [31m-[0m[0m db_engine_version       = "8.0"
+      [31m-[0m[0m db_instance_class       = "db.r5.large"
+      [31m-[0m[0m db_multi_az             = false
+      [31m-[0m[0m generator_instance_type = "c6i.xlarge"
+      [31m-[0m[0m mysql_max_connections   = 500
+      [31m-[0m[0m region                  = "us-east-2"
+      [31m-[0m[0m test_id                 = "typical-p95-3x-r1-20261010"
+    } [90m-> null[0m[0m
+[0m[1maws_cloudwatch_dashboard.main: Destroying... [id=cwm-bench-typical-p95-3x-r1-20261010][0m[0m
+[0m[1maws_iam_role_policy.app_ssm_db: Destroying... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010:read-db-password][0m[0m
+[0m[1maws_lb_target_group_attachment.app[0]: Destroying... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-20261010185847722500000009][0m[0m
+[0m[1maws_vpc_security_group_egress_rule.alb_to_app: Destroying... [id=sgr-05e2aa83ca79b50a1][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_https_from_generator: Destroying... [id=sgr-0de04dab0532f1c66][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.rds_from_app: Destroying... [id=sgr-0a68202aec9d6a126][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.app_from_alb: Destroying... [id=sgr-02e33cdb82a814409][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_http_from_generator: Destroying... [id=sgr-060f2cc5b5538ebf0][0m[0m
+[0m[1maws_route_table_association.private[0]: Destroying... [id=rtbassoc-REDACTED0198][0m[0m
+[0m[1maws_lb_listener.http: Destroying... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:listener/app/cwm-bench-alb/REDACTED0003/218c43c64183d386][0m[0m
+[0m[1maws_lb_target_group_attachment.app[0]: Destruction complete after 1s[0m
+[0m[1maws_vpc_security_group_egress_rule.app_https_out: Destroying... [id=sgr-06cee3afdd061ef51][0m[0m
+[0m[1maws_iam_role_policy.app_ssm_db: Destruction complete after 1s[0m
+[0m[1maws_lb_target_group_attachment.app[2]: Destroying... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-2026101018584773970000000a][0m[0m
+[0m[1maws_lb_listener.http: Destruction complete after 1s[0m
+[0m[1maws_vpc_security_group_egress_rule.generator_all: Destroying... [id=sgr-05eb9d72c65838aeb][0m[0m
+[0m[1maws_lb_target_group_attachment.app[2]: Destruction complete after 0s[0m
+[0m[1maws_route_table_association.public[0]: Destroying... [id=rtbassoc-REDACTED0201][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_http_from_generator: Destruction complete after 1s[0m
+[0m[1maws_vpc_security_group_egress_rule.app_http_out: Destroying... [id=sgr-0d5c1b38269c0b1ac][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.rds_from_app: Destruction complete after 1s[0m
+[0m[1maws_route_table_association.public[1]: Destroying... [id=rtbassoc-REDACTED0202][0m[0m
+[0m[1maws_cloudwatch_dashboard.main: Destruction complete after 1s[0m
+[0m[1maws_iam_role_policy_attachment.ssm: Destroying... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010-20261010185201273400000001][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.alb_https_from_generator: Destruction complete after 1s[0m
+[0m[1maws_route_table_association.private[1]: Destroying... [id=rtbassoc-REDACTED0197][0m[0m
+[0m[1maws_vpc_security_group_ingress_rule.app_from_alb: Destruction complete after 1s[0m
+[0m[1maws_lb_target_group_attachment.app[1]: Destroying... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004-20261010185847656900000008][0m[0m
+[0m[1maws_vpc_security_group_egress_rule.alb_to_app: Destruction complete after 1s[0m
+[0m[1maws_vpc_security_group_egress_rule.app_to_rds: Destroying... [id=sgr-06429d0011b444e2c][0m[0m
+[0m[1maws_route_table_association.private[0]: Destruction complete after 1s[0m
+[0m[1maws_instance.generator: Destroying... [id=i-REDACTED0096][0m[0m
+[0m[1maws_lb_target_group_attachment.app[1]: Destruction complete after 0s[0m
+[0m[1maws_instance.app[1]: Destroying... [id=i-REDACTED0079][0m[0m
+[0m[1maws_iam_role_policy_attachment.ssm: Destruction complete after 0s[0m
+[0m[1maws_instance.app[0]: Destroying... [id=i-REDACTED0089][0m[0m
+[0m[1maws_vpc_security_group_egress_rule.app_https_out: Destruction complete after 0s[0m
+[0m[1maws_lb_target_group.app: Destroying... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:targetgroup/cwm-bench-app/REDACTED0004][0m[0m
+[0m[1maws_vpc_security_group_egress_rule.generator_all: Destruction complete after 0s[0m
+[0m[1maws_instance.app[2]: Destroying... [id=i-REDACTED0050][0m[0m
+[0m[1maws_route_table_association.public[0]: Destruction complete after 0s[0m
+[0m[1maws_lb_target_group.app: Destruction complete after 0s[0m
+[0m[1maws_route_table_association.public[1]: Destruction complete after 0s[0m
+[0m[1maws_route_table.public: Destroying... [id=rtb-REDACTED0191][0m[0m
+[0m[1maws_vpc_security_group_egress_rule.app_http_out: Destruction complete after 0s[0m
+[0m[1maws_route_table_association.private[1]: Destruction complete after 0s[0m
+[0m[1maws_route_table.private: Destroying... [id=rtb-REDACTED0189][0m[0m
+[0m[1maws_vpc_security_group_egress_rule.app_to_rds: Destruction complete after 0s[0m
+[0m[1maws_route_table.public: Destruction complete after 1s[0m
+[0m[1maws_internet_gateway.main: Destroying... [id=igw-REDACTED0188][0m[0m
+[0m[1maws_route_table.private: Destruction complete after 1s[0m
+[0m[1maws_instance.generator: Still destroying... [id=i-REDACTED0096, 10s elapsed][0m[0m
+[0m[1maws_instance.app[1]: Still destroying... [id=i-REDACTED0079, 10s elapsed][0m[0m
+[0m[1maws_instance.app[0]: Still destroying... [id=i-REDACTED0089, 10s elapsed][0m[0m
+[0m[1maws_instance.app[2]: Still destroying... [id=i-REDACTED0050, 10s elapsed][0m[0m
+[0m[1maws_internet_gateway.main: Still destroying... [id=igw-REDACTED0188, 10s elapsed][0m[0m
+[0m[1maws_internet_gateway.main: Destruction complete after 17s[0m
+[0m[1maws_instance.generator: Still destroying... [id=i-REDACTED0096, 20s elapsed][0m[0m
+[0m[1maws_instance.app[1]: Still destroying... [id=i-REDACTED0079, 20s elapsed][0m[0m
+[0m[1maws_instance.app[0]: Still destroying... [id=i-REDACTED0089, 20s elapsed][0m[0m
+[0m[1maws_instance.app[2]: Still destroying... [id=i-REDACTED0050, 20s elapsed][0m[0m
+[0m[1maws_instance.generator: Destruction complete after 20s[0m
+[0m[1maws_instance.app[2]: Destruction complete after 20s[0m
+[0m[1maws_security_group.generator: Destroying... [id=sg-REDACTED0192][0m[0m
+[0m[1maws_lb.main: Destroying... [id=arn:aws:elasticloadbalancing:us-east-2:REDACTED:loadbalancer/app/cwm-bench-alb/REDACTED0003][0m[0m
+[0m[1maws_security_group.generator: Destruction complete after 1s[0m
+[0m[1maws_instance.app[1]: Still destroying... [id=i-REDACTED0079, 30s elapsed][0m[0m
+[0m[1maws_instance.app[0]: Still destroying... [id=i-REDACTED0089, 30s elapsed][0m[0m
+[0m[1maws_instance.app[1]: Destruction complete after 30s[0m
+[0m[1maws_lb.main: Still destroying... [id=arn:aws:elasticloadbalancing:us-east-2:...cer/app/cwm-bench-alb/REDACTED0003, 10s elapsed][0m[0m
+[0m[1maws_instance.app[0]: Destruction complete after 30s[0m
+[0m[1maws_subnet.public[0]: Destroying... [id=subnet-REDACTED0199][0m[0m
+[0m[1maws_iam_instance_profile.ec2: Destroying... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010][0m[0m
+[0m[1maws_security_group.app: Destroying... [id=sg-REDACTED0194][0m[0m
+[0m[1maws_subnet.public[1]: Destroying... [id=subnet-REDACTED0200][0m[0m
+[0m[1maws_db_instance.main: Destroying... [id=db-REDACTED0002][0m[0m
+[0m[1maws_ssm_parameter.db_password: Destroying... [id=/cwm-bench/typical-p95-3x-r1-20261010/db-password][0m[0m
+[0m[1maws_iam_instance_profile.ec2: Destruction complete after 0s[0m
+[0m[1maws_iam_role.ec2: Destroying... [id=cwm-bench-ec2-typical-p95-3x-r1-20261010][0m[0m
+[0m[1maws_ssm_parameter.db_password: Destruction complete after 0s[0m
+[0m[1maws_subnet.public[0]: Destruction complete after 0s[0m
+[0m[1maws_subnet.public[1]: Destruction complete after 0s[0m
+[0m[1maws_security_group.app: Destruction complete after 0s[0m
+[0m[1maws_iam_role.ec2: Destruction complete after 0s[0m
+[0m[1maws_lb.main: Destruction complete after 17s[0m
+[0m[1maws_security_group.alb: Destroying... [id=sg-REDACTED0195][0m[0m
+[0m[1maws_security_group.alb: Destruction complete after 1s[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 1m0s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 1m10s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 1m20s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 1m30s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 1m40s elapsed][0m[0m
+[0m[1maws_db_instance.main: Still destroying... [id=db-REDACTED0002, 1m50s elapsed][0m[0m
+[0m[1maws_db_instance.main: Destruction complete after 1m51s[0m
+[0m[1maws_db_subnet_group.main: Destroying... [id=cwm-bench-typical-p95-3x-r1-20261010][0m[0m
+[0m[1maws_db_parameter_group.main: Destroying... [id=cwm-bench-typical-p95-3x-r1-20261010][0m[0m
+[0m[1maws_security_group.rds: Destroying... [id=sg-REDACTED0193][0m[0m
+[0m[1mrandom_password.db: Destroying... [id=none][0m[0m
+[0m[1mrandom_password.db: Destruction complete after 0s[0m
+[0m[1maws_db_parameter_group.main: Destruction complete after 0s[0m
+[0m[1maws_db_subnet_group.main: Destruction complete after 0s[0m
+[0m[1maws_subnet.private[0]: Destroying... [id=subnet-REDACTED0190][0m[0m
+[0m[1maws_subnet.private[1]: Destroying... [id=subnet-REDACTED0196][0m[0m
+[0m[1maws_subnet.private[1]: Destruction complete after 1s[0m
+[0m[1maws_subnet.private[0]: Destruction complete after 1s[0m
+[0m[1maws_security_group.rds: Destruction complete after 1s[0m
+[0m[1maws_vpc.main: Destroying... [id=vpc-REDACTED0187][0m[0m
+[0m[1maws_vpc.main: Destruction complete after 0s[0m
+[0m[1m[32m
+Destroy complete! Resources: 45 destroyed.
+[0[REDACTED_PARTIAL]

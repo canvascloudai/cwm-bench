@@ -1,0 +1,77 @@
+{
+  "parent": "typical-p95-v1-20261010",
+  "revision": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "controllerHash": "1529969249738610238063c418138f1f98cda513c267e96bded28cbe60459037",
+  "slots": [
+    {
+      "campaign": "typical-p95-1x-r1-20261010",
+      "n": 1,
+      "rep": 1,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-1x-r1-20261010",
+      "schema": "p95_122333bc9e8be5c95a077c0e",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 0,
+      "rungs": [
+        {
+          "scenario": "typical-p95-1x-300",
+          "runId": "typical-p95-1x-300-r1",
+          "rungPos": 1,
+          "startedAt": "2026-10-10T16:16:16.899Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T16:16:55Z",
+            "end": "2026-10-10T16:37:08Z",
+            "complete": true
+          },
+          "collectAttempt": 1
+        }
+      ],
+      "applyStartedAt": "2026-10-10T16:08:14.602Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": false,
+      "invalidReason": "Expected property name or '}' in JSON at position [REDACTED_PARTIAL]",
+      "destroyedAt": "2026-10-10T16:41:12.311Z"
+    },
+    {
+      "campaign": "typical-p95-2x-r1-20261010",
+      "n": 2,
+      "rep": 1,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r1-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r1-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r1-20261010",
+      "schema": "p95_e1973f0cd223b853bb1901fc",
+      "applyAttempted": false,
+      "applied": false,
+      "destroyed": false,
+      "delayed": false,
+      "exportedBytes": 0,
+      "rungs": [],
+      "pauseReason": "Interrupted; cleanup require[REDACTED_PARTIAL]"
+    }
+  ],
+  "days": {
+    "1": "2026-10-10"
+  },
+  "missingRawApplies": [],
+  "spendGuard": {
+    "conservativeUpperBoundUsd": 3.098727222222222,
+    "actualBillingClaim": false,
+    "capUsd": 40,
+    "replacementsUsed": 0,
+    "cleanupReserveUsd": 2
+  },
+  "account": "REDACTED",
+  "ami": "ami-0d3d85815a9746bc5",
+  "lastEvent": {
+    "at": "2026-10-10T16:57:25.175Z",
+    "text": "CAMPAIGN_PAUSED Interrupted; cleanup require[REDACTED_PARTIAL]"
+  },
+  "paused": "Interrupted; cleanup require[REDACTED_PARTIAL]"
+}

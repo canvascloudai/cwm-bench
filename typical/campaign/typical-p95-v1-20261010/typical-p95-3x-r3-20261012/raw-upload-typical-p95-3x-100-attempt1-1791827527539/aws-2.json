@@ -1,0 +1,22 @@
+{
+    "CommandId": "a8e0148f-529c-4164-9e42-9bedf1e2a5b9",
+    "InstanceId": "i-REDACTED0038",
+    "Comment": "cwm-bench worker-adapter",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-10-12T17:52:09.985Z",
+    "ExecutionElapsedTime": "PT0.775S",
+    "ExecutionEndDateTime": "2026-10-12T17:52:09.985Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "RAW_UPLOAD_COMPLETE\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}

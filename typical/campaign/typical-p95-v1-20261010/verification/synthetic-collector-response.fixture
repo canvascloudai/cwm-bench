@@ -1,0 +1,421 @@
+{
+  "ok": true,
+  "adapterVersion": "1.6.1",
+  "scenario": "typical-p95-1x-300",
+  "aliasOf": null,
+  "completeness": "optional",
+  "requiresCompleteCollect": false,
+  "complete": false,
+  "knownGap": false,
+  "invented": false,
+  "campaignId": "typical-p95-1x-r1-20261010",
+  "runId": "typical-p95-1x-300-r1",
+  "measurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "ladder": [
+    300,
+    200,
+    100
+  ],
+  "rung_pos": 1,
+  "ladder_history": [],
+  "runIdSource": "env",
+  "region": "us-east-2",
+  "missing": [
+    "cloudwatch:generator_cpu",
+    "cloudwatch:rds_cpu",
+    "cloudwatch:rds_connections",
+    "cloudwatch:rds_burst_balance",
+    "cloudwatch:app_cpu_i-dryrun",
+    "cloudwatch:app_ebs_burst_vol-dryrun",
+    "cloudwatch:alb_request_count",
+    "cloudwatch:alb_http_target_2xx",
+    "cloudwatch:alb_http_target_5xx",
+    "cloudwatch:alb_http_elb_5xx",
+    "cloudwatch:alb_target_response_time:p50/p95/p99"
+  ],
+  "terraformOutputs": {
+    "alb_dns": "cwm-bench-alb-example.us-east-1.elb.amazonaws.com",
+    "alb_arn": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/cwm-bench-example/abc123def456",
+    "target_group_arn": "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/cwm-bench-example/def456abc123",
+    "generator_instance_id": "i-generator1",
+    "app_instance_ids": [
+      "i-dryrun"
+    ],
+    "rds_identifier": "cwm-bench-example",
+    "rds_endpoint": "cwm-bench-example.xxxx.us-east-1.rds.amazonaws.com",
+    "generator_ip": "203.0.113.10",
+    "dashboard_url": "https://us-east-1.console.aws.amazon.com/cloudwatch/home",
+    "topology_declaration": {
+      "region": "us-east-2",
+      "test_id": "typical-p95-1x-r1-20261010",
+      "app_count": 1,
+      "app_pool_size": 250,
+      "mysql_max_connections": 500,
+      "app_instance_type": "m5.large",
+      "db_instance_class": "db.r5.large",
+      "db_engine": "mysql",
+      "db_multi_az": false,
+      "generator_instance_type": "c6i.xlarge",
+      "alb": "application"
+    }
+  },
+  "resolvedAmis": {
+    "amiId": "ami-0123456789abcdef0",
+    "source": "ssm-al2023-latest",
+    "roles": {
+      "app": "ami-0123456789abcdef0",
+      "generator": "ami-0123456789abcdef0"
+    }
+  },
+  "cloudwatch": {
+    "status": "collected",
+    "note": "Values are CloudWatch GetMetricStatistics datapoints. Null/empty means the API returned no datapoints. Nothing here is invented or copied from the public CWM score.",
+    "window": {
+      "startTime": "2026-10-10T10:00:00.000Z",
+      "endTime": "2026-10-10T10:19:00.000Z",
+      "actualStartTime": "2026-10-10T10:00:00.000Z",
+      "actualEndTime": "2026-10-10T10:20:00.000Z",
+      "source": "persisted-run"
+    },
+    "metrics": {
+      "app_cpu_i-dryrun": {
+        "label": "app_cpu_i-dryrun",
+        "namespace": "AWS/EC2",
+        "metricName": "CPUUtilization",
+        "dimensions": [
+          "Name=InstanceId,Value=i-dryrun"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "generator_cpu": {
+        "label": "generator_cpu",
+        "namespace": "AWS/EC2",
+        "metricName": "CPUUtilization",
+        "dimensions": [
+          "Name=InstanceId,Value=i-generator1"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "rds_cpu": {
+        "label": "rds_cpu",
+        "namespace": "AWS/RDS",
+        "metricName": "CPUUtilization",
+        "dimensions": [
+          "Name=DBInstanceIdentifier,Value=cwm-bench-example"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "rds_connections": {
+        "label": "rds_connections",
+        "namespace": "AWS/RDS",
+        "metricName": "DatabaseConnections",
+        "dimensions": [
+          "Name=DBInstanceIdentifier,Value=cwm-bench-example"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "rds_burst_balance": {
+        "label": "rds_burst_balance",
+        "namespace": "AWS/RDS",
+        "metricName": "BurstBalance",
+        "dimensions": [
+          "Name=DBInstanceIdentifier,Value=cwm-bench-example"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "app_ebs_burst_vol-dryrun": {
+        "label": "app_ebs_burst_vol-dryrun",
+        "namespace": "AWS/EBS",
+        "metricName": "BurstBalance",
+        "dimensions": [
+          "Name=VolumeId,Value=vol-dryrun"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "alb_request_count": {
+        "label": "alb_request_count",
+        "namespace": "AWS/ApplicationELB",
+        "metricName": "RequestCount",
+        "dimensions": [
+          "Name=LoadBalancer,Value=app/cwm-bench-example/abc123def456"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "alb_http_target_2xx": {
+        "label": "alb_http_target_2xx",
+        "namespace": "AWS/ApplicationELB",
+        "metricName": "HTTPCode_Target_2XX_Count",
+        "dimensions": [
+          "Name=LoadBalancer,Value=app/cwm-bench-example/abc123def456",
+          "Name=TargetGroup,Value=targetgroup/cwm-bench-example/def456abc123"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "alb_http_target_5xx": {
+        "label": "alb_http_target_5xx",
+        "namespace": "AWS/ApplicationELB",
+        "metricName": "HTTPCode_Target_5XX_Count",
+        "dimensions": [
+          "Name=LoadBalancer,Value=app/cwm-bench-example/abc123def456",
+          "Name=TargetGroup,Value=targetgroup/cwm-bench-example/def456abc123"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "alb_http_elb_5xx": {
+        "label": "alb_http_elb_5xx",
+        "namespace": "AWS/ApplicationELB",
+        "metricName": "HTTPCode_ELB_5XX_Count",
+        "dimensions": [
+          "Name=LoadBalancer,Value=app/cwm-bench-example/abc123def456"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": null,
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      },
+      "alb_target_response_time": {
+        "label": "alb_target_response_time",
+        "namespace": "AWS/ApplicationELB",
+        "metricName": "TargetResponseTime",
+        "dimensions": [
+          "Name=LoadBalancer,Value=app/cwm-bench-example/abc123def456",
+          "Name=TargetGroup,Value=targetgroup/cwm-bench-example/def456abc123"
+        ],
+        "datapoints": [],
+        "labelFromApi": "CPUUtilization",
+        "extendedStatistics": [
+          "p50",
+          "p95",
+          "p99"
+        ],
+        "percentiles": {
+          "p50": {
+            "available": false,
+            "value": null,
+            "count": 0,
+            "percentile": "p50"
+          },
+          "p95": {
+            "available": false,
+            "value": null,
+            "count": 0,
+            "percentile": "p95"
+          },
+          "p99": {
+            "available": false,
+            "value": null,
+            "count": 0,
+            "percentile": "p99"
+          }
+        },
+        "summary": {
+          "available": false,
+          "value": null,
+          "count": 0
+        }
+      }
+    },
+    "queryFailures": [],
+    "retryCounts": {}
+  },
+  "artifacts": {
+    "present": true,
+    "dir": "/opt/cwm-bench/results/raw/typical-p95-1x-r1-20261010/typical-p95-1x-300-r1",
+    "files": [
+      "summary.json",
+      "k6.json.gz",
+      "identity.json"
+    ],
+    "summaryPresent": true,
+    "identityPresent": true,
+    "identityMatches": true,
+    "requestLevelRaw": {
+      "present": true,
+      "files": [
+        "k6.json.gz"
+      ]
+    },
+    "k6": {
+      "present": true,
+      "latency": {
+        "p50Ms": 10,
+        "p95Ms": 10,
+        "p99Ms": 10,
+        "source": "k6",
+        "metric": "http_req_duration",
+        "untaggedAggregate": true,
+        "steadySubmetricPresent": false
+      },
+      "latencyPercentilesPresent": true,
+      "errorClasses": {
+        "db_timeout": 0,
+        "too_many_connections": 0,
+        "queue_full": 0,
+        "cpu_overload": 0,
+        "internal": 0,
+        "unclassified": 0
+      },
+      "errorClassCountsPresent": true,
+      "errorClassEvidence": "zero-http-failure-rate",
+      "classifiedErrorCount": 0,
+      "goodputRps": 300,
+      "httpReqs": {
+        "count": 360000,
+        "rate": 300
+      },
+      "httpReqFailed": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 360000
+      },
+      "droppedIterations": 0,
+      "peakVus": null,
+      "counterConsistency": {
+        "valid": true,
+        "reasons": []
+      }
+    },
+    "command": {
+      "commandId": "cmd-2",
+      "status": "Success",
+      "responseCode": 0,
+      "stderr": ""
+    }
+  },
+  "latency": {
+    "p50Ms": 10,
+    "p95Ms": 10,
+    "p99Ms": 10,
+    "source": "k6",
+    "metric": "http_req_duration",
+    "untaggedAggregate": true,
+    "steadySubmetricPresent": false
+  },
+  "albLatency": {
+    "p50Ms": null,
+    "p95Ms": null,
+    "p99Ms": null,
+    "source": "unmeasured",
+    "present": false
+  },
+  "goodputRps": 300,
+  "errorCategories": {
+    "db_timeout": 0,
+    "too_many_connections": 0,
+    "queue_full": 0,
+    "cpu_overload": 0,
+    "internal": 0,
+    "iops_throttle": null,
+    "unclassified": 0
+  },
+  "perNode": [
+    {
+      "instanceId": "i-dryrun",
+      "role": "app",
+      "cpuAvgPct": null,
+      "rps": null
+    },
+    {
+      "instanceId": "i-generator1",
+      "role": "generator",
+      "cpuAvgPct": null,
+      "rps": 300
+    },
+    {
+      "instanceId": "cwm-bench-example",
+      "role": "database",
+      "cpuAvgPct": null,
+      "rps": null
+    }
+  ],
+  "databaseConnections": {
+    "avg": null,
+    "max": null,
+    "saturation": "unknown"
+  },
+  "burstBalanceMin": {
+    "rds": null,
+    "appVolumes": [
+      {
+        "volumeId": "vol-dryrun",
+        "min": null
+      }
+    ]
+  },
+  "concurrency": {
+    "targetRps": 300,
+    "executor": "k6-arrival-rate"
+  },
+  "iopsThrottle": {
+    "count": null,
+    "observed": false,
+    "burstBalanceHitZero": null
+  }
+}

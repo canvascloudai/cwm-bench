@@ -1,0 +1,90 @@
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid function argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on app.tf line 41, in resource "aws_instance" "app":
+[31m│[0m [0m  41:     server_js_b64     = filebase64("${[4mpath.module[0m}/../app/src/server.js")[0m
+[31m│[0m [0m    [90m├────────────────[0m
+[31m│[0m [0m[0m    [90m│[0m while calling [1mfilebase64[0m([0mpath)
+[31m│[0m [0m    [90m│[0m [1mpath.module[0m is "."
+[31m│[0m [0m[0m
+[31m│[0m [0mInvalid value for "path" parameter: no file exists at
+[31m│[0m [0m"./../app/src/server.js"; this function works only with files that are
+[31m│[0m [0mdistributed as part of the configuration source code, so if this file will
+[31m│[0m [0mbe created by a resource in this configuration you must instead obtain this
+[31m│[0m [0mresult from an attribute of that resource.
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid function argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on app.tf line 42, in resource "aws_instance" "app":
+[31m│[0m [0m  42:     package_json_b64  = filebase64("${[4mpath.module[0m}/../app/package.json")[0m
+[31m│[0m [0m    [90m├────────────────[0m
+[31m│[0m [0m[0m    [90m│[0m while calling [1mfilebase64[0m([0mpath)
+[31m│[0m [0m    [90m│[0m [1mpath.module[0m is "."
+[31m│[0m [0m[0m
+[31m│[0m [0mInvalid value for "path" parameter: no file exists at
+[31m│[0m [0m"./../app/package.json"; this function works only with files that are
+[31m│[0m [0mdistributed as part of the configuration source code, so if this file will
+[31m│[0m [0mbe created by a resource in this configuration you must instead obtain this
+[31m│[0m [0mresult from an attribute of that resource.
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid function argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on app.tf line 43, in resource "aws_instance" "app":
+[31m│[0m [0m  43:     seed_sql_b64      = filebase64("${[4mpath.module[0m}/../app/seed/seed.sql")[0m
+[31m│[0m [0m    [90m├────────────────[0m
+[31m│[0m [0m[0m    [90m│[0m while calling [1mfilebase64[0m([0mpath)
+[31m│[0m [0m    [90m│[0m [1mpath.module[0m is "."
+[31m│[0m [0m[0m
+[31m│[0m [0mInvalid value for "path" parameter: no file exists at
+[31m│[0m [0m"./../app/seed/seed.sql"; this function works only with files that are
+[31m│[0m [0mdistributed as part of the configuration source code, so if this file will
+[31m│[0m [0mbe created by a resource in this configuration you must instead obtain this
+[31m│[0m [0mresult from an attribute of that resource.
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid function argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on generator.tf line 31, in resource "aws_instance" "generator":
+[31m│[0m [0m  31:     scenarios_js_b64   = filebase64("${[4mpath.module[0m}/../load/scenarios.js")[0m
+[31m│[0m [0m    [90m├────────────────[0m
+[31m│[0m [0m[0m    [90m│[0m while calling [1mfilebase64[0m([0mpath)
+[31m│[0m [0m    [90m│[0m [1mpath.module[0m is "."
+[31m│[0m [0m[0m
+[31m│[0m [0mInvalid value for "path" parameter: no file exists at
+[31m│[0m [0m"./../load/scenarios.js"; this function works only with files that are
+[31m│[0m [0mdistributed as part of the configuration source code, so if this file will
+[31m│[0m [0mbe created by a resource in this configuration you must instead obtain this
+[31m│[0m [0mresult from an attribute of that resource.
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid function argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on generator.tf line 32, in resource "aws_instance" "generator":
+[31m│[0m [0m  32:     diagnostics_js_b64 = filebase64("${[4mpath.module[0m}/../load/diagnostics.js")[0m
+[31m│[0m [0m    [90m├────────────────[0m
+[31m│[0m [0m[0m    [90m│[0m while calling [1mfilebase64[0m([0mpath)
+[31m│[0m [0m    [90m│[0m [1mpath.module[0m is "."
+[31m│[0m [0m[0m
+[31m│[0m [0mInvalid value for "path" parameter: no file exists at
+[31m│[0m [0m"./../load/diagnostics.js"; this function works only with files that are
+[31m│[0m [0mdistributed as part of the configuration source code, so if this file will
+[31m│[0m [0mbe created by a resource in this configuration you must instead obtain this
+[31m│[0m [0mresult from an attribute of that resource.
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid function argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on generator.tf line 33, in resource "aws_instance" "generator":
+[31m│[0m [0m  33:     common_js_b64      = filebase64("${[4mpath.module[0m}/../load/lib/common.js")[0m
+[31m│[0m [0m    [90m├────────────────[0m
+[31m│[0m [0m[0m    [90m│[0m while calling [1mfilebase64[0m([0mpath)
+[31m│[0m [0m    [90m│[0m [1mpath.module[0m is "."
+[31m│[0m [0m[0m
+[31m│[0m [0mInvalid value for "path" parameter: no file exists at
+[31m│[0m [0m"./../load/lib/common.js"; this function works only with files that are
+[31m│[0m [0mdistributed as part of the configuration source code, so if this file will
+[31m│[0m [0mbe created by a resource in this configuration you must instead obtain this
+[31m│[0m [0mresult from an attribute of that resource.
+[31m╵[0m[0m

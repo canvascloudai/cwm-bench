@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-10T16:45:18.049Z",
+  "campaign": "typical-p95-1x-r1-20261010",
+  "invalid": true,
+  "excludedFromScoring": true,
+  "neverPool": true,
+  "reason": "External controller 1.0.1 parsed only the first line of a multiline summary",
+  "lostRequestLevelGzip": true,
+  "loss": "Generator destroyed before k6.json.gz download; bytes cannot be recovered",
+  "rung300JsonsPreserved": [
+    {
+      "file": "10-typical-p95-1x-300.run.json",
+      "sha256": "0bf634955f3d4ff93003fdcb72f541270e4e808e395fa17cb817ff78a274d4bb"
+    },
+    {
+      "file": "11-typical-p95-1x-300.collect.json",
+      "sha256": "9acbdb1fdf510e3683a0413df5216984952fa4611a95ede5f1da8f43486799af"
+    }
+  ],
+  "rungs200And100NotRun": true,
+  "noRungRetry": true,
+  "creatorApprovedWholeApplyReplacement": true,
+  "replacementReserved": {
+    "n": 1,
+    "rep": 1,
+    "suffix": "a",
+    "count": 1,
+    "limit": 6
+  },
+  "controllerFix": {
+    "version": "1.0.2",
+    "hash": "5bc213b090271323a2b072784b4aaec405bf915b9a68077cc3b2860e83f0f1d2",
+    "measurementShaUnchanged": "0815668ced5c219313b02efba0279ef2ae55fa0c"
+  },
+  "creatorRequiredDryTests": [
+    "Multiline k6 summary",
+    "Gzip downloaded and hash-checked before summary parse or destroy"
+  ],
+  "offlineTestsPassed": 9
+}

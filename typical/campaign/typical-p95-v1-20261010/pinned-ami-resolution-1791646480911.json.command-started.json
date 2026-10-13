@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "get-parameter",
+    "--name",
+    "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-10T15:34:40.912Z",
+  "stdoutFile": "pinned-ami-resolution-1791646480911.json.stdout.txt",
+  "stderrFile": "pinned-ami-resolution-1791646480911.json.stderr.txt"
+}
