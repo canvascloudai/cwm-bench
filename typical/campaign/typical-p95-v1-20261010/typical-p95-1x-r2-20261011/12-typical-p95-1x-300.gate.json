@@ -1,0 +1,18 @@
+{
+  "scenario": "typical-p95-1x-300",
+  "runId": "typical-p95-1x-300-r2",
+  "rungPos": 1,
+  "startedAt": "2026-10-11T20:06:09.181Z",
+  "noRungRetry": true,
+  "bounds": {
+    "start": "2026-10-11T20:06:52Z",
+    "end": "2026-10-11T20:27:05Z",
+    "complete": true
+  },
+  "collectAttempt": 1,
+  "generatorValid": true,
+  "invalidReason": null,
+  "rawDownloaded": true,
+  "cloudwatchDescriptiveGaps": [],
+  "completed": true
+}

@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "rds",
+    "describe-db-instances",
+    "--db-instance-identifier",
+    "cwm-bench-typical-p95-3x-r3-20261012",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-12T16:44:45.067Z",
+  "finalResponsePublished": true
+}

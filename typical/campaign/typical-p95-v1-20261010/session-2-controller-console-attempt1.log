@@ -1,0 +1,47 @@
+Encryption service initialized with key version 1
+Key fingerprints - canonical: 2400e3e3, legacy: none
+EncryptionService.decrypt called with:
+  - Data type: object
+  - User ID: 1
+  - Is nested call: false
+  - Data is an object with keys: version, keyVersion, iv, tag, data, userId
+  - Converted object to string, length: 356
+  - Attempting to parse JSON...
+  - JSON parse successful
+  - Parsed object keys: version, keyVersion, iv, tag, data, userId
+  - All required properties found in encrypted package
+APPLY_STARTED typical-p95-2x-r2-20261011 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-p95-2x-r2-20261011 adapter=1.6.1 apps=2 profile=typical workers=2 SHA=0815668ced5c219313b02efba0279ef2ae55fa0c
+RUN_STARTED typical-p95-2x-r2-20261011 typical-p95-2x-300
+RUNG_SAVED typical-p95-2x-r2-20261011 typical-p95-2x-300
+RUN_STARTED typical-p95-2x-r2-20261011 typical-p95-2x-200
+RUNG_SAVED typical-p95-2x-r2-20261011 typical-p95-2x-200
+RUN_STARTED typical-p95-2x-r2-20261011 typical-p95-2x-100
+RUNG_SAVED typical-p95-2x-r2-20261011 typical-p95-2x-100
+DESTROY_STARTED typical-p95-2x-r2-20261011
+DESTROY_FINISHED typical-p95-2x-r2-20261011
+DELAYED_CLEANUP_CONFIRMED typical-p95-2x-r2-20261011
+APPLY_STARTED typical-p95-3x-r2-20261011 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-p95-3x-r2-20261011 adapter=1.6.1 apps=3 profile=typical workers=2 SHA=0815668ced5c219313b02efba0279ef2ae55fa0c
+RUN_STARTED typical-p95-3x-r2-20261011 typical-p95-3x-300
+RUNG_SAVED typical-p95-3x-r2-20261011 typical-p95-3x-300
+RUN_STARTED typical-p95-3x-r2-20261011 typical-p95-3x-200
+RUNG_SAVED typical-p95-3x-r2-20261011 typical-p95-3x-200
+RUN_STARTED typical-p95-3x-r2-20261011 typical-p95-3x-100
+RUNG_SAVED typical-p95-3x-r2-20261011 typical-p95-3x-100
+DESTROY_STARTED typical-p95-3x-r2-20261011
+DESTROY_FINISHED typical-p95-3x-r2-20261011
+DELAYED_CLEANUP_CONFIRMED typical-p95-3x-r2-20261011
+APPLY_STARTED typical-p95-1x-r2-20261011 ami=ami-0d3d85815a9746bc5
+READY_CONFIRMED typical-p95-1x-r2-20261011 adapter=1.6.1 apps=1 profile=typical workers=2 SHA=0815668ced5c219313b02efba0279ef2ae55fa0c
+RUN_STARTED typical-p95-1x-r2-20261011 typical-p95-1x-300
+RUNG_SAVED typical-p95-1x-r2-20261011 typical-p95-1x-300
+RUN_STARTED typical-p95-1x-r2-20261011 typical-p95-1x-200
+RUNG_SAVED typical-p95-1x-r2-20261011 typical-p95-1x-200
+RUN_STARTED typical-p95-1x-r2-20261011 typical-p95-1x-100
+RUNG_SAVED typical-p95-1x-r2-20261011 typical-p95-1x-100
+DESTROY_STARTED typical-p95-1x-r2-20261011
+DESTROY_FINISHED typical-p95-1x-r2-20261011
+DELAYED_CLEANUP_CONFIRMED typical-p95-1x-r2-20261011
+SESSION_FINISHED rep=2 no-live-stacks=true
+SESSION_PAUSED next=3 due=2026-10-12T16:21:31.264Z

@@ -1,0 +1,11 @@
+{
+  "commandId": "da464111-b234-4b90-82f5-448cee16a42a",
+  "status": "Success",
+  "stdout": "identity={\"campaignId\":\"typical-p95-3x-r3-20261012\",\"runId\":\"typical-p95-3x-100-r3\",\"scenario\":\"typical-p95-3x-100\"}\nstarted_at=2026-10-12T17:31:36Z\ncompleted_at=2026-10-12T17:51:40Z\nexit_code=0\n",
+  "stderr": "",
+  "responseCode": 0,
+  "statusDetails": "Success",
+  "executionStartDateTime": "2026-10-12T17:51:58.746Z",
+  "executionEndDateTime": "2026-10-12T17:51:58.746Z",
+  "ok": true
+}

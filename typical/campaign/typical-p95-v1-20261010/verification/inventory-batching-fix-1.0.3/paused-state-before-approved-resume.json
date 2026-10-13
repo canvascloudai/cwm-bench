@@ -1,0 +1,615 @@
+{
+  "parent": "typical-p95-v1-20261010",
+  "revision": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "controllerHash": "5bc213b090271323a2b072784b4aaec405bf915b9a68077cc3b2860e83f0f1d2",
+  "slots": [
+    {
+      "campaign": "typical-p95-1x-r1-20261010",
+      "n": 1,
+      "rep": 1,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-1x-r1-20261010",
+      "schema": "p95_122333bc9e8be5c95a077c0e",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 0,
+      "rungs": [
+        {
+          "scenario": "typical-p95-1x-300",
+          "runId": "typical-p95-1x-300-r1",
+          "rungPos": 1,
+          "startedAt": "2026-10-10T16:16:16.899Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T16:16:55Z",
+            "end": "2026-10-10T16:37:08Z",
+            "complete": true
+          },
+          "collectAttempt": 1
+        }
+      ],
+      "applyStartedAt": "2026-10-10T16:08:14.602Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": false,
+      "invalidReason": "Expected property name or '}' in JSON at position [REDACTED_PARTIAL]",
+      "destroyedAt": "2026-10-10T16:41:12.311Z",
+      "excludedFromScoring": true,
+      "lostRequestLevelGzip": true
+    },
+    {
+      "campaign": "typical-p95-2x-r1-20261010",
+      "n": 2,
+      "rep": 1,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r1-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r1-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r1-20261010",
+      "schema": "p95_e1973f0cd223b853bb1901fc",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 90717880,
+      "rungs": [
+        {
+          "scenario": "typical-p95-2x-300",
+          "runId": "typical-p95-2x-300-r1",
+          "rungPos": 1,
+          "startedAt": "2026-10-10T17:15:22.562Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T17:15:52Z",
+            "end": "2026-10-10T17:36:05Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-2x-200",
+          "runId": "typical-p95-2x-200-r1",
+          "rungPos": 2,
+          "startedAt": "2026-10-10T17:37:52.133Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T17:38:21Z",
+            "end": "2026-10-10T17:58:31Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-2x-100",
+          "runId": "typical-p95-2x-100-r1",
+          "rungPos": 3,
+          "startedAt": "2026-10-10T17:59:59.486Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T18:00:31Z",
+            "end": "2026-10-10T18:20:35Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-10T17:07:20.993Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-10T18:24:41.297Z"
+    },
+    {
+      "campaign": "typical-p95-3x-r1-20261010",
+      "n": 3,
+      "rep": 1,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-3x-r1-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-3x-r1-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r1-20261010",
+      "schema": "p95_6cd50eb5d20a67eebb888c74",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 91012017,
+      "rungs": [
+        {
+          "scenario": "typical-p95-3x-300",
+          "runId": "typical-p95-3x-300-r1",
+          "rungPos": 1,
+          "startedAt": "2026-10-10T19:00:22.948Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T19:01:00Z",
+            "end": "2026-10-10T19:21:13Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-3x-200",
+          "runId": "typical-p95-3x-200-r1",
+          "rungPos": 2,
+          "startedAt": "2026-10-10T19:23:11.204Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T19:23:46Z",
+            "end": "2026-10-10T19:43:56Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-3x-100",
+          "runId": "typical-p95-3x-100-r1",
+          "rungPos": 3,
+          "startedAt": "2026-10-10T19:45:59.604Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T19:46:53Z",
+            "end": "2026-10-10T20:06:57Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-10T18:51:56.664Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-10T20:11:16.350Z"
+    },
+    {
+      "campaign": "typical-p95-1x-r1a-20261010",
+      "n": 1,
+      "rep": 1,
+      "suffix": "a",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1a-20261010/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1a-20261010/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-1x-r1a-20261010",
+      "schema": "p95_9f4fcea4b37ad4f331d2e096",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 90922682,
+      "rungs": [
+        {
+          "scenario": "typical-p95-1x-300",
+          "runId": "typical-p95-1x-300-r1a",
+          "rungPos": 1,
+          "startedAt": "2026-10-10T20:46:48.304Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T20:47:22Z",
+            "end": "2026-10-10T21:07:35Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-1x-200",
+          "runId": "typical-p95-1x-200-r1a",
+          "rungPos": 2,
+          "startedAt": "2026-10-10T21:09:16.747Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T21:09:39Z",
+            "end": "2026-10-10T21:29:49Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-1x-100",
+          "runId": "typical-p95-1x-100-r1a",
+          "rungPos": 3,
+          "startedAt": "2026-10-10T21:31:03.999Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-10T21:31:27Z",
+            "end": "2026-10-10T21:51:31Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-10T20:38:57.532Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-10T21:57:21.079Z"
+    },
+    {
+      "campaign": "typical-p95-2x-r2-20261011",
+      "n": 2,
+      "rep": 2,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r2-20261011/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-2x-r2-20261011/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r2-20261011",
+      "schema": "p95_10870151e543d6aa967b3d81",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 90571678,
+      "rungs": [
+        {
+          "scenario": "typical-p95-2x-300",
+          "runId": "typical-p95-2x-300-r2",
+          "rungPos": 1,
+          "startedAt": "2026-10-11T16:29:40.061Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T16:30:10Z",
+            "end": "2026-10-11T16:50:23Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-2x-200",
+          "runId": "typical-p95-2x-200-r2",
+          "rungPos": 2,
+          "startedAt": "2026-10-11T16:52:37.912Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T16:53:14Z",
+            "end": "2026-10-11T17:13:23Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-2x-100",
+          "runId": "typical-p95-2x-100-r2",
+          "rungPos": 3,
+          "startedAt": "2026-10-11T17:14:49.901Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T17:15:19Z",
+            "end": "2026-10-11T17:35:23Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-11T16:21:31.264Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-11T17:39:53.311Z"
+    },
+    {
+      "campaign": "typical-p95-3x-r2-20261011",
+      "n": 3,
+      "rep": 2,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-3x-r2-20261011/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-3x-r2-20261011/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011",
+      "schema": "p95_4163a2f20986037dfea15a06",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 90692256,
+      "rungs": [
+        {
+          "scenario": "typical-p95-3x-300",
+          "runId": "typical-p95-3x-300-r2",
+          "rungPos": 1,
+          "startedAt": "2026-10-11T18:17:39.941Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T18:18:31Z",
+            "end": "2026-10-11T18:38:44Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-3x-200",
+          "runId": "typical-p95-3x-200-r2",
+          "rungPos": 2,
+          "startedAt": "2026-10-11T18:40:56.702Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T18:41:33Z",
+            "end": "2026-10-11T19:01:43Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-3x-100",
+          "runId": "typical-p95-3x-100-r2",
+          "rungPos": 3,
+          "startedAt": "2026-10-11T19:03:44.641Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T19:04:21Z",
+            "end": "2026-10-11T19:24:25Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-11T18:09:08.985Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-11T19:28:44.336Z"
+    },
+    {
+      "campaign": "typical-p95-1x-r2-20261011",
+      "n": 1,
+      "rep": 2,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r2-20261011/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r2-20261011/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-1x-r2-20261011",
+      "schema": "p95_bec97d295cbd6c45193c7de0",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 90994843,
+      "rungs": [
+        {
+          "scenario": "typical-p95-1x-300",
+          "runId": "typical-p95-1x-300-r2",
+          "rungPos": 1,
+          "startedAt": "2026-10-11T20:06:09.181Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T20:06:52Z",
+            "end": "2026-10-11T20:27:05Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-1x-200",
+          "runId": "typical-p95-1x-200-r2",
+          "rungPos": 2,
+          "startedAt": "2026-10-11T20:28:53.464Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T20:29:18Z",
+            "end": "2026-10-11T20:49:28Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-1x-100",
+          "runId": "typical-p95-1x-100-r2",
+          "rungPos": 3,
+          "startedAt": "2026-10-11T20:51:07.341Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-11T20:51:30Z",
+            "end": "2026-10-11T21:11:34Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-11T19:58:15.524Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-11T21:15:27.960Z"
+    },
+    {
+      "campaign": "typical-p95-3x-r3-20261012",
+      "n": 3,
+      "rep": 3,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-3x-r3-20261012/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-3x-r3-20261012/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r3-20261012",
+      "schema": "p95_0838173e14c893bbe0389b2c",
+      "applyAttempted": true,
+      "applied": true,
+      "destroyed": true,
+      "delayed": true,
+      "exportedBytes": 90568035,
+      "rungs": [
+        {
+          "scenario": "typical-p95-3x-300",
+          "runId": "typical-p95-3x-300-r3",
+          "rungPos": 1,
+          "startedAt": "2026-10-12T16:44:45.124Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-12T16:45:21Z",
+            "end": "2026-10-12T17:05:34Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-3x-200",
+          "runId": "typical-p95-3x-200-r3",
+          "rungPos": 2,
+          "startedAt": "2026-10-12T17:07:56.836Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-12T17:08:35Z",
+            "end": "2026-10-12T17:28:45Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        },
+        {
+          "scenario": "typical-p95-3x-100",
+          "runId": "typical-p95-3x-100-r3",
+          "rungPos": 3,
+          "startedAt": "2026-10-12T17:30:56.419Z",
+          "noRungRetry": true,
+          "bounds": {
+            "start": "2026-10-12T17:31:36Z",
+            "end": "2026-10-12T17:51:40Z",
+            "complete": true
+          },
+          "collectAttempt": 1,
+          "generatorValid": true,
+          "invalidReason": null,
+          "rawDownloaded": true,
+          "cloudwatchDescriptiveGaps": [],
+          "completed": true
+        }
+      ],
+      "applyStartedAt": "2026-10-12T16:36:29.163Z",
+      "engineVersion": "8.0.46-rds.20260908",
+      "valid": true,
+      "destroyedAt": "2026-10-12T17:58:15.278Z"
+    },
+    {
+      "campaign": "typical-p95-1x-r3-20261012",
+      "n": 1,
+      "rep": 3,
+      "suffix": "",
+      "repo": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r3-20261012/cwm-bench",
+      "tfdir": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r3-20261012/terraform",
+      "out": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-1x-r3-20261012",
+      "schema": "p95_a4b0f74134601b7bf6d5c685",
+      "applyAttempted": false,
+      "applied": false,
+      "destroyed": false,
+      "delayed": false,
+      "exportedBytes": 0,
+      "rungs": [],
+      "pauseReason": "AWS query failed: tagged.json"
+    }
+  ],
+  "days": {
+    "1": "2026-10-10",
+    "2": "2026-10-11",
+    "3": "2026-10-12"
+  },
+  "missingRawApplies": [
+    "typical-p95-1x-r1-20261010"
+  ],
+  "spendGuard": {
+    "conservativeUpperBoundUsd": 21.56946202297161,
+    "actualBillingClaim": false,
+    "capUsd": 40,
+    "replacementsUsed": 1,
+    "cleanupReserveUsd": 2
+  },
+  "account": "REDACTED",
+  "ami": "ami-0d3d85815a9746bc5",
+  "lastEvent": {
+    "at": "2026-10-12T18:14:51.371Z",
+    "text": "CAMPAIGN_PAUSED AWS query failed: tagged.json"
+  },
+  "reservedReplacement": {
+    "n": 1,
+    "rep": 1,
+    "suffix": "a"
+  },
+  "nextSession": 3,
+  "nextSessionAt": "2026-10-12T16:21:31.264Z",
+  "paused": "AWS query failed: tagged.json"
+}

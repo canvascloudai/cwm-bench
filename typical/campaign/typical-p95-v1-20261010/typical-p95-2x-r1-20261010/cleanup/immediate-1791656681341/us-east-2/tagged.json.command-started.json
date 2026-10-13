@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "resourcegroupstaggingapi",
+    "get-resources",
+    "--tag-filters",
+    "Key=TestId,Values=typical-p95-2x-r1-20261010",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-10T18:24:41.947Z",
+  "stdoutFile": "tagged.json.stdout.txt",
+  "stderrFile": "tagged.json.stderr.txt"
+}

@@ -1,0 +1,2 @@
+
+An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstances operation: The instance ID 'i-REDACTED0044' does not exist

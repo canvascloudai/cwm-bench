@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "resourcegroupstaggingapi",
+    "get-resources",
+    "--tag-filters",
+    "Key=TestId,Values=typical-p95-3x-r3-20261012",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-12T17:58:31.727Z",
+  "finalResponsePublished": true
+}

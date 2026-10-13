@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-instances",
+    "--instance-ids",
+    "i-REDACTED0177",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 254,
+  "finishedAt": "2026-10-12T18:49:23.491Z",
+  "finalResponsePublished": false
+}

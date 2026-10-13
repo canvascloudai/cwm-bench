@@ -1,0 +1,5 @@
+{
+  "approval": "PR #20 merged. Use merge commit of PR #20 on main, adapter 1.6.1, for all 9 applies; set CWM_MEASUREMENT_SHA to it; rerun no-AWS collector dry run and confirm measurementSha before session 1. All other instructions unchanged.",
+  "measurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "approvedBeforeAnyApply": true
+}

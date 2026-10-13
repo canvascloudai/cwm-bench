@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "state",
+    "list"
+  ],
+  "startedAt": "2026-10-12T17:58:05.797Z",
+  "stdoutFile": "terraform-postdestroy-state-1791827885796.txt.stdout.txt",
+  "stderrFile": "terraform-postdestroy-state-1791827885796.txt.stderr.txt"
+}

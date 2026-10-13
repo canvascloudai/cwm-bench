@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: typical-p95 keys are a reverse ladder and are not scale keys
+ok 1 - typical-p95 keys are a reverse ladder and are not scale keys
+  ---
+  duration_ms: 3.404628
+  ...
+# Subtest: p95 apply runs 300 then 200 then 100 and records ladder metadata
+ok 2 - p95 apply runs 300 then 200 then 100 and records ladder metadata
+  ---
+  duration_ms: 18.653016
+  ...
+# Subtest: p95 rejects a forward ladder, a reused key, a bad test id, and the wrong app count
+ok 3 - p95 rejects a forward ladder, a reused key, a bad test id, and the wrong app count
+  ---
+  duration_ms: 2.742586
+  ...
+# Subtest: an existing scale key still accepts 300 first and keeps the ascending ladder
+ok 4 - an existing scale key still accepts 300 first and keeps the ascending ladder
+  ---
+  duration_ms: 1.356043
+  ...
+# Subtest: p95 collect scores the untagged aggregate and a scale collect does not switch
+ok 5 - p95 collect scores the untagged aggregate and a scale collect does not switch
+  ---
+  duration_ms: 10.294959
+  ...
+# Subtest: p95 collect rejects a measurement SHA that disagrees with the app gitSha
+ok 6 - p95 collect rejects a measurement SHA that disagrees with the app gitSha
+  ---
+  duration_ms: 0.88201
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 250.378963

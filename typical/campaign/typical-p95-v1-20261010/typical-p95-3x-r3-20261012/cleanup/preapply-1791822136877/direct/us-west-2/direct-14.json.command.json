@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-volumes",
+    "--volume-ids",
+    "vol-REDACTED0182",
+    "--region",
+    "us-west-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 254,
+  "finishedAt": "2026-10-12T16:35:50.766Z",
+  "finalResponsePublished": false
+}

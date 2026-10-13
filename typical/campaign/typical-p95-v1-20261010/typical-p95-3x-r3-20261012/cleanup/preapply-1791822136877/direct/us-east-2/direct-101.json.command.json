@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-security-group-rules",
+    "--security-group-rule-ids",
+    "sgr-053c6b4022fc7b4aa",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "exitCode": 254,
+  "finishedAt": "2026-10-12T16:27:20.685Z",
+  "finalResponsePublished": false
+}

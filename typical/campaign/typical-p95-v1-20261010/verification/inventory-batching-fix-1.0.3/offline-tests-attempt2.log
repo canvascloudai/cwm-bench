@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: external inventory batches 43 IDs in both regions, preserves direct checks, and fails closed
+ok 1 - external inventory batches 43 IDs in both regions, preserves direct checks, and fails closed
+  ---
+  duration_ms: 400.970181
+  ...
+# Subtest: external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+ok 2 - external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+  ---
+  duration_ms: 143.05545
+  ...
+# Subtest: pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+ok 3 - pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+  ---
+  duration_ms: 0.929105
+  ...
+# Subtest: live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+ok 4 - live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+  ---
+  duration_ms: 1.197649
+  ...
+# Subtest: generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+ok 5 - generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+  ---
+  duration_ms: 1.125405
+  ...
+# Subtest: budget refuses seventh replacement or over-cap reservation without stopping the campaign
+ok 6 - budget refuses seventh replacement or over-cap reservation without stopping the campaign
+  ---
+  duration_ms: 0.585995
+  ...
+# Subtest: multiline summary parses only after actual gzip download/hash verification and before destroy
+ok 7 - multiline summary parses only after actual gzip download/hash verification and before destroy
+  ---
+  duration_ms: 135.684131
+  ...
+# Subtest: live ladder preserves verified raw before collector interpretation and destroys only afterward
+ok 8 - live ladder preserves verified raw before collector interpretation and destroys only afterward
+  ---
+  duration_ms: 0.738372
+  ...
+# Subtest: definition violation pauses, ladder identity cannot alias or reorder
+ok 9 - definition violation pauses, ladder identity cannot alias or reorder
+  ---
+  duration_ms: 0.670895
+  ...
+# Subtest: gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+ok 10 - gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+  ---
+  duration_ms: 74.763919
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1595.127749

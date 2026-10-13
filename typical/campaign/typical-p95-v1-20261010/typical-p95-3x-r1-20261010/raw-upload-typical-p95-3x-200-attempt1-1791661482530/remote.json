@@ -1,0 +1,11 @@
+{
+  "commandId": "e1a27b0d-3c3d-44c2-8014-b74d62249086",
+  "status": "Success",
+  "stdout": "RAW_UPLOAD_COMPLETE\n",
+  "stderr": "",
+  "responseCode": 0,
+  "statusDetails": "Success",
+  "executionStartDateTime": "2026-10-10T19:44:44.719Z",
+  "executionEndDateTime": "2026-10-10T19:44:49.719Z",
+  "ok": true
+}

@@ -1,0 +1,372 @@
+{
+    "ResourceTagMappingList": [
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0126",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0df66acfe207ad611",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d63eda7ccdc01009",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-09286ad4dbc03b00f",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0073",
+            "Tags": [
+                {
+                    "Key": "Role",
+                    "Value": "app"
+                },
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "cwm-bench-app-1"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04ee4b398c381111f",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0127",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0551829661399f1aa",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0112",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Tier",
+                    "Value": "private"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "cwm-bench-private-us-east-2b"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ec8cf235f304d4ad",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0152",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0058",
+            "Tags": [
+                {
+                    "Key": "Role",
+                    "Value": "generator"
+                },
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "cwm-bench-generator"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0090",
+            "Tags": [
+                {
+                    "Key": "Role",
+                    "Value": "app"
+                },
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                },
+                {
+                    "Key": "Name",
+                    "Value": "cwm-bench-app-0"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05d06a6e31cca7b0f",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e5006f57f3f624ab",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        },
+        {
+            "ResourceARN": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a0ed84d2d98523dc",
+            "Tags": [
+                {
+                    "Key": "Project",
+                    "Value": "cwm-bench"
+                },
+                {
+                    "Key": "TestId",
+                    "Value": "typical-p95-2x-r2-20261011"
+                },
+                {
+                    "Key": "ManagedBy",
+                    "Value": "terraform"
+                },
+                {
+                    "Key": "Topology",
+                    "Value": "alb-2x-m5.large-db.r5.large-mysql80-single-az"
+                }
+            ]
+        }
+    ]
+}

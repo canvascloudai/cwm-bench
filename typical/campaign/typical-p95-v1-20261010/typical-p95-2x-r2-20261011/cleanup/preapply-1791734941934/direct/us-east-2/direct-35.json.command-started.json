@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-instances",
+    "--instance-ids",
+    "i-REDACTED0085",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-11T16:11:02.737Z",
+  "stdoutFile": "direct-35.json.stdout.txt",
+  "stderrFile": "direct-35.json.stderr.txt"
+}

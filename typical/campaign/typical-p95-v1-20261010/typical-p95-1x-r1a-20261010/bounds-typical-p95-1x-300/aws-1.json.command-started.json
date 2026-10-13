@@ -1,0 +1,24 @@
+{
+  "command": "aws",
+  "args": [
+    "ssm",
+    "send-command",
+    "--instance-ids",
+    "i-REDACTED0065",
+    "--document-name",
+    "AWS-RunShellScript",
+    "--comment",
+    "cwm-bench worker-adapter",
+    "--timeout-seconds",
+    "60",
+    "--parameters",
+    "{\"commands\":[\"set -euo pipefail\\nDIR='/opt/cwm-bench/results/raw/typical-p95-1x-r1a-20261010/typical-p95-1x-300-r1a'\\nprintf \\\"identity=%s\\\\n\\\" \\\"$(cat \\\"$DIR/identity.json\\\")\\\"\\nprintf \\\"started_at=%s\\\\n\\\" \\\"$(cat \\\"$DIR/started_at\\\")\\\"\\nprintf \\\"completed_at=%s\\\\n\\\" \\\"$(cat \\\"$DIR/completed_at\\\")\\\"\\nprintf \\\"exit_code=%s\\\\n\\\" \\\"$(cat \\\"$DIR/exit.code\\\")\\\"\"]}",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-10T21:08:10.213Z",
+  "stdoutFile": "aws-1.json.stdout.txt",
+  "stderrFile": "aws-1.json.stderr.txt"
+}

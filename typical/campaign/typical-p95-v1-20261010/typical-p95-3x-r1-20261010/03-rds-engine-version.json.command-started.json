@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "rds",
+    "describe-db-instances",
+    "--db-instance-identifier",
+    "cwm-bench-typical-p95-3x-r1-20261010",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-10T19:00:20.422Z",
+  "stdoutFile": "03-rds-engine-version.json.stdout.txt",
+  "stderrFile": "03-rds-engine-version.json.stderr.txt"
+}

@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "validate",
+    "-json"
+  ],
+  "startedAt": "2026-10-10T17:07:12.561Z",
+  "stdoutFile": "terraform-validate-1791652032558.json.stdout.txt",
+  "stderrFile": "terraform-validate-1791652032558.json.stderr.txt"
+}

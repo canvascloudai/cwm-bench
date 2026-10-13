@@ -1,0 +1,16 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-subnets",
+    "--subnet-ids",
+    "subnet-REDACTED0103",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-12T16:32:22.097Z",
+  "stdoutFile": "direct-222.json.stdout.txt",
+  "stderrFile": "direct-222.json.stderr.txt"
+}

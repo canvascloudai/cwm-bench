@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "state",
+    "list"
+  ],
+  "startedAt": "2026-10-10T20:38:51.290Z",
+  "stdoutFile": "terraform-preapply-state-1791664731289.txt.stdout.txt",
+  "stderrFile": "terraform-preapply-state-1791664731289.txt.stderr.txt"
+}

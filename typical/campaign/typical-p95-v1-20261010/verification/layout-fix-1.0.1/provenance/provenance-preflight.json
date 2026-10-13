@@ -1,0 +1,12 @@
+{
+  "syntheticFixtureOnly": true,
+  "noAwsOrDatabaseOrCwmCalls": true,
+  "pinnedSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "adapterVersion": "1.6.1",
+  "adapterExitCode": 0,
+  "suppliedCwmMeasurementSha": true,
+  "explicitCollectMeasurementShaPresent": true,
+  "measurementSha": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "blocker": null,
+  "noScoringPerformed": true
+}

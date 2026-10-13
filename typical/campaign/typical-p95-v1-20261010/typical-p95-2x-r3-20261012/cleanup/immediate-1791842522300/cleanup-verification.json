@@ -1,0 +1,188 @@
+{
+  "checkedAt": "2026-10-12T22:03:17.358Z",
+  "account": "REDACTED",
+  "results": [
+    {
+      "region": "us-east-2",
+      "checkedAt": "2026-10-12T22:02:17.514Z",
+      "campaigns": [
+        "typical-p95-2x-r3-20261012"
+      ],
+      "taggedArns": [
+        "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0002",
+        "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0001",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d0c2e1794ea2277b",
+        "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0029",
+        "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0025",
+        "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0021",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a54bd3b56dd32bf4",
+        "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0030",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04ebb8554215b7173",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d099bc092375883b",
+        "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0003",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0753d26549d57fc4e",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0240bedb490a6077d",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-045d98a1b1cf071ff",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-07bed73bd6361cbf8",
+        "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0020",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bbf067554e808660"
+      ],
+      "liveInstanceIds": [],
+      "volumeIds": [],
+      "ruleIds": [],
+      "rdsIds": []
+    },
+    {
+      "region": "us-west-2",
+      "checkedAt": "2026-10-12T22:02:29.897Z",
+      "campaigns": [
+        "typical-p95-2x-r3-20261012"
+      ],
+      "taggedArns": [],
+      "liveInstanceIds": [],
+      "volumeIds": [],
+      "ruleIds": [],
+      "rdsIds": []
+    }
+  ],
+  "classifications": [
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0003",
+      "checkedAt": "2026-10-12T22:02:29.908Z",
+      "classification": "terminated",
+      "resourceId": "i-REDACTED0003",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-0.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0001",
+      "checkedAt": "2026-10-12T22:02:32.437Z",
+      "classification": "terminated",
+      "resourceId": "i-REDACTED0001",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-1.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0002",
+      "checkedAt": "2026-10-12T22:02:35.061Z",
+      "classification": "terminated",
+      "resourceId": "i-REDACTED0002",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-2.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0240bedb490a6077d",
+      "checkedAt": "2026-10-12T22:02:37.674Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0240bedb490a6077d",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-3.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-045d98a1b1cf071ff",
+      "checkedAt": "2026-10-12T22:02:40.428Z",
+      "classification": "not-found",
+      "resourceId": "sgr-045d98a1b1cf071ff",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-4.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04ebb8554215b7173",
+      "checkedAt": "2026-10-12T22:02:43.641Z",
+      "classification": "not-found",
+      "resourceId": "sgr-04ebb8554215b7173",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-5.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0753d26549d57fc4e",
+      "checkedAt": "2026-10-12T22:02:46.871Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0753d26549d57fc4e",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-6.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-07bed73bd6361cbf8",
+      "checkedAt": "2026-10-12T22:02:50.448Z",
+      "classification": "not-found",
+      "resourceId": "sgr-07bed73bd6361cbf8",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-7.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a54bd3b56dd32bf4",
+      "checkedAt": "2026-10-12T22:02:53.764Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a54bd3b56dd32bf4",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-8.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bbf067554e808660",
+      "checkedAt": "2026-10-12T22:02:56.429Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0bbf067554e808660",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-9.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d099bc092375883b",
+      "checkedAt": "2026-10-12T22:02:58.992Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d099bc092375883b",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-10.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d0c2e1794ea2277b",
+      "checkedAt": "2026-10-12T22:03:01.589Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d0c2e1794ea2277b",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-11.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0030",
+      "checkedAt": "2026-10-12T22:03:04.192Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0030",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-12.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0029",
+      "checkedAt": "2026-10-12T22:03:06.878Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0029",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-13.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0025",
+      "checkedAt": "2026-10-12T22:03:09.524Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0025",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-14.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0020",
+      "checkedAt": "2026-10-12T22:03:12.105Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0020",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-15.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0021",
+      "checkedAt": "2026-10-12T22:03:14.729Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0021",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-2x-r3-20261012/cleanup/immediate-1791842522300/direct/us-east-2/direct-16.json"
+    }
+  ],
+  "strictEmpty": false,
+  "liveCleanupConfirmed": true
+}

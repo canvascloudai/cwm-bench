@@ -1,0 +1,14 @@
+{
+  "command": "aws",
+  "args": [
+    "rds",
+    "describe-db-instances",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-12T22:02:15.066Z",
+  "stdoutFile": "rds.json.stdout.txt",
+  "stderrFile": "rds.json.stderr.txt"
+}

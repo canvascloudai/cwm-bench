@@ -1,0 +1,11 @@
+{
+  "command": "terraform",
+  "args": [
+    "init",
+    "-input=false",
+    "-reconfigure"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-10T15:44:03.547Z",
+  "finalResponsePublished": true
+}

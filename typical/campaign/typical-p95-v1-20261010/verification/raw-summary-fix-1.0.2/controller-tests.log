@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+ok 1 - external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+  ---
+  duration_ms: 161.484278
+  ...
+# Subtest: pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+ok 2 - pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+  ---
+  duration_ms: 2.184697
+  ...
+# Subtest: live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+ok 3 - live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+  ---
+  duration_ms: 0.780975
+  ...
+# Subtest: generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+ok 4 - generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+  ---
+  duration_ms: 0.522897
+  ...
+# Subtest: budget refuses seventh replacement or over-cap reservation without stopping the campaign
+ok 5 - budget refuses seventh replacement or over-cap reservation without stopping the campaign
+  ---
+  duration_ms: 0.677455
+  ...
+# Subtest: multiline summary parses only after actual gzip download/hash verification and before destroy
+ok 6 - multiline summary parses only after actual gzip download/hash verification and before destroy
+  ---
+  duration_ms: 120.100401
+  ...
+# Subtest: live ladder preserves verified raw before collector interpretation and destroys only afterward
+ok 7 - live ladder preserves verified raw before collector interpretation and destroys only afterward
+  ---
+  duration_ms: 0.46978
+  ...
+# Subtest: definition violation pauses, ladder identity cannot alias or reorder
+ok 8 - definition violation pauses, ladder identity cannot alias or reorder
+  ---
+  duration_ms: 0.531246
+  ...
+# Subtest: gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+ok 9 - gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+  ---
+  duration_ms: 63.073613
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2102.288812

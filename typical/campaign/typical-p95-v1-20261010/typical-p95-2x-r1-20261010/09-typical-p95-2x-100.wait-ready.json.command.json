@@ -1,0 +1,11 @@
+{
+  "command": "node",
+  "args": [
+    "scripts/worker-adapter.mjs",
+    "wait-ready",
+    "--json"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-10T18:00:22.713Z",
+  "finalResponsePublished": true
+}

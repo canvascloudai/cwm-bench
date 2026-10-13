@@ -1,0 +1,69 @@
+TAP version 13
+# Subtest: external inventory batches 43 IDs in both regions, preserves direct checks, and fails closed
+not ok 1 - external inventory batches 43 IDs in both regions, preserves direct checks, and fails closed
+  ---
+  duration_ms: 385.807215
+  location: '/home/runner/workspace/scripts/cwm-bench-p95-contract.node-test.ts:1:732'
+  failureType: 'testCodeFailure'
+  error: 'Live/unknown resources block the next apply'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    FixtureCloud.verifyCleanup (/home/runner/workspace/scripts/cwm-bench-scale-cloud.ts:81:45)
+    async TestContext.<anonymous> (/home/runner/workspace/scripts/cwm-bench-p95-contract.node-test.ts:54:19)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+ok 2 - external Terraform staging preserves relative app/load sources and repairs an unapplied layout
+  ---
+  duration_ms: 156.137636
+  ...
+# Subtest: pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+ok 3 - pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+  ---
+  duration_ms: 0.639127
+  ...
+# Subtest: live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+ok 4 - live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+  ---
+  duration_ms: 0.772792
+  ...
+# Subtest: generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+ok 5 - generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+  ---
+  duration_ms: 0.330745
+  ...
+# Subtest: budget refuses seventh replacement or over-cap reservation without stopping the campaign
+ok 6 - budget refuses seventh replacement or over-cap reservation without stopping the campaign
+  ---
+  duration_ms: 0.568459
+  ...
+# Subtest: multiline summary parses only after actual gzip download/hash verification and before destroy
+ok 7 - multiline summary parses only after actual gzip download/hash verification and before destroy
+  ---
+  duration_ms: 130.111595
+  ...
+# Subtest: live ladder preserves verified raw before collector interpretation and destroys only afterward
+ok 8 - live ladder preserves verified raw before collector interpretation and destroys only afterward
+  ---
+  duration_ms: 1.395487
+  ...
+# Subtest: definition violation pauses, ladder identity cannot alias or reorder
+ok 9 - definition violation pauses, ladder identity cannot alias or reorder
+  ---
+  duration_ms: 0.795585
+  ...
+# Subtest: gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+ok 10 - gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+  ---
+  duration_ms: 79.973174
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 9
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1913.722144

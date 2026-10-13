@@ -1,0 +1,15 @@
+{
+  "hourlyConservativeCeilingUsd": 2,
+  "fixedOverheadReserveUsd": 2,
+  "cleanupReserveUsd": 2,
+  "applyReserveHours": 2,
+  "exportEgressReserveUsdPerGiB": 0.12,
+  "actualBillingClaim": false,
+  "includesExtendedSupport": true,
+  "knownEc2HourlyUsd": {
+    "m5.large": 0.096,
+    "c6i.xlarge": 0.17
+  },
+  "pricingSource": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/us-east-2/index.json",
+  "excessAction": "destroy, pause, ask Kevin; never label partial without his stop decision"
+}

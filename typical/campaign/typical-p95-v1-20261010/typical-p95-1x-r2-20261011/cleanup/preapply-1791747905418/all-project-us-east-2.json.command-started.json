@@ -1,0 +1,17 @@
+{
+  "command": "aws",
+  "args": [
+    "ec2",
+    "describe-instances",
+    "--filters",
+    "Name=tag:Project,Values=cwm-bench",
+    "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped",
+    "--region",
+    "us-east-2",
+    "--output",
+    "json"
+  ],
+  "startedAt": "2026-10-11T19:57:41.921Z",
+  "stdoutFile": "all-project-us-east-2.json.stdout.txt",
+  "stderrFile": "all-project-us-east-2.json.stderr.txt"
+}

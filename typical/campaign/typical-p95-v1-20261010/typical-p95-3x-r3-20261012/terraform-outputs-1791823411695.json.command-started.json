@@ -1,0 +1,10 @@
+{
+  "command": "terraform",
+  "args": [
+    "output",
+    "-json"
+  ],
+  "startedAt": "2026-10-12T16:43:31.697Z",
+  "stdoutFile": "terraform-outputs-1791823411695.json.stdout.txt",
+  "stderrFile": "terraform-outputs-1791823411695.json.stderr.txt"
+}

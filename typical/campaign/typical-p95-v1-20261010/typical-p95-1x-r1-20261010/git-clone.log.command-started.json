@@ -1,0 +1,11 @@
+{
+  "command": "git",
+  "args": [
+    "clone",
+    "https://github.com/canvascloudai/cwm-bench.git",
+    "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/work/typical-p95-1x-r1-20261010/cwm-bench"
+  ],
+  "startedAt": "2026-10-10T15:43:44.372Z",
+  "stdoutFile": "git-clone.log.stdout.txt",
+  "stderrFile": "git-clone.log.stderr.txt"
+}

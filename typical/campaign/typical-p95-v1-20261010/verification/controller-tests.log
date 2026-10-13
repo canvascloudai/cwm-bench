@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+ok 1 - pin, Latin square, reverse ladder, clean environment and actual-day letter ids
+  ---
+  duration_ms: 3.299211
+  ...
+# Subtest: live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+ok 2 - live shared ladder driver runs once per rung, recollects separately and stops invalid apply
+  ---
+  duration_ms: 4.807754
+  ...
+# Subtest: generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+ok 3 - generator uses 15-minute steady MEAN, whole-rung scheduled denominator and strict fallback
+  ---
+  duration_ms: 0.381074
+  ...
+# Subtest: budget refuses seventh replacement or over-cap reservation without stopping the campaign
+ok 4 - budget refuses seventh replacement or over-cap reservation without stopping the campaign
+  ---
+  duration_ms: 0.687905
+  ...
+# Subtest: definition violation pauses, ladder identity cannot alias or reorder
+ok 5 - definition violation pauses, ladder identity cannot alias or reorder
+  ---
+  duration_ms: 0.472436
+  ...
+# Subtest: gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+ok 6 - gzip download verifies exact bytes/hash/integrity, preserves adjacent summary and never overwrites
+  ---
+  duration_ms: 78.843411
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1187.890062

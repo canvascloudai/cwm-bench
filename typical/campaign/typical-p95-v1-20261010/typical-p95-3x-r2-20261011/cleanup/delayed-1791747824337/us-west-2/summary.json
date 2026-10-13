@@ -1,0 +1,12 @@
+{
+  "region": "us-west-2",
+  "checkedAt": "2026-10-11T19:44:21.885Z",
+  "campaigns": [
+    "typical-p95-3x-r2-20261011"
+  ],
+  "taggedArns": [],
+  "liveInstanceIds": [],
+  "volumeIds": [],
+  "ruleIds": [],
+  "rdsIds": []
+}

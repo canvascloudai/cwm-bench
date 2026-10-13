@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-10T15:58:24.926Z",
+  "approval": "Fix, validate without AWS, then resume",
+  "scope": "External directory layout only; unchanged pinned app/load assets",
+  "oldControllerHash": "9ef67307d95b8286406698f0c19784d470899e1b3b97f00ee1ecc8c62dbc2a1b",
+  "newControllerHash": "1529969249738610238063c418138f1f98cda513c267e96bded28cbe60459037",
+  "measurementShaUnchanged": "0815668ced5c219313b02efba0279ef2ae55fa0c",
+  "pinnedAmiUnchanged": "ami-0d3d85815a9746bc5",
+  "noApplyOrRungAttempted": true,
+  "replacementCountConsumed": 0,
+  "failedPlanPreserved": true,
+  "oldControllerManifestPreserved": true,
+  "offlineTerraformValid": true,
+  "offlineCollectorMeasurementShaPresent": true
+}

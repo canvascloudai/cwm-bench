@@ -1,0 +1,2292 @@
+{
+  "checkedAt": "2026-10-11T18:08:38.293Z",
+  "account": "REDACTED",
+  "results": [
+    {
+      "region": "us-east-2",
+      "checkedAt": "2026-10-11T17:56:50.201Z",
+      "campaigns": [
+        "typical-v1-20260927c",
+        "typical-later-day-20261006",
+        "typical-second-region-20261006",
+        "typical-scale-2x-r1-20261006",
+        "typical-scale-1x-r1-20261006",
+        "typical-scale-3x-r1-20261006",
+        "typical-scale-1x-r2-20261007",
+        "typical-scale-3x-r2-20261007",
+        "typical-scale-2x-r2-20261007",
+        "typical-scale-3x-r3-20261008",
+        "typical-scale-3x-r3a-20261009",
+        "typical-scale-2x-r3-20261009",
+        "typical-scale-1x-r3-20261009",
+        "typical-p95-1x-r1-20261010",
+        "typical-p95-2x-r1-20261010",
+        "typical-p95-3x-r1-20261010",
+        "typical-p95-1x-r1a-20261010",
+        "typical-p95-2x-r2-20261011"
+      ],
+      "taggedArns": [
+        "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0126",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0df66acfe207ad611",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d63eda7ccdc01009",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-09286ad4dbc03b00f",
+        "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0073",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04ee4b398c381111f",
+        "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0127",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0551829661399f1aa",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ec8cf235f304d4ad",
+        "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0152",
+        "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0058",
+        "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0090",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05d06a6e31cca7b0f",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e5006f57f3f624ab",
+        "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a0ed84d2d98523dc"
+      ],
+      "liveInstanceIds": [],
+      "volumeIds": [],
+      "ruleIds": [],
+      "rdsIds": []
+    },
+    {
+      "region": "us-west-2",
+      "checkedAt": "2026-10-11T17:57:02.024Z",
+      "campaigns": [
+        "typical-v1-20260927c",
+        "typical-later-day-20261006",
+        "typical-second-region-20261006",
+        "typical-scale-2x-r1-20261006",
+        "typical-scale-1x-r1-20261006",
+        "typical-scale-3x-r1-20261006",
+        "typical-scale-1x-r2-20261007",
+        "typical-scale-3x-r2-20261007",
+        "typical-scale-2x-r2-20261007",
+        "typical-scale-3x-r3-20261008",
+        "typical-scale-3x-r3a-20261009",
+        "typical-scale-2x-r3-20261009",
+        "typical-scale-1x-r3-20261009",
+        "typical-p95-1x-r1-20261010",
+        "typical-p95-2x-r1-20261010",
+        "typical-p95-3x-r1-20261010",
+        "typical-p95-1x-r1a-20261010",
+        "typical-p95-2x-r2-20261011"
+      ],
+      "taggedArns": [],
+      "liveInstanceIds": [],
+      "volumeIds": [],
+      "ruleIds": [],
+      "rdsIds": []
+    }
+  ],
+  "classifications": [
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0043",
+      "checkedAt": "2026-10-11T17:57:02.036Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0043",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-0.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0044",
+      "checkedAt": "2026-10-11T17:57:04.484Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0044",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-1.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0045",
+      "checkedAt": "2026-10-11T17:57:06.804Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0045",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-2.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0046",
+      "checkedAt": "2026-10-11T17:57:09.156Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0046",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-3.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0047",
+      "checkedAt": "2026-10-11T17:57:11.512Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0047",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-4.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0049",
+      "checkedAt": "2026-10-11T17:57:13.952Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0049",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-5.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0050",
+      "checkedAt": "2026-10-11T17:57:16.325Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0050",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-6.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0053",
+      "checkedAt": "2026-10-11T17:57:18.769Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0053",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-7.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0054",
+      "checkedAt": "2026-10-11T17:57:21.181Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0054",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-8.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0055",
+      "checkedAt": "2026-10-11T17:57:23.537Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0055",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-9.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0057",
+      "checkedAt": "2026-10-11T17:57:25.993Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0057",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-10.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0058",
+      "checkedAt": "2026-10-11T17:57:28.437Z",
+      "classification": "terminated",
+      "resourceId": "i-REDACTED0058",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-11.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0059",
+      "checkedAt": "2026-10-11T17:57:31.060Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0059",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-12.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0060",
+      "checkedAt": "2026-10-11T17:57:33.495Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0060",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-13.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0061",
+      "checkedAt": "2026-10-11T17:57:35.949Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0061",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-14.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0062",
+      "checkedAt": "2026-10-11T17:57:38.372Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0062",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-15.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0063",
+      "checkedAt": "2026-10-11T17:57:40.861Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0063",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-16.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0064",
+      "checkedAt": "2026-10-11T17:57:43.232Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0064",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-17.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0065",
+      "checkedAt": "2026-10-11T17:57:45.641Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0065",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-18.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0066",
+      "checkedAt": "2026-10-11T17:57:48.017Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0066",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-19.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0067",
+      "checkedAt": "2026-10-11T17:57:50.494Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0067",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-20.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0068",
+      "checkedAt": "2026-10-11T17:57:52.912Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0068",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-21.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0069",
+      "checkedAt": "2026-10-11T17:57:55.233Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0069",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-22.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0070",
+      "checkedAt": "2026-10-11T17:57:57.680Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0070",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-23.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0072",
+      "checkedAt": "2026-10-11T17:58:00.185Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0072",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-24.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0073",
+      "checkedAt": "2026-10-11T17:58:02.636Z",
+      "classification": "terminated",
+      "resourceId": "i-REDACTED0073",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-25.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0074",
+      "checkedAt": "2026-10-11T17:58:05.117Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0074",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-26.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0075",
+      "checkedAt": "2026-10-11T17:58:07.460Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0075",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-27.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0076",
+      "checkedAt": "2026-10-11T17:58:09.821Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0076",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-28.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0077",
+      "checkedAt": "2026-10-11T17:58:12.173Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0077",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-29.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0078",
+      "checkedAt": "2026-10-11T17:58:14.588Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0078",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-30.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0079",
+      "checkedAt": "2026-10-11T17:58:17.005Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0079",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-31.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0080",
+      "checkedAt": "2026-10-11T17:58:19.398Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0080",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-32.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0081",
+      "checkedAt": "2026-10-11T17:58:21.824Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0081",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-33.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0082",
+      "checkedAt": "2026-10-11T17:58:24.630Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0082",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-34.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0083",
+      "checkedAt": "2026-10-11T17:58:27.017Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0083",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-35.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0084",
+      "checkedAt": "2026-10-11T17:58:29.444Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0084",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-36.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0085",
+      "checkedAt": "2026-10-11T17:58:31.892Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0085",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-37.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0086",
+      "checkedAt": "2026-10-11T17:58:34.416Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0086",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-38.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0088",
+      "checkedAt": "2026-10-11T17:58:36.872Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0088",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-39.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0089",
+      "checkedAt": "2026-10-11T17:58:39.296Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0089",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-40.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0090",
+      "checkedAt": "2026-10-11T17:58:41.753Z",
+      "classification": "terminated",
+      "resourceId": "i-REDACTED0090",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-41.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0091",
+      "checkedAt": "2026-10-11T17:58:44.385Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0091",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-42.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0092",
+      "checkedAt": "2026-10-11T17:58:46.813Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0092",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-43.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0093",
+      "checkedAt": "2026-10-11T17:58:49.391Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0093",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-44.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0094",
+      "checkedAt": "2026-10-11T17:58:51.955Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0094",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-45.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0095",
+      "checkedAt": "2026-10-11T17:58:54.525Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0095",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-46.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:instance/i-REDACTED0096",
+      "checkedAt": "2026-10-11T17:58:57.053Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0096",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-47.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-002d5e025733e4ec2",
+      "checkedAt": "2026-10-11T17:58:59.485Z",
+      "classification": "not-found",
+      "resourceId": "sgr-002d5e025733e4ec2",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-48.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-003c3d291f2503c97",
+      "checkedAt": "2026-10-11T17:59:01.977Z",
+      "classification": "not-found",
+      "resourceId": "sgr-003c3d291f2503c97",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-49.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-006a572d651ebc1f9",
+      "checkedAt": "2026-10-11T17:59:04.505Z",
+      "classification": "not-found",
+      "resourceId": "sgr-006a572d651ebc1f9",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-50.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-006dba55aacdcc295",
+      "checkedAt": "2026-10-11T17:59:07.050Z",
+      "classification": "not-found",
+      "resourceId": "sgr-006dba55aacdcc295",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-51.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-009789b510430d523",
+      "checkedAt": "2026-10-11T17:59:09.867Z",
+      "classification": "not-found",
+      "resourceId": "sgr-009789b510430d523",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-52.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-00a6989fc609f67d2",
+      "checkedAt": "2026-10-11T17:59:12.521Z",
+      "classification": "not-found",
+      "resourceId": "sgr-00a6989fc609f67d2",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-53.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-00b25638325dd8e72",
+      "checkedAt": "2026-10-11T17:59:15.076Z",
+      "classification": "not-found",
+      "resourceId": "sgr-00b25638325dd8e72",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-54.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-00e08c892694ffd0a",
+      "checkedAt": "2026-10-11T17:59:17.621Z",
+      "classification": "not-found",
+      "resourceId": "sgr-00e08c892694ffd0a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-55.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0106feff954dce323",
+      "checkedAt": "2026-10-11T17:59:20.162Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0106feff954dce323",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-56.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-011ce9e571c890313",
+      "checkedAt": "2026-10-11T17:59:22.858Z",
+      "classification": "not-found",
+      "resourceId": "sgr-011ce9e571c890313",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-57.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0146f63bfd64b5d66",
+      "checkedAt": "2026-10-11T17:59:25.313Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0146f63bfd64b5d66",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-58.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0148242d34ff4214a",
+      "checkedAt": "2026-10-11T17:59:27.811Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0148242d34ff4214a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-59.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-014b59db349d3ea39",
+      "checkedAt": "2026-10-11T17:59:30.265Z",
+      "classification": "not-found",
+      "resourceId": "sgr-014b59db349d3ea39",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-60.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0151fbba51c0b24b7",
+      "checkedAt": "2026-10-11T17:59:32.713Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0151fbba51c0b24b7",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-61.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-01ab76985286ecf2c",
+      "checkedAt": "2026-10-11T17:59:35.152Z",
+      "classification": "not-found",
+      "resourceId": "sgr-01ab76985286ecf2c",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-62.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-01bccb7181c11b9e3",
+      "checkedAt": "2026-10-11T17:59:37.569Z",
+      "classification": "not-found",
+      "resourceId": "sgr-01bccb7181c11b9e3",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-63.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-01e4659e259a4480f",
+      "checkedAt": "2026-10-11T17:59:40.041Z",
+      "classification": "not-found",
+      "resourceId": "sgr-01e4659e259a4480f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-64.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02021467a21dcf20f",
+      "checkedAt": "2026-10-11T17:59:42.437Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02021467a21dcf20f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-65.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-020465c11a62a81d1",
+      "checkedAt": "2026-10-11T17:59:44.737Z",
+      "classification": "not-found",
+      "resourceId": "sgr-020465c11a62a81d1",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-66.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02638fe8979c4a796",
+      "checkedAt": "2026-10-11T17:59:47.189Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02638fe8979c4a796",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-67.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02727ef98854554c5",
+      "checkedAt": "2026-10-11T17:59:49.569Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02727ef98854554c5",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-68.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02884103ec55e5e0d",
+      "checkedAt": "2026-10-11T17:59:51.933Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02884103ec55e5e0d",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-69.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02b861b2d834d6a60",
+      "checkedAt": "2026-10-11T17:59:54.333Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02b861b2d834d6a60",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-70.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02e33cdb82a814409",
+      "checkedAt": "2026-10-11T17:59:56.757Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02e33cdb82a814409",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-71.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02f6dba15c444bedc",
+      "checkedAt": "2026-10-11T17:59:59.189Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02f6dba15c444bedc",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-72.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-02fec2e7e8db51eee",
+      "checkedAt": "2026-10-11T18:00:01.614Z",
+      "classification": "not-found",
+      "resourceId": "sgr-02fec2e7e8db51eee",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-73.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-03021c9d0451f5fc6",
+      "checkedAt": "2026-10-11T18:00:04.310Z",
+      "classification": "not-found",
+      "resourceId": "sgr-03021c9d0451f5fc6",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-74.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0309368ef33dade2b",
+      "checkedAt": "2026-10-11T18:00:06.793Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0309368ef33dade2b",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-75.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-030bc83d4dee43586",
+      "checkedAt": "2026-10-11T18:00:09.288Z",
+      "classification": "not-found",
+      "resourceId": "sgr-030bc83d4dee43586",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-76.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-037206d76fa96bf79",
+      "checkedAt": "2026-10-11T18:00:11.754Z",
+      "classification": "not-found",
+      "resourceId": "sgr-037206d76fa96bf79",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-77.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0382288e1cad467bf",
+      "checkedAt": "2026-10-11T18:00:14.162Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0382288e1cad467bf",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-78.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0390b97935e77e360",
+      "checkedAt": "2026-10-11T18:00:16.597Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0390b97935e77e360",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-79.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-039d391df00ca6ebb",
+      "checkedAt": "2026-10-11T18:00:19.046Z",
+      "classification": "not-found",
+      "resourceId": "sgr-039d391df00ca6ebb",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-80.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-041092f4a4be82cf0",
+      "checkedAt": "2026-10-11T18:00:21.594Z",
+      "classification": "not-found",
+      "resourceId": "sgr-041092f4a4be82cf0",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-81.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-044077faa4eb90e8e",
+      "checkedAt": "2026-10-11T18:00:24.017Z",
+      "classification": "not-found",
+      "resourceId": "sgr-044077faa4eb90e8e",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-82.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0444441c793658a88",
+      "checkedAt": "2026-10-11T18:00:26.632Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0444441c793658a88",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-83.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-046328fcfe0bba6ba",
+      "checkedAt": "2026-10-11T18:00:28.953Z",
+      "classification": "not-found",
+      "resourceId": "sgr-046328fcfe0bba6ba",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-84.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-048b603d55f0f0d35",
+      "checkedAt": "2026-10-11T18:00:31.450Z",
+      "classification": "not-found",
+      "resourceId": "sgr-048b603d55f0f0d35",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-85.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04a82470e567ad2c1",
+      "checkedAt": "2026-10-11T18:00:33.722Z",
+      "classification": "not-found",
+      "resourceId": "sgr-04a82470e567ad2c1",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-86.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04abbba37ea14be39",
+      "checkedAt": "2026-10-11T18:00:36.109Z",
+      "classification": "not-found",
+      "resourceId": "sgr-04abbba37ea14be39",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-87.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04db5787388336d22",
+      "checkedAt": "2026-10-11T18:00:38.476Z",
+      "classification": "not-found",
+      "resourceId": "sgr-04db5787388336d22",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-88.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-04ee4b398c381111f",
+      "checkedAt": "2026-10-11T18:00:40.829Z",
+      "classification": "not-found",
+      "resourceId": "sgr-04ee4b398c381111f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-89.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-053c6b4022fc7b4aa",
+      "checkedAt": "2026-10-11T18:00:43.229Z",
+      "classification": "not-found",
+      "resourceId": "sgr-053c6b4022fc7b4aa",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-90.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0551829661399f1aa",
+      "checkedAt": "2026-10-11T18:00:45.641Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0551829661399f1aa",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-91.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05d06a6e31cca7b0f",
+      "checkedAt": "2026-10-11T18:00:48.039Z",
+      "classification": "not-found",
+      "resourceId": "sgr-05d06a6e31cca7b0f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-92.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05e2aa83ca79b50a1",
+      "checkedAt": "2026-10-11T18:00:50.416Z",
+      "classification": "not-found",
+      "resourceId": "sgr-05e2aa83ca79b50a1",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-93.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05eb9d72c65838aeb",
+      "checkedAt": "2026-10-11T18:00:52.865Z",
+      "classification": "not-found",
+      "resourceId": "sgr-05eb9d72c65838aeb",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-94.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-05fbca0ab44cd75af",
+      "checkedAt": "2026-10-11T18:00:55.285Z",
+      "classification": "not-found",
+      "resourceId": "sgr-05fbca0ab44cd75af",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-95.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-060f2cc5b5538ebf0",
+      "checkedAt": "2026-10-11T18:00:57.729Z",
+      "classification": "not-found",
+      "resourceId": "sgr-060f2cc5b5538ebf0",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-96.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06171c82ce07b8ba1",
+      "checkedAt": "2026-10-11T18:01:00.206Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06171c82ce07b8ba1",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-97.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0627a045c3ff48a00",
+      "checkedAt": "2026-10-11T18:01:02.721Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0627a045c3ff48a00",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-98.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-062f904c1badd5380",
+      "checkedAt": "2026-10-11T18:01:05.253Z",
+      "classification": "not-found",
+      "resourceId": "sgr-062f904c1badd5380",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-99.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06429d0011b444e2c",
+      "checkedAt": "2026-10-11T18:01:07.781Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06429d0011b444e2c",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-100.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0664cad466a6b2383",
+      "checkedAt": "2026-10-11T18:01:10.192Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0664cad466a6b2383",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-101.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0686213d367e1be13",
+      "checkedAt": "2026-10-11T18:01:12.656Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0686213d367e1be13",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-102.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06a18317ca88e7ac7",
+      "checkedAt": "2026-10-11T18:01:15.088Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06a18317ca88e7ac7",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-103.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06a2e0e59cc38cfae",
+      "checkedAt": "2026-10-11T18:01:17.593Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06a2e0e59cc38cfae",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-104.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06a85cfe6a6929887",
+      "checkedAt": "2026-10-11T18:01:20.133Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06a85cfe6a6929887",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-105.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06cee3afdd061ef51",
+      "checkedAt": "2026-10-11T18:01:22.589Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06cee3afdd061ef51",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-106.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06d8d8822164e0523",
+      "checkedAt": "2026-10-11T18:01:25.040Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06d8d8822164e0523",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-107.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06e3250d721c080d7",
+      "checkedAt": "2026-10-11T18:01:27.556Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06e3250d721c080d7",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-108.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-06f388235a47c10a4",
+      "checkedAt": "2026-10-11T18:01:30.089Z",
+      "classification": "not-found",
+      "resourceId": "sgr-06f388235a47c10a4",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-109.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-072aa30b4493d5dbb",
+      "checkedAt": "2026-10-11T18:01:32.633Z",
+      "classification": "not-found",
+      "resourceId": "sgr-072aa30b4493d5dbb",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-110.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-077fd616e8786619f",
+      "checkedAt": "2026-10-11T18:01:35.112Z",
+      "classification": "not-found",
+      "resourceId": "sgr-077fd616e8786619f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-111.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0789d22ddf82f92ef",
+      "checkedAt": "2026-10-11T18:01:37.653Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0789d22ddf82f92ef",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-112.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-07c34918253638bdf",
+      "checkedAt": "2026-10-11T18:01:40.150Z",
+      "classification": "not-found",
+      "resourceId": "sgr-07c34918253638bdf",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-113.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0840c6b156db67eff",
+      "checkedAt": "2026-10-11T18:01:42.669Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0840c6b156db67eff",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-114.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0881628f4896b5a11",
+      "checkedAt": "2026-10-11T18:01:45.221Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0881628f4896b5a11",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-115.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-089819de9f539c8d0",
+      "checkedAt": "2026-10-11T18:01:47.757Z",
+      "classification": "not-found",
+      "resourceId": "sgr-089819de9f539c8d0",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-116.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08a64c1abba52d232",
+      "checkedAt": "2026-10-11T18:01:50.257Z",
+      "classification": "not-found",
+      "resourceId": "sgr-08a64c1abba52d232",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-117.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08a81471c4e2cf66d",
+      "checkedAt": "2026-10-11T18:01:52.785Z",
+      "classification": "not-found",
+      "resourceId": "sgr-08a81471c4e2cf66d",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-118.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08ad76a5c0d8e7df1",
+      "checkedAt": "2026-10-11T18:01:55.350Z",
+      "classification": "not-found",
+      "resourceId": "sgr-08ad76a5c0d8e7df1",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-119.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08c9b12183ab5f87b",
+      "checkedAt": "2026-10-11T18:01:57.889Z",
+      "classification": "not-found",
+      "resourceId": "sgr-08c9b12183ab5f87b",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-120.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08f44dd100b102f57",
+      "checkedAt": "2026-10-11T18:02:00.318Z",
+      "classification": "not-found",
+      "resourceId": "sgr-08f44dd100b102f57",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-121.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-08fa167c641e8c772",
+      "checkedAt": "2026-10-11T18:02:02.845Z",
+      "classification": "not-found",
+      "resourceId": "sgr-08fa167c641e8c772",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-122.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-090c23f801f4a62ef",
+      "checkedAt": "2026-10-11T18:02:05.309Z",
+      "classification": "not-found",
+      "resourceId": "sgr-090c23f801f4a62ef",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-123.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0911b7982b504a3aa",
+      "checkedAt": "2026-10-11T18:02:07.769Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0911b7982b504a3aa",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-124.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-09286ad4dbc03b00f",
+      "checkedAt": "2026-10-11T18:02:10.265Z",
+      "classification": "not-found",
+      "resourceId": "sgr-09286ad4dbc03b00f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-125.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-09565dc5cc7df129f",
+      "checkedAt": "2026-10-11T18:02:12.716Z",
+      "classification": "not-found",
+      "resourceId": "sgr-09565dc5cc7df129f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-126.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0992ef27617c96630",
+      "checkedAt": "2026-10-11T18:02:15.196Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0992ef27617c96630",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-127.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-09a471d389b905b5c",
+      "checkedAt": "2026-10-11T18:02:17.810Z",
+      "classification": "not-found",
+      "resourceId": "sgr-09a471d389b905b5c",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-128.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-09c539a3705c40fae",
+      "checkedAt": "2026-10-11T18:02:20.541Z",
+      "classification": "not-found",
+      "resourceId": "sgr-09c539a3705c40fae",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-129.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a09537cf3a09c3f4",
+      "checkedAt": "2026-10-11T18:02:23.097Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a09537cf3a09c3f4",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-130.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a0ed84d2d98523dc",
+      "checkedAt": "2026-10-11T18:02:25.777Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a0ed84d2d98523dc",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-131.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a2f9efab3747d61a",
+      "checkedAt": "2026-10-11T18:02:28.382Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a2f9efab3747d61a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-132.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a32783c78ab9f8d8",
+      "checkedAt": "2026-10-11T18:02:31.134Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a32783c78ab9f8d8",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-133.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a68202aec9d6a126",
+      "checkedAt": "2026-10-11T18:02:33.970Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a68202aec9d6a126",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-134.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a792d191c154fed8",
+      "checkedAt": "2026-10-11T18:02:36.604Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a792d191c154fed8",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-135.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a7b7b0e091ca1353",
+      "checkedAt": "2026-10-11T18:02:39.185Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a7b7b0e091ca1353",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-136.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0a834bd9301cd7f2e",
+      "checkedAt": "2026-10-11T18:02:41.772Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0a834bd9301cd7f2e",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-137.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0abd7f8468091e364",
+      "checkedAt": "2026-10-11T18:02:44.280Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0abd7f8468091e364",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-138.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b0004a4f6727737a",
+      "checkedAt": "2026-10-11T18:02:47.218Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0b0004a4f6727737a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-139.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b36acb451be94873",
+      "checkedAt": "2026-10-11T18:02:50.417Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0b36acb451be94873",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-140.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b51f5fd9490eeda5",
+      "checkedAt": "2026-10-11T18:02:53.517Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0b51f5fd9490eeda5",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-141.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b63e95d9173c468a",
+      "checkedAt": "2026-10-11T18:02:56.649Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0b63e95d9173c468a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-142.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b93ea623079913f5",
+      "checkedAt": "2026-10-11T18:02:59.682Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0b93ea623079913f5",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-143.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0b999bd55033bb620",
+      "checkedAt": "2026-10-11T18:03:02.431Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0b999bd55033bb620",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-144.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ba8c304c3375cb6c",
+      "checkedAt": "2026-10-11T18:03:05.082Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ba8c304c3375cb6c",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-145.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bac54e4fd8e9d0c2",
+      "checkedAt": "2026-10-11T18:03:07.627Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0bac54e4fd8e9d0c2",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-146.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bcbb7968ae273be5",
+      "checkedAt": "2026-10-11T18:03:10.179Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0bcbb7968ae273be5",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-147.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0be3f12f1381daa90",
+      "checkedAt": "2026-10-11T18:03:12.708Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0be3f12f1381daa90",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-148.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0bf148588bbf0d418",
+      "checkedAt": "2026-10-11T18:03:15.345Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0bf148588bbf0d418",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-149.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c0dbd56936bb8761",
+      "checkedAt": "2026-10-11T18:03:17.994Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c0dbd56936bb8761",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-150.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c1ca127adc6b2999",
+      "checkedAt": "2026-10-11T18:03:20.706Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c1ca127adc6b2999",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-151.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c3dfe829d114b580",
+      "checkedAt": "2026-10-11T18:03:23.372Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c3dfe829d114b580",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-152.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c5b7940422d87513",
+      "checkedAt": "2026-10-11T18:03:25.986Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c5b7940422d87513",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-153.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c5c08fe6211c30fc",
+      "checkedAt": "2026-10-11T18:03:28.674Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c5c08fe6211c30fc",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-154.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c5f703b2d3d0990c",
+      "checkedAt": "2026-10-11T18:03:31.482Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c5f703b2d3d0990c",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-155.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c7461e0d2b8cf331",
+      "checkedAt": "2026-10-11T18:03:34.007Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c7461e0d2b8cf331",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-156.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0c8a1ca7b327fae34",
+      "checkedAt": "2026-10-11T18:03:36.540Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c8a1ca7b327fae34",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-157.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0cb0a78d0a6155e60",
+      "checkedAt": "2026-10-11T18:03:38.965Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0cb0a78d0a6155e60",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-158.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ccc1b99bc45995a3",
+      "checkedAt": "2026-10-11T18:03:41.503Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ccc1b99bc45995a3",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-159.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d044ca24c2bc4e60",
+      "checkedAt": "2026-10-11T18:03:43.893Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d044ca24c2bc4e60",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-160.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d0735cc510bf48d9",
+      "checkedAt": "2026-10-11T18:03:46.333Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d0735cc510bf48d9",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-161.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d2bb76a21c4ea8f2",
+      "checkedAt": "2026-10-11T18:03:48.777Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d2bb76a21c4ea8f2",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-162.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d35df5bf5ff0e805",
+      "checkedAt": "2026-10-11T18:03:51.266Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d35df5bf5ff0e805",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-163.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d5c1b38269c0b1ac",
+      "checkedAt": "2026-10-11T18:03:53.725Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d5c1b38269c0b1ac",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-164.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d63eda7ccdc01009",
+      "checkedAt": "2026-10-11T18:03:56.286Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d63eda7ccdc01009",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-165.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d68bcc4409d49276",
+      "checkedAt": "2026-10-11T18:03:58.817Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d68bcc4409d49276",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-166.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0d88dcef8bf42a75a",
+      "checkedAt": "2026-10-11T18:04:01.305Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0d88dcef8bf42a75a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-167.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0da771c1903618e92",
+      "checkedAt": "2026-10-11T18:04:03.793Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0da771c1903618e92",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-168.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0de04dab0532f1c66",
+      "checkedAt": "2026-10-11T18:04:06.272Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0de04dab0532f1c66",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-169.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ded16be8ede55a83",
+      "checkedAt": "2026-10-11T18:04:08.837Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ded16be8ede55a83",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-170.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0df66acfe207ad611",
+      "checkedAt": "2026-10-11T18:04:11.313Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0df66acfe207ad611",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-171.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e0a57137f70f718f",
+      "checkedAt": "2026-10-11T18:04:13.712Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e0a57137f70f718f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-172.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e11bd5cfd12065e8",
+      "checkedAt": "2026-10-11T18:04:16.213Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e11bd5cfd12065e8",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-173.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e32cc0d6a73a8e06",
+      "checkedAt": "2026-10-11T18:04:18.656Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e32cc0d6a73a8e06",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-174.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e5006f57f3f624ab",
+      "checkedAt": "2026-10-11T18:04:21.016Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e5006f57f3f624ab",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-175.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e51b907074e9366e",
+      "checkedAt": "2026-10-11T18:04:23.349Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e51b907074e9366e",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-176.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e6f4a5f7616207f1",
+      "checkedAt": "2026-10-11T18:04:25.697Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e6f4a5f7616207f1",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-177.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e83f5515dad117dc",
+      "checkedAt": "2026-10-11T18:04:28.053Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e83f5515dad117dc",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-178.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e9b52c126d567a6b",
+      "checkedAt": "2026-10-11T18:04:30.473Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e9b52c126d567a6b",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-179.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0e9f046103c8209dd",
+      "checkedAt": "2026-10-11T18:04:32.845Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e9f046103c8209dd",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-180.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ec8cf235f304d4ad",
+      "checkedAt": "2026-10-11T18:04:35.372Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ec8cf235f304d4ad",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-181.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0eeca6b441b934c8c",
+      "checkedAt": "2026-10-11T18:04:37.910Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0eeca6b441b934c8c",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-182.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ef98f0f495434b00",
+      "checkedAt": "2026-10-11T18:04:40.463Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ef98f0f495434b00",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-183.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0f0d22ae049ea51b2",
+      "checkedAt": "2026-10-11T18:04:43.037Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0f0d22ae049ea51b2",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-184.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0f234cc5560748d4e",
+      "checkedAt": "2026-10-11T18:04:45.653Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0f234cc5560748d4e",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-185.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0f661785e2ec5bb92",
+      "checkedAt": "2026-10-11T18:04:48.253Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0f661785e2ec5bb92",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-186.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0f7fc85a28f276099",
+      "checkedAt": "2026-10-11T18:04:50.714Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0f7fc85a28f276099",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-187.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0fe05020884ffa2d5",
+      "checkedAt": "2026-10-11T18:04:53.205Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0fe05020884ffa2d5",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-188.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0fea71d8e30811c77",
+      "checkedAt": "2026-10-11T18:04:55.673Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0fea71d8e30811c77",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-189.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ff1578183cfbd022",
+      "checkedAt": "2026-10-11T18:04:58.169Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ff1578183cfbd022",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-190.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:security-group-rule/sgr-0ffdf1f0a9244847e",
+      "checkedAt": "2026-10-11T18:05:00.516Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0ffdf1f0a9244847e",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-191.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0098",
+      "checkedAt": "2026-10-11T18:05:02.997Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0098",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-192.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0099",
+      "checkedAt": "2026-10-11T18:05:05.433Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0099",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-193.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0100",
+      "checkedAt": "2026-10-11T18:05:07.877Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0100",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-194.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0101",
+      "checkedAt": "2026-10-11T18:05:10.504Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0101",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-195.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0102",
+      "checkedAt": "2026-10-11T18:05:13.029Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0102",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-196.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0103",
+      "checkedAt": "2026-10-11T18:05:15.593Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0103",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-197.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0104",
+      "checkedAt": "2026-10-11T18:05:18.196Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0104",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-198.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0106",
+      "checkedAt": "2026-10-11T18:05:20.729Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0106",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-199.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0107",
+      "checkedAt": "2026-10-11T18:05:23.196Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0107",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-200.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0108",
+      "checkedAt": "2026-10-11T18:05:25.665Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0108",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-201.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0109",
+      "checkedAt": "2026-10-11T18:05:28.109Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0109",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-202.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0110",
+      "checkedAt": "2026-10-11T18:05:30.496Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0110",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-203.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0111",
+      "checkedAt": "2026-10-11T18:05:32.936Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0111",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-204.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0112",
+      "checkedAt": "2026-10-11T18:05:35.357Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0112",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-205.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0113",
+      "checkedAt": "2026-10-11T18:05:37.801Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0113",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-206.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0114",
+      "checkedAt": "2026-10-11T18:05:40.305Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0114",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-207.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0115",
+      "checkedAt": "2026-10-11T18:05:42.870Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0115",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-208.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0116",
+      "checkedAt": "2026-10-11T18:05:45.369Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0116",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-209.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0117",
+      "checkedAt": "2026-10-11T18:05:47.889Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0117",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-210.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:subnet/subnet-REDACTED0118",
+      "checkedAt": "2026-10-11T18:05:50.473Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0118",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-211.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0119",
+      "checkedAt": "2026-10-11T18:05:52.993Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0119",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-212.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0120",
+      "checkedAt": "2026-10-11T18:05:55.537Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0120",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-213.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0122",
+      "checkedAt": "2026-10-11T18:05:57.965Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0122",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-214.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0123",
+      "checkedAt": "2026-10-11T18:06:00.433Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0123",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-215.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0124",
+      "checkedAt": "2026-10-11T18:06:02.913Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0124",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-216.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0125",
+      "checkedAt": "2026-10-11T18:06:05.422Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0125",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-217.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0126",
+      "checkedAt": "2026-10-11T18:06:07.921Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0126",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-218.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0127",
+      "checkedAt": "2026-10-11T18:06:10.357Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0127",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-219.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0128",
+      "checkedAt": "2026-10-11T18:06:12.773Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0128",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-220.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0129",
+      "checkedAt": "2026-10-11T18:06:15.153Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0129",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-221.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0130",
+      "checkedAt": "2026-10-11T18:06:17.665Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0130",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-222.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0131",
+      "checkedAt": "2026-10-11T18:06:20.052Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0131",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-223.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0132",
+      "checkedAt": "2026-10-11T18:06:22.448Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0132",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-224.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0133",
+      "checkedAt": "2026-10-11T18:06:35.521Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0133",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-225.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0135",
+      "checkedAt": "2026-10-11T18:06:37.996Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0135",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-226.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0136",
+      "checkedAt": "2026-10-11T18:06:40.440Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0136",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-227.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0137",
+      "checkedAt": "2026-10-11T18:06:42.932Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0137",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-228.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0138",
+      "checkedAt": "2026-10-11T18:06:45.405Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0138",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-229.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0139",
+      "checkedAt": "2026-10-11T18:06:47.917Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0139",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-230.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0140",
+      "checkedAt": "2026-10-11T18:06:50.464Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0140",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-231.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0141",
+      "checkedAt": "2026-10-11T18:06:52.977Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0141",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-232.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0142",
+      "checkedAt": "2026-10-11T18:06:55.392Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0142",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-233.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0144",
+      "checkedAt": "2026-10-11T18:06:57.789Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0144",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-234.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0146",
+      "checkedAt": "2026-10-11T18:07:00.183Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0146",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-235.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0147",
+      "checkedAt": "2026-10-11T18:07:02.609Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0147",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-236.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0148",
+      "checkedAt": "2026-10-11T18:07:05.021Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0148",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-237.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0149",
+      "checkedAt": "2026-10-11T18:07:07.453Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0149",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-238.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0150",
+      "checkedAt": "2026-10-11T18:07:09.976Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0150",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-239.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0151",
+      "checkedAt": "2026-10-11T18:07:12.513Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0151",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-240.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0152",
+      "checkedAt": "2026-10-11T18:07:15.057Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0152",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-241.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0153",
+      "checkedAt": "2026-10-11T18:07:17.653Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0153",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-242.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0157",
+      "checkedAt": "2026-10-11T18:07:20.109Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0157",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-243.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0158",
+      "checkedAt": "2026-10-11T18:07:22.601Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0158",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-244.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0159",
+      "checkedAt": "2026-10-11T18:07:25.052Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0159",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-245.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0160",
+      "checkedAt": "2026-10-11T18:07:27.610Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0160",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-246.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0161",
+      "checkedAt": "2026-10-11T18:07:30.085Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0161",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-247.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0162",
+      "checkedAt": "2026-10-11T18:07:32.549Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0162",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-248.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0163",
+      "checkedAt": "2026-10-11T18:07:35.009Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0163",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-249.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0165",
+      "checkedAt": "2026-10-11T18:07:37.460Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0165",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-250.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0166",
+      "checkedAt": "2026-10-11T18:07:39.929Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0166",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-251.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0167",
+      "checkedAt": "2026-10-11T18:07:42.360Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0167",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-252.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0169",
+      "checkedAt": "2026-10-11T18:07:44.729Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0169",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-253.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0170",
+      "checkedAt": "2026-10-11T18:07:47.089Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0170",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-254.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0171",
+      "checkedAt": "2026-10-11T18:07:49.497Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0171",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-255.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0172",
+      "checkedAt": "2026-10-11T18:07:51.873Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0172",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-256.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0173",
+      "checkedAt": "2026-10-11T18:07:54.266Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0173",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-257.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0175",
+      "checkedAt": "2026-10-11T18:07:56.777Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0175",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-258.json"
+    },
+    {
+      "region": "us-east-2",
+      "arn": "arn:aws:ec2:us-east-2:REDACTED:volume/vol-REDACTED0176",
+      "checkedAt": "2026-10-11T18:07:59.241Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0176",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-east-2/direct-259.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:instance/i-REDACTED0177",
+      "checkedAt": "2026-10-11T18:08:01.633Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0177",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-0.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:instance/i-REDACTED0178",
+      "checkedAt": "2026-10-11T18:08:03.930Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0178",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-1.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:instance/i-REDACTED0179",
+      "checkedAt": "2026-10-11T18:08:06.277Z",
+      "classification": "not-found",
+      "resourceId": "i-REDACTED0179",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-2.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-03ed543c87c0ee5e9",
+      "checkedAt": "2026-10-11T18:08:08.598Z",
+      "classification": "not-found",
+      "resourceId": "sgr-03ed543c87c0ee5e9",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-3.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-042e7888080411a91",
+      "checkedAt": "2026-10-11T18:08:10.912Z",
+      "classification": "not-found",
+      "resourceId": "sgr-042e7888080411a91",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-4.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-05897a7dcdf17dea0",
+      "checkedAt": "2026-10-11T18:08:13.152Z",
+      "classification": "not-found",
+      "resourceId": "sgr-05897a7dcdf17dea0",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-5.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-062e9d59de875f312",
+      "checkedAt": "2026-10-11T18:08:15.478Z",
+      "classification": "not-found",
+      "resourceId": "sgr-062e9d59de875f312",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-6.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0649c7663bf69fb2f",
+      "checkedAt": "2026-10-11T18:08:17.728Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0649c7663bf69fb2f",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-7.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0bff492cff3ffbb0d",
+      "checkedAt": "2026-10-11T18:08:19.889Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0bff492cff3ffbb0d",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-8.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0c0dd24586f8ef475",
+      "checkedAt": "2026-10-11T18:08:22.217Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0c0dd24586f8ef475",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-9.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0cd9b20d48e5c7cba",
+      "checkedAt": "2026-10-11T18:08:24.385Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0cd9b20d48e5c7cba",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-10.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:security-group-rule/sgr-0e5b587e7e3fc046a",
+      "checkedAt": "2026-10-11T18:08:26.656Z",
+      "classification": "not-found",
+      "resourceId": "sgr-0e5b587e7e3fc046a",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-11.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:subnet/subnet-REDACTED0180",
+      "checkedAt": "2026-10-11T18:08:28.969Z",
+      "classification": "not-found",
+      "resourceId": "subnet-REDACTED0180",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-12.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:volume/vol-REDACTED0181",
+      "checkedAt": "2026-10-11T18:08:31.312Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0181",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-13.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:volume/vol-REDACTED0182",
+      "checkedAt": "2026-10-11T18:08:33.697Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0182",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-14.json"
+    },
+    {
+      "region": "us-west-2",
+      "arn": "arn:aws:ec2:us-west-2:REDACTED:volume/vol-REDACTED0183",
+      "checkedAt": "2026-10-11T18:08:35.983Z",
+      "classification": "not-found",
+      "resourceId": "vol-REDACTED0183",
+      "evidenceFile": "/home/runner/workspace/.local/private-cwm-p95/typical-p95-v1-20261010/out/typical-p95-3x-r2-20261011/cleanup/preapply-1791741380172/direct/us-west-2/direct-15.json"
+    }
+  ],
+  "strictEmpty": false,
+  "liveCleanupConfirmed": true
+}
