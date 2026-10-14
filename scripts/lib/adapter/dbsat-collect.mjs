@@ -93,7 +93,8 @@ export function mergeSteady(parts) {
     steadyP95Ms: p95,
     droppedIterations: present.reduce((sum, part) => sum + Number(part.droppedIterations || 0), 0),
     method: `merged log histogram (ratio ${ratio}), nearest rank on bucket upper bound`,
-    perGenerator: present.map((part) => ({ n: part.n, steadyP95Ms: part.steadyP95Ms })),
+    perGenerator: present.map((part) => ({ n: part.n, steadyP95Ms: part.steadyP95Ms,
+      ...(part.transfer ? { transfer: part.transfer } : {}) })),
     perMinute: [...minutes.values()]
       .sort((a, b) => a.minuteUtc.localeCompare(b.minuteUtc))
       .map((row) => ({ ...row, errorRate: row.requests ? row.failed / row.requests : null })),
