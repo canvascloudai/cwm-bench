@@ -17,6 +17,7 @@
 
 import http from 'k6/http';
 import { check } from 'k6';
+import { Counter } from 'k6/metrics';
 import crypto from 'k6/crypto';
 import encoding from 'k6/encoding';
 import {
@@ -28,10 +29,15 @@ import {
   executionSegmentOptions,
   envOr,
   requireTarget,
+  extractErrorClass,
   recordErrorClass,
   handleRunSummary,
   SUMMARY_TREND_STATS,
 } from './lib/common.js';
+
+// Typical-only request-level attribution. Leave the frozen common helpers
+// and their lean/diagnostic consumers unchanged.
+const requestOutcomes = new Counter('request_outcomes');
 
 const TOKEN_KEY = 'cwm-bench-typical-hs256-key';
 const TOKEN_HEADER_JSON = '{"alg":"HS256","typ":"JWT"}';
@@ -111,15 +117,19 @@ function requestParams(name, id, jsonBody) {
 export default function scenario() {
   const roll = Math.random();
   let res;
+  let requestName;
   if (roll < 0.59) {
+    requestName = 'GET /api/articles';
     const offset = 20 * Math.floor(Math.random() * 50);
     const id = userId();
     res = http.get(`${target}/api/articles?limit=20&offset=${offset}`, requestParams('GET /api/articles', id, false));
   } else if (roll < 0.79) {
+    requestName = 'GET /api/articles/:slug';
     const id = userId();
     const slug = `article-${articleNumber()}`;
     res = http.get(`${target}/api/articles/${slug}`, requestParams('GET /api/articles/:slug', id, false));
   } else if (roll < 0.89) {
+    requestName = 'GET /api/profiles/:username';
     const id = userId();
     const profileId = userId();
     res = http.get(
@@ -127,6 +137,7 @@ export default function scenario() {
       requestParams('GET /api/profiles/:username', id, false)
     );
   } else if (roll < 0.99) {
+    requestName = 'POST /api/articles/:slug/comments';
     const id = userId();
     const slug = `article-${articleNumber()}`;
     const payload = JSON.stringify({ comment: { body: COMMENT_BODY } });
@@ -136,6 +147,7 @@ export default function scenario() {
       requestParams('POST /api/articles/:slug/comments', id, true)
     );
   } else {
+    requestName = 'POST /api/users/login';
     const id = userId();
     const payload = JSON.stringify({
       user: { email: `user${id}@example.test`, password: PASSWORD },
@@ -143,6 +155,11 @@ export default function scenario() {
     res = http.post(`${target}/api/users/login`, payload, requestParams('POST /api/users/login', id, true));
   }
 
+  requestOutcomes.add(1, {
+    name: requestName,
+    http_status: String(res.status),
+    error_class: extractErrorClass(res) || 'none',
+  });
   const errorClass = recordErrorClass(res);
   check(res, {
     'status is 2xx or classified error': (r) =>
