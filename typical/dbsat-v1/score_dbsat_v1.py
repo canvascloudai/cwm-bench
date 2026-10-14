@@ -71,6 +71,14 @@ INTERPRETATIONS = [
     "serve as S*.",
     "When a candidate exists, a lower non-improving step that failed on "
     "headroom/pressure is listed as an observation; the candidate is the outcome.",
+    "Performance Insights wait-event type names are matched case-insensitively "
+    "(the API returns e.g. 'io', 'CPU', 'lock').",
+    "Error rates by class use the steady-window denominator: each class's share "
+    "of whole-step classified failures times steady failures / steady requests, "
+    "because the adapter reports class counts for the whole step only.",
+    "An overload (partial) step's window starts at the steady start floored to "
+    "the minute and spans the observed steady minutes, matching the adapter's "
+    "whole-minute perMinute rows.",
 ]
 
 
@@ -450,7 +458,11 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
     partial = (dbsat.get("partialStep") or {}).get("partial")
     if window and partial:
         minutes = (dbsat.get("partialStep") or {}).get("steadyMinutesObserved") or 0
-        window = (window[0], window[0] + timedelta(minutes=minutes))
+        # Align to the minute boundary so the observed overload minutes (the
+        # adapter's perMinute rows start on whole minutes) are not dropped by a
+        # sub-minute offset of the steady start (INTERPRETATION, see list).
+        start = window[0].replace(second=0, microsecond=0)
+        window = (start, start + timedelta(minutes=minutes))
         expected_minutes = minutes
     metrics = (collect.get("cloudwatch") or {}).get("metrics") or {}
     app_cpu = [aggregate_minutes(_minute_values(m, "average", window), "mean", expected_minutes)
@@ -471,7 +483,7 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
         "steady_p95_ms": steady_p95,
         "achieved_rps": requests / seconds if requests else None,
         "error_rate": (failed / requests) if requests else None,
-        "error_rates_by_class": {k: (v / requests if requests else None) for k, v in classes.items() if isinstance(v, (int, float))},
+        "error_rates_by_class": _steady_class_rates(classes, failed, requests),
         "app_cpu_by_node": app_cpu,
         "db_cpu_mean": aggregate_minutes(_minute_values(metrics.get("rds_cpu"), "average", window), "mean", expected_minutes),
         "connections_max": aggregate_minutes(_minute_values(metrics.get("rds_connections"), "maximum", window), "max", expected_minutes),
@@ -483,6 +495,23 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
         "target_connection_errors": _sum_minutes(((dbsat.get("cloudwatch") or {}).get("metrics") or {}).get("alb_target_connection_errors"), window),
     }
     return rec
+
+
+def _steady_class_rates(classes, steady_failed, steady_requests):
+    """Error rate by class over the steady window (one denominator).
+
+    The adapter reports class counts for the whole step only, while the total
+    error rate uses steady-window rows. Each class's share of the whole-step
+    classified failures is applied to the steady failures, so class rates sum to
+    the steady error rate (INTERPRETATION, see list).
+    """
+    counts = {k: v for k, v in (classes or {}).items() if _num(v) is not None}
+    if not steady_requests:
+        return {k: None for k in counts}
+    total = sum(counts.values())
+    if not total:
+        return {k: 0.0 for k in counts}
+    return {k: (v / total) * steady_failed / steady_requests for k, v in counts.items()}
 
 
 # [FACT, AWS EC2 docs] c6i.xlarge baseline network bandwidth 1.5625 Gbit/s.
@@ -550,11 +579,12 @@ def _pi_aggregate(pi, window, expected):
         if not dims:
             total = minutes(series.get("datapoints") or [])
         else:
-            by_type[dims.get("db.wait_event_type.name", "other")] = minutes(series.get("datapoints") or [])
+            name = str(dims.get("db.wait_event_type.name", "other")).strip().lower()
+            by_type[name] = minutes(series.get("datapoints") or [])
     aas = aggregate_minutes(total or {}, "mean", expected)
     shares = {}
     if aas:
-        for name, key in (("cpu", "CPU"), ("io", "IO"), ("lock", "Lock")):
+        for name, key in (("cpu", "cpu"), ("io", "io"), ("lock", "lock")):
             mean = aggregate_minutes(by_type.get(key, {}), "mean", expected)
             shares[name] = (mean / aas) if mean is not None else 0.0
     return {"aas": aas, "shares": shares}
