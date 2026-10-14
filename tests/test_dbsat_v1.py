@@ -413,5 +413,44 @@ class D1eDerivedFixes(unittest.TestCase):
         self.assertEqual(p["not_assessable"], [])
 
 
+class PartialAchievedRps(unittest.TestCase):
+    def _collect(self, start, stop):
+        rows = [{"requests": 54000, "failed": 0}] * 4 + [{"requests": 9000, "failed": 0}]
+        return {"cloudwatch": {"window": {"actualStartTime": start.isoformat()}, "metrics": {}},
+                "errorCategories": {}, "dbsat": {"steadyP95": {"steadyP95Ms": 100.0, "perMinute": rows},
+                "partialStep": {"partial": True, "steadyMinutesObserved": 5, "stop": {"reason": "breach", "at": stop}}}}
+
+    def test_truncated_last_minute_uses_elapsed_seconds(self):
+        from datetime import datetime, timedelta, timezone
+        start = datetime(2026, 1, 1, 10, 0, 0, tzinfo=timezone.utc)   # steady starts 10:05:00
+        c = self._collect(start, "2026-01-01T10:09:10Z")               # 4 min + 10 s
+        r = s.record_from_collect(c, None, servers=4, rps=900, rep=1)
+        self.assertAlmostEqual(r["achieved_rps_elapsed_s"], 250.0)
+        self.assertAlmostEqual(r["achieved_rps"], 225000 / 250.0)
+        span = (start + timedelta(minutes=5), start + timedelta(minutes=9, seconds=10))
+        r2 = s.record_from_collect(c, None, servers=4, rps=900, rep=1, steady_span=span)
+        self.assertEqual(r2["achieved_rps_elapsed_source"], "k6 steady-phase span")
+        self.assertAlmostEqual(r2["achieved_rps"], 900.0)
+
+    def test_fallback_without_stop(self):
+        from datetime import datetime, timezone
+        start = datetime(2026, 1, 1, 10, 0, 0, tzinfo=timezone.utc)
+        c = self._collect(start, None)
+        r = s.record_from_collect(c, None, servers=4, rps=900, rep=1)
+        self.assertEqual(r["achieved_rps_elapsed_s"], 300)
+
+    def test_steady_span_from_k6(self):
+        import gzip, json as _j, tempfile, os
+        rows = [{"metric": "http_reqs", "type": "Point", "data": {"time": t, "value": 1, "tags": {"phase": ph}}}
+                for t, ph in (("2026-01-01T10:04:59.5Z", "warmup"), ("2026-01-01T10:05:00.25Z", "steady"),
+                              ("2026-01-01T10:09:10.123456789Z", "steady"))]
+        with tempfile.TemporaryDirectory() as d:
+            f = os.path.join(d, "k6.json.gz")
+            with gzip.open(f, "wt") as h:
+                h.write("\n".join(_j.dumps(r, separators=(",", ":")) for r in rows) + "\n")
+            first, last = s.steady_span_from_k6(f)
+        self.assertAlmostEqual((last - first).total_seconds(), 249.873456, places=5)
+
+
 if __name__ == "__main__":
     unittest.main()
