@@ -6,7 +6,8 @@
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { awsJson, cloudWatchAlbDimension, getMetricStatistics, runRemoteShell } from './aws.mjs';
+import { awsJson, cloudWatchAlbDimension, getMetricStatistics } from './aws.mjs';
+import { readRemoteText } from './remote-text.mjs';
 import { generatorPlan } from './run.mjs';
 
 const STEADY_SCRIPT = readFileSync(fileURLToPath(new URL('./steady_p95.py', import.meta.url)), 'utf8');
@@ -145,10 +146,10 @@ export async function collectPoolMetrics(runAws, outputs, region, window, deps =
   const nodes = [];
   for (const instanceId of outputs.appInstanceIds || []) {
     try {
-      const invocation = await runRemoteShell(runAws, {
+      const invocation = await readRemoteText(runAws, {
         instanceId,
         region,
-        commands: ['curl -fsS --max-time 5 http://127.0.0.1:8080/api/metrics'],
+        producer: 'curl -fsS --max-time 5 http://127.0.0.1:8080/api/metrics',
         timeoutSeconds: 60,
         waitTimeoutMs: deps.ssmWaitMs || 60_000,
         pollMs: deps.ssmPollMs || 1000,
@@ -162,7 +163,8 @@ export async function collectPoolMetrics(runAws, outputs, region, window, deps =
         const at = Date.parse(row.minute);
         return at >= start && at < end;
       });
-      nodes.push({ instanceId, available: minutes.length > 0, gitSha: body.gitSha || null, minutes });
+      nodes.push({ instanceId, available: minutes.length > 0, gitSha: body.gitSha || null, minutes,
+        transfer: invocation.transfer });
     } catch (error) {
       nodes.push({ instanceId, available: false, error: String(error && error.message ? error.message : error) });
     }
@@ -207,10 +209,10 @@ export async function collectDbsatExtras(ctx, spec, outputs, region, window, ide
   const parts = [];
   let stopped = null;
   for (const generator of generatorPlan(spec, outputs)) {
-    const invocation = await runRemoteShell(runAws, {
+    const invocation = await readRemoteText(runAws, {
       instanceId: generator.instanceId,
       region,
-      commands: [steadyCommand(identity.campaignId, identity.runId)],
+      producer: steadyCommand(identity.campaignId, identity.runId),
       timeoutSeconds: 600,
       waitTimeoutMs: ctx.deps.ssmWaitMs || 600_000,
       pollMs: ctx.deps.ssmPollMs || 2000,
@@ -219,6 +221,7 @@ export async function collectDbsatExtras(ctx, spec, outputs, region, window, ide
       wait: ctx.deps.wait,
     });
     const parsed = parseSteady(invocation.stdout);
+    if (parsed.steady) parsed.steady.transfer = invocation.transfer;
     parts.push(parsed.steady);
     stopped = stopped || parsed.stopped;
   }

@@ -18,6 +18,7 @@ import {
   steadyCommand,
 } from '../../scripts/lib/adapter/dbsat-collect.mjs';
 import { ADAPTER_VERSION } from '../../scripts/lib/adapter/version.mjs';
+import { localSsmText } from '../remote-text-helper.mjs';
 import { MemoryStream, createAwsMock, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -78,8 +79,8 @@ function sentScripts(aws) {
     }));
 }
 
-test('adapter is 1.7.0 with 21 ascending dbsat keys at 2x/3x/4x', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.0');
+test('adapter is 1.7.1 with 21 ascending dbsat keys at 2x/3x/4x', () => {
+  assert.equal(ADAPTER_VERSION, '1.7.1');
   const keys = SCENARIO_KEYS.filter((key) => key.startsWith('typical-dbsat-'));
   assert.equal(keys.length, 21);
   assert.deepEqual(DBSAT_LADDER, [300, 500, 700, 900, 1100, 1300, 1500]);
@@ -248,7 +249,9 @@ test('PI collect queries db.load.avg by wait event type per minute', async () =>
 
 test('pool metrics are read per app node and clipped to the window', async () => {
   const body = { gitSha: 'abc', minutes: [{ minute: '2026-10-13T00:59:00.000Z' }, { minute: '2026-10-13T01:05:00.000Z' }] };
-  const aws = createAwsMock(ssmOnlineHandlers({ meta: body }));
+  const producer = `printf '%s' '${Buffer.from(JSON.stringify(body)).toString('base64')}' | base64 -d`;
+  const aws = localSsmText({ replace: text => text.replace(
+    'curl -fsS --max-time 5 http://127.0.0.1:8080/api/metrics', producer) }).runAws;
   const pool = await collectPoolMetrics(aws, { appInstanceIds: ['i-a', 'i-b'] }, 'us-east-2',
     { startTime: '2026-10-13T01:00:00Z', endTime: '2026-10-13T01:20:00Z' }, { ssmPollMs: 1, wait: async () => {} });
   assert.equal(pool.available, true);
