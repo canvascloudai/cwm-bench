@@ -334,5 +334,84 @@ class Aggregation(unittest.TestCase):
         self.assertAlmostEqual(r["pool_wait_p95_ms"], 1.001 ** 1, places=6)
 
 
+class D1eDerivedFixes(unittest.TestCase):
+    """Synthetic fixtures shaped like the 4x dry-run collects (values rounded,
+    identifiers synthetic; no raw evidence)."""
+
+    @staticmethod
+    def _collect(start, steady_minutes, partial, pi_names, classes, per_minute, cw_minutes):
+        from datetime import timedelta
+        steady0 = start + timedelta(minutes=5)
+        minute0 = steady0.replace(second=0, microsecond=0)
+        def series(field, value):
+            return {"datapoints": [{"timestamp": (minute0 + timedelta(minutes=i)).isoformat(), field: value} for i in range(cw_minutes)]}
+        def pi(value, name=None):
+            return {"metric": "db.load.avg", "dimensions": ({"db.wait_event_type.name": name} if name else None),
+                    "datapoints": [{"timestamp": (minute0 + timedelta(minutes=i)).isoformat(), "value": value} for i in range(cw_minutes)]}
+        return {
+            "cloudwatch": {"window": {"actualStartTime": start.isoformat()}, "metrics": {
+                "app_cpu_i-app0001": series("average", 20.0), "rds_cpu": series("average", 93.0),
+                "rds_connections": series("maximum", 377.0), "generator_cpu": series("average", 13.0),
+                "alb_request_count": series("sum", 54000.0), "alb_http_elb_5xx": series("sum", 2.0)}},
+            "errorCategories": classes,
+            "dbsat": {
+                "steadyP95": {"steadyP95Ms": 150.0, "droppedIterations": 0, "perMinute": per_minute},
+                "performanceInsights": {"available": True, "series": [
+                    pi(12.0), pi(9.6, pi_names[0]), pi(1.8, pi_names[1]), pi(0.0, pi_names[2])]},
+                "poolMetrics": {"available": True, "nodes": [{"minutes": [{"minute": minute0.isoformat(), "waitBucketRatio": 1.001, "waitBuckets": {"-6000": 100}}]}]},
+                "cloudwatch": {"metrics": {"generator_cpu_i-gen0001": series("average", 13.0),
+                                           "generator_network_out_i-gen0001": series("sum", 1.0e7)}},
+                "partialStep": {"partial": partial, "steadyMinutesObserved": steady_minutes},
+            },
+        }
+
+    def test_pi_wait_types_match_case_insensitively(self):
+        from datetime import datetime, timezone
+        start = datetime(2026, 1, 1, 10, 0, 0, tzinfo=timezone.utc)
+        rows = [{"requests": 42000, "failed": 0}] * 15
+        lower = self._collect(start, 15, False, ("io", "cpu", "lock"), {"internal": 0}, rows, 15)
+        upper = self._collect(start, 15, False, ("IO", "CPU", "Lock"), {"internal": 0}, rows, 15)
+        a = s.record_from_collect(lower, None, servers=4, rps=700, rep=1)
+        b = s.record_from_collect(upper, None, servers=4, rps=700, rep=1)
+        self.assertAlmostEqual(a["wait_shares"]["io"], 0.8)
+        self.assertAlmostEqual(a["wait_shares"]["cpu"], 0.15)
+        self.assertEqual(a["wait_shares"], b["wait_shares"])
+        self.assertIn("io", s.db_pressure(a)["types"])
+
+    def test_class_rates_use_steady_denominator(self):
+        from datetime import datetime, timezone
+        start = datetime(2026, 1, 1, 10, 0, 0, tzinfo=timezone.utc)
+        rows = [{"requests": 10000, "failed": 900}] * 15
+        # whole-step counts larger than steady failures (ramp minutes included)
+        c = self._collect(start, 15, False, ("io", "cpu", "lock"), {"internal": 3000, "too_many_connections": 1000, "db_timeout": 0}, rows, 15)
+        r = s.record_from_collect(c, None, servers=4, rps=700, rep=1)
+        self.assertAlmostEqual(r["error_rate"], 0.09)
+        self.assertAlmostEqual(sum(r["error_rates_by_class"].values()), r["error_rate"])
+        self.assertAlmostEqual(r["error_rates_by_class"]["internal"], 0.0675)
+        self.assertAlmostEqual(r["error_rates_by_class"]["too_many_connections"], 0.0225)
+        self.assertEqual(r["error_rates_by_class"]["db_timeout"], 0.0)
+
+    def test_class_rates_without_requests_or_failures(self):
+        self.assertEqual(s._steady_class_rates({"internal": 5}, 0, 0), {"internal": None})
+        self.assertEqual(s._steady_class_rates({"internal": 0}, 0, 100), {"internal": 0.0})
+
+    def test_partial_step_keeps_breach_minutes(self):
+        from datetime import datetime, timezone
+        # sub-minute offset like the dry run (actual start hh:mm:01)
+        start = datetime(2026, 1, 1, 10, 0, 1, tzinfo=timezone.utc)
+        rows = [{"requests": 54000, "failed": 4900}] * 5
+        c = self._collect(start, 5, True, ("io", "cpu", "lock"), {"internal": 24500}, rows, 3)
+        r = s.record_from_collect(c, None, servers=4, rps=900, rep=1)
+        self.assertEqual(r["status"], "overload")
+        self.assertEqual(r["db_cpu_mean"], 93.0)
+        self.assertEqual(r["connections_max"], 377.0)
+        self.assertEqual(r["app_cpu_by_node"], [20.0])
+        self.assertIsNotNone(r["generator"]["cpu_mean"])
+        p = s.db_pressure(r)
+        self.assertIn("cpu", p["types"])
+        self.assertIn("io", p["types"])
+        self.assertEqual(p["not_assessable"], [])
+
+
 if __name__ == "__main__":
     unittest.main()
