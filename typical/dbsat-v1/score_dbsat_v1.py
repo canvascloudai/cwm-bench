@@ -79,6 +79,11 @@ INTERPRETATIONS = [
     "An overload (partial) step's window starts at the steady start floored to "
     "the minute and spans the observed steady minutes, matching the adapter's "
     "whole-minute perMinute rows.",
+    "Achieved RPS of an overload (partial) step = steady requests / actual elapsed "
+    "steady seconds, truncated last minute included: k6 steady-phase first-to-last "
+    "request span when the raw k6 output is supplied, otherwise steady start to "
+    "the recorded stop time (approximate; k6 graceful stop runs past it). Complete "
+    "steps keep the 900 s steady window.",
 ]
 
 
@@ -447,13 +452,14 @@ def aggregate_minutes(values, how, expected=STEADY_MINUTES):
     return sum(vals) / len(vals) if how == "mean" else max(vals)
 
 
-def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_minutes=STEADY_MINUTES):
+def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_minutes=STEADY_MINUTES, steady_span=None):
     """Build one §6.0 record. `samples` are (datetime, ms) k6 request samples."""
     here = Path(__file__).resolve().parent
     sys.path.insert(0, str(here.parent / "p95-v1"))
     import score_p95_v1 as p95  # noqa: E402  (same steady-window code, §4.1)
 
     window = p95.steady_window(collect)
+    steady_start = window[0] if window else None
     dbsat = collect.get("dbsat") or {}
     partial = (dbsat.get("partialStep") or {}).get("partial")
     if window and partial:
@@ -471,7 +477,9 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
     per_minute = steady.get("perMinute") or []
     requests = sum(row.get("requests") or 0 for row in per_minute)
     failed = sum(row.get("failed") or 0 for row in per_minute)
-    seconds = max(1, len(per_minute)) * 60 if partial else STEADY_S
+    seconds, elapsed_source = STEADY_S, "steady window"
+    if partial:
+        seconds, elapsed_source = partial_elapsed_seconds(dbsat, per_minute, steady_start, steady_span)
     steady_p95 = p95.steady_only_p95(samples, window) if samples is not None else steady.get("steadyP95Ms")
     classes = collect.get("errorCategories") or {}
     pi = _pi_aggregate(dbsat.get("performanceInsights") or {}, window, expected_minutes)
@@ -481,7 +489,9 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
         "status": "overload" if partial else "complete",
         "overload_minutes": len(per_minute) if partial else None,
         "steady_p95_ms": steady_p95,
-        "achieved_rps": requests / seconds if requests else None,
+        "achieved_rps": requests / seconds if requests and seconds else None,
+        "achieved_rps_elapsed_s": seconds,
+        "achieved_rps_elapsed_source": elapsed_source,
         "error_rate": (failed / requests) if requests else None,
         "error_rates_by_class": _steady_class_rates(classes, failed, requests),
         "app_cpu_by_node": app_cpu,
@@ -512,6 +522,50 @@ def _steady_class_rates(classes, steady_failed, steady_requests):
     if not total:
         return {k: 0.0 for k in counts}
     return {k: (v / total) * steady_failed / steady_requests for k, v in counts.items()}
+
+
+def partial_elapsed_seconds(dbsat, per_minute, steady_start, steady_span=None):
+    """Elapsed steady seconds of an overload (partial) step, truncated last minute included.
+
+    Preferred: the first/last steady-phase request timestamps from k6 (steady_span,
+    see steady_span_from_k6). Fallback: steady start to the recorded stop time; the
+    stop is issued before k6's graceful stop finishes, so this is approximate.
+    Last resort: whole observed minutes (the pre-fix behaviour).
+    """
+    from datetime import datetime, timezone
+    if steady_span and steady_span[0] is not None and steady_span[1] is not None and steady_span[1] > steady_span[0]:
+        return (steady_span[1] - steady_span[0]).total_seconds(), "k6 steady-phase span"
+    stop = ((dbsat.get("partialStep") or {}).get("stop") or {}).get("at")
+    if stop and steady_start is not None:
+        end = datetime.fromisoformat(str(stop).replace("Z", "+00:00")).astimezone(timezone.utc)
+        if end > steady_start:
+            return (end - steady_start).total_seconds(), "steady start to recorded stop (approximate)"
+    return max(1, len(per_minute)) * 60, "whole observed minutes (fallback)"
+
+
+def steady_span_from_k6(path, phase="steady"):
+    """(first, last) timestamps of http_reqs points tagged phase=steady in k6 --out json."""
+    import gzip
+    from datetime import datetime
+    path = Path(path)
+    opener = gzip.open if path.suffix == ".gz" else open
+    first = last = None
+    with opener(path, "rt", encoding="utf-8", errors="replace") as handle:
+        for line in handle:
+            if '"http_reqs"' not in line or f'"phase":"{phase}"' not in line.replace(" ", ""):
+                continue
+            row = json.loads(line)
+            if row.get("metric") != "http_reqs" or row.get("type") != "Point":
+                continue
+            data = row.get("data") or {}
+            if (data.get("tags") or {}).get("phase") != phase:
+                continue
+            raw = str(data.get("time"))
+            head, _, frac = raw.rstrip("Z").partition(".")
+            stamp = datetime.fromisoformat(head + "." + (frac + "000000")[:6] + "+00:00") if frac else datetime.fromisoformat(head + "+00:00")
+            first = stamp if first is None or stamp < first else first
+            last = stamp if last is None or stamp > last else last
+    return first, last
 
 
 # [FACT, AWS EC2 docs] c6i.xlarge baseline network bandwidth 1.5625 Gbit/s.
