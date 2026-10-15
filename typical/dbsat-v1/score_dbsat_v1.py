@@ -84,6 +84,12 @@ INTERPRETATIONS = [
     "request span when the raw k6 output is supplied, otherwise steady start to "
     "the recorded stop time (approximate; k6 graceful stop runs past it). Complete "
     "steps keep the 900 s steady window.",
+    "Error rates by class, when the raw k6 output is supplied, come from the "
+    "k6 request_outcomes points of the steady phase: class = the app error_class "
+    "tag, or 'unclassified' when it is 'none'/missing on a status >= 400 or 0; "
+    "rate = class count / steady request_outcomes points. Without the raw k6 "
+    "output (or without request_outcomes points) the adapter's errorCategories "
+    "are used as before. The source is recorded in error_classes_source.",
 ]
 
 
@@ -452,8 +458,12 @@ def aggregate_minutes(values, how, expected=STEADY_MINUTES):
     return sum(vals) / len(vals) if how == "mean" else max(vals)
 
 
-def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_minutes=STEADY_MINUTES, steady_span=None):
-    """Build one §6.0 record. `samples` are (datetime, ms) k6 request samples."""
+def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_minutes=STEADY_MINUTES, steady_span=None,
+                        request_outcomes=None):
+    """Build one §6.0 record. `samples` are (datetime, ms) k6 request samples.
+
+    `request_outcomes` is the result of request_outcomes_from_k6 (optional).
+    """
     here = Path(__file__).resolve().parent
     sys.path.insert(0, str(here.parent / "p95-v1"))
     import score_p95_v1 as p95  # noqa: E402  (same steady-window code, §4.1)
@@ -482,6 +492,13 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
         seconds, elapsed_source = partial_elapsed_seconds(dbsat, per_minute, steady_start, steady_span)
     steady_p95 = p95.steady_only_p95(samples, window) if samples is not None else steady.get("steadyP95Ms")
     classes = collect.get("errorCategories") or {}
+    if request_outcomes and request_outcomes.get("total"):
+        class_rates = {k: 0.0 for k in classes}
+        class_rates.update({k: v / request_outcomes["total"] for k, v in request_outcomes["classes"].items()})
+        class_source = "k6 request_outcomes (steady)"
+    else:
+        class_rates = _steady_class_rates(classes, failed, requests)
+        class_source = "adapter errorCategories"
     pi = _pi_aggregate(dbsat.get("performanceInsights") or {}, window, expected_minutes)
     pool = _pool_p95(dbsat.get("poolMetrics") or {}, window)
     rec = {
@@ -493,7 +510,9 @@ def record_from_collect(collect, samples=None, *, servers, rps, rep, expected_mi
         "achieved_rps_elapsed_s": seconds,
         "achieved_rps_elapsed_source": elapsed_source,
         "error_rate": (failed / requests) if requests else None,
-        "error_rates_by_class": _steady_class_rates(classes, failed, requests),
+        "error_rates_by_class": class_rates,
+        "error_classes_source": class_source,
+        "error_counts_by_status_class": (request_outcomes or {}).get("by_status_class") if class_source.startswith("k6") else None,
         "app_cpu_by_node": app_cpu,
         "db_cpu_mean": aggregate_minutes(_minute_values(metrics.get("rds_cpu"), "average", window), "mean", expected_minutes),
         "connections_max": aggregate_minutes(_minute_values(metrics.get("rds_connections"), "maximum", window), "max", expected_minutes),
@@ -570,6 +589,45 @@ def steady_span_from_k6(path, phase="steady"):
 
 # [FACT, AWS EC2 docs] c6i.xlarge baseline network bandwidth 1.5625 Gbit/s.
 GENERATOR_BASELINE_BPS = 1.5625e9
+
+
+def request_outcomes_from_k6(path, phase="steady"):
+    """Steady-phase request_outcomes counts from k6 --out json (plain or .gz).
+
+    Returns {"total": n, "classes": {class: failures}, "by_status_class": {"status/class": n}}.
+    Failures are points with http_status >= 400 or 0; their class is the
+    error_class tag, or 'unclassified' when it is 'none' or missing.
+    """
+    import gzip
+    path = Path(path)
+    opener = gzip.open if path.suffix == ".gz" else open
+    total = 0
+    classes, by_status = {}, {}
+    with opener(path, "rt", encoding="utf-8", errors="replace") as handle:
+        for line in handle:
+            if '"request_outcomes"' not in line:
+                continue
+            row = json.loads(line)
+            if row.get("metric") != "request_outcomes" or row.get("type") != "Point":
+                continue
+            data = row.get("data") or {}
+            tags = data.get("tags") or {}
+            if tags.get("phase") != phase:
+                continue
+            n = data.get("value") or 1
+            total += n
+            status = str(tags.get("http_status", ""))
+            cls = tags.get("error_class") or "none"
+            key = f"{status}/{cls}"
+            by_status[key] = by_status.get(key, 0) + n
+            try:
+                code = int(status)
+            except ValueError:
+                code = 0
+            if code >= 400 or code == 0:
+                cls = "unclassified" if cls == "none" else cls
+                classes[cls] = classes.get(cls, 0) + n
+    return {"total": total, "classes": classes, "by_status_class": by_status}
 
 
 def _sum_minutes(metric, window):
