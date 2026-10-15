@@ -452,5 +452,59 @@ class PartialAchievedRps(unittest.TestCase):
         self.assertAlmostEqual((last - first).total_seconds(), 249.873456, places=5)
 
 
+class RequestOutcomeClasses(unittest.TestCase):
+    """Synthetic request_outcomes points (no raw evidence)."""
+
+    @staticmethod
+    def _write(path, points):
+        import gzip, json as _j
+        with gzip.open(path, "wt") as h:
+            h.write(_j.dumps({"type": "Metric", "metric": "request_outcomes", "data": {"type": "counter"}}) + "\n")
+            for phase, status, cls, n in points:
+                for _ in range(n):
+                    h.write(_j.dumps({"metric": "request_outcomes", "type": "Point", "data": {
+                        "time": "2026-01-01T10:05:00Z", "value": 1,
+                        "tags": {"phase": phase, "name": "x", "http_status": status, "error_class": cls}}},
+                        separators=(",", ":")) + "\n")
+
+    def _collect(self):
+        from datetime import datetime, timezone
+        start = datetime(2026, 1, 1, 10, 0, 0, tzinfo=timezone.utc)
+        rows = [{"requests": 100, "failed": 0}] * 14 + [{"requests": 100, "failed": 10}]
+        return {"cloudwatch": {"window": {"actualStartTime": start.isoformat()}, "metrics": {}},
+                "errorCategories": {"internal": 0, "db_timeout": 0, "unclassified": 10},
+                "dbsat": {"steadyP95": {"steadyP95Ms": 50.0, "perMinute": rows}}}
+
+    def test_k6_points_give_app_classes(self):
+        import os, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            f = os.path.join(d, "k6.json.gz")
+            self._write(f, [("warmup", "500", "internal", 5), ("steady", "200", "none", 180),
+                            ("steady", "500", "internal", 16), ("steady", "502", "none", 3),
+                            ("steady", "0", "unclassified", 1)])
+            ro = s.request_outcomes_from_k6(f)
+        self.assertEqual(ro["total"], 200)
+        self.assertEqual(ro["classes"], {"internal": 16, "unclassified": 4})
+        self.assertEqual(ro["by_status_class"]["502/none"], 3)
+        r = s.record_from_collect(self._collect(), None, servers=2, rps=300, rep=1, request_outcomes=ro)
+        self.assertEqual(r["error_classes_source"], "k6 request_outcomes (steady)")
+        self.assertAlmostEqual(r["error_rates_by_class"]["internal"], 0.08)
+        self.assertAlmostEqual(r["error_rates_by_class"]["unclassified"], 0.02)
+        self.assertEqual(r["error_rates_by_class"]["db_timeout"], 0.0)
+
+    def test_fallback_to_adapter_categories(self):
+        import os, tempfile
+        r = s.record_from_collect(self._collect(), None, servers=2, rps=300, rep=1)
+        self.assertEqual(r["error_classes_source"], "adapter errorCategories")
+        self.assertAlmostEqual(r["error_rates_by_class"]["unclassified"], 10 / 1500)
+        self.assertIsNone(r["error_counts_by_status_class"])
+        with tempfile.TemporaryDirectory() as d:   # k6 file without request_outcomes points
+            f = os.path.join(d, "k6.json.gz")
+            self._write(f, [])
+            ro = s.request_outcomes_from_k6(f)
+        r2 = s.record_from_collect(self._collect(), None, servers=2, rps=300, rep=1, request_outcomes=ro)
+        self.assertEqual(r2["error_classes_source"], "adapter errorCategories")
+
+
 if __name__ == "__main__":
     unittest.main()
