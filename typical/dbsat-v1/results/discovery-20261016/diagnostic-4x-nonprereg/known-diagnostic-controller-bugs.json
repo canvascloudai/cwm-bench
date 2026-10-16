@@ -1,0 +1,11 @@
+{
+  "controllerManifestSha256": "2200cbc136e297799b718cdb4fc9c7e35f33acbfd82559d4e725caaeef407076",
+  "unchanged": true,
+  "bugs": [
+    "Breach hook diagnostic identifier is shadowed by a later local const diagnostic in the same try block (temporal dead zone).",
+    "Aborted-rung preservation did not find k6.json.gz plus exit.code at its expected path; exact remote cause remains unverified."
+  ],
+  "fixesMade": false,
+  "recoveryEntrypointSha256": "ecc50712544031974ba2c97d5b35bb07bf655471556c91cd317db257794e20f2",
+  "noMeasurementChanges": true
+}
