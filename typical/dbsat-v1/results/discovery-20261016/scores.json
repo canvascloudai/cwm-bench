@@ -1,0 +1,821 @@
+{
+  "campaign": "typical-dbsat-v1",
+  "interpretations": [
+    "Mixed/uncertain 'partial DB evidence' (\u00a76.3) = a pool signal with no \u00a76.2 pressure while (i) db_timeout > 0.1% is present (unattributed timeout) or (ii) at least one \u00a76.2 input is not assessable. No new numeric threshold is introduced.",
+    "'Same type' of DB pressure in confirmation (\u00a77.4c) = the confirmation pressure types intersect the types that held in both discovery reps.",
+    "A \u00a76.2/\u00a76.3 input that is not assessable (\u00a76.0 missing-minute rule) never satisfies a threshold; a step whose headroom is not assessable cannot serve as S*.",
+    "When a candidate exists, a lower non-improving step that failed on headroom/pressure is listed as an observation; the candidate is the outcome.",
+    "Performance Insights wait-event type names are matched case-insensitively (the API returns e.g. 'io', 'CPU', 'lock').",
+    "Error rates by class use the steady-window denominator: each class's share of whole-step classified failures times steady failures / steady requests, because the adapter reports class counts for the whole step only.",
+    "An overload (partial) step's window starts at the steady start floored to the minute and spans the observed steady minutes, matching the adapter's whole-minute perMinute rows.",
+    "Achieved RPS of an overload (partial) step = steady requests / actual elapsed steady seconds, truncated last minute included: k6 steady-phase first-to-last request span when the raw k6 output is supplied, otherwise steady start to the recorded stop time (approximate; k6 graceful stop runs past it). Complete steps keep the 900 s steady window.",
+    "Error rates by class, when the raw k6 output is supplied, come from the k6 request_outcomes points of the steady phase: class = the app error_class tag, or 'unclassified' when it is 'none'/missing on a status >= 400 or 0; rate = class count / steady request_outcomes points. Without the raw k6 output (or without request_outcomes points) the adapter's errorCategories are used as before. The source is recorded in error_classes_source."
+  ],
+  "transitions": [
+    {
+      "transition": "2\u21923",
+      "steps": [
+        {
+          "rps": 300,
+          "complete_both": true,
+          "classification": "improves",
+          "pairs": [
+            {
+              "comparable": true,
+              "improves": true,
+              "by": [
+                "p95"
+              ],
+              "rp": 1.8662616075318612,
+              "rt": 0.9995925292082473,
+              "err_pp": 3.7035249244477285e-05,
+              "err_ratio": 2.9987775876247413,
+              "err_ratio_label": null,
+              "p95_change_pct": -46.41694412164947
+            },
+            {
+              "comparable": true,
+              "improves": true,
+              "by": [
+                "p95"
+              ],
+              "rp": 1.7715638909436875,
+              "rt": 1.0005373256007855,
+              "err_pp": 2.2254063739305813e-05,
+              "err_ratio": 1.600859720961257,
+              "err_ratio_label": null,
+              "p95_change_pct": -43.55269910884705
+            }
+          ],
+          "summary": {
+            "rp_geomean": 1.8182963660960128,
+            "rt_geomean": 1.0000648158317262,
+            "err_ratio_geomean": 2.1910322343931443,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": 2.964465649189155e-05,
+            "p95_change_pct": -45.00346485611376
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": true,
+              "pressure_n1": {
+                "pressure": false,
+                "types": [],
+                "unattributed_timeout": false,
+                "not_assessable": []
+              },
+              "headroom_n": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              },
+              "headroom_n1": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              }
+            },
+            {
+              "rep": 2,
+              "complete": true,
+              "pressure_n1": {
+                "pressure": false,
+                "types": [],
+                "unattributed_timeout": false,
+                "not_assessable": []
+              },
+              "headroom_n": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              },
+              "headroom_n1": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              }
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": true,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 500,
+          "complete_both": false,
+          "classification": "inconclusive",
+          "pairs": [
+            {
+              "improves": true,
+              "reason": "N breached, N+1 complete (\u00a76.1)",
+              "comparable": true,
+              "rp": null,
+              "rt": null,
+              "err_pp": null,
+              "err_ratio": null,
+              "err_ratio_label": null
+            },
+            {
+              "comparable": true,
+              "improves": false,
+              "by": [],
+              "rp": 1.2088868117812546,
+              "rt": 1.0002867488680087,
+              "err_pp": 0.00010892967095011681,
+              "err_ratio": 4.267890128503504,
+              "err_ratio_label": null,
+              "p95_change_pct": -17.279269634306527
+            }
+          ],
+          "summary": {
+            "rp_geomean": 1.2088868117812546,
+            "rt_geomean": 1.0002867488680087,
+            "err_ratio_geomean": 4.267890128503504,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": 0.00010892967095011681,
+            "p95_change_pct": -17.279269634306527
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "overload",
+              "status_n1": "complete"
+            },
+            {
+              "rep": 2,
+              "complete": true,
+              "pressure_n1": {
+                "pressure": true,
+                "types": [
+                  "io"
+                ],
+                "unattributed_timeout": false,
+                "not_assessable": []
+              },
+              "headroom_n": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              },
+              "headroom_n1": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              }
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 700,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "complete"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "overload",
+              "status_n1": "overload"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 900,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "overload"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 1100,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 1300,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 1500,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        }
+      ],
+      "step_labels": {
+        "2x-300-r1": "complete",
+        "2x-300-r2": "complete",
+        "3x-300-r1": "complete",
+        "3x-300-r2": "complete",
+        "2x-500-r1": "overload observation, 16 min",
+        "2x-500-r2": "complete",
+        "3x-500-r1": "complete",
+        "3x-500-r2": "complete",
+        "2x-700-r1": "not tested",
+        "2x-700-r2": "overload observation, 5 min",
+        "3x-700-r1": "complete",
+        "3x-700-r2": "overload observation, 8 min",
+        "2x-900-r1": "not tested",
+        "2x-900-r2": "not tested",
+        "3x-900-r1": "overload observation, 5 min",
+        "3x-900-r2": "not tested",
+        "2x-1100-r1": "not tested",
+        "2x-1100-r2": "not tested",
+        "3x-1100-r1": "not tested",
+        "3x-1100-r2": "not tested",
+        "2x-1300-r1": "not tested",
+        "2x-1300-r2": "not tested",
+        "3x-1300-r1": "not tested",
+        "3x-1300-r2": "not tested",
+        "2x-1500-r1": "not tested",
+        "2x-1500-r2": "not tested",
+        "3x-1500-r1": "not tested",
+        "3x-1500-r2": "not tested"
+      },
+      "observations": [],
+      "outcome": "no DB breakpoint established within tested range",
+      "reason": "every complete step improves"
+    },
+    {
+      "transition": "3\u21924",
+      "steps": [
+        {
+          "rps": 300,
+          "complete_both": true,
+          "classification": "inconclusive",
+          "pairs": [
+            {
+              "comparable": true,
+              "improves": true,
+              "by": [
+                "p95"
+              ],
+              "rp": 1.9597856017661124,
+              "rt": 1.0005632800687794,
+              "err_pp": -1.1100679998726305e-05,
+              "err_ratio": 0.6253520500429872,
+              "err_ratio_label": null,
+              "p95_change_pct": -48.97401026424403
+            },
+            {
+              "comparable": true,
+              "improves": false,
+              "by": [],
+              "rp": 1.0929026125637926,
+              "rt": 0.9990666666666668,
+              "err_pp": -1.857041881064302e-05,
+              "err_ratio": 0.6660444444444444,
+              "err_ratio_label": null,
+              "p95_change_pct": -8.50053897719728
+            }
+          ],
+          "summary": {
+            "rp_geomean": 1.4635077055605443,
+            "rt_geomean": 0.9998146933344109,
+            "err_ratio_geomean": 0.6453776094296082,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": -1.4835549404684662e-05,
+            "p95_change_pct": -31.671012308268942
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": true,
+              "pressure_n1": {
+                "pressure": false,
+                "types": [],
+                "unattributed_timeout": false,
+                "not_assessable": []
+              },
+              "headroom_n": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              },
+              "headroom_n1": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              }
+            },
+            {
+              "rep": 2,
+              "complete": true,
+              "pressure_n1": {
+                "pressure": false,
+                "types": [],
+                "unattributed_timeout": false,
+                "not_assessable": []
+              },
+              "headroom_n": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              },
+              "headroom_n1": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              }
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": true,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 500,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            {
+              "comparable": true,
+              "improves": false,
+              "by": [],
+              "rp": 1.3220541987205248,
+              "rt": 1.0005425151804197,
+              "err_pp": 0.0009271854208278232,
+              "err_ratio": 28.815624437196085,
+              "err_ratio_label": null,
+              "p95_change_pct": -24.36013584255522
+            },
+            null
+          ],
+          "summary": {
+            "rp_geomean": 1.3220541987205248,
+            "rt_geomean": 1.0005425151804197,
+            "err_ratio_geomean": 28.81562443719608,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": 0.0009271854208278232,
+            "p95_change_pct": -24.36013584255522
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": true,
+              "pressure_n1": {
+                "pressure": false,
+                "types": [],
+                "unattributed_timeout": false,
+                "not_assessable": []
+              },
+              "headroom_n": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              },
+              "headroom_n1": {
+                "holds": true,
+                "reasons": [],
+                "pool_attribution": "none",
+                "mixed": false,
+                "pool_not_assessable": false,
+                "labels": []
+              }
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "complete",
+              "status_n1": "overload"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 700,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "complete",
+              "status_n1": "overload"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "overload",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 900,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "overload",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 1100,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 1300,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        },
+        {
+          "rps": 1500,
+          "complete_both": false,
+          "classification": "not comparable",
+          "pairs": [
+            null,
+            null
+          ],
+          "summary": {
+            "rp_geomean": null,
+            "rt_geomean": null,
+            "err_ratio_geomean": null,
+            "err_ratio_undefined_or_zero": [],
+            "err_pp_mean": null,
+            "p95_change_pct": null
+          },
+          "per_rep": [
+            {
+              "rep": 1,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            },
+            {
+              "rep": 2,
+              "complete": false,
+              "status_n": "not tested",
+              "status_n1": "not tested"
+            }
+          ],
+          "db_pressure_both_reps": false,
+          "pressure_types": null,
+          "headroom_both_reps": false,
+          "unattributed_timeout": false,
+          "mixed": false,
+          "pool_not_assessable": false,
+          "qualifies_s_star": false
+        }
+      ],
+      "step_labels": {
+        "3x-300-r1": "complete",
+        "3x-300-r2": "complete",
+        "4x-300-r1": "complete",
+        "4x-300-r2": "complete",
+        "3x-500-r1": "complete",
+        "3x-500-r2": "complete",
+        "4x-500-r1": "complete",
+        "4x-500-r2": "overload observation, 12 min",
+        "3x-700-r1": "complete",
+        "3x-700-r2": "overload observation, 8 min",
+        "4x-700-r1": "overload observation, 6 min",
+        "4x-700-r2": "not tested",
+        "3x-900-r1": "overload observation, 5 min",
+        "3x-900-r2": "not tested",
+        "4x-900-r1": "not tested",
+        "4x-900-r2": "not tested",
+        "3x-1100-r1": "not tested",
+        "3x-1100-r2": "not tested",
+        "4x-1100-r1": "not tested",
+        "4x-1100-r2": "not tested",
+        "3x-1300-r1": "not tested",
+        "3x-1300-r2": "not tested",
+        "4x-1300-r1": "not tested",
+        "4x-1300-r2": "not tested",
+        "3x-1500-r1": "not tested",
+        "3x-1500-r2": "not tested",
+        "4x-1500-r1": "not tested",
+        "4x-1500-r2": "not tested"
+      },
+      "observations": [],
+      "outcome": "inconclusive",
+      "at": 300
+    }
+  ]
+}
