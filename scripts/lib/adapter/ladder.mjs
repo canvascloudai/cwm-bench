@@ -17,8 +17,17 @@ export const P95_TEST_ID_RE = /^typical-p95-(1x|2x|3x)-r[1-3][a-z]?-\d{8}$/;
  * never skip, reorder, or re-run a step.
  */
 export const DBSAT_LADDER = Object.freeze([300, 500, 700, 900, 1100, 1300, 1500]);
-/** Discovery r1/r2, confirmation c1, dry run d1; optional replacement letter. */
-export const DBSAT_TEST_ID_RE = /^typical-dbsat-(2x|3x|4x)-(r[12]|c1|d1)([a-z]?)-\d{8}$/;
+/** typical-dbsat-v1: discovery r1/r2, confirmation c1, dry run d1; optional replacement letter. */
+export const DBSAT_V1_TEST_ID_RE = /^typical-dbsat-(2x|3x|4x)-(r[12]|c1|d1)([a-z]?)-\d{8}$/;
+/** typical-dbsat-pscap-v1 (max_prepared_stmt_count holdout): reps r1..r9; optional replacement letter. */
+export const DBSAT_PSCAP_TEST_ID_RE = /^typical-dbsat-pscap-(2x|3x|4x)-(r[1-9])([a-z]?)-\d{8}$/;
+/** Any typical-dbsat apply id (v1 or pscap). Group 1 or 4 is the scale. */
+export const DBSAT_TEST_ID_RE = /^typical-dbsat-(?:(2x|3x|4x)-(?:r[12]|c1|d1)|pscap-(2x|3x|4x)-r[1-9])[a-z]?-\d{8}$/;
+
+export function dbsatScale(id) {
+  const match = DBSAT_TEST_ID_RE.exec(String(id || ''));
+  return match ? (match[1] || match[2]) : null;
+}
 
 export function parseLadder(value) {
   if (value == null || value === '') return null;
@@ -108,17 +117,17 @@ function unenforcedMetadata(spec, plan, done) {
 function assertDbsatTestId(spec, id) {
   const dbsat = typeof spec.key === 'string' && spec.key.startsWith('typical-dbsat-');
   if (dbsat) {
-    const match = DBSAT_TEST_ID_RE.exec(id);
-    if (!match) {
+    const scale = dbsatScale(id);
+    if (!scale) {
       const err = new Error(
-        `scenario ${spec.key} requires test id typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD; got ${id || 'unset'}`,
+        `scenario ${spec.key} requires test id typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD or typical-dbsat-pscap-{2x|3x|4x}-r<n>[letter]-YYYYMMDD; got ${id || 'unset'}`,
       );
       err.code = 'TEST_ID_MISMATCH';
       throw err;
     }
-    if (Number(match[1][0]) !== spec.expectedAppCount) {
+    if (Number(scale[0]) !== spec.expectedAppCount) {
       const err = new Error(
-        `scenario ${spec.key} expects ${spec.expectedAppCount} app server(s); test id ${id} is ${match[1]}`,
+        `scenario ${spec.key} expects ${spec.expectedAppCount} app server(s); test id ${id} is ${scale}`,
       );
       err.code = 'TEST_ID_MISMATCH';
       throw err;

@@ -116,6 +116,17 @@ variable "mysql_max_connections" {
   default     = 500
 }
 
+variable "mysql_max_prepared_stmt_count" {
+  type        = number
+  description = "Parameter-group value for max_prepared_stmt_count. Default 16382 is the MySQL 8.0 engine default; at the default no parameter block is emitted, so the parameter group (and the plan) is identical to earlier campaigns. typical-dbsat-pscap-v1 sets 65528 (the MySQL maximum)."
+  default     = 16382
+
+  validation {
+    condition     = var.mysql_max_prepared_stmt_count == floor(var.mysql_max_prepared_stmt_count) && var.mysql_max_prepared_stmt_count >= 0 && var.mysql_max_prepared_stmt_count <= 65528
+    error_message = "mysql_max_prepared_stmt_count must be an integer from 0 to 65528."
+  }
+}
+
 variable "db_username" {
   type        = string
   description = "RDS master username."

@@ -71,6 +71,7 @@ After apply, record outputs: `alb_dns`, `alb_arn`, `target_group_arn`, `rds_endp
 - `test_id` — campaign slug
 - `app_pool_size` — default 250; set **40** for the app-bound diagnostic (re-apply or replace user_data)
 - `mysql_max_connections` — default 500
+- `mysql_max_prepared_stmt_count` — default 16382 (engine default; no parameter-group override is emitted at the default, so earlier campaigns plan identically). `typical-dbsat-pscap-v1` passes 65528. Offline check: `terraform -chdir=terraform test`.
 - `extra_tags` — map
 - `ami_id` — pin for a campaign
 - `app_source_git_ref` — **exact measurement SHA**. user_data fails if this is empty or a branch name (`main` / `master` / `HEAD`). There is no unpinned clone.
