@@ -51,6 +51,10 @@ export function extractOutputs(values) {
     amiSource: values.ami_source || null,
     rdsIdentifier: values.rds_identifier || null,
     rdsEndpoint: values.rds_endpoint || null,
+    dbParameterGroupName: values.db_parameter_group_name || null,
+    mysqlMaxPreparedStmtCount: values.mysql_max_prepared_stmt_count == null
+      ? null
+      : Number(values.mysql_max_prepared_stmt_count),
     generatorIp: values.generator_ip || null,
     dashboardUrl: values.dashboard_url || null,
     appRootVolumeIds: Array.isArray(values.app_root_volume_ids)

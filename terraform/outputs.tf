@@ -103,3 +103,13 @@ output "topology_declaration" {
     test_id                 = var.test_id
   }
 }
+
+output "mysql_max_prepared_stmt_count" {
+  description = "Declared max_prepared_stmt_count (16382 = engine default, no parameter-group override)."
+  value       = var.mysql_max_prepared_stmt_count
+}
+
+output "db_parameter_group_name" {
+  description = "RDS DB parameter group name (wait-ready reads the live max_prepared_stmt_count from it)."
+  value       = aws_db_parameter_group.main.name
+}

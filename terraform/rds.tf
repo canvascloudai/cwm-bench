@@ -46,6 +46,16 @@ resource "aws_db_parameter_group" "main" {
     value = tostring(var.mysql_max_connections)
   }
 
+  # typical-dbsat-pscap-v1 only. At the engine default (16382) no block is
+  # emitted, so earlier campaigns plan an identical parameter group.
+  dynamic "parameter" {
+    for_each = var.mysql_max_prepared_stmt_count == 16382 ? [] : [var.mysql_max_prepared_stmt_count]
+    content {
+      name  = "max_prepared_stmt_count"
+      value = tostring(parameter.value)
+    }
+  }
+
   tags = {
     Name = "${local.name}-mysql80"
   }

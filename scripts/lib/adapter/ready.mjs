@@ -1,7 +1,8 @@
 import { ADAPTER_VERSION, PRIMARY_REGION, SECOND_REGION } from './version.mjs';
 import { listScenarioKeys, scenarioCatalog, scenariosRequiringCompleteCollect } from './scenarios.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
-import { describeSsmInstance, runRemoteShell } from './aws.mjs';
+import { awsJson, describeSsmInstance, runRemoteShell } from './aws.mjs';
+import { DBSAT_PSCAP_TEST_ID_RE } from './ladder.mjs';
 import { redact } from './redact.mjs';
 
 const DEFAULT_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
@@ -204,6 +205,77 @@ async function retryReadiness(label, probe, controller) {
   }
 }
 
+
+export const MYSQL_DEFAULT_MAX_PREPARED_STMT_COUNT = 16382;
+
+/**
+ * typical-dbsat-pscap-v1: verify the live RDS max_prepared_stmt_count.
+ * Runs only when the declared value differs from the engine default or the
+ * campaign id is a pscap apply, so every earlier campaign's wait-ready is
+ * unchanged (no extra AWS calls).
+ */
+export function preparedStmtCheckRequired(outputs, env = {}) {
+  const declared = outputs.mysqlMaxPreparedStmtCount;
+  const id = String((env && env.CWM_CAMPAIGN_ID) || (outputs.topology && outputs.topology.test_id) || '');
+  return (declared != null && declared !== MYSQL_DEFAULT_MAX_PREPARED_STMT_COUNT)
+    || DBSAT_PSCAP_TEST_ID_RE.test(id);
+}
+
+/** typical-dbsat-pscap-v1 §2: the only intervention is the MySQL maximum. */
+export const PSCAP_MAX_PREPARED_STMT_COUNT = 65528;
+
+export async function checkPreparedStmtParameter(runAws, outputs, region, env = {}) {
+  const declared = outputs.mysqlMaxPreparedStmtCount;
+  const id = String((env && env.CWM_CAMPAIGN_ID) || (outputs.topology && outputs.topology.test_id) || '');
+  if (DBSAT_PSCAP_TEST_ID_RE.test(id) && declared !== PSCAP_MAX_PREPARED_STMT_COUNT) {
+    const err = new Error(`pscap apply ${id} must declare mysql_max_prepared_stmt_count=${PSCAP_MAX_PREPARED_STMT_COUNT}; got ${declared == null ? 'unset' : declared}`);
+    err.code = 'DB_PARAMETER_MISMATCH';
+    throw err;
+  }
+  if (declared == null || !outputs.dbParameterGroupName || !outputs.rdsIdentifier) {
+    const err = new Error('max_prepared_stmt_count check needs terraform outputs mysql_max_prepared_stmt_count, db_parameter_group_name and rds_identifier');
+    err.code = 'DB_PARAMETER_MISMATCH';
+    throw err;
+  }
+  const params = await awsJson(runAws, [
+    'rds', 'describe-db-parameters',
+    '--db-parameter-group-name', outputs.dbParameterGroupName,
+    '--region', region,
+    '--query', "Parameters[?ParameterName=='max_prepared_stmt_count']",
+    '--output', 'json',
+  ]);
+  const rows = Array.isArray(params) ? params : (params.Parameters || []);
+  const row = rows.find((item) => item && item.ParameterName === 'max_prepared_stmt_count') || rows[0];
+  const live = row && row.ParameterValue != null && row.ParameterValue !== '' ? Number(row.ParameterValue) : null;
+  const effective = live == null ? MYSQL_DEFAULT_MAX_PREPARED_STMT_COUNT : live;
+  if (effective !== declared) {
+    const err = new Error(`live max_prepared_stmt_count ${live == null ? 'unset (engine default 16382)' : live} != declared ${declared}`);
+    err.code = 'DB_PARAMETER_MISMATCH';
+    throw err;
+  }
+  const inst = await awsJson(runAws, [
+    'rds', 'describe-db-instances',
+    '--db-instance-identifier', outputs.rdsIdentifier,
+    '--region', region,
+    '--query', 'DBInstances[0].DBParameterGroups',
+    '--output', 'json',
+  ]);
+  const groups = Array.isArray(inst) ? inst : [];
+  const group = groups.find((item) => item && item.DBParameterGroupName === outputs.dbParameterGroupName);
+  const applyStatus = group ? group.ParameterApplyStatus : null;
+  if (applyStatus !== 'in-sync') {
+    throw pendingReadiness('RDS parameter group apply status', { applyStatus });
+  }
+  return {
+    parameter: 'max_prepared_stmt_count',
+    declared,
+    live: effective,
+    source: live == null ? 'engine-default' : (row.Source || 'user'),
+    parameterGroup: outputs.dbParameterGroupName,
+    applyStatus,
+  };
+}
+
 export async function waitReady(ctx) {
   const capability = capabilityPayload();
   const payload = {
@@ -354,6 +426,15 @@ export async function waitReady(ctx) {
 
   payload.appNodes = appNodes;
   payload.ready.appHealth = true;
+
+  if (preparedStmtCheckRequired(outputs, ctx.env)) {
+    payload.dbParameters = await retryReadiness(
+      'RDS max_prepared_stmt_count',
+      () => checkPreparedStmtParameter(runAws, outputs, region, ctx.env),
+      controller,
+    );
+    payload.ready.dbParameters = true;
+  }
   return payload;
 }
 
