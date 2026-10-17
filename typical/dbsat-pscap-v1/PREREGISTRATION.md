@@ -78,7 +78,15 @@ Evaluated **per rep**, with each rep's own breach rung B (B = "none" if all 7 ru
   - DB CPU mean, PI AAS and CPU/IO/lock shares, max connections
   - `Prepared_stmt_count` trajectory
   - the comparison with the dbsat-v1 4× rungs (descriptive; never pooled).
-- **Replit #5195 (non-scored)**: its cap-reached signal is shown next to our diagnostic as a comparison only. It never enters H1/H0.
+- **Replit #5195 (non-scored comparison only; never enters H1/H0).**
+  - **What it is:** an internal, opt-in, **uncalibrated projection**.
+  - It computes **potential usage** = servers × pool size × `statementsPerConnection`, labelled the **full-pool upper bound**.
+  - It computes an **open-connection estimate** = explicit open connections × `statementsPerConnection`.
+  - At or above the cap (16,382 by default, configurable), it emits the signal **"prepared-statement cap reached"**: new prepares fail, while reuse may succeed.
+  - It projects **no HTTP error rate**, and the signal is **invariant to RPS**.
+  - **Comparison for pscap:** with the cap at 65,528, does the candidate signal stay off at the observed open connections, for any `statementsPerConnection` below 65,528 / 424 ≈ **154**? 424 is the highest DatabaseConnections seen in dbsat-v1; the comparison uses each rep's observed maximum.
+  - We report the observed open connections, the implied `statementsPerConnection` (observed `Prepared_stmt_count` ÷ `Threads_connected`), and whether the projection's signal would be on or off at each rung, next to the observed 1461 counts.
+  - Because the projection has no RPS dependence and no error rate, it cannot predict the breach rung.
 
 ## 6. Scoring
 No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` and `db_pressure`. H1/H0 is a lookup on the §4.2 tables using the rules in §5, and the evaluation script is committed with the results. There are no transitions and no §7.4 confirmation in this campaign.
@@ -135,3 +143,4 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
 
 ## 11. Changelog
 - r1 (2026-10-17): initial draft.
+- r1.1 (2026-10-17): §5 Replit #5195 comparison detail added (non-scored).
