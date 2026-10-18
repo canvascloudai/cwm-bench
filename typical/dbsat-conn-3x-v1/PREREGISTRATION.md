@@ -28,7 +28,7 @@ The recalibrated CWM server-limit candidate (unpublished, opt-in) was fitted on 
 - **App and load code are byte-identical to measurement SHA `881e0cf`**: `app-typical/`, `load/typical.js`, `load/lib/`. Adapter 1.7.1, fresh seed per apply.
 - **DB parameters (unchanged from pscap-v1) [DECISION]:**
   - `max_prepared_stmt_count = 65528`, via `-var mysql_max_prepared_stmt_count=65528`.
-  - `max_connections = 500`, the Terraform `mysql_max_connections` default.
+  - `max_connections = 500`, set in the DB parameter group via the Terraform `mysql_max_connections` variable (default 500).
   - 500 is a declared parameter-group override, not the RDS formula default for this class. The formula `DBInstanceClassMemory/12582880` gives about 1,365 on db.r5.large; see `terraform/variables.tf`.
   - Both actual values are recorded at wait-ready with `SHOW GLOBAL VARIABLES` (§4.2).
 - **The only intervention vs pscap-v1 [DECISION]:** app server count 4 → 3.
@@ -75,7 +75,7 @@ All are computed with `typical/dbsat-v1/score_dbsat_v1.py` (`record_from_collect
 
 ### 5.1 Locked candidate: the recalibrated CWM server-limit candidate (unpublished, opt-in)
 - **Status.** The candidate is not enabled in normal CWM runs and is not published. Its predictions are frozen here before any 3× apply. **No accuracy claim is made for it in this prereg or before this holdout is scored.**
-- **Engine commit:** to be recorded at freeze. If it cannot be recorded before the first apply, it is recorded in the evidence before scoring and disclosed as late.
+- **Engine commit:** `56001ba1ee0534e0523aeae3912f8b2b0d1abdb5`. This is the recalibrated CWM server-limit candidate code that produced the frozen predictions in this section.
 - **Fit inputs:** these per-minute diagnostic CSVs only.
   - pscap-v1 holdout r1 and r2: `prepared-statements-by-minute.csv`, `mysql-errors-by-minute.csv`, `http-outcomes-by-minute.csv`.
   - The dbsat-v1 non-prereg 4× diagnostic: `prepared-statements-by-minute.csv`, `prepared-limit-and-1461-by-minute.csv`, `mysql-errors-by-minute.csv`, `http-outcomes-all-rungs-by-minute.csv`.
@@ -218,7 +218,7 @@ All four breaches were on the error criterion, on `500/internal`. Those 2× and 
 1. **Repo wiring: none required [FACT, checked against `main` @ a30113d4].**
    - Apply IDs reuse the existing pscap ID family (§9), which the adapter already accepts for the 3× dbsat keys: `DBSAT_PSCAP_TEST_ID_RE` / `DBSAT_TEST_ID_RE` in `scripts/lib/adapter/ladder.mjs`, scale 3x, `expectedAppCount` 3.
    - The wait-ready gate already enforces `max_prepared_stmt_count = 65528` for that family (`scripts/lib/adapter/ready.mjs`).
-   - The Terraform `mysql_max_prepared_stmt_count` variable exists, and `mysql_max_connections` defaults to 500.
+   - The Terraform `mysql_max_prepared_stmt_count` variable exists, and `mysql_max_connections` (default 500) sets `max_connections` in the DB parameter group.
    - The 3× scenario keys `typical-dbsat-3x-{300…1500}` exist.
 2. **Runner-side controller (not in this repo).** Start from the pscap-v1 rep 2 controller (pscap-1.0.1-boundaries, controller SHA256 `d27be406bdf19b689b0f7dde86d8c29b76d0716da36fcf79d4a9292c905ee5f0`). It includes the post-breach boundary reread. Before any paid apply:
    - (a) accept the 3× app count and the §9 IDs;
@@ -244,3 +244,4 @@ All four breaches were on the error criterion, on `500/internal`. Those 2× and 
 
 ## 11. Changelog
 - r1 (2026-10-18): initial draft.
+- r1.1 (2026-10-18, before freeze): engine commit recorded (§5.1); `max_connections` wording clarified as the parameter-group setting (§2, §8). No change to predictions, hypotheses or rules.
