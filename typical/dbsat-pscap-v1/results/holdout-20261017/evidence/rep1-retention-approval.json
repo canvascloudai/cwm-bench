@@ -1,0 +1,11 @@
+{
+  "approved": true,
+  "at": "2026-10-17T18:42:51.377964+00:00",
+  "predecessorManifestSha256": "b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f",
+  "rep1Campaign": "typical-dbsat-pscap-4x-r1-20261017",
+  "noRep1Rerun": true,
+  "retainRep1PartialData": true,
+  "reprocess900OfflineOnly": true,
+  "startFreshRep2AfterControllerOnlyFixAndAllSuitesPass": true,
+  "cleanupConfirmedBeforeFix": true
+}

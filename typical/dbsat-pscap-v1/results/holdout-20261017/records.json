@@ -1,0 +1,507 @@
+{
+ "records": [
+  {
+   "servers": 4,
+   "rps": 300,
+   "rep": 1,
+   "status": "complete",
+   "overload_minutes": null,
+   "steady_p95_ms": 18.965156,
+   "achieved_rps": 300.00111111111113,
+   "achieved_rps_elapsed_s": 900,
+   "achieved_rps_elapsed_source": "steady window",
+   "error_rate": 4.814796982233399e-05,
+   "error_rates_by_class": {
+    "db_timeout": 0.0,
+    "too_many_connections": 0.0,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 0.0,
+    "iops_throttle": 0.0,
+    "unclassified": 4.814796982233399e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 243118,
+    "201/none": 26870,
+    "502/unclassified": 13
+   },
+   "app_cpu_by_node": [
+    8.542167089246076,
+    8.771236493190719,
+    9.076266890355846,
+    8.932842504942887
+   ],
+   "db_cpu_mean": 31.961824001735298,
+   "connections_max": 152.0,
+   "pi_aas_mean": 0.6035714285714286,
+   "wait_shares": {
+    "cpu": 0.4161735700197238,
+    "io": 0.5779092702169624,
+    "lock": 0.003944773175542406
+   },
+   "pool_wait_p95_ms": 0.038144752169815034,
+   "generator": {
+    "cpu_mean": 6.608324829477704,
+    "dropped_ratio": 0.0,
+    "network_out_ratio": 0.0007865998769230769
+   },
+   "alb_elb_5xx_ratio": 5.555531813966607e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": false,
+    "types": [],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 18.978935,
+   "phase_steady_points": 270001,
+   "steady_request_outcomes_total": 270001,
+   "steady_span_utc": [
+    "2026-10-17T16:22:09.938510+00:00",
+    "2026-10-17T16:37:09.936436+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 500,
+   "rep": 1,
+   "status": "complete",
+   "overload_minutes": null,
+   "steady_p95_ms": 80.592888,
+   "achieved_rps": 499.63666666666666,
+   "achieved_rps_elapsed_s": 900,
+   "achieved_rps_elapsed_source": "steady window",
+   "error_rate": 2.8909896747191847e-05,
+   "error_rates_by_class": {
+    "db_timeout": 0.0,
+    "too_many_connections": 0.0,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 0.0,
+    "iops_throttle": 0.0,
+    "unclassified": 2.8909896747191847e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 404592,
+    "201/none": 45068,
+    "502/unclassified": 13
+   },
+   "app_cpu_by_node": [
+    13.689739071089727,
+    14.401283879994859,
+    14.017298107688427,
+    14.396138028048123
+   ],
+   "db_cpu_mean": 54.84268500288237,
+   "connections_max": 385.0,
+   "pi_aas_mean": 1.327865213882163,
+   "wait_shares": {
+    "cpu": 0.343615614885502,
+    "io": 0.6393350453585376,
+    "lock": 0.0
+   },
+   "pool_wait_p95_ms": 0.032507412399844046,
+   "generator": {
+    "cpu_mean": 10.093591612940031,
+    "dropped_ratio": 0.0006228571428571429,
+    "network_out_ratio": 0.001311429481025641
+   },
+   "alb_elb_5xx_ratio": 2.8229304070665647e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": false,
+    "types": [],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 80.592888,
+   "phase_steady_points": 449673,
+   "steady_request_outcomes_total": 449673,
+   "steady_span_utc": [
+    "2026-10-17T16:53:32.275142+00:00",
+    "2026-10-17T17:08:32.269436+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 700,
+   "rep": 1,
+   "status": "complete",
+   "overload_minutes": null,
+   "steady_p95_ms": 378.622331,
+   "achieved_rps": 699.8044444444445,
+   "achieved_rps_elapsed_s": 900,
+   "achieved_rps_elapsed_source": "steady window",
+   "error_rate": 0.00016830098567218778,
+   "error_rates_by_class": {
+    "db_timeout": 0.0,
+    "too_many_connections": 6.986078650543643e-05,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 7.938725739254141e-06,
+    "iops_throttle": 0.0,
+    "unclassified": 9.05014734274972e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 566750,
+    "503/too_many_connections": 44,
+    "201/none": 62968,
+    "502/unclassified": 57,
+    "500/internal": 5
+   },
+   "app_cpu_by_node": [
+    19.810362733550537,
+    20.147471688763783,
+    20.256361263132796,
+    20.924464298504475
+   ],
+   "db_cpu_mean": 84.34904298622352,
+   "connections_max": 498.0,
+   "pi_aas_mean": 17.503812863544017,
+   "wait_shares": {
+    "cpu": 0.16902637736026055,
+    "io": 0.790936384761726,
+    "lock": 0.0002732023223588653
+   },
+   "pool_wait_p95_ms": 0.03164188217022217,
+   "generator": {
+    "cpu_mean": 13.032837349218878,
+    "dropped_ratio": 0.0009374149659863945,
+    "network_out_ratio": 0.0018352346125128207
+   },
+   "alb_elb_5xx_ratio": 7.326544069162575e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": true,
+    "types": [
+     "cpu",
+     "io",
+     "connection-cap"
+    ],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 368.000629,
+   "phase_steady_points": 629824,
+   "steady_request_outcomes_total": 629824,
+   "steady_span_utc": [
+    "2026-10-17T17:30:08.212293+00:00",
+    "2026-10-17T17:45:08.228103+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 900,
+   "rep": 1,
+   "status": "overload (breach stop; no live collect)",
+   "steady_p95_ms": null,
+   "achieved_rps": 880.3868738901541,
+   "achieved_rps_elapsed_s": 220.899477,
+   "achieved_rps_elapsed_source": "k6 steady-phase span (includes drain after the stop)",
+   "error_rate": 0.17200491574839183,
+   "error_rates_by_class": {
+    "too_many_connections": 0.15156033875471137,
+    "internal": 0.01614586814893278,
+    "unclassified": 4.627796603197293e-05,
+    "queue_full": 0.004252430878715735
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 144574,
+    "201/none": 16452,
+    "503/too_many_connections": 29475,
+    "500/internal": 3140,
+    "502/unclassified": 9,
+    "503/queue_full": 827
+   },
+   "app_cpu_by_node": null,
+   "db_cpu_mean": null,
+   "connections_max": null,
+   "pi_aas_mean": null,
+   "wait_shares": null,
+   "pool_wait_p95_ms": null,
+   "generator": null,
+   "alb_elb_5xx_ratio": null,
+   "target_connection_errors": null,
+   "record_source": "raw k6 only (collect unavailable)",
+   "phase_steady_p95_ms": 2073.173573,
+   "phase_steady_points": 194477,
+   "steady_request_outcomes_total": 194477,
+   "steady_span_utc": [
+    "2026-10-17T18:12:39.787503+00:00",
+    "2026-10-17T18:16:20.686980+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 300,
+   "rep": 2,
+   "status": "complete",
+   "overload_minutes": null,
+   "steady_p95_ms": 21.440836,
+   "achieved_rps": 300.00111111111113,
+   "achieved_rps_elapsed_s": 900,
+   "achieved_rps_elapsed_source": "steady window",
+   "error_rate": 3.333320987700046e-05,
+   "error_rates_by_class": {
+    "db_timeout": 0.0,
+    "too_many_connections": 0.0,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 0.0,
+    "iops_throttle": 0.0,
+    "unclassified": 3.333320987700046e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 243085,
+    "201/none": 26907,
+    "502/unclassified": 9
+   },
+   "app_cpu_by_node": [
+    9.579830611810406,
+    8.460706067405221,
+    9.21144790767522,
+    8.604165340527349
+   ],
+   "db_cpu_mean": 30.214284348905046,
+   "connections_max": 107.0,
+   "pi_aas_mean": 0.5066666666666666,
+   "wait_shares": {
+    "cpu": 0.4232456140350878,
+    "io": 0.5701754385964912,
+    "lock": 0.0
+   },
+   "pool_wait_p95_ms": 0.04074589964636448,
+   "generator": {
+    "cpu_mean": 5.912231733554748,
+    "dropped_ratio": 0.0,
+    "network_out_ratio": 0.0007832689249523809
+   },
+   "alb_elb_5xx_ratio": 3.5713577111565244e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": false,
+    "types": [],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 21.382905,
+   "phase_steady_points": 270001,
+   "steady_request_outcomes_total": 270001,
+   "steady_span_utc": [
+    "2026-10-17T19:41:52.628142+00:00",
+    "2026-10-17T19:56:52.624639+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 500,
+   "rep": 2,
+   "status": "complete",
+   "overload_minutes": null,
+   "steady_p95_ms": 84.602083,
+   "achieved_rps": 499.98,
+   "achieved_rps_elapsed_s": 900,
+   "achieved_rps_elapsed_source": "steady window",
+   "error_rate": 3.3334666720002134e-05,
+   "error_rates_by_class": {
+    "db_timeout": 0.0,
+    "too_many_connections": 0.0,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 0.0,
+    "iops_throttle": 0.0,
+    "unclassified": 3.3334666720002134e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 405086,
+    "201/none": 44881,
+    "502/unclassified": 15
+   },
+   "app_cpu_by_node": [
+    15.390469351933325,
+    14.575931362423175,
+    14.27539407665347,
+    14.38513110997647
+   ],
+   "db_cpu_mean": 52.62912430153098,
+   "connections_max": 269.0,
+   "pi_aas_mean": 1.8578537567374505,
+   "wait_shares": {
+    "cpu": 0.30651167164002774,
+    "io": 0.6363875956907403,
+    "lock": 0.0
+   },
+   "pool_wait_p95_ms": 0.03883722509912186,
+   "generator": {
+    "cpu_mean": 9.276558398564024,
+    "dropped_ratio": 3.619047619047619e-05,
+    "network_out_ratio": 0.001303702521904762
+   },
+   "alb_elb_5xx_ratio": 3.571598647554645e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": false,
+    "types": [],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 84.061313,
+   "phase_steady_points": 449982,
+   "steady_request_outcomes_total": 449982,
+   "steady_span_utc": [
+    "2026-10-17T20:12:54.770088+00:00",
+    "2026-10-17T20:27:54.767050+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 700,
+   "rep": 2,
+   "status": "complete",
+   "overload_minutes": null,
+   "steady_p95_ms": 739.135216,
+   "achieved_rps": 698.6944444444445,
+   "achieved_rps_elapsed_s": 900,
+   "achieved_rps_elapsed_source": "steady window",
+   "error_rate": 0.008433188884029738,
+   "error_rates_by_class": {
+    "db_timeout": 1.2722140500139148e-05,
+    "too_many_connections": 0.007439271657456367,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 0.0009159941160100187,
+    "iops_throttle": 0.0,
+    "unclassified": 6.520097006321313e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 561108,
+    "201/none": 62414,
+    "502/unclassified": 41,
+    "504/db_timeout": 8,
+    "500/internal": 576,
+    "503/too_many_connections": 4678
+   },
+   "app_cpu_by_node": [
+    21.849943344007478,
+    20.47555256576254,
+    20.273731329850083,
+    19.733328665992307
+   ],
+   "db_cpu_mean": 85.37747792181328,
+   "connections_max": 499.0,
+   "pi_aas_mean": 46.93396930211769,
+   "wait_shares": {
+    "cpu": 0.07772603470319164,
+    "io": 0.4076953145055612,
+    "lock": 0.00021997644999995246
+   },
+   "pool_wait_p95_ms": 0.033968925534184874,
+   "generator": {
+    "cpu_mean": 12.266592458510116,
+    "dropped_ratio": 0.0016,
+    "network_out_ratio": 0.0018286086104615385
+   },
+   "alb_elb_5xx_ratio": 7.158169857864443e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": true,
+    "types": [
+     "cpu",
+     "io",
+     "connection-cap"
+    ],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 747.017653,
+   "phase_steady_points": 628825,
+   "steady_request_outcomes_total": 628825,
+   "steady_span_utc": [
+    "2026-10-17T20:49:18.082454+00:00",
+    "2026-10-17T21:04:18.250583+00:00"
+   ]
+  },
+  {
+   "servers": 4,
+   "rps": 900,
+   "rep": 2,
+   "status": "overload",
+   "overload_minutes": 5,
+   "steady_p95_ms": 1525.116832,
+   "achieved_rps": 889.7464371462067,
+   "achieved_rps_elapsed_s": 207.986222,
+   "achieved_rps_elapsed_source": "k6 steady-phase span",
+   "error_rate": 0.20077274323849667,
+   "error_rates_by_class": {
+    "db_timeout": 0.0,
+    "too_many_connections": 0.18078949501499555,
+    "queue_full": 0.0,
+    "cpu_overload": 0.0,
+    "internal": 0.01997244062575991,
+    "iops_throttle": 0.0,
+    "unclassified": 1.0807597741212072e-05
+   },
+   "error_classes_source": "k6 request_outcomes (steady)",
+   "error_counts_by_status_class": {
+    "200/none": 132975,
+    "201/none": 14926,
+    "503/too_many_connections": 33456,
+    "500/internal": 3696,
+    "502/unclassified": 2
+   },
+   "app_cpu_by_node": [
+    24.789759953599084,
+    25.137651510369338,
+    24.8169930295587,
+    24.251010134684623
+   ],
+   "db_cpu_mean": 98.52567444339913,
+   "connections_max": 570.0,
+   "pi_aas_mean": 158.34428669427302,
+   "wait_shares": {
+    "cpu": 0.09073599508650294,
+    "io": 0.6343453547199435,
+    "lock": 0.0
+   },
+   "pool_wait_p95_ms": 0.0332301349849702,
+   "generator": {
+    "cpu_mean": 14.057947921314023,
+    "dropped_ratio": 0.002777777777777778,
+    "network_out_ratio": 0.0020817707519999997
+   },
+   "alb_elb_5xx_ratio": 1.2866121571982734e-05,
+   "target_connection_errors": 0.0,
+   "db_pressure": {
+    "pressure": true,
+    "types": [
+     "cpu",
+     "io",
+     "connection-cap"
+    ],
+    "unattributed_timeout": false,
+    "not_assessable": []
+   },
+   "record_source": "record_from_collect (unchanged scorer)",
+   "phase_steady_p95_ms": 1540.819434,
+   "phase_steady_points": 185055,
+   "steady_request_outcomes_total": 185055,
+   "steady_span_utc": [
+    "2026-10-17T21:31:51.930245+00:00",
+    "2026-10-17T21:35:19.916467+00:00"
+   ]
+  }
+ ]
+}

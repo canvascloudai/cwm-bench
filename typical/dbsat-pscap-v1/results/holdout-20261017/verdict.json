@@ -1,0 +1,60 @@
+{
+ "reps": {
+  "1": {
+   "B": 900,
+   "mysql_1461_total": 0,
+   "final_complete_rung": 700,
+   "final_complete_rung_last5": [
+    28294,
+    28388,
+    28416,
+    28469,
+    28488
+   ],
+   "prepared_stmt_count_max_whole_apply": 29803,
+   "H1_1_no_1461": true,
+   "H1_2_breach_above_700": true,
+   "H1_3_stabilizes_below_cap": true,
+   "H1_3_cap_only_at_breach": false,
+   "H0a": false,
+   "H0b": false,
+   "measured_verdict": "H1",
+   "validity": {
+    "harness_failure": true,
+    "retained_as_disclosed_exception": true
+   }
+  },
+  "2": {
+   "B": 900,
+   "mysql_1461_total": 0,
+   "final_complete_rung": 700,
+   "final_complete_rung_last5": [
+    29822,
+    29822,
+    29822,
+    29822,
+    29822
+   ],
+   "prepared_stmt_count_max_whole_apply": 29824,
+   "H1_1_no_1461": true,
+   "H1_2_breach_above_700": true,
+   "H1_3_stabilizes_below_cap": true,
+   "H1_3_cap_only_at_breach": false,
+   "H0a": false,
+   "H0b": false,
+   "measured_verdict": "H1",
+   "validity": {
+    "harness_failure": false,
+    "retained_as_disclosed_exception": false
+   }
+  }
+ },
+ "measured_outcome_all_reps": [
+  "H1",
+  "H1"
+ ],
+ "campaign_verdict": "H1 (mechanism confirmed)",
+ "campaign_verdict_basis": "rep 1 retained as a disclosed exception to the \u00a75 invalid-rep rule",
+ "strict_alternative": "not decided (fewer than 2 valid reps)",
+ "strict_alternative_basis": "blanket \u00a75 exclusion of any rep with a harness failure"
+}

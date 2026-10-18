@@ -1,0 +1,234 @@
+{
+ "1": {
+  "campaign": "typical-dbsat-pscap-4x-r1-20261017",
+  "samples_total": 489,
+  "samples_missing_prepared": 0,
+  "max_gap_s": 15.169,
+  "limit_values_seen": [
+   65528
+  ],
+  "mysql_1461_cumulative_first_last": [
+   0,
+   0
+  ],
+  "prepared_stmt_count_max_whole_apply": 29803,
+  "rungs": [
+   {
+    "rps": 300,
+    "window_start_utc": "2026-10-17T16:16:32.491Z",
+    "window_end_utc": "2026-10-17T16:37:20Z",
+    "step_status": "complete",
+    "samples": 83,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 0,
+    "prepared_stmt_count_peak": 7821,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T16:37:05.787000+00:00",
+    "prepared_stmt_count_last5": [
+     7755,
+     7755,
+     7755,
+     7755,
+     7821
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 154,
+    "stmts_per_connection_at_peak": 50.8,
+    "stmts_per_connection_range": [
+     38.1,
+     56.4
+    ]
+   },
+   {
+    "rps": 500,
+    "window_start_utc": "2026-10-17T16:48:01.890Z",
+    "window_end_utc": "2026-10-17T17:08:49Z",
+    "step_status": "complete",
+    "samples": 83,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 0,
+    "prepared_stmt_count_peak": 16542,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T17:08:20.909000+00:00",
+    "prepared_stmt_count_last5": [
+     16491,
+     16507,
+     16527,
+     16542,
+     16542
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 386,
+    "stmts_per_connection_at_peak": 42.9,
+    "stmts_per_connection_range": [
+     27.9,
+     58.1
+    ]
+   },
+   {
+    "rps": 700,
+    "window_start_utc": "2026-10-17T17:24:21.021Z",
+    "window_end_utc": "2026-10-17T17:45:32Z",
+    "step_status": "complete",
+    "samples": 84,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 32,
+    "prepared_stmt_count_peak": 28488,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T17:45:20.907000+00:00",
+    "prepared_stmt_count_last5": [
+     28294,
+     28388,
+     28416,
+     28469,
+     28488
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 500,
+    "stmts_per_connection_at_peak": 57.0,
+    "stmts_per_connection_range": [
+     41.9,
+     57.0
+    ]
+   },
+   {
+    "rps": 900,
+    "window_start_utc": "2026-10-17T18:07:09.125Z",
+    "window_end_utc": "2026-10-17T18:16:08.164Z",
+    "step_status": "breach stop (no live collect)",
+    "samples": 36,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 3396,
+    "prepared_stmt_count_peak": 29800,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T18:16:05.797000+00:00",
+    "prepared_stmt_count_last5": [
+     29757,
+     29771,
+     29788,
+     29796,
+     29800
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 503,
+    "stmts_per_connection_at_peak": 59.6,
+    "stmts_per_connection_range": [
+     57.0,
+     59.6
+    ]
+   }
+  ]
+ },
+ "2": {
+  "campaign": "typical-dbsat-pscap-4x-r2-20261017",
+  "samples_total": 576,
+  "samples_missing_prepared": 0,
+  "max_gap_s": 15.21,
+  "limit_values_seen": [
+   65528
+  ],
+  "mysql_1461_cumulative_first_last": [
+   0,
+   0
+  ],
+  "prepared_stmt_count_max_whole_apply": 29824,
+  "rungs": [
+   {
+    "rps": 300,
+    "window_start_utc": "2026-10-17T19:36:20.765Z",
+    "window_end_utc": "2026-10-17T19:57:03Z",
+    "step_status": "complete",
+    "samples": 83,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 0,
+    "prepared_stmt_count_peak": 5260,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T19:56:23.515000+00:00",
+    "prepared_stmt_count_last5": [
+     5202,
+     5259,
+     5260,
+     5260,
+     5260
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 108,
+    "stmts_per_connection_at_peak": 48.7,
+    "stmts_per_connection_range": [
+     37.3,
+     54.1
+    ]
+   },
+   {
+    "rps": 500,
+    "window_start_utc": "2026-10-17T20:07:26.929Z",
+    "window_end_utc": "2026-10-17T20:28:12Z",
+    "step_status": "complete",
+    "samples": 83,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 0,
+    "prepared_stmt_count_peak": 15230,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T20:27:38.307000+00:00",
+    "prepared_stmt_count_last5": [
+     15227,
+     15229,
+     15230,
+     15230,
+     15230
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 271,
+    "stmts_per_connection_at_peak": 56.2,
+    "stmts_per_connection_range": [
+     35.6,
+     56.4
+    ]
+   },
+   {
+    "rps": 700,
+    "window_start_utc": "2026-10-17T20:43:48.661Z",
+    "window_end_utc": "2026-10-17T21:04:42Z",
+    "step_status": "complete",
+    "samples": 84,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 1194,
+    "prepared_stmt_count_peak": 29822,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T21:03:08.477000+00:00",
+    "prepared_stmt_count_last5": [
+     29822,
+     29822,
+     29822,
+     29822,
+     29822
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 503,
+    "stmts_per_connection_at_peak": 59.6,
+    "stmts_per_connection_range": [
+     42.8,
+     59.6
+    ]
+   },
+   {
+    "rps": 900,
+    "window_start_utc": "2026-10-17T21:26:21.441Z",
+    "window_end_utc": "2026-10-17T21:35:07.870Z",
+    "step_status": "overload observation",
+    "samples": 35,
+    "mysql_1461_delta": 0,
+    "mysql_1040_delta": 3698,
+    "prepared_stmt_count_peak": 29824,
+    "prepared_stmt_count_peak_at_utc": "2026-10-17T21:31:23.342000+00:00",
+    "prepared_stmt_count_last5": [
+     29824,
+     29824,
+     29824,
+     29824,
+     29824
+    ],
+    "first_sample_at_cap_utc": null,
+    "threads_connected_max": 503,
+    "stmts_per_connection_at_peak": 59.6,
+    "stmts_per_connection_range": [
+     59.3,
+     59.6
+    ]
+   }
+  ]
+ }
+}

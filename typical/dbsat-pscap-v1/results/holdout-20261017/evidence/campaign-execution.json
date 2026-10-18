@@ -1,0 +1,217 @@
+{
+  "campaign": "typical-dbsat-pscap-v1-20261017",
+  "wiringSha": "b4d05afbc8ec7d61616af4231dc876443f2a5b81",
+  "measurementContentSha": "881e0cffd51da084be4a24ffd13366dfbb67063f",
+  "schedulingDisclosure": "reps run same UTC day (prereg: different days where possible)",
+  "freshApplyEachRep": true,
+  "applies": [
+    {
+      "campaign": "typical-dbsat-pscap-4x-r1-20261017",
+      "startedAt": "2026-10-17T15:53:43.182Z",
+      "destroyedAt": "2026-10-17T18:24:11.502Z",
+      "recordedOutcome": "holdout harness/infrastructure failure",
+      "ownerAcceptedRep1PartialData": true,
+      "rungs": [
+        {
+          "rate": 300,
+          "startedAt": "2026-10-17T16:16:32.491Z",
+          "endedAt": "2026-10-17T16:37:20Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 500,
+          "startedAt": "2026-10-17T16:48:01.890Z",
+          "endedAt": "2026-10-17T17:08:49Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 700,
+          "startedAt": "2026-10-17T17:24:21.021Z",
+          "endedAt": "2026-10-17T17:45:32Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 900,
+          "startedAt": "2026-10-17T18:07:09.125Z",
+          "stoppedAt": "2026-10-17T18:16:08.164Z",
+          "abortedRawPreserved": true,
+          "noRungRetry": true
+        }
+      ],
+      "cleanup": [
+        {
+          "kind": "immediate",
+          "checkedAt": "2026-10-17T18:25:37.130Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "staleTagInventoryClassified": true,
+          "sourceSha256": "5ebdde6e94fee50592db7fe034061a3b1306f418ae83e6e4d2e2953ebb92811d",
+          "classifications": {
+            "terminated": 5,
+            "not-found": 14
+          }
+        },
+        {
+          "kind": "delayed",
+          "checkedAt": "2026-10-17T18:40:31.622Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "staleTagInventoryClassified": true,
+          "sourceSha256": "c7644d9faf1c62b7ebaf939bd7c8b3123a9a1aa78c4f98c69d9291e11d277609",
+          "classifications": {
+            "terminated": 5,
+            "not-found": 14
+          }
+        }
+      ],
+      "rds": {
+        "engineVersion": "8.0.46-rds.20260908",
+        "requestedPin": "8.0.46-rds.20260908",
+        "topology": {
+          "alb": "application",
+          "app_count": 4,
+          "app_instance_type": "m5.large",
+          "app_pool_size": 250,
+          "db_engine": "mysql",
+          "db_engine_version": "8.0.46-rds.20260908",
+          "db_instance_class": "db.r5.large",
+          "db_multi_az": false,
+          "generator_instance_type": "c6i.xlarge",
+          "mysql_max_connections": 500,
+          "region": "us-east-2",
+          "test_id": "typical-dbsat-pscap-4x-r1-20261017"
+        },
+        "ami": "ami-0d3d85815a9746bc5",
+        "controllerHash": "b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f"
+      }
+    },
+    {
+      "campaign": "typical-dbsat-pscap-4x-r2-20261017",
+      "startedAt": "2026-10-17T19:14:35.122Z",
+      "destroyedAt": "2026-10-17T22:06:07.705Z",
+      "recordedOutcome": "holdout overload observation",
+      "ownerAcceptedRep1PartialData": false,
+      "rungs": [
+        {
+          "rate": 300,
+          "startedAt": "2026-10-17T19:36:20.765Z",
+          "endedAt": "2026-10-17T19:57:03Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 500,
+          "startedAt": "2026-10-17T20:07:26.929Z",
+          "endedAt": "2026-10-17T20:28:12Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 700,
+          "startedAt": "2026-10-17T20:43:48.661Z",
+          "endedAt": "2026-10-17T21:04:42Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 900,
+          "startedAt": "2026-10-17T21:26:21.441Z",
+          "stoppedAt": "2026-10-17T21:35:07.870Z",
+          "endedAt": "2026-10-17T21:35:07.870Z",
+          "stepStatus": "overload observation",
+          "collectComplete": true,
+          "generatorValid": true,
+          "recovery": "recovery failed",
+          "noRungRetry": true
+        }
+      ],
+      "cleanup": [
+        {
+          "kind": "immediate",
+          "checkedAt": "2026-10-17T22:07:33.834Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "staleTagInventoryClassified": true,
+          "sourceSha256": "6eaa7d82806f855d19360389e267bf22dab36cb90b6f67896e3e314e3714f5bc",
+          "classifications": {
+            "terminated": 5,
+            "not-found": 14
+          }
+        },
+        {
+          "kind": "delayed",
+          "checkedAt": "2026-10-17T22:22:39.924Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "staleTagInventoryClassified": true,
+          "sourceSha256": "55e58f01fa0806c855c614930aaf129d16e52a4ba9e5503878181f695061bac2",
+          "classifications": {
+            "terminated": 5,
+            "not-found": 14
+          }
+        }
+      ],
+      "rds": {
+        "engineVersion": "8.0.46-rds.20260908",
+        "requestedPin": "8.0.46-rds.20260908",
+        "topology": {
+          "alb": "application",
+          "app_count": 4,
+          "app_instance_type": "m5.large",
+          "app_pool_size": 250,
+          "db_engine": "mysql",
+          "db_engine_version": "8.0.46-rds.20260908",
+          "db_instance_class": "db.r5.large",
+          "db_multi_az": false,
+          "generator_instance_type": "c6i.xlarge",
+          "mysql_max_connections": 500,
+          "region": "us-east-2",
+          "test_id": "typical-dbsat-pscap-4x-r2-20261017"
+        },
+        "ami": "ami-0d3d85815a9746bc5",
+        "controllerHash": "b5ba224bba4ae4acff7115d048607124e7fb8f3b8ad8f4a261cd9615b5718b4a"
+      }
+    }
+  ],
+  "noScoringPerformed": true,
+  "rep1OriginalJournalPreserved": true,
+  "rep1NotRerun": true,
+  "rep1Limitation": "900 raw retained and reprocessed offline; no complete live collect or recovery result.",
+  "rep2ControllerSha256": "d27be406bdf19b689b0f7dde86d8c29b76d0716da36fcf79d4a9292c905ee5f0",
+  "rep2ManifestSha256": "b5ba224bba4ae4acff7115d048607124e7fb8f3b8ad8f4a261cd9615b5718b4a"
+}

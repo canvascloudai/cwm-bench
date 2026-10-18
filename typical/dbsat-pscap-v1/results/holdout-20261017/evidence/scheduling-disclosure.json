@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-17T18:46:27.332Z",
+  "disclosure": "reps run same UTC day (prereg: different days where possible)",
+  "ownerApproved": true,
+  "noCalendarWait": true,
+  "freshApplyRequired": true,
+  "rep1ImmediateAndDelayedCleanupPassed": true,
+  "rep1Campaign": "typical-dbsat-pscap-4x-r1-20261017"
+}
