@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-17T18:44:07.280552+00:00",
+  "offlineOnly": true,
+  "noAwsCalls": true,
+  "noRungRerun": true,
+  "rawGzipBytes": 53008459,
+  "rawGzipSha256": "2cbdd0adb4a67c2d0e16082c8d0c84253f6ec8071c84c5739e664b3974d61e46",
+  "rawGzipMatchesPreservedTransfer": true,
+  "gzipIntegrityVerified": true,
+  "startedAt": "2026-10-17T18:07:35Z",
+  "completedAt": "2026-10-17T18:16:31Z",
+  "stoppedAt": "2026-10-17T18:16:08.164Z",
+  "boundarySources": [
+    "persisted START in archived monitor remote.json",
+    "persisted completed_at in archived adapter run remoteStdout"
+  ],
+  "pinnedSteadyScriptSha256": "20510ebf1024538560f45c8acd1528a00b6c31c60c0b2154323d258f1d9294a5",
+  "pinnedSteadyScriptUnchanged": true,
+  "requestOutcomePoints": 329127,
+  "firstRequestOutcomeUtc": "2026-10-17T18:07:40.345791386Z",
+  "lastRequestOutcomeUtc": "2026-10-17T18:16:20.68709287Z",
+  "requestOutcomesPresentWithStatusAndClass": true,
+  "fullCollectReconstructed": false,
+  "limitations": [
+    "No post-stop live collect or recovery can be recreated offline.",
+    "Original journal and run records unchanged.",
+    "Pinned steady script includes all phase=steady points, including request completions during drain."
+  ]
+}

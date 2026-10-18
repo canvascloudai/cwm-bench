@@ -1,0 +1,108 @@
+--- <runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/controller.ts	2026-10-17 18:43:57.855996581 +0000
++++ <runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build-boundaries/controller.ts	2026-10-17 18:44:09.595996581 +0000
+@@ -371,6 +371,35 @@
+       throw new DbsatInvalid("Run identity, generators, or ascending ladder mismatch");
+     if (stopped && value.stepStatus !== "overload observation")
+       throw new DbsatInvalid("Breach stop did not report overload observation");
++    // The breach teardown can settle the detached run during this iteration.
++    // Its earlier monitor response predates completed_at: reread only after
++    // pending has settled. Never substitute the controller clock or stop time.
++    if (!started || !ended) {
++      const finalParts = await Promise.all(generators.map(g =>
++        liveMinutes(cloud, s, e, g, runId, ++tick)));
++      const starts = finalParts.map(p => p.start);
++      const ends = finalParts.map(p => p.end);
++      if (starts.every(t => t && Number.isFinite(Date.parse(t))) &&
++          ends.every(t => t && Number.isFinite(Date.parse(t)))) {
++        if (Math.max(...starts.map(t => Date.parse(t!))) -
++            Math.min(...starts.map(t => Date.parse(t!))) > 10_000)
++          throw new DbsatInvalid("Generator start windows are not synchronized");
++        const persistedStart = starts.sort().at(-1)!;
++        const persistedEnd = ends.sort().at(-1)!;
++        if ((started && Date.parse(started) !== Date.parse(persistedStart)) ||
++            Date.parse(persistedEnd) < Date.parse(persistedStart) ||
++            (stopped && Date.parse(persistedEnd) < Date.parse(stopped)))
++          throw new DbsatInvalid("Persisted generator run boundaries inconsistent");
++        started = persistedStart;
++        ended = persistedEnd;
++        await io.json(path.join(s.out, `persisted-boundaries-${runId}.json`), {
++          startedAt: started, completedAt: ended, rereadAfterRunSettled: true,
++          sources: finalParts.map((p, index) => ({
++            generator: generators[index], startedAt: p.start, completedAt: p.end
++          }))
++        });
++      }
++    }
+     if (!started || !ended) throw new DbsatInvalid("Persisted generator run boundaries missing");
+     // Start the 15-minute recovery clock immediately, not after raw transfers
+     // or possibly slow collect retries. Run is already stopped on all generators.
+@@ -941,7 +970,7 @@
+ let pscapCapture: DiagnosticCapture | undefined;
+ const execFileAsync = promisify(execFileCallback);
+ async function controllerManifest() {
+-  return JSON.parse(await fs.readFile(path.join(PSCAP_ROOT,"build/manifest.json"),"utf8"));
++  return JSON.parse(await fs.readFile(path.join(PSCAP_ROOT,"build-boundaries/manifest.json"),"utf8"));
+ }
+ function variables(...args: Parameters<typeof baseVariables>) {
+   return [...baseVariables(...args), "-var=mysql_max_prepared_stmt_count=65528"];
+@@ -1042,22 +1071,54 @@
+   root=PSCAP_ROOT;
+   await fs.mkdir(root,{recursive:true,mode:0o700});
+   const manifest=await controllerManifest();
+-  const offline=JSON.parse(await fs.readFile(path.join(root,"offline-preflight.json"),"utf8"));
++  const offline=JSON.parse(await fs.readFile(path.join(root,"offline-boundaries-preflight.json"),"utf8"));
+   if (!offline.passed || offline.manifestSha256!==manifest.sha256)
+     throw new DbsatPause("Full offline suite/manifest proof required before AWS");
+-  // On the second rep, wait without any cloud credential/API access or live stack.
++  // Owner-approved scheduling deviation only: fresh rep 2 immediately after all cleanup.
+   if (rep===2) {
+     const prior=JSON.parse(await fs.readFile(path.join(root,"runner-state.json"),"utf8"));
++    const repairApproval=JSON.parse(await fs.readFile(path.join(root,"owner-boundaries-approval.json"),"utf8"));
++    if(repairApproval.approved!==true || repairApproval.predecessorManifestSha256!=="b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f" ||
++       repairApproval.noRep1Rerun!==true)
++      throw new DbsatPause("Owner boundary repair approval required");
+     const accepted=prior.applies.find((a:any)=>a.phase==="r1" && a.delayed &&
+-      ["holdout overload observation","holdout ladder complete without breach"].includes(a.outcome));
++      (["holdout overload observation","holdout ladder complete without breach"].includes(a.outcome) ||
++       (a.campaign===repairApproval.rep1Campaign && a.failedStage==="workload" &&
++        prior.paused==="Error: Persisted generator run boundaries missing" &&
++        a.rungs.length===4 && a.rungs.slice(0,3).every((r:any,i:number)=>
++          r.rate===[300,500,700][i] && r.collectComplete && r.generatorValid) &&
++        a.rungs[3].rate===900 && a.rungs[3].abortedRawPreserved &&
++        a.rungs[3].stoppedAt && !a.rawRetentionBlocked)));
+     if (!accepted) throw new DbsatPause("Rep 1 not valid and cleaned");
+-    const nextDay=Date.parse(accepted.startedAt.slice(0,10)+"T00:00:00Z")+86400000;
+-    if(Date.now()<nextDay)console.log(`PSCAP_WAIT_NEXT_UTC_DAY ${new Date(nextDay).toISOString()} no-live-stack=true`);
+-    await io.wait(Math.max(0,nextDay-Date.now()));
++    if (prior.applies.some((a:any)=>a.startedAt && !a.delayed))
++      throw new DbsatPause("Rep 1 cleanup incomplete; no stack reuse");
++    const schedulingApproval=JSON.parse(await fs.readFile(path.join(root,"owner-same-day-scheduling-approval.json"),"utf8"));
++    if(schedulingApproval.approved!==true || schedulingApproval.predecessorManifestSha256!=="b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f")
++      throw new DbsatPause("Owner scheduling approval missing");
++    await io.json(path.join(root,"out","scheduling-disclosure.json"),{
++      at:new Date().toISOString(),disclosure:"reps run same UTC day (prereg: different days where possible)",
++      ownerApproved:true,noCalendarWait:true,freshApplyRequired:true,
++      rep1ImmediateAndDelayedCleanupPassed:true,rep1Campaign:accepted.campaign
++    });
+   }
+   await withProcessLock(path.join(ROOT,".controller.flock"),async()=>{
+     if(await exists(path.join(root,"runner-state.json"))) {
+       j=JSON.parse(await fs.readFile(path.join(root,"runner-state.json"),"utf8"));
++      if(rep===2 && j.controller.sha256==="b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f" &&
++        !j.applies.some((a:any)=>a.phase==="r2") &&
++        !j.applies.some((a:any)=>a.startedAt && !a.delayed)) {
++        j.controllerTransitions??=[];
++        j.controllerTransitions.push({at:new Date().toISOString(),
++          predecessor:j.controller,newController:manifest,
++          scope:"owner-approved controller boundary reread fix; retain rep 1 partial data without rerun; fresh rep 2",
++          disclosure:"reps run same UTC day (prereg: different days where possible)"});
++        j.ownerAcceptedRep1PartialData={at:new Date().toISOString(),
++          approval:"owner-boundaries-approval.json",noRep1Rerun:true,
++          completeCollectRates:[300,500,700],preservedBreachRawRate:900,
++          originalApplyAndRungRecordsUnchanged:true};
++        j.controller=manifest;
++        await save();
++      }
+       if(j.controller.sha256!==manifest.sha256 || j.measurementSha!==DBSAT.sha ||
+         j.applies.some((a:any)=>a.startedAt && !a.delayed && (a.rungs.length || a.rawRetentionBlocked)))
+         throw new DbsatPause("Mid-workload interruption; retain evidence and ask Kevin");

@@ -1,0 +1,6 @@
+{
+  "at": "2026-10-17T18:18:06.573Z",
+  "stage": "workload",
+  "reason": "Error: Persisted generator run boundaries missing",
+  "rungsStarted": 4
+}
