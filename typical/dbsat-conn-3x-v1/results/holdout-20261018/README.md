@@ -11,7 +11,7 @@ These are redacted results for the 3× MySQL server-limit holdout preregistered 
   - MySQL errno 1040 was raised about 4,000 times;
   - `Threads_connected` was 503 against `max_connections` = 500;
   - there were zero errno 1461 errors, and peak `Prepared_stmt_count` was 29,750 against 65,528.
-- **At 700 RPS**, the rung where the breach was predicted, `Threads_connected` peaked at 442 / 434. The steady error rate was 0.008% / 0.013%, and P95 was 139 / 192 ms.
+- **At 700 RPS**, the rung where the breach was predicted, `Threads_connected` peaked at 442 / 434. The steady error rate was 0.0078% (r1) / 0.0133% (r2), and P95 was 139 / 192 ms.
 - **E5 caveat** (see "Validity"): both reps pass E5 under the definition the prereg cites. Under a stricter reading of "scheduled", both reps would be invalid and the campaign would be **not decided**, not H0.
 
 ## Integrity
@@ -70,7 +70,7 @@ Breach declarations were at 2026-10-18 16:21:07 UTC (r1) and 19:48:08 UTC (r2).
 Below 900, every steady failure is classed `unclassified`; there are no `too_many_connections` responses.
 
 **The 700 rung was not close to breaching.**
-- The worst monitor minute was 0.026% / 0.038% errors, against the 5% criterion.
+- The steady error rate was 0.0078% (r1) / 0.0133% (r2), against the 5% criterion. The worst monitor minute was 0.026% / 0.038%.
 - P95 was 139 / 192 ms, against 2000 ms.
 - There were no 1040 errors.
 
@@ -88,15 +88,17 @@ Below 900, every steady failure is classed `unclassified`; there are no `too_man
 | 900 | — | 503 / 503 | — | 29,722 / 29,718 | 59.1 / 59.4 |
 
 ## Observations (descriptive; not part of the H1/H0 test)
-- **Connections tracked total RPS, not RPS per app server.**
-  - The frozen reference values read 3× connections off the 4× knots indexed by RPS per server, so 166.7 RPS per server (500 total) gave 471 connections. Measured: 203 / 225.
+- **The holdout rejected the per-server connection scaling.**
+  - The candidate scaled a 4× connection curve by RPS per app server. Its frozen reference values read 3× connections off the 4× knots indexed by RPS per server, so 166.7 RPS per server (500 total) gave 471 connections. Measured: 203 / 225.
   - At the same **total** RPS, 3× used about as many connections as pscap-v1 4×, or fewer. The exception is r2 at 300 (181 against 154 / 108). 3× did not need the much higher counts that the per-server reading implies.
-  - At 700, `Threads_connected` was 442 / 434, below the 490 server-limit threshold. With no 1040s there were no `too_many_connections` responses, and the error rate stayed far below 5%.
+  - At 700, `Threads_connected` was 442 / 434, below the 490 server-limit threshold. With no 1040s there were no `too_many_connections` responses, and the steady error rate stayed at 0.0078% / 0.0133%.
+  - The data is consistent with connection demand following total RPS, and motivates testing a model based on total RPS next. It does not prove that connections depend only on total traffic.
 - **3× and 4× both broke at 900 on `max_connections` = 500.**
   - In both topologies the breach was on the error criterion.
   - In both, `too_many_connections` dominated, at 89.9% of steady failures in each 3× rep and about 88–90% in pscap-v1. `Threads_connected` was 503.
   - 3× was milder at 900: 10.6% / 13.5% errors against 17.2% / 20.1% on 4×.
-- **The statement coefficient held.**
+  - Adding a fourth app server did not improve the first observed overload rung: both 3× and 4× passed 700 RPS and breached at 900 RPS; the exact transition lies between those tested loads.
+- **The statement coefficient held.** The statements-per-open-connection estimate held up much better than the connection-demand prediction.
   - Near the connection plateau there were 56.5–59.4 statements per connection. The frozen coefficient is 59.10.
   - Peak `Prepared_stmt_count` was about 29.7k. The prepared-statement cap was never approached.
 - **Error-share observations:**
@@ -109,7 +111,7 @@ Comparison with `typical-dbsat-pscap-v1` (4×, same parameters, `../../../dbsat-
 |---|---|---|---|---|---|---|---|---|
 | 300 | 154 / 108 | 79 / 181 | 0.005% / 0.003% | 0.006% / 0.003% | 0.000% / 0.000% | 0.000% / 0.000% | 32.0 / 30.2 | 26.1 / 27.2 |
 | 500 | 386 / 271 | 203 / 225 | 0.003% / 0.003% | 0.003% / 0.009% | 0.000% / 0.000% | 0.000% / 0.000% | 54.8 / 52.6 | 45.5 / 47.9 |
-| 700 | 500 / 503 | 442 / 434 | 0.017% / 0.843% | 0.008% / 0.013% | 0.007% / 0.744% | 0.000% / 0.000% | 84.3 / 85.4 | 69.8 / 76.1 |
+| 700 | 500 / 503 | 442 / 434 | 0.017% / 0.843% | 0.0078% / 0.0133% | 0.007% / 0.744% | 0.000% / 0.000% | 84.3 / 85.4 | 69.8 / 76.1 |
 | 900 | 503 / 503 | 503 / 503 | 17.200% / 20.077% | 10.570% / 13.495% | 15.156% / 18.079% | 9.497% / 12.128% | — / 98.5 | 86.9 / 91.7 |
 E5 1 {'controller_dropped': 1721, 'controller_scheduled_full_step': 945000, 'controller_fraction': 0.0018211640211640212, 'k6_dropped': 1721.0, 'k6_iterations_completed': 314655.0, 'scheduled_until_stop': 316376.0, 'fraction_of_scheduled_until_stop': 0.005439729941588489, 'strict_until_stop_ok': False}
 E5 2 {'controller_dropped': 2393, 'controller_scheduled_full_step': 945000, 'controller_fraction': 0.0025322751322751323, 'k6_dropped': 2393.0, 'k6_iterations_completed': 319143.0, 'scheduled_until_stop': 321536.0, 'fraction_of_scheduled_until_stop': 0.007442401472929936, 'strict_until_stop_ok': False}
