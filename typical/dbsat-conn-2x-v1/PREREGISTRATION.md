@@ -79,7 +79,7 @@ All are computed with `typical/dbsat-v1/score_dbsat_v1.py` (`record_from_collect
 
 ### 4.3 Observer occupancy and privileges (recorded before any load; descriptive) [DECISION, r1.2]
 At wait-ready, before the warmup of rung 1, the controller records:
-- **(a) Observer privileges:** `SHOW GRANTS` for the observer/polling DB user, and whether that user holds `SUPER` or `CONNECTION_ADMIN`. Either privilege allows use of MySQL's reserved administrative connection slot above `max_connections`.
+- **(a) Observer privileges:** `SHOW GRANTS` for the observer/polling DB user, and whether that user holds `SUPER` or `CONNECTION_ADMIN`. This is recorded as **reserved-slot eligibility only**. MySQL allows one extra administrative connection beyond `max_connections`, but holding the privilege does not establish that a privileged connection is excluded from the ordinary count.
 - **(b) Non-app occupancy:** a processlist snapshot (`information_schema.PROCESSLIST`) counting non-app connections by user, as observer, `rdsadmin`/system and other. App connections are expected to be zero at that point. The app-user count is recorded as well; if it is not zero, occupancy is reported as not cleanly established.
 - **(c)** The recorded `max_connections` (as in §4.2).
 
@@ -146,7 +146,7 @@ Assumption: 1 ordinary observer/system connection, 0 exempt. App pool ceiling 50
 - In the two exempt scenarios the pool and server limits tie, so the candidate makes **no** TMC or breach prediction ("unknown", not "no breach"). The three-exempt case matches a possible observed total of 503 but does not prove 500 app slots.
 - None of these scenarios changes §5.4–§5.6. They are reported next to the results for interpretation only.
 - **Scoring is always against the primary matrix [DECISION, r1.2].** H1/H0 (§5.4) are **always** scored against the §5.2 primary matrix (one ordinary observer, no other occupancy). No sensitivity case may be selected after results.
-  - The occupancy measured under §4.3 is reported and mapped descriptively to the nearest recorded scenario in this section. The mapping uses the number of non-app connections and whether they hold `SUPER` or `CONNECTION_ADMIN`.
+  - The occupancy measured under §4.3 is reported and mapped descriptively to the nearest recorded scenario in this section. The mapping uses the number of non-app connections and their reserved-slot eligibility. The ordinary/exempt split counts as **established only if the recorded evidence directly supports it**, for example at most one privileged non-app connection and counts consistent with `max_connections`. Otherwise the split is reported as **unknown**. Sensitivity numbers and the primary-scoring lock are unchanged.
   - If the measured occupancy matches an exempt-observer case (where the candidate's breach prediction is "unknown"), the results state this explicitly as context. The rep is still scored against the primary prediction.
   - If occupancy cannot be established (missing or ambiguous records, or app connections above zero at wait-ready), it is reported as **unknown**. Scoring is unaffected, and §4.3 is not an E1–E5 validity input.
 
@@ -165,6 +165,7 @@ Definitions:
   4. 1461 total = 0;
   5. server-limit reached (≥ 490) at or before the 900 rung;
   6. every `Prepared_stmt_count` sample in the apply is < 65,528.
+- **Interpretation of H1.** H1 supports only the rung-and-mechanism prediction (first breach at 900, from server-connection rejections). The connection curve and the ~13.6% rejection share are reported descriptively and are **not** validated by H1.
 - **H0, per rep (fail).** Any of the following:
   - (a) B ≤ 700: a breach at 300, 500 or 700, **by any mechanism** (error or P95);
   - (b) no breach at 900: B ∈ {1100, 1300, 1500, none};
@@ -183,8 +184,10 @@ Definitions:
 **Verdict-bearing evidence (E).** These are the only inputs to §5.4:
 - **E1** — wait-ready `SHOW GLOBAL VARIABLES`: `max_prepared_stmt_count` = 65528 and `max_connections` = 500.
 - **E2** — the breach-monitor per-minute rows for every rung through the breach declaration, or through the last rung if there is no breach.
-- **E3** — the raw k6 `k6.json.gz` for every rung through the breach rung, hash-verified against the generator transfer before destroy. The per-minute P95 and error values and the steady `request_outcomes` are recomputable from it.
-- **E4** — the 15 s observer polls, with ≤ 2 consecutive missing samples from the breach-rung start through declaration + 60 s, and ≤ 10% missing from the first rung start through declaration + 60 s.
+- **E3** — the raw k6 `k6.json.gz` for every rung through the breach rung (with no breach: all seven rung gzips), hash-verified against the generator transfer before destroy. The per-minute P95 and error values and the steady `request_outcomes` are recomputable from it.
+- **E4** — the 15 s observer polls:
+  - **With a breach:** ≤ 2 consecutive missing samples from the breach-rung start through the breach declaration + 60 s, and ≤ 10% missing from the first rung start through the breach declaration + 60 s.
+  - **With no breach (all seven rungs complete):** ≤ 2 consecutive missing samples within every steady phase of all seven rungs, and ≤ 10% missing from the first rung start through the end of the final rung's steady phase.
 - **E5 — generator validity [DECISION, pre-freeze revision r1.1].** The check exists to show that the generator kept up with the requested schedule, so it is split by rung type.
   - **E5-pre: rungs below the breach rung, and every rung if there is no breach.** Both conditions are required:
     - **dropped iterations / (completed k6 iterations + dropped iterations) ≤ 0.005**, counted over the whole rung including warmup, through that rung's end, from the raw k6 `iterations` and `dropped_iterations` counters. A rung with no iterations is unknown and fails E5 (no division by zero);
@@ -193,7 +196,7 @@ Definitions:
     - **CPU:** every 1-minute CloudWatch `CPUUtilization` average for the generator instance, for each UTC minute that overlaps `[rung start, breach stop]` (warmup included), is ≤ 70%. A missing minute fails this condition;
     - **k6 process:** the run record shows the controller-initiated breach stop, and nothing else. That means `partialStep.reason = breach`, an `ADAPTER_K6_STOPPED {"reason":"breach"}` marker whose `at` equals `partialStep.at`, `teardown.k6Stopped = true`, and a k6 exit status of 105 (aborted by the controller's interrupt) or 0. Any other exit status, or a k6 exit before the stop marker, fails;
     - **k6 log:** the full k6 stdout/stderr for the rung has no `level=error` line other than the single `test run was aborted because k6 received a 'interrupt' signal` line written at or after the stop. Script exceptions, `GoError` lines and threshold aborts all fail. `level=warn` lines (for example insufficient VUs) are reported, not scored;
-    - **Harness:** the run record's `error` is null, the remote stderr is empty apart from the k6 log above, and the generator transfer and raw `k6.json.gz` hash verification (E3) succeeded.
+    - **Harness:** up to and including the breach declaration timestamp, the run record has no `error` and the remote stderr is empty apart from the k6 log above (scope set by the controller's problem-record timestamps). A non-null `error` from a post-breach collect or persistence step does **not** invalidate the rep, provided all evidence required by E1–E4 and this generator-health check survives (the post-breach harness-failure rule below). In addition, the generator transfer and raw `k6.json.gz` hash verification (E3) succeeded.
   - **Breach-rung dropped ratios, reported descriptively under both denominators and never scored:**
     - dropped / (completed + dropped) through the actual stop;
     - dropped / (RPS × 1,050), the dbsat-v1 §7.5 full-step denominator.
@@ -287,13 +290,13 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
    - (d) keep conn3-1.0.0's wait-ready `max_connections` recording and timestamped problem records (stage + failure time) for §5.5;
    - (e) compute TMC share of failures and TMC / all-responses at the breach rung in the run summary (descriptive; scoring recomputes both);
    - (f) record §4.3 at wait-ready, before rung-1 warmup:
-     - (a) `SHOW GRANTS` for the observer user, with a `SUPER`/`CONNECTION_ADMIN` flag;
+     - (a) `SHOW GRANTS` for the observer user, with a reserved-slot eligibility flag (`SUPER`/`CONNECTION_ADMIN` held; eligibility only, not proof of exemption);
      - (b) the processlist count of non-app connections by user (observer, `rdsadmin`/system, other) and the app-user count;
      - (c) `max_connections`.
 
      Repeat (b) once at the breach rung, within 60 s of the declaration.
 
-   Required offline tests: a simulated 2× breach captures the InnoDB/error snapshot; a gap in steady minutes resets the breach streak; an early-stopped rung's dropped ratios use elapsed-until-stop counts; a simulated breach stop yields exit 105 with only the interrupt `level=error` line and passes E5-breach, while an injected k6 script error, a non-105 exit, or a missing generator CPU minute fails it; an aborted rung keeps its original raw gzip; a simulated post-breach processing failure produces a timestamped problem record with E1–E5 intact; against a fixture database, the wait-ready occupancy record captures grants with the correct reserved-slot flag (granted and not granted), non-app counts by user with app count zero, and `max_connections`, and the breach-rung processlist re-record is written. Record the new controller manifest SHA256, the diff and the test logs with the evidence.
+   Required offline tests: a simulated 2× breach captures the InnoDB/error snapshot; a gap in steady minutes resets the breach streak; an early-stopped rung's dropped ratios use elapsed-until-stop counts; a simulated breach stop yields exit 105 with only the interrupt `level=error` line and passes E5-breach, while an injected k6 script error, a non-105 exit, or a missing generator CPU minute fails it; an aborted rung keeps its original raw gzip; a simulated post-breach processing failure produces a timestamped problem record with E1–E5 intact; against a fixture database, the wait-ready occupancy record captures grants with the correct reserved-slot eligibility flag (granted and not granted), non-app counts by user with app count zero, and `max_connections`, and the breach-rung processlist re-record is written; a scorer/controller fixture with a non-null **post-breach** run-record error and intact E1–E4 and generator-health evidence scores as valid, and one with a **pre-breach** error is invalid. Record the new controller manifest SHA256, the diff and the test logs with the evidence.
 3. The wiring commit is `main` at freeze, with `git diff 881e0cf -- app-typical/ load/` empty. The evidence records both that commit and 881e0cf.
 
 ## 9. Names and paths
@@ -321,3 +324,10 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
   - the rejection-share transfer stated as an assumption (§5.1).
 
   **No change to frozen numbers, predictions or H1/H0.**
+- r1.3 (2026-10-19, before freeze; approved by Kevin Brown):
+  - the E5 run-record error and stderr checks are scoped to the period up to and including the breach declaration, and a post-breach collect/persistence error with intact evidence does not invalidate the rep; offline fixtures added (§5.5, §8.2);
+  - reserved-slot privileges are recorded as eligibility only, and the ordinary/exempt split counts as established only when the records directly support it, otherwise unknown (§4.3, §5.3, §8.2 (f));
+  - E3/E4 coverage is defined for a run with no breach (§5.5);
+  - an H1 interpretation line is added (§5.4).
+
+  **Frozen numbers, predictions and H1/H0 are unchanged.**
