@@ -1,0 +1,206 @@
+{
+ "prereg": "typical/dbsat-conn-3x-v1/PREREGISTRATION.md \u00a75.3/\u00a75.4",
+ "reps": {
+  "1": {
+   "B": 900,
+   "B_label": 900,
+   "breach_declared_utc": "2026-10-18T16:21:07.004000+00:00",
+   "breach_minutes": [
+    {
+     "minuteUtc": "2026-10-18T16:18:00Z",
+     "errorRate": 0.10094286253064304,
+     "p95Ms": 1304.665701,
+     "overLimit": true
+    },
+    {
+     "minuteUtc": "2026-10-18T16:19:00Z",
+     "errorRate": 0.11640241179097811,
+     "p95Ms": 1339.068198,
+     "overLimit": true
+    },
+    {
+     "minuteUtc": "2026-10-18T16:20:00Z",
+     "errorRate": 0.09659302239083538,
+     "p95Ms": 1337.113289,
+     "overLimit": true
+    }
+   ],
+   "breach_on_error_criterion": true,
+   "tmc_share_at_breach_rung": 0.8985575910718046,
+   "mysql_1461_total": 0,
+   "server_limit_threshold": 490.0,
+   "server_limit_first_reached_rung": 900,
+   "prepared_stmt_count_max_whole_apply": 29747,
+   "H1_conditions": {
+    "1_B_eq_700": false,
+    "2_error_criterion": true,
+    "3_tmc_share_gt_50pct": true,
+    "4_no_1461": true,
+    "5_server_limit_by_700": false,
+    "6_prepared_below_cap": true
+   },
+   "H0_conditions": {
+    "a_B_le_500": false,
+    "b_no_breach_at_700": true,
+    "c_B700_not_connections": false,
+    "d_any_1461": false,
+    "e_prepared_at_or_above_cap": false
+   },
+   "measured_verdict": "H0",
+   "validity": {
+    "E1_wait_ready_variables": true,
+    "E2_breach_monitor_rows": true,
+    "E3_raw_k6_hash_verified": true,
+    "E3_per_rung": {
+     "300": true,
+     "500": true,
+     "700": true,
+     "900": true
+    },
+    "E4_polling": true,
+    "E4_detail": {
+     "breach_rung_to_decl_plus_60s": {
+      "missing": 0,
+      "max_consecutive_missing": 0,
+      "expected": 38
+     },
+     "first_rung_to_decl_plus_60s": {
+      "missing": 0,
+      "max_consecutive_missing": 0,
+      "expected": 454,
+      "missing_fraction": 0.0
+     }
+    },
+    "E5_generator_pre_breach": true,
+    "E5_breach_rung_dropped_ok": true,
+    "E5_breach_rung_detail": {
+     "controller_dropped": 1721,
+     "controller_scheduled_full_step": 945000,
+     "controller_fraction": 0.0018211640211640212,
+     "k6_dropped": 1721.0,
+     "k6_iterations_completed": 314655.0,
+     "scheduled_until_stop": 316376.0,
+     "fraction_of_scheduled_until_stop": 0.005439729941588489,
+     "strict_until_stop_ok": false
+    },
+    "E5": true,
+    "max_prepared_stmt_count_65528": true,
+    "max_connections_500": true,
+    "recorded_max_connections": 500,
+    "problem_records": [],
+    "failures_before_breach": [],
+    "recovery_outcome": "recovery failed",
+    "valid": true,
+    "valid_if_E5_denominator_is_scheduled_until_stop": false
+   }
+  },
+  "2": {
+   "B": 900,
+   "B_label": 900,
+   "breach_declared_utc": "2026-10-18T19:48:08.117000+00:00",
+   "breach_minutes": [
+    {
+     "minuteUtc": "2026-10-18T19:45:00Z",
+     "errorRate": 0.1329890130528688,
+     "p95Ms": 1428.419133,
+     "overLimit": true
+    },
+    {
+     "minuteUtc": "2026-10-18T19:46:00Z",
+     "errorRate": 0.1379463541955906,
+     "p95Ms": 1422.945366,
+     "overLimit": true
+    },
+    {
+     "minuteUtc": "2026-10-18T19:47:00Z",
+     "errorRate": 0.1314012905150871,
+     "p95Ms": 1433.678366,
+     "overLimit": true
+    }
+   ],
+   "breach_on_error_criterion": true,
+   "tmc_share_at_breach_rung": 0.8987158908507223,
+   "mysql_1461_total": 0,
+   "server_limit_threshold": 490.0,
+   "server_limit_first_reached_rung": 900,
+   "prepared_stmt_count_max_whole_apply": 29750,
+   "H1_conditions": {
+    "1_B_eq_700": false,
+    "2_error_criterion": true,
+    "3_tmc_share_gt_50pct": true,
+    "4_no_1461": true,
+    "5_server_limit_by_700": false,
+    "6_prepared_below_cap": true
+   },
+   "H0_conditions": {
+    "a_B_le_500": false,
+    "b_no_breach_at_700": true,
+    "c_B700_not_connections": false,
+    "d_any_1461": false,
+    "e_prepared_at_or_above_cap": false
+   },
+   "measured_verdict": "H0",
+   "validity": {
+    "E1_wait_ready_variables": true,
+    "E2_breach_monitor_rows": true,
+    "E3_raw_k6_hash_verified": true,
+    "E3_per_rung": {
+     "300": true,
+     "500": true,
+     "700": true,
+     "900": true
+    },
+    "E4_polling": true,
+    "E4_detail": {
+     "breach_rung_to_decl_plus_60s": {
+      "missing": 0,
+      "max_consecutive_missing": 0,
+      "expected": 38
+     },
+     "first_rung_to_decl_plus_60s": {
+      "missing": 0,
+      "max_consecutive_missing": 0,
+      "expected": 450,
+      "missing_fraction": 0.0
+     }
+    },
+    "E5_generator_pre_breach": true,
+    "E5_breach_rung_dropped_ok": true,
+    "E5_breach_rung_detail": {
+     "controller_dropped": 2393,
+     "controller_scheduled_full_step": 945000,
+     "controller_fraction": 0.0025322751322751323,
+     "k6_dropped": 2393.0,
+     "k6_iterations_completed": 319143.0,
+     "scheduled_until_stop": 321536.0,
+     "fraction_of_scheduled_until_stop": 0.007442401472929936,
+     "strict_until_stop_ok": false
+    },
+    "E5": true,
+    "max_prepared_stmt_count_65528": true,
+    "max_connections_500": true,
+    "recorded_max_connections": 500,
+    "problem_records": [],
+    "failures_before_breach": [],
+    "recovery_outcome": "recovery failed",
+    "valid": true,
+    "valid_if_E5_denominator_is_scheduled_until_stop": false
+   }
+  }
+ },
+ "valid_reps": [
+  "1",
+  "2"
+ ],
+ "campaign_verdict": "H0",
+ "measured_outcome_all_reps": {
+  "1": "H0",
+  "2": "H0"
+ },
+ "sensitivity_E5_scheduled_until_stop": {
+  "basis": "not the preregistered rule; \u00a75.4 E5 cites dbsat-v1 \u00a77.5, scheduled = RPS x 1050 s",
+  "valid_reps": [],
+  "campaign_verdict": "not decided (fewer than 2 valid reps)",
+  "note": "an invalid rep is not a result (\u00a75.4) and would go to the \u00a77.2 replacement rules"
+ }
+}
