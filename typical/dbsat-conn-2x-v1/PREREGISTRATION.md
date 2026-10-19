@@ -171,12 +171,22 @@ Definitions:
 - **E2** — the breach-monitor per-minute rows for every rung through the breach declaration, or through the last rung if there is no breach.
 - **E3** — the raw k6 `k6.json.gz` for every rung through the breach rung, hash-verified against the generator transfer before destroy. The per-minute P95 and error values and the steady `request_outcomes` are recomputable from it.
 - **E4** — the 15 s observer polls, with ≤ 2 consecutive missing samples from the breach-rung start through declaration + 60 s, and ≤ 10% missing from the first rung start through declaration + 60 s.
-- **E5 — generator validity [DECISION, adopted prospectively].** On every rung through the breach rung (or the last rung if there is no breach):
-  - **dropped iterations / (completed k6 iterations + dropped iterations) ≤ 0.005**, counted over the **whole rung including warmup, through the actual stop** (elapsed until the breach stop, never the full planned rung), from the raw k6 `iterations` and `dropped_iterations` counters;
-  - a rung with no iterations is unknown and fails E5 (no division by zero);
-  - generator CPU steady mean ≤ 70% (dbsat-v1 §7.5).
-  
-  This is the stricter of the two readings disclosed in the conn-3x results. The dbsat-v1 §7.5 ratio, dropped / (RPS × 1,050), is reported **only as a sensitivity** and does not decide validity. The E5 denominator (iterations scheduled by the generator) is not the error-rate denominator of §3.1 (HTTP responses).
+- **E5 — generator validity [DECISION, pre-freeze revision r1.1].** The check exists to show that the generator kept up with the requested schedule, so it is split by rung type.
+  - **E5-pre: rungs below the breach rung, and every rung if there is no breach.** Both conditions are required:
+    - **dropped iterations / (completed k6 iterations + dropped iterations) ≤ 0.005**, counted over the whole rung including warmup, through that rung's end, from the raw k6 `iterations` and `dropped_iterations` counters. A rung with no iterations is unknown and fails E5 (no division by zero);
+    - generator CPU steady mean ≤ 70% (dbsat-v1 §7.5).
+  - **E5-breach: the breach rung.** Dropped iterations are treated as an **overload symptom** and **do not invalidate the rep**. Generator health is required instead, and all of the following must hold:
+    - **CPU:** every 1-minute CloudWatch `CPUUtilization` average for the generator instance, for each UTC minute that overlaps `[rung start, breach stop]` (warmup included), is ≤ 70%. A missing minute fails this condition;
+    - **k6 process:** the run record shows the controller-initiated breach stop, and nothing else. That means `partialStep.reason = breach`, an `ADAPTER_K6_STOPPED {"reason":"breach"}` marker whose `at` equals `partialStep.at`, `teardown.k6Stopped = true`, and a k6 exit status of 105 (aborted by the controller's interrupt) or 0. Any other exit status, or a k6 exit before the stop marker, fails;
+    - **k6 log:** the full k6 stdout/stderr for the rung has no `level=error` line other than the single `test run was aborted because k6 received a 'interrupt' signal` line written at or after the stop. Script exceptions, `GoError` lines and threshold aborts all fail. `level=warn` lines (for example insufficient VUs) are reported, not scored;
+    - **Harness:** the run record's `error` is null, the remote stderr is empty apart from the k6 log above, and the generator transfer and raw `k6.json.gz` hash verification (E3) succeeded.
+  - **Breach-rung dropped ratios, reported descriptively under both denominators and never scored:**
+    - dropped / (completed + dropped) through the actual stop;
+    - dropped / (RPS × 1,050), the dbsat-v1 §7.5 full-step denominator.
+
+  On E5-pre rungs the dbsat-v1 ratio, dropped / (RPS × 1,050), is also reported as a sensitivity only. The E5 iteration denominator is not the §3.1 error-rate denominator (HTTP responses).
+
+  **Rationale.** At an overloaded rung, slow responses tie up VUs, so dropped iterations reflect system saturation rather than a generator that cannot keep up. In `typical-dbsat-conn-3x-v1` the breach rungs measured 0.54% / 0.74% under the strict denominator, with generator CPU under 20%. Generator health measured directly is the relevant test there. Below the breach rung the system is not saturated, so the strict ratio is kept.
 
 A rep is **invalid** (not a result; it follows the §7.2 replacement rules) if any of the following holds:
 - any of E1–E5 is missing or fails;
@@ -199,7 +209,7 @@ No rerun of that rep is made, and no owner exception is needed. Whether a failur
 - The candidate's breach is conditional and ignores latency and non-TMC errors. A breach at or before 700 for those reasons is therefore possible without contradicting the candidate's connection model, which is why §5.4 fixes the H0(a) interpretation in advance.
 
 ## 6. Scoring
-No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` and `db_pressure`, and the §4.2 tables from the observer polls. H1/H0 is a lookup on those tables and the steady k6 outcomes using §3.1, §5.4 and §5.5, by an evaluation script committed with the results. It follows the conn-3x `evaluate_conn3x_v1.py` pattern, with the §3.1 eligible-minute rule recomputed from raw k6, the §5.5 E5 ratio, and the H0(a) interpretation. There are no transitions and no §7.4 confirmation in this campaign.
+No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` and `db_pressure`, and the §4.2 tables from the observer polls. H1/H0 is a lookup on those tables and the steady k6 outcomes using §3.1, §5.4 and §5.5, by an evaluation script committed with the results. It follows the conn-3x `evaluate_conn3x_v1.py` pattern, with the §3.1 eligible-minute rule recomputed from raw k6, the §5.5 E5-pre ratio and E5-breach generator-health checks, and the H0(a) interpretation. There are no transitions and no §7.4 confirmation in this campaign.
 
 **Descriptive comparisons (not scored):** measured per-rung median-of-minute-max `Threads_connected`, `Prepared_stmt_count` and TMC / all-responses share against §5.2 and §5.3; app CPU per node against conn-3x and pscap-v1.
 
@@ -254,11 +264,16 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
 2. **Runner-side controller (not in this repo).** Start from the conn-3x controller **conn3-1.0.0** (controller SHA256 `b75972e03de0d5558a35524332f3e68fe7b7139b07e7317b64e9437558320414`, manifest SHA256 `c6ade740bc1dabc418382e7a898bc1398e6761f676d529b8698cac0298717465`). Changes before any paid apply:
    - (a) accept the 2× app count and the §9 IDs;
    - (b) apply the §3.1 breach rule with explicit complete-steady-minute eligibility (a missing or incomplete minute breaks the streak);
-   - (c) record per rung the raw k6 completed and dropped iterations through the actual stop, warmup included, and report the §5.5 E5 ratio, with the dbsat-v1 RPS × 1,050 ratio alongside as a sensitivity;
+   - (c) record per rung the raw k6 completed and dropped iterations through the rung's end or the actual stop, warmup included. Report the §5.5 strict ratio and the dbsat-v1 RPS × 1,050 ratio side by side;
+   - (c2) at the breach rung, record generator health for §5.5 E5-breach:
+     - per-minute generator `CPUUtilization` covering every minute from rung start through the breach stop, re-read after the stop. In the conn-3x collects the series ended 1–2 minutes before the stop;
+     - the k6 exit status and the stop marker;
+     - the **full** k6 stdout/stderr log, not only the tail kept in the run record;
+     - the run record's `error` field;
    - (d) keep conn3-1.0.0's wait-ready `max_connections` recording and timestamped problem records (stage + failure time) for §5.5;
    - (e) compute TMC share of failures and TMC / all-responses at the breach rung in the run summary (descriptive; scoring recomputes both).
 
-   Required offline tests: a simulated 2× breach captures the InnoDB/error snapshot; a gap in steady minutes resets the breach streak; an early-stopped rung's E5 ratio uses elapsed-until-stop counts; an aborted rung keeps its original raw gzip; a simulated post-breach processing failure produces a timestamped problem record with E1–E5 intact. Record the new controller manifest SHA256, the diff and the test logs with the evidence.
+   Required offline tests: a simulated 2× breach captures the InnoDB/error snapshot; a gap in steady minutes resets the breach streak; an early-stopped rung's dropped ratios use elapsed-until-stop counts; a simulated breach stop yields exit 105 with only the interrupt `level=error` line and passes E5-breach, while an injected k6 script error, a non-105 exit, or a missing generator CPU minute fails it; an aborted rung keeps its original raw gzip; a simulated post-breach processing failure produces a timestamped problem record with E1–E5 intact. Record the new controller manifest SHA256, the diff and the test logs with the evidence.
 3. The wiring commit is `main` at freeze, with `git diff 881e0cf -- app-typical/ load/` empty. The evidence records both that commit and 881e0cf.
 
 ## 9. Names and paths
@@ -271,10 +286,11 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
 ## 10. Risks
 - **App tier first.** On 2×, 700 RPS is 350 RPS per server and 900 is 450, well above any per-server load measured in pscap-v1 or conn-3x. App CPU, the event loop or `queueLimit` could breach first at or below 700. That is H0(a) and, with TMC share ≤ 50%, leaves the server-limit component untested (§5.4).
 - **Pool and server tie.** With a 500 pool fleet against `max_connections` 500, a small change in observer/system occupancy moves the binding limit between the pool and the server (§5.3). Pool waits instead of `too_many_connections` rejections would show as H0(c) or a P95-only breach (mixed).
-- **Stricter E5 at the breach rung.** Under the §5.5 ratio, the conn-3x breach rungs measured 0.54% and 0.74%, above 0.5%. If 2× overload behaves the same, reps can be invalid, replacements may not fix it, and the campaign can end **not decided**. This is accepted in advance; the rule is not relaxed after the fact.
+- **Generator health at the breach rung.** Dropped iterations at the breach rung no longer decide validity (§5.5). The rep can still be invalid if generator CPU goes above 70%, a CPU minute is missing, or k6 logs an error other than the controller's interrupt. The strict dropped ratio still applies below the breach rung, so a generator that falls behind before saturation invalidates the rep.
 - **Extrapolation.** The demand curve is applied to a topology it was not fitted on, and its leave-rep fits disagree on the exponent (1.24–1.76).
 - Reps may disagree. The result is then "not decided", with no third rep.
 - The recovery-rule artifact and the AAS window-end null bug may recur. They are disclosed and not scored.
 
 ## 11. Changelog
 - r1 (2026-10-18): initial draft.
+- r1.1 (2026-10-19, before freeze; approved by Kevin Brown): E5 split into E5-pre (strict dropped ratio, unchanged) and E5-breach (generator health instead of dropped iterations; both dropped ratios descriptive) (§5.5). Controller requirement (c2) and offline tests added (§8.2). Risk text updated (§10). **No change to predictions (§5.1–§5.3, §5.6) or to H1/H0 (§5.4).**
