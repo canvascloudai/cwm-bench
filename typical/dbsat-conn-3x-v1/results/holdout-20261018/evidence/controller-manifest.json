@@ -1,0 +1,285 @@
+{
+  "version": "conn3-1.0.0",
+  "predecessorControllerSha256": "d27be406bdf19b689b0f7dde86d8c29b76d0716da36fcf79d4a9292c905ee5f0",
+  "controllerSha256": "b75972e03de0d5558a35524332f3e68fe7b7139b07e7317b64e9437558320414",
+  "sha256": "c6ade740bc1dabc418382e7a898bc1398e6761f676d529b8698cac0298717465",
+  "wiringSha": "9aee7d15bd513bdb25dd2b8da53407142ea81f37",
+  "wiringTree": "855d55faa289b3682b8e055e0620caf5f4631427",
+  "measurementBasis": "881e0cffd51da084be4a24ffd13366dfbb67063f",
+  "files": [
+    {
+      "file": "scripts/run-cwm-bench-dbsat.ts",
+      "sha256": "0eec4df56f117c7d1abbac42c57d46fe6feb281be3f4c68e314313fc82f5932d"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-contract.ts",
+      "sha256": "7d55c019956767cc277991a87fb3ead107d61adaec77c8e530256ee804ec8204"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-observe.ts",
+      "sha256": "e5676ea2b5f05e4cdf7e6674bd2597aa7e7b1e1e46ad3fbac7247b6666d33bc3"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-live.py",
+      "sha256": "e41977933b52ce90284924751d3047e2477e5997c24eaf78660666e9517091dd"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-contract.node-test.ts",
+      "sha256": "2d24c35faa01183714395ca575a41e5417f17a03a097235a4f03f62cf842d66c"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-transport.ts",
+      "sha256": "2455193ca6aba1b40d21d45998ec301b681f465aec6bc3ce8094e81d4ab2b10c"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-preserve.ts",
+      "sha256": "e9b941b18fdfde15cdd2d2f0f489e37de3f5cee75f1f83a4fef8f61db2f91fdc"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-review.ts",
+      "sha256": "b42d12380526c4efb5991624398af5ad5267a684bb9b1c9cd7bb4f5fc35f3da2"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-review.node-test.ts",
+      "sha256": "ac9ea165a44aaa04d528679acba625a7ef67e0e2980006c99753eca8fef28b1f"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-first-review.ts",
+      "sha256": "bd1d425bf1b96dd334398bb2ba8647d843abfedf732b213f7cb5930639c43e27"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-first-review.node-test.ts",
+      "sha256": "424451d939428613823c827eb1d52de954810b9a0e4be195527fa786c2be2d40"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-preapply-recovery.ts",
+      "sha256": "8040475a862bb33cc9a1c37b25f14d05fac91553b39992daf215afd45c88dd8d"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-preapply-recovery.node-test.ts",
+      "sha256": "e8ad2e231adb9f4ae73ddbe9571940ae163d8c29e27c6761a351bc926022036b"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-transfer-audit.node-test.ts",
+      "sha256": "1c7960bbb67fa1ef9946917bbcc34807735383ca5fe76705086a316e8a943c63"
+    },
+    {
+      "file": "scripts/cwm-bench-checkout-proof.ts",
+      "sha256": "9d089fc1b80d80029e7dd89a133754fd88a47245693bdcf4bf796a11354de187"
+    },
+    {
+      "file": "scripts/cwm-bench-checkout-proof.node-test.ts",
+      "sha256": "0954866559bca34ad51869a19a86744e72a733ca8f08ef66f728671f5ee7ea1c"
+    },
+    {
+      "file": "scripts/run-cwm-bench-checkout-1.1.9.ts",
+      "sha256": "1ae2beb9ccf77d34005369515b4c4ebb58de813a4fe9a93b5f8a2ed9e1717063"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-approved-checkout.ts",
+      "sha256": "c9601ed94f73cdf026ae3b665f0cc67bce755edba6c0ae9b4cb28614d7625dba"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-approved-checkout.node-test.ts",
+      "sha256": "41968fa51083e5851ce920ac4a38763887c81021829dffd3e78b42dfdab47423"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-interruption.node-test.ts",
+      "sha256": "4bbdcc13a377291450c39d67d97d2f55480bb8ffe8eed4cae02ed97c48f81bb9"
+    },
+    {
+      "file": "scripts/fixtures/cwm-bench-dbsat-interruption-harness.ts",
+      "sha256": "8a0f21d145acf1dc6a4c51211af242f22f01c1d0154065093316db1b60db0f3d"
+    },
+    {
+      "file": "scripts/cwm-bench-process-lock.ts",
+      "sha256": "295dcd0e3dceb965aa4d674395ed871500de81a4733cfca8fd9e213f03e01825"
+    },
+    {
+      "file": "scripts/cwm-bench-holdout-io.ts",
+      "sha256": "438b71a00c545baf70d93d82e4d009666128d7e243dc3ea4ad7e2856dd5565b1"
+    },
+    {
+      "file": "scripts/cwm-bench-holdout-contract.ts",
+      "sha256": "f9a3635b71637b0ecda4c6f52a9d82b4355664ec87ba5db7eeda3b58f3b15838"
+    },
+    {
+      "file": "scripts/cwm-bench-typical-contract.ts",
+      "sha256": "9a8a1dd4a8fb3e56e4bccc44a270ca08be0b9482bb755fea3fd41b5482657e37"
+    },
+    {
+      "file": "scripts/cwm-bench-scale-cloud.ts",
+      "sha256": "7102e90bb656b493b07ae9440df7b118e491cd2c887db598d70260fcc4057f80"
+    },
+    {
+      "file": "scripts/cwm-bench-scale-cleanup.ts",
+      "sha256": "31befaa854b482eb2068f6bd316806fa7b4a5dc387d5305ee974b516e62409bf"
+    },
+    {
+      "file": "scripts/cwm-bench-scale-evidence.ts",
+      "sha256": "2eae9b581204b04639531cbecc8482333b8b84c82b17802a15b0d50c34e43c2b"
+    },
+    {
+      "file": "scripts/cwm-bench-holdout-cleanup.ts",
+      "sha256": "31ee5b3fdb18542341b25d64a0206c782a21766bfc67f5bcc56b0caef288fdd2"
+    },
+    {
+      "file": "scripts/cwm-bench-p95-cloud.ts",
+      "sha256": "92b7dbfa419248b49bb4eb5f941efcedbe8696561d5f131eb3282a20e2f83e1b"
+    },
+    {
+      "file": "scripts/cwm-bench-p95-raw.ts",
+      "sha256": "f8d37eeed3b2b340f67c83ffebd4470898419e04edbdf7c3a1af8326f1ff27eb"
+    },
+    {
+      "file": "scripts/cwm-bench-p95-contract.ts",
+      "sha256": "49cc92bc70916698d03e04a920e11cdaef32a1017e98adb5118020be9490e3a7"
+    },
+    {
+      "file": "scripts/cwm-bench-scale-contract.ts",
+      "sha256": "23fa718ce04673b3122625b10636ab44a0c0538d34111d1834d1cb961665801d"
+    },
+    {
+      "file": "scripts/cwm-bench-p95-staging.ts",
+      "sha256": "d45310aa218e2630fa68b318a29c73bd0648f218216ffe8710212806487f814c"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-cleanup.ts",
+      "sha256": "5c61f7033d18451eb5e6c871276660148a0e7d12326647d9f5a1bdaed7c2560c"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-cleanup.node-test.ts",
+      "sha256": "4240a3616dd02c71cb4cc075af0022e90a37cbe1e4a987343d0492691c55c98f"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-adapter.mjs",
+      "sha256": "18f4c4013326c053c5d7f403141e0dbce6d18976f898d27dd0c72acb95c9f2a9"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-adapter.node-test.ts",
+      "sha256": "66b4961431fb32fe3f09be1e5301ebe0b3a16c456dcb141a2465077e98a7805f"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-adapter.fixture.mjs",
+      "sha256": "82eaaf99ad99ae60c90e12087f3d2577076eb7c4bf0c08dd51ccc921157092a6"
+    },
+    {
+      "file": "scripts/build-cwm-bench-pscap.mjs",
+      "sha256": "4e80df0bfd620b08b0e599a1737dd2861c57dd2b2e4ca174ba04ed0bdc0153dc"
+    },
+    {
+      "file": "scripts/fixtures/cwm-bench-pscap-entry.ts.txt",
+      "sha256": "684d04f69c125eedcc27ed7fa3a6d68e03c4c1d893db010a0bca9ed7b1c41f6d"
+    },
+    {
+      "file": "scripts/run-cwm-bench-pscap.mjs",
+      "sha256": "e64200f537d94079537342a3bae680756afe21e3f2ffe8db08f60df49d746d0f"
+    },
+    {
+      "file": "scripts/cwm-bench-pscap.node-test.mjs",
+      "sha256": "d21f2c255b058f61d35977fc34b2c197221084a1f5b94d8dc1a87fa3837712cc"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-diagnostic-hooks.ts",
+      "sha256": "4e978774b5e7b64c95abee74fa1af74ce2f542e11f57a2c44e6ebace8b914506"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-diagnostic-data.mjs",
+      "sha256": "5d1ed1d19ee373b4c09af12d69a2604bd96c23f4f599dcb997dfb5bda916f74d"
+    },
+    {
+      "file": "scripts/cwm-bench-dbsat-diagnostic-observer.cjs",
+      "sha256": "f1291adaffdee1f17b0c16ae0cab4379928c1986da14064ff83d69a636900f12"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/contract.ts",
+      "sha256": "681b53d9650c8f38cdf5bb4a3b617a8768ed4200461250105282afc6462b0b62"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/review.ts",
+      "sha256": "a160d572beb5d91c6cc6072401f366bafcbfdde2f65a0191a7089488e0d72984"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/observer.cjs",
+      "sha256": "22da49fba91a196f08c7b72161bde1a753fcd0cb38a494c52041817ae464a9d8"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/hooks.ts",
+      "sha256": "b6ed23a497c0a48b6ddaff77a51c6c4a92758dec62aa0ca185d29b4e467888ee"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/controller.ts",
+      "sha256": "19182a94b835b34a864f353917ed036a12aab26322e404e09afbe1687080361c"
+    },
+    {
+      "file": "scripts/cwm-bench-pscap-same-day.mjs",
+      "sha256": "de877ce545de064a278dff661e26bdab0fdf74a6e851a9c2982eeeff39db9919"
+    },
+    {
+      "file": "scripts/cwm-bench-pscap-same-day.node-test.mjs",
+      "sha256": "461cf29c0b1b7fb5807ee3d2a0afc5fd09a8433edc5da35f7555dacdec56cfe2"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build-same-day/controller.ts",
+      "sha256": "4941e5af23c176861a43ae71d2acb812bf0189051dd6adcc8933495d69af11ba"
+    },
+    {
+      "file": "scripts/cwm-bench-pscap-boundaries.mjs",
+      "sha256": "e69d2eef596684c86e9c1c0107c13b000092e2af84ba9cb420f13343b8049435"
+    },
+    {
+      "file": "scripts/cwm-bench-pscap-boundaries.node-test.mjs",
+      "sha256": "b9f523ca413976ddec37a644f50fb4c25ecae8cc9de5393577e6cb5d78aba629"
+    },
+    {
+      "file": "scripts/run-cwm-bench-pscap-boundaries.mjs",
+      "sha256": "03c4db6f4253a71fc7b3c0276773837752434bdd0d34cb5a39f9f6fd46a172a2"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build-boundaries/controller.ts",
+      "sha256": "d27be406bdf19b689b0f7dde86d8c29b76d0716da36fcf79d4a9292c905ee5f0"
+    },
+    {
+      "file": "scripts/build-cwm-bench-conn3.mjs",
+      "sha256": "0f7843cffba77a9c4d8bb57d908bd43ed6c6328654f11507e4d936b93fe00699"
+    },
+    {
+      "file": "scripts/fixtures/cwm-bench-conn3-entry.ts.txt",
+      "sha256": "8524b4526cd73c7c4547f5c0ed64fb1fd4cf0b2fbad63ac72d45ca3c04ff1fa3"
+    },
+    {
+      "file": "scripts/cwm-bench-conn3-evidence.ts",
+      "sha256": "ea42d224856b7a1d6fb3e1ba94ecf17ecfb8d5b45d5e61d20a8e36ad31e60793"
+    },
+    {
+      "file": "scripts/cwm-bench-conn3.node-test.mjs",
+      "sha256": "6c55cc6c84e17ccbd62ae303abbe07409f99504d0f42606f91e8e4fbfaba1a6b"
+    },
+    {
+      "file": "scripts/run-cwm-bench-conn3.mjs",
+      "sha256": "f780b276552498cf48e65212761bcefc665e26bde33b2421d3ec4c360f5c8aeb"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/contract.ts",
+      "sha256": "978b4c345fbcf0367797d0505188cdfd9603b79b932e0c00c9a96f1a89170476"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/review.ts",
+      "sha256": "a1eac9b6a22d7c657ef44263176dab9452f3c6f74bb0da94f196d654b117a432"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/hooks.ts",
+      "sha256": "d05c78efd6df1ad44528d5a9e205bab1647c764206a6d5b10b321dd79c433a04"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/observer.cjs",
+      "sha256": "c8a31f12bc0aa2b9378252dab75eee4dc8124a6c994a9747d728c1176296a0dd"
+    },
+    {
+      "file": ".local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/controller.ts",
+      "sha256": "b75972e03de0d5558a35524332f3e68fe7b7139b07e7317b64e9437558320414"
+    }
+  ],
+  "controllerOnly": true,
+  "scope": "Preregistration §8.2: 3x admission/identity, actual SQL max_connections, timestamped problems, descriptive TMC evidence"
+}

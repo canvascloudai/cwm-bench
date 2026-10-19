@@ -1,0 +1,72 @@
+[
+  {
+    "file": "out/typical-dbsat-pscap-3x-r1-20261018/rungs/probe0/k6.json.gz",
+    "bytes": 2816530,
+    "sha256": "84e2df2f6d648e3186df0d804012f2279f21781fcf357efa9d0b37d70d5624cb",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r1-20261018/rungs/typical-dbsat-3x-300-i-REDACTED0002/k6.json.gz",
+    "bytes": 49586488,
+    "sha256": "f50cc0281b16c9f2207b0ea3879308b942e6f350b780922ff4d5354644ff9239",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r1-20261018/rungs/typical-dbsat-3x-500-i-REDACTED0002/k6.json.gz",
+    "bytes": 82494654,
+    "sha256": "56a841bc091ec24da8224c87d5602eeade7a567573b226ef8340e8d443c8a345",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r1-20261018/rungs/typical-dbsat-3x-700-i-REDACTED0002/k6.json.gz",
+    "bytes": 115442469,
+    "sha256": "1a8c854cd0f1a418ac28c91a879c098771c0316738ea37618248b6f70fba86fb",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r1-20261018/rungs/typical-dbsat-3x-900-i-REDACTED0002/k6.json.gz",
+    "bytes": 50085392,
+    "sha256": "81da86b9cfadbab966e35a6dcc63d9be6b0c83879e528c2ff162f075718ad755",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r2-20261018/rungs/probe0/k6.json.gz",
+    "bytes": 2827113,
+    "sha256": "fb69914ad5cd432cc911cc9b674c5fff40a20c92f29b14953cbc23940e983e17",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r2-20261018/rungs/typical-dbsat-3x-300-i-REDACTED0006/k6.json.gz",
+    "bytes": 49783045,
+    "sha256": "533aef55194dd204f5e5d1395747fed1f927a4a62f3f6b0c32a93babae1ac88e",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r2-20261018/rungs/typical-dbsat-3x-500-i-REDACTED0006/k6.json.gz",
+    "bytes": 82823614,
+    "sha256": "659cac34dfda1989d6c224feeed9e20cc3ea4f54de693dbb487caeedd6571978",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r2-20261018/rungs/typical-dbsat-3x-700-i-REDACTED0006/k6.json.gz",
+    "bytes": 115982419,
+    "sha256": "e4679803bc3302e1a9187ac2ba0c4faa6f6ecea0594b5b3dfc90df1254188183",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  },
+  {
+    "file": "out/typical-dbsat-pscap-3x-r2-20261018/rungs/typical-dbsat-3x-900-i-REDACTED0006/k6.json.gz",
+    "bytes": 50959660,
+    "sha256": "e4d15c85e0b996953e991e6df3f006feb762005e11e2e33d7a0c261793f3c053",
+    "gzipIntegrityVerified": true,
+    "matchesOriginalTransfer": true
+  }
+]

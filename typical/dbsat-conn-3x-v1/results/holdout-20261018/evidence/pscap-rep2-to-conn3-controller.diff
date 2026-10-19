@@ -1,0 +1,423 @@
+--- pscap-rep2/controller.ts
++++ conn3/controller.ts
+@@ -1,7 +1,8 @@
+-import { DiagnosticCapture } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/hooks.ts";
++import {rawRungEvidence,postBreachEvidence} from "<runner-workspace>/scripts/cwm-bench-conn3-evidence.ts";
++import { DiagnosticCapture } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/hooks.ts";
+ import { execFile as execFileCallback } from "node:child_process";
+ import { promisify } from "node:util";
+-const PSCAP_ROOT = "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017";
++const PSCAP_ROOT = "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018";
+ const MEASUREMENT_BASIS = "881e0cffd51da084be4a24ffd13366dfbb67063f";
+ import fs from "node:fs/promises";
+ import path from "node:path";
+@@ -18,28 +19,39 @@
+   collectGate, collectTransferReport, generatorDiagnostics, BreachTracker, mergeMinute, recoveryMetricGate,
+   recoveryProbeGate, spendGuard, conditioningPrefix, confirmationPlan,
+   NORMAL_DISCOVERY_JOURNAL, normalDiscoveryApprovalGate, normalDiscoverySpendPause,
+-  normalDiscoveryCellGate } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/contract.ts";
++  normalDiscoveryCellGate } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/contract.ts";
+ import { controllerManifest as oldControllerManifest, dbObservation, recoveryProbe, startLiveMonitor, liveMinutes,
+   captureMonitorEvidence, jsonBody } from "<runner-workspace>/scripts/cwm-bench-dbsat-observe";
+ import { preserveAbortedRung, verifiedLocalRaw } from "<runner-workspace>/scripts/cwm-bench-dbsat-preserve";
+ import { captureBootstrapNodes, offlineReviewGate, publicationArchiveArgs, recoveryPollTime,
+-  verifiedCheckout, readReadinessPoolMetrics } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/review.ts";
++  verifiedCheckout, readReadinessPoolMetrics } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/review.ts";
+ import { requestOutcomeCounts, firstCollectApprovalGate } from "<runner-workspace>/scripts/cwm-bench-dbsat-first-review";
+ import { stagePreapplyRecovery, unstartedRecoverySlot } from "<runner-workspace>/scripts/cwm-bench-dbsat-preapply-recovery";
+ import { approvedCheckoutGate } from "<runner-workspace>/scripts/cwm-bench-dbsat-approved-checkout";
+ import { oneTimeRestartException, preWorkloadRetryAdmission, normalConfirmationCellGate,
+-  autonomyPolicyGate, autonomyFailureClass, autonomyRetryPlan, SEED_RACE_DEVIATION } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/contract.ts";
++  autonomyPolicyGate, autonomyFailureClass, autonomyRetryPlan, SEED_RACE_DEVIATION } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/contract.ts";
+ 
+ class BudgetPause extends DbsatPause {}
+ const ROOT = path.resolve(".local/private-cwm-dbsat");
+-const REPO = "<runner-workspace>/.local/private-cwm-dbsat/pscap-wiring-20261017";
++const REPO = "<runner-workspace>/.local/private-cwm-dbsat/conn3-wiring-20261018";
+ const TF = path.resolve(".local/private-cwm-scale/tools/terraform");
+ const HISTORY = [
+   ".local/private-cwm-holdouts/typical-holdouts-v1-20261006",
+   ".local/private-cwm-scale/typical-scale-v1-20261006",
+   ".local/private-cwm-p95/typical-p95-v1-20261010",
+ ].map(p => path.resolve(p));
++let activeStage = "admission";
+ const io = new HoldoutIO();
++const writeJson = io.json.bind(io);
++io.json = async (file: string, value: any) => writeJson(file,
++  /problem/.test(path.basename(file)) ? { ...value,
++    at: value.at ?? new Date().toISOString(), stage: value.stage ?? activeStage } : value);
++const failureTimes = new Map<unknown,any>();
++function problem(error: unknown, stage: string) {
++  if (!failureTimes.has(error)) failureTimes.set(error,{
++    at:new Date().toISOString(),stage,reason:io.redact(String(error))});
++  return failureTimes.get(error);
++}
+ const sha256 = (b: string | Buffer) => createHash("sha256").update(b).digest("hex");
+ const exists = (p: string) => fs.stat(p).then(() => true, e => { if (e.code === "ENOENT") return false; throw e; });
+ type Apply = {
+@@ -314,7 +326,9 @@
+   const runIO = new HoldoutIO(); runIO.secrets.push(...io.secrets);
+   let settled = false, run: any, runError: unknown;
+   const pending = adapter(s, "run", `10-${key}.run.json`, key, e, runIO)
+-    .then(r => { run = r; settled = true; }, error => { runError = error; settled = true; });
++    .then(r => { run = r; settled = true;
++      if(r.code!==0)record.runFailureAt=new Date().toISOString();
++    }, error => { runError = error; problem(error,"workload-command"); settled = true; });
+   const tracker = new BreachTracker();
+   let started: string | undefined, ended: string | undefined, stopped: string | undefined;
+   let recoveryPending: Promise<any> | undefined;
+@@ -439,13 +453,23 @@
+     await save();
+     if (stopped) {
+       const recovery = await recoveryPending!;
+-      record.recovery = recovery.verdict; await save();
++      record.recovery = recovery.verdict;
++      record.tooManyConnections = await rawRungEvidence(s,record);
++      await io.json(path.join(s.out,"breach-request-outcomes-summary.json"),record.tooManyConnections);
++      await save();
+       return { stopped: true, recovery, generatorValid: diagnostic.valid };
+     }
+     // Dry-run invalidity is retained for diagnosis; no rung is repeated or silently retuned.
+     if (!diagnostic.valid && s.phase !== "d1") throw new DbsatInvalid("Generator-invalid step");
+     await log(`RUNG_COLLECTED ${key} raw-retained=true`);
+     return { stopped: false, generatorValid: diagnostic.valid };
++  } catch (error) {
++    const p=problem(error,stopped ? "post-breach-processing" : "workload");
++    if(record.runFailureAt && Date.parse(record.runFailureAt)<Date.parse(p.at))
++      p.at=record.runFailureAt;
++    record.problem=p; await save();
++    await io.json(path.join(s.out,`rung-problem-${runId}-${Date.now()}.json`),p);
++    throw error;
+   } finally {
+     let recoveryError: unknown;
+     if (recoveryPending) {
+@@ -496,7 +520,7 @@
+         throw new DbsatPause(`Raw preservation blocked; stack retained for Kevin: ${io.redact(String(error))}`);
+       } finally { io.cleaning = false; }
+     }
+-    if (recoveryError) throw recoveryError;
++    if (recoveryError) { problem(recoveryError,"recovery"); throw recoveryError; }
+   }
+ }
+ async function destroy(s: Apply) {
+@@ -970,7 +994,7 @@
+ let pscapCapture: DiagnosticCapture | undefined;
+ const execFileAsync = promisify(execFileCallback);
+ async function controllerManifest() {
+-  return JSON.parse(await fs.readFile(path.join(PSCAP_ROOT,"build-boundaries/manifest.json"),"utf8"));
++  return JSON.parse(await fs.readFile(path.join(PSCAP_ROOT,"build/manifest.json"),"utf8"));
+ }
+ function variables(...args: Parameters<typeof baseVariables>) {
+   return [...baseVariables(...args), "-var=mysql_max_prepared_stmt_count=65528"];
+@@ -991,12 +1015,12 @@
+   const git = async (args: string[]) => (await execFileAsync("git",["-C",REPO,...args],
+     {maxBuffer: 4*1024*1024})).stdout.trim();
+   if (await git(["rev-parse","HEAD"]) !== DBSAT.sha ||
+-      await git(["rev-parse","HEAD^{tree}"]) !== "8af907660f1e6a396d06cca7e14fd59bcf50f0fa")
++      await git(["rev-parse","HEAD^{tree}"]) !== "855d55faa289b3682b8e055e0620caf5f4631427")
+     throw new DbsatPause("Wiring checkout commit/tree mismatch; reconcile and ask Kevin");
+   await git(["diff","--exit-code","HEAD","--"]);
+   await git(["diff","--exit-code",MEASUREMENT_BASIS,"--","app-typical/","load/"]);
+   return {wiringSha:DBSAT.sha,measurementBasis:MEASUREMENT_BASIS,
+-    tree:"8af907660f1e6a396d06cca7e14fd59bcf50f0fa",appAndLoadDiffEmpty:true};
++    tree:"855d55faa289b3682b8e055e0620caf5f4631427",appAndLoadDiffEmpty:true};
+ }
+ async function sourceProof(s: Apply) {
+   const manifest = await controllerManifest();
+@@ -1005,11 +1029,11 @@
+     if (sha256(await fs.readFile(f.file)) !== f.sha256) throw new DbsatPause("Holdout source hash mismatch");
+   await io.json(path.join(s.out,"checkout-tracked-tree-proof.json"),await pscapCheckout());
+   await io.json(path.join(s.out,"controller-manifest.json"),manifest);
+-  await fs.copyFile(path.join(REPO,"typical/dbsat-pscap-v1/PREREGISTRATION.md"),
++  await fs.copyFile(path.join(REPO,"typical/dbsat-conn-3x-v1/PREREGISTRATION.md"),
+     path.join(s.out,"PREREGISTRATION.md"));
+ }
+ async function budget(s: Apply, hours: number) {
+-  const old = spendGuard(j.applies,4,1,hours);
++  const old = spendGuard(j.applies,3,1,hours);
+   const guard = {...old,softCapUsd:25,campaignOnly:true,
+     pause:old.projectedUsd>=25 || old.spentUpperBoundUsd>=25 || old.replacements>3};
+   await io.state(path.join(s.out,"spend-guard.json"),guard);
+@@ -1018,15 +1042,16 @@
+ async function pscapAttempt(s: Apply) {
+   let failure: unknown, stage="preparation";
+   try {
++    activeStage=stage;
+     await prepare(s);
+-    stage="readiness";
++    stage="readiness";activeStage=stage;
+     const outputs=await ready(s);
+     pscapCapture=new DiagnosticCapture(cloud,io,s,env(s),root);
+     await pscapCapture.setup(outputs);
+     await pscapCapture.verifyParameter();
+-    stage="baseline";
++    stage="baseline";activeStage=stage;
+     const b=await baseline(s,outputs);
+-    stage="workload";
++    stage="workload";activeStage=stage;
+     for (const [index,rate] of DBSAT.rates.entries()) {
+       await budget(s,6);
+       const result=await rung(s,outputs,rate,index+1,b);
+@@ -1039,15 +1064,17 @@
+   } catch(error) {
+     failure=error;s.outcome="holdout harness/infrastructure failure";
+     (s as any).failedStage=stage;
++    (s as any).problem=problem(error,stage);
+     j.paused=io.redact(String(error));await save();
+-    await io.json(path.join(s.out,`problem-${Date.now()}.json`),{at:new Date().toISOString(),
+-      stage,reason:j.paused,rungsStarted:s.rungs.length});
++    await io.json(path.join(s.out,`problem-${Date.now()}.json`),{...(s as any).problem,rungsStarted:s.rungs.length});
+   } finally {
+     io.cleaning=true;
+     if (!(failure instanceof BudgetPause)) {
+       if (pscapCapture) {
+         try { await pscapCapture.finish(); }
+         catch(error) {
++          const p=problem(error,"evidence-preservation");
++          await io.json(path.join(s.out,`preservation-problem-${Date.now()}.json`),p);
+           failure ??= error;
+           s.rawRetentionBlocked ||= !pscapCapture.evidenceRetained;
+           s.outcome="holdout diagnostic preservation/validation failure";
+@@ -1056,11 +1083,20 @@
+       }
+       if (s.startedAt && !s.rawRetentionBlocked) {
+         try {await destroy(s);}
+-        catch(error) {failure ??= error;j.paused="Cleanup unconfirmed; ask Kevin";await save();}
++        catch(error) {failure ??= error;
++          await io.json(path.join(s.out,`cleanup-problem-${Date.now()}.json`),problem(error,"cleanup"));
++          j.paused="Cleanup unconfirmed; ask Kevin";await save();}
+       }
+     }
+     io.cleaning=false;
+   }
++  if (failure && s.rungs.at(-1)?.stoppedAt && s.delayed && !s.rawRetentionBlocked) {
++    const proof=await postBreachEvidence(s,problem(failure,stage),io);
++    if(proof.intact) {
++      s.outcome="holdout overload observation; post-breach aggregates unavailable";
++      (s as any).postBreachEvidenceIntact=true;await save();return;
++    }
++  }
+   if (failure) throw failure;
+ }
+ async function pscapMain() {
+@@ -1071,54 +1107,12 @@
+   root=PSCAP_ROOT;
+   await fs.mkdir(root,{recursive:true,mode:0o700});
+   const manifest=await controllerManifest();
+-  const offline=JSON.parse(await fs.readFile(path.join(root,"offline-boundaries-preflight.json"),"utf8"));
++  const offline=JSON.parse(await fs.readFile(path.join(root,"offline-preflight.json"),"utf8"));
+   if (!offline.passed || offline.manifestSha256!==manifest.sha256)
+     throw new DbsatPause("Full offline suite/manifest proof required before AWS");
+-  // Owner-approved scheduling deviation only: fresh rep 2 immediately after all cleanup.
+-  if (rep===2) {
+-    const prior=JSON.parse(await fs.readFile(path.join(root,"runner-state.json"),"utf8"));
+-    const repairApproval=JSON.parse(await fs.readFile(path.join(root,"owner-boundaries-approval.json"),"utf8"));
+-    if(repairApproval.approved!==true || repairApproval.predecessorManifestSha256!=="b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f" ||
+-       repairApproval.noRep1Rerun!==true)
+-      throw new DbsatPause("Owner boundary repair approval required");
+-    const accepted=prior.applies.find((a:any)=>a.phase==="r1" && a.delayed &&
+-      (["holdout overload observation","holdout ladder complete without breach"].includes(a.outcome) ||
+-       (a.campaign===repairApproval.rep1Campaign && a.failedStage==="workload" &&
+-        prior.paused==="Error: Persisted generator run boundaries missing" &&
+-        a.rungs.length===4 && a.rungs.slice(0,3).every((r:any,i:number)=>
+-          r.rate===[300,500,700][i] && r.collectComplete && r.generatorValid) &&
+-        a.rungs[3].rate===900 && a.rungs[3].abortedRawPreserved &&
+-        a.rungs[3].stoppedAt && !a.rawRetentionBlocked)));
+-    if (!accepted) throw new DbsatPause("Rep 1 not valid and cleaned");
+-    if (prior.applies.some((a:any)=>a.startedAt && !a.delayed))
+-      throw new DbsatPause("Rep 1 cleanup incomplete; no stack reuse");
+-    const schedulingApproval=JSON.parse(await fs.readFile(path.join(root,"owner-same-day-scheduling-approval.json"),"utf8"));
+-    if(schedulingApproval.approved!==true || schedulingApproval.predecessorManifestSha256!=="b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f")
+-      throw new DbsatPause("Owner scheduling approval missing");
+-    await io.json(path.join(root,"out","scheduling-disclosure.json"),{
+-      at:new Date().toISOString(),disclosure:"reps run same UTC day (prereg: different days where possible)",
+-      ownerApproved:true,noCalendarWait:true,freshApplyRequired:true,
+-      rep1ImmediateAndDelayedCleanupPassed:true,rep1Campaign:accepted.campaign
+-    });
+-  }
+   await withProcessLock(path.join(ROOT,".controller.flock"),async()=>{
+     if(await exists(path.join(root,"runner-state.json"))) {
+       j=JSON.parse(await fs.readFile(path.join(root,"runner-state.json"),"utf8"));
+-      if(rep===2 && j.controller.sha256==="b55f6fc3914e5d05ba0782b9ee8abc381fc1703e7fec147b785390b91800924f" &&
+-        !j.applies.some((a:any)=>a.phase==="r2") &&
+-        !j.applies.some((a:any)=>a.startedAt && !a.delayed)) {
+-        j.controllerTransitions??=[];
+-        j.controllerTransitions.push({at:new Date().toISOString(),
+-          predecessor:j.controller,newController:manifest,
+-          scope:"owner-approved controller boundary reread fix; retain rep 1 partial data without rerun; fresh rep 2",
+-          disclosure:"reps run same UTC day (prereg: different days where possible)"});
+-        j.ownerAcceptedRep1PartialData={at:new Date().toISOString(),
+-          approval:"owner-boundaries-approval.json",noRep1Rerun:true,
+-          completeCollectRates:[300,500,700],preservedBreachRawRate:900,
+-          originalApplyAndRungRecordsUnchanged:true};
+-        j.controller=manifest;
+-        await save();
+-      }
+       if(j.controller.sha256!==manifest.sha256 || j.measurementSha!==DBSAT.sha ||
+         j.applies.some((a:any)=>a.startedAt && !a.delayed && (a.rungs.length || a.rawRetentionBlocked)))
+         throw new DbsatPause("Mid-workload interruption; retain evidence and ask Kevin");
+@@ -1126,13 +1120,13 @@
+         throw new DbsatPause("Rep already ran workload; no automatic replacement");
+     } else {
+       if(rep!==1)throw new DbsatPause("Rep 1 journal required");
+-      j={parent:"typical-dbsat-pscap-v1-20261017",measurementSha:DBSAT.sha,
++      j={parent:"typical-dbsat-conn-3x-v1-20261018",measurementSha:DBSAT.sha,
+         measurementBasis:MEASUREMENT_BASIS,wiringSha:DBSAT.sha,controller:manifest,
+         applies:[],noDiscoveryStarted:true,softCapUsd:25,replacementCap:3,
+-        replacementAdmission:"explicit owner approval required after any workload failure",
++        replacementAdmission:"pause and ask Kevin for pre-breach invalid rep",
+         priorCampaignIds:[],priorEvidenceRoots:[]};
+       for(const name of await fs.readdir(ROOT)) {
+-        if(name.startsWith("typical-dbsat-") && name!=="typical-dbsat-pscap-v1-20261017") {
++        if(name.startsWith("typical-dbsat-") && name!=="typical-dbsat-conn-3x-v1-20261018") {
+           const dir=path.join(ROOT,name);
+           for(const file of await fs.readdir(dir).catch(()=>[]))if(/^runner-state.*\.json$/.test(file)) {
+             const old=JSON.parse(await fs.readFile(path.join(dir,file),"utf8"));
+@@ -1145,11 +1139,22 @@
+       j.priorEvidenceRoots.push(path.join(ROOT,"diagnostic-prepared-statements-20261016"));
+       await save();
+     }
++    if(rep===2) {
++      const accepted=j.applies.find((a:any)=>a.phase==="r1" && a.delayed &&
++        (["holdout overload observation","holdout ladder complete without breach"].includes(a.outcome) ||
++          a.postBreachEvidenceIntact===true));
++      if(!accepted || j.applies.some((a:any)=>a.startedAt&&!a.delayed))
++        throw new DbsatPause("Rep 1 not accepted and cleaned; no stack reuse");
++      await io.json(path.join(root,"out","scheduling-disclosure.json"),{
++        at:new Date().toISOString(),ownerApproved:true,freshApplyRequired:true,
++        disclosure:"reps run same UTC day if cleanup completes that day (prereg: same day allowed)",
++        rep1ImmediateAndDelayedCleanupPassed:true,rep1Campaign:accepted.campaign});
++    }
+     io.installSignals();base=await scaleCredentials(io,TF);cloud=new DbsatCloud(io,ROOT,base);
+     const pending=j.applies.filter((a:any)=>a.startedAt && !a.delayed);
+     for (const previous of pending) {
+       await io.json(path.join(previous.out,`workspace-restart-${Date.now()}.json`), {
+-        at:new Date().toISOString(),zeroRungs:true,neverReapplyInterruptedState:true,
++        at:new Date().toISOString(),stage:"pre-workload-restart",zeroRungs:true,neverReapplyInterruptedState:true,
+         deviation:"pre-workload workspace interruption; cleanup before new admission"});
+       const state=await terraform(previous,["state","list"],`restart-state-${Date.now()}.txt`);
+       if(state.code!==0)throw new DbsatPause("Interrupted Terraform state unresolved; ask Kevin");
+@@ -1159,8 +1164,8 @@
+     if(retries>2)throw new DbsatPause("Two pre-workload retries exhausted; ask Kevin");
+     while(true) {
+       const date=utcStamp(new Date()),suffix=retries?String.fromCharCode(96+retries):"";
+-      const campaign=`typical-dbsat-pscap-4x-r${rep}${suffix}-${date}`;
+-      const s:Apply={campaign,n:4,generators:1,phase:`r${rep}`,suffix,repo:REPO,
++      const campaign=`typical-dbsat-pscap-3x-r${rep}${suffix}-${date}`;
++      const s:Apply={campaign,n:3,generators:1,phase:`r${rep}`,suffix,repo:REPO,
+         tfdir:path.join(root,"work",campaign,"terraform"),out:path.join(root,"out",campaign),
+         schema:`dbsat_${sha256(campaign).slice(0,24)}`,rates:[...DBSAT.rates],vuPre:0.5,vuMax:2.5,rdsPin:DBSAT.rds,rungs:[],
+         ...(retries?{autonomyRetry:{ownerApproved:true,replacementConsumed:false}}:{})};
+@@ -1168,7 +1173,7 @@
+       try {
+         await pscapAttempt(s);
+         j.paused="Rep complete and cleaned; no scoring";await save();
+-        console.log(`PSCAP_REP_COMPLETE rep=${rep} outcome=${s.outcome} both-region-cleanup=true delayed=true`);
++        console.log(`CONN3_REP_COMPLETE rep=${rep} outcome=${s.outcome} both-region-cleanup=true delayed=true`);
+         return;
+       } catch(error) {
+         const reason=io.redact(String(error));
+@@ -1187,7 +1192,7 @@
+         }
+         lastFailure=reason;retries++;
+         await io.json(path.join(s.out,"autonomy-preworkload-retry.json"),{at:new Date().toISOString(),
+-          cause:reason,zeroRungs:true,nextRetry:retries,replacementConsumed:false,
++          stage:"pre-workload-retry",cause:reason,zeroRungs:true,nextRetry:retries,replacementConsumed:false,
+           bothRegionCleanupConfirmed:!s.startedAt || s.delayed});
+         pscapCapture=undefined;
+       }
+--- pscap-rep2/contract.ts
++++ conn3/contract.ts
+@@ -1,8 +1,8 @@
+ import { cleanEnvironment, utcStamp } from "<runner-workspace>/scripts/cwm-bench-holdout-contract";
+ 
+ export const DBSAT = {
+-  controllerVersion: "pscap-1.0.0", adapterVersion: "1.7.1",
+-  sha: "b4d05afbc8ec7d61616af4231dc876443f2a5b81",
++  controllerVersion: "conn3-1.0.0", adapterVersion: "1.7.1",
++  sha: "9aee7d15bd513bdb25dd2b8da53407142ea81f37",
+   repository: "https://github.com/canvascloudai/cwm-bench.git", region: "us-east-2",
+   ami: "ami-0d3d85815a9746bc5", rds: "8.0.46-rds.20260908",
+   rates: [300, 500, 700, 900, 1100, 1300, 1500],
+--- pscap-rep2/hooks.ts
++++ conn3/hooks.ts
+@@ -10,7 +10,7 @@
+ const hash = (b: Buffer | string) => createHash("sha256").update(b).digest("hex");
+ const q = (s: string) => "'" + s.replaceAll("'", "'\\''") + "'";
+ const stamp = () => new Date().toISOString();
+-const script = "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/observer.cjs";
++const script = "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/observer.cjs";
+ 
+ export class DiagnosticCapture {
+   outputs: any;
+@@ -60,10 +60,11 @@
+   async verifyParameter() {
+     const body = await this.transfer(this.outputs.app_instance_ids.value[0], "readiness-parameter", false);
+     const sample = JSON.parse(body.files["samples.jsonl"].trim().split("\n")[0]);
++    if (Number(sample.max_connections) !== 500) throw Error("Readiness SHOW GLOBAL VARIABLES max_connections is not 500");
+     if (Number(sample.max_prepared_stmt_count) !== 65528)
+       throw Error("Readiness SHOW GLOBAL VARIABLES is not 65528");
+     await this.io.json(path.join(this.s.out, "wait-ready-show-global-variables.json"), {
+-      at: sample.at, max_prepared_stmt_count: 65528, verifiedBeforeParse: true, actualSqlRead: true });
++      at: sample.at, max_prepared_stmt_count: 65528, max_connections: Number(sample.max_connections), verifiedBeforeParse: true, actualSqlRead: true });
+   }
+   async start() {
+     const node = this.outputs.app_instance_ids.value[0];
+@@ -206,7 +207,7 @@
+         mysqlCode: Number(e.ERROR_NUMBER), errorName: e.ERROR_NAME,
+         raisedCount: e.SUM_ERROR_RAISED, handledCount: e.SUM_ERROR_HANDLED })) }));
+     await this.io.json(path.join(this.s.out, "diagnostic-time-series.json"), {
+-      campaign: this.s.campaign, measurementSha: "b4d05afbc8ec7d61616af4231dc876443f2a5b81", measurementContentSha: "881e0cffd51da084be4a24ffd13366dfbb67063f",
++      campaign: this.s.campaign, measurementSha: "9aee7d15bd513bdb25dd2b8da53407142ea81f37", measurementContentSha: "881e0cffd51da084be4a24ffd13366dfbb67063f",
+       holdoutOnly: true, scoredAsDiscovery: false, scoredAsConfirmation: false,
+       ...summary, requestOutcomes: [...outcomes.values()], breachSnapshots: top20,
+       endpointMysqlErrnoCounts: "unavailable: pinned app does not log request-time errno",
+--- pscap-rep2/observer.cjs
++++ conn3/observer.cjs
+@@ -5,7 +5,7 @@
+ const { execFileSync } = require('node:child_process');
+ const mysql = require('/opt/cwm-bench-app/node_modules/mysql2/promise');
+ const dir = process.argv[2];
+-if (!/^\/opt\/cwm-dbsat-diagnostic\/typical-dbsat-pscap-4x-r[12][a-z]?-\d{8}$/.test(dir || '')) {
++if (!/^\/opt\/cwm-dbsat-diagnostic\/typical-dbsat-pscap-3x-r[12][a-z]?-\d{8}$/.test(dir || '')) {
+   throw Error('Invalid diagnostic directory');
+ }
+ const mode = process.argv[3];
+@@ -16,7 +16,7 @@
+ };
+ const sql = Object.freeze({
+   status: "SHOW GLOBAL STATUS WHERE Variable_name IN ('Prepared_stmt_count','Com_stmt_prepare','Com_stmt_close','Threads_connected')",
+-  limit: "SHOW GLOBAL VARIABLES LIKE 'max_prepared_stmt_count'",
++  limit: "SHOW GLOBAL VARIABLES WHERE Variable_name IN ('max_prepared_stmt_count','max_connections')",
+   errors: 'SELECT ERROR_NUMBER, ERROR_NAME, SQL_STATE, SUM_ERROR_RAISED, SUM_ERROR_HANDLED, FIRST_SEEN, LAST_SEEN FROM performance_schema.events_errors_summary_global_by_error WHERE SUM_ERROR_RAISED > 0 ORDER BY ERROR_NUMBER',
+   innodb: 'SHOW ENGINE INNODB STATUS',
+   top20: 'SELECT ERROR_NUMBER, ERROR_NAME, SQL_STATE, SUM_ERROR_RAISED, SUM_ERROR_HANDLED, FIRST_SEEN, LAST_SEEN FROM performance_schema.events_errors_summary_global_by_error WHERE SUM_ERROR_RAISED > 0 ORDER BY SUM_ERROR_RAISED DESC, ERROR_NUMBER LIMIT 20',
+@@ -41,14 +41,15 @@
+   const sample = async scheduledAt => {
+     const at = stamp();
+     const status = Object.fromEntries((await query(sql.status)).map(r => [r.Variable_name, r.Value]));
+-    const limit = (await query(sql.limit))[0]?.Value;
++    const variables = Object.fromEntries((await query(sql.limit)).map(r => [r.Variable_name,r.Value]));
++    const limit = variables.max_prepared_stmt_count;
+     const errors = await query(sql.errors);
+     for (const name of ['Prepared_stmt_count', 'Com_stmt_prepare', 'Com_stmt_close', 'Threads_connected']) {
+       if (!/^\d+$/.test(String(status[name]))) throw Error('DB status sample incomplete');
+     }
+     if (!/^\d+$/.test(String(limit))) throw Error('DB configured limit missing');
+     const value = { at, completedAt: stamp(), scheduledAt, mode, status,
+-      max_prepared_stmt_count: limit, errors, diagnosticOnly: true };
++      max_prepared_stmt_count: limit, max_connections: variables.max_connections, errors, diagnosticOnly: true };
+     write('samples.jsonl', value);
+     fs.writeFileSync(path.join(dir, 'heartbeat.json'), JSON.stringify({ at: stamp() }),
+       { mode: 0o600 });
+--- pscap-rep2/review.ts
++++ conn3/review.ts
+@@ -6,7 +6,7 @@
+ import { gunzipSync } from "node:zlib";
+ import type { ScaleCloud } from "<runner-workspace>/scripts/cwm-bench-scale-cloud";
+ import type { HoldoutIO } from "<runner-workspace>/scripts/cwm-bench-holdout-io";
+-import { DBSAT, DbsatPause, DbsatInvalid } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-pscap-v1-20261017/build/contract.ts";
++import { DBSAT, DbsatPause, DbsatInvalid } from "<runner-workspace>/.local/private-cwm-dbsat/typical-dbsat-conn-3x-v1-20261018/build/contract.ts";
+ import { jsonBody } from "<runner-workspace>/scripts/cwm-bench-dbsat-observe";
+ export async function verifiedCheckout(checkout: string, verify = auditTrackedTree) {
+   try {

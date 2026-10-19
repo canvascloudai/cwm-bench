@@ -1,0 +1,310 @@
+{
+  "campaign": "typical-dbsat-conn-3x-v1-20261018",
+  "wiringSha": "9aee7d15bd513bdb25dd2b8da53407142ea81f37",
+  "measurementContentSha": "881e0cffd51da084be4a24ffd13366dfbb67063f",
+  "controllerSha256": "b75972e03de0d5558a35524332f3e68fe7b7139b07e7317b64e9437558320414",
+  "manifestSha256": "c6ade740bc1dabc418382e7a898bc1398e6761f676d529b8698cac0298717465",
+  "schedulingDisclosure": "reps run same UTC day (prereg: same day allowed)",
+  "freshApplyEachRep": true,
+  "applies": [
+    {
+      "campaign": "typical-dbsat-pscap-3x-r1-20261018",
+      "phase": "r1",
+      "startedAt": "2026-10-18T14:07:26.924Z",
+      "destroyedAt": "2026-10-18T16:46:22.799Z",
+      "recordedOutcome": "holdout overload observation",
+      "cleanup": [
+        {
+          "kind": "immediate",
+          "checkedAt": "2026-10-18T16:47:44.062Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "sourceSha256": "0b8cf14357c3089a2271d3e7d87c0fed0c360f8013cc096f6c9545607d104b0f",
+          "classifications": {
+            "terminated": 4,
+            "not-found": 13
+          }
+        },
+        {
+          "kind": "delayed",
+          "checkedAt": "2026-10-18T17:02:43.816Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "sourceSha256": "529d62e09ea1c7c5dcaedba3db180673b722f3bb15bbb3ffa77df344ad8207ee",
+          "classifications": {
+            "terminated": 4,
+            "not-found": 13
+          }
+        }
+      ],
+      "rungs": [
+        {
+          "rate": 300,
+          "startedAt": "2026-10-18T14:28:27.971Z",
+          "endedAt": "2026-10-18T14:49:08Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 500,
+          "startedAt": "2026-10-18T14:58:29.143Z",
+          "endedAt": "2026-10-18T15:19:11Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 700,
+          "startedAt": "2026-10-18T15:33:14.947Z",
+          "endedAt": "2026-10-18T15:54:07Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 900,
+          "startedAt": "2026-10-18T16:12:32.359Z",
+          "stoppedAt": "2026-10-18T16:21:07.005Z",
+          "endedAt": "2026-10-18T16:21:07.005Z",
+          "stepStatus": "overload observation",
+          "collectComplete": true,
+          "generatorValid": true,
+          "recovery": "recovery failed",
+          "noRungRetry": true,
+          "tooManyConnections": {
+            "at": "2026-10-18T16:39:39.093Z",
+            "descriptiveOnly": true,
+            "scored": false,
+            "key": "typical-dbsat-3x-900",
+            "rawDirectory": "typical-dbsat-3x-900-i-REDACTED0002",
+            "originalGzipVerified": true,
+            "cutoffUtc": "2026-10-18T16:21:07.005Z",
+            "phase": "steady",
+            "allOutcomes": 168203,
+            "failureOutcomes": 17773,
+            "tooManyConnections503": 15961,
+            "tooManyConnectionsShareOfFailures": 0.8980476002925787,
+            "tooManyConnectionsShareOfAllOutcomes": 0.0948912920697015,
+            "counts": [
+              {
+                "status": "200",
+                "errorClass": "none",
+                "count": 135320
+              },
+              {
+                "status": "503",
+                "errorClass": "too_many_connections",
+                "count": 15961
+              },
+              {
+                "status": "201",
+                "errorClass": "none",
+                "count": 15110
+              },
+              {
+                "status": "500",
+                "errorClass": "internal",
+                "count": 1802
+              },
+              {
+                "status": "502",
+                "errorClass": "unclassified",
+                "count": 10
+              }
+            ],
+            "droppedIterations": 1721,
+            "scheduledIterations": 945000,
+            "droppedFraction": 0.0018211640211640212
+          }
+        }
+      ],
+      "rds": {
+        "engineVersion": "8.0.46-rds.20260908",
+        "requestedPin": "8.0.46-rds.20260908",
+        "topology": {
+          "alb": "application",
+          "app_count": 3,
+          "app_instance_type": "m5.large",
+          "app_pool_size": 250,
+          "db_engine": "mysql",
+          "db_engine_version": "8.0.46-rds.20260908",
+          "db_instance_class": "db.r5.large",
+          "db_multi_az": false,
+          "generator_instance_type": "c6i.xlarge",
+          "mysql_max_connections": 500,
+          "region": "us-east-2",
+          "test_id": "typical-dbsat-pscap-3x-r1-20261018"
+        },
+        "ami": "ami-0d3d85815a9746bc5",
+        "controllerHash": "c6ade740bc1dabc418382e7a898bc1398e6761f676d529b8698cac0298717465"
+      }
+    },
+    {
+      "campaign": "typical-dbsat-pscap-3x-r2-20261018",
+      "phase": "r2",
+      "startedAt": "2026-10-18T17:35:23.340Z",
+      "destroyedAt": "2026-10-18T20:14:05.593Z",
+      "recordedOutcome": "holdout overload observation",
+      "cleanup": [
+        {
+          "kind": "immediate",
+          "checkedAt": "2026-10-18T20:15:27.980Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "sourceSha256": "6c06820d18a681c192a30332be45dfbae6608a4bce50f0aafa1599a9e73016e8",
+          "classifications": {
+            "terminated": 4,
+            "not-found": 13
+          }
+        },
+        {
+          "kind": "delayed",
+          "checkedAt": "2026-10-18T20:30:25.060Z",
+          "regions": [
+            "us-east-2",
+            "us-west-2"
+          ],
+          "liveCleanupConfirmed": true,
+          "baselineLiveCleanupConfirmed": true,
+          "strictTagInventoryEmpty": false,
+          "sourceSha256": "3154b90128f4dc56b9338aff22f5adae871b0f9d1cf25c2d60b26da52e8452f8",
+          "classifications": {
+            "terminated": 4,
+            "not-found": 13
+          }
+        }
+      ],
+      "rungs": [
+        {
+          "rate": 300,
+          "startedAt": "2026-10-18T17:56:23.205Z",
+          "endedAt": "2026-10-18T18:17:01Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 500,
+          "startedAt": "2026-10-18T18:25:58.084Z",
+          "endedAt": "2026-10-18T18:46:41Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 700,
+          "startedAt": "2026-10-18T19:00:03.196Z",
+          "endedAt": "2026-10-18T19:20:53Z",
+          "stepStatus": "complete",
+          "collectComplete": true,
+          "generatorValid": true,
+          "noRungRetry": true
+        },
+        {
+          "rate": 900,
+          "startedAt": "2026-10-18T19:39:25.856Z",
+          "stoppedAt": "2026-10-18T19:48:08.119Z",
+          "endedAt": "2026-10-18T19:48:08.119Z",
+          "stepStatus": "overload observation",
+          "collectComplete": true,
+          "generatorValid": true,
+          "recovery": "recovery failed",
+          "noRungRetry": true,
+          "tooManyConnections": {
+            "at": "2026-10-18T20:07:22.478Z",
+            "descriptiveOnly": true,
+            "scored": false,
+            "key": "typical-dbsat-3x-900",
+            "rawDirectory": "typical-dbsat-3x-900-i-REDACTED0006",
+            "originalGzipVerified": true,
+            "cutoffUtc": "2026-10-18T19:48:08.119Z",
+            "phase": "steady",
+            "allOutcomes": 173294,
+            "failureOutcomes": 23484,
+            "tooManyConnections503": 21121,
+            "tooManyConnectionsShareOfFailures": 0.8993783001192301,
+            "tooManyConnectionsShareOfAllOutcomes": 0.1218795803663139,
+            "counts": [
+              {
+                "status": "200",
+                "errorClass": "none",
+                "count": 134781
+              },
+              {
+                "status": "201",
+                "errorClass": "none",
+                "count": 15029
+              },
+              {
+                "status": "503",
+                "errorClass": "too_many_connections",
+                "count": 21121
+              },
+              {
+                "status": "500",
+                "errorClass": "internal",
+                "count": 2360
+              },
+              {
+                "status": "504",
+                "errorClass": "db_timeout",
+                "count": 1
+              },
+              {
+                "status": "502",
+                "errorClass": "unclassified",
+                "count": 2
+              }
+            ],
+            "droppedIterations": 2393,
+            "scheduledIterations": 945000,
+            "droppedFraction": 0.0025322751322751323
+          }
+        }
+      ],
+      "rds": {
+        "engineVersion": "8.0.46-rds.20260908",
+        "requestedPin": "8.0.46-rds.20260908",
+        "topology": {
+          "alb": "application",
+          "app_count": 3,
+          "app_instance_type": "m5.large",
+          "app_pool_size": 250,
+          "db_engine": "mysql",
+          "db_engine_version": "8.0.46-rds.20260908",
+          "db_instance_class": "db.r5.large",
+          "db_multi_az": false,
+          "generator_instance_type": "c6i.xlarge",
+          "mysql_max_connections": 500,
+          "region": "us-east-2",
+          "test_id": "typical-dbsat-pscap-3x-r2-20261018"
+        },
+        "ami": "ami-0d3d85815a9746bc5",
+        "controllerHash": "c6ade740bc1dabc418382e7a898bc1398e6761f676d529b8698cac0298717465"
+      }
+    }
+  ],
+  "noScoringPerformed": true,
+  "privateReviewOnlyNotPublicPublication": true
+}

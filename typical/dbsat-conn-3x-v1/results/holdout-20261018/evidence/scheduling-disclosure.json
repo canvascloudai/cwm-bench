@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-18T17:02:48.683Z",
+  "ownerApproved": true,
+  "freshApplyRequired": true,
+  "disclosure": "reps run same UTC day if cleanup completes that day (prereg: same day allowed)",
+  "rep1ImmediateAndDelayedCleanupPassed": true,
+  "rep1Campaign": "typical-dbsat-pscap-3x-r1-20261018"
+}

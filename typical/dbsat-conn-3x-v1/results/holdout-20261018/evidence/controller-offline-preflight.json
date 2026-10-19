@@ -1,0 +1,172 @@
+{
+  "at": "2026-10-18T13:36:50.641Z",
+  "passed": true,
+  "manifestSha256": "c6ade740bc1dabc418382e7a898bc1398e6761f676d529b8698cac0298717465",
+  "controllerSha256": "b75972e03de0d5558a35524332f3e68fe7b7139b07e7317b64e9437558320414",
+  "predecessorControllerSha256": "d27be406bdf19b689b0f7dde86d8c29b76d0716da36fcf79d4a9292c905ee5f0",
+  "controllerOnly": true,
+  "wiringSha": "9aee7d15bd513bdb25dd2b8da53407142ea81f37",
+  "measurementContentSha": "881e0cffd51da084be4a24ffd13366dfbb67063f",
+  "appAndLoadDiffEmpty": true,
+  "awsCallsMadeByOfflineFixAndTests": false,
+  "suites": [
+    {
+      "suite": "controller",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/cwm-bench-dbsat-adapter.node-test.ts",
+        "scripts/cwm-bench-dbsat-approved-checkout.node-test.ts",
+        "scripts/cwm-bench-dbsat-cleanup-recovery.node-test.ts",
+        "scripts/cwm-bench-dbsat-cleanup.node-test.ts",
+        "scripts/cwm-bench-dbsat-contract.node-test.ts",
+        "scripts/cwm-bench-dbsat-diagnostic-transport.node-test.ts",
+        "scripts/cwm-bench-dbsat-durable-io.node-test.ts",
+        "scripts/cwm-bench-dbsat-first-review.node-test.ts",
+        "scripts/cwm-bench-dbsat-interruption.node-test.ts",
+        "scripts/cwm-bench-dbsat-orphan-plan.node-test.ts",
+        "scripts/cwm-bench-dbsat-preapply-recovery.node-test.ts",
+        "scripts/cwm-bench-dbsat-review.node-test.ts",
+        "scripts/cwm-bench-dbsat-transfer-audit.node-test.ts",
+        "scripts/cwm-bench-checkout-proof.node-test.ts"
+      ],
+      "cwd": "<runner-workspace>",
+      "log": "offline-controller-1792330518857.log",
+      "fixtureIsolation": "VM spend guard uses supplied fixture clock",
+      "exitCode": 0,
+      "passed": 141,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "diagnostic",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/cwm-bench-dbsat-diagnostic.node-test.mjs"
+      ],
+      "cwd": "<runner-workspace>",
+      "log": "offline-diagnostic-1792330518857.log",
+      "exitCode": 0,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "pscap",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/cwm-bench-pscap.node-test.mjs"
+      ],
+      "cwd": "<runner-workspace>",
+      "log": "offline-pscap-1792330518857.log",
+      "fixtureIsolation": "Read-only fresh Git object database; historical app/load bytes checked unchanged",
+      "exitCode": 0,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "scheduling",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/cwm-bench-pscap-same-day.node-test.mjs"
+      ],
+      "cwd": "<runner-workspace>",
+      "log": "offline-scheduling-1792330518857.log",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "boundaries",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/cwm-bench-pscap-boundaries.node-test.mjs"
+      ],
+      "cwd": "<runner-workspace>",
+      "log": "offline-boundaries-1792330518857.log",
+      "fixtureIsolation": "Admission reads archived pre-rep2 checkpoint; historical journal unchanged",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "public-node",
+      "command": [
+        "bash",
+        "-c",
+        "node --test --test-concurrency=1 tests/*.mjs tests/adapter/*.mjs"
+      ],
+      "cwd": "<runner-workspace>/.local/private-cwm-dbsat/conn3-wiring-20261018",
+      "log": "offline-public-node-1792330518857.log",
+      "exitCode": 0,
+      "passed": 148,
+      "failed": 0,
+      "skipped": 1
+    },
+    {
+      "suite": "public-python",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "<runner-workspace>/.local/private-cwm-dbsat/conn3-wiring-20261018",
+      "log": "offline-public-python-1792330518857.log",
+      "exitCode": 0,
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "conn3-section-8.2",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "scripts/cwm-bench-conn3.node-test.mjs"
+      ],
+      "cwd": "<runner-workspace>",
+      "log": "offline-conn3-section-8.2-1792330518857.log",
+      "exitCode": 0,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "passed": 412,
+    "failed": 0,
+    "skipped": 1
+  },
+  "wiringBundleSha256": "a33e6c3dca0462bac3846944e6af7d1ee399d3f2d25e3860a99ad10df8dcb31c",
+  "wiringBundleBytes": 3009299,
+  "testRuntimeDisclosure": [
+    "Historical interruption VM spend guard explicitly uses its own supplied fixture clock.",
+    "Historical admission suite reads the archived pre-rep2 journal, without modifying either journal.",
+    "Historical missing .git is not restored: its app/load diff uses the fresh clone object DB read-only.",
+    "Public Node tests run serially with pinned k6; Python cache directories prepend inherited PYTHONPATH."
+  ]
+}
