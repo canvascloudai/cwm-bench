@@ -77,6 +77,14 @@ All are computed with `typical/dbsat-v1/score_dbsat_v1.py` (`record_from_collect
 - Endpoint-level errno stays **unavailable** unless the app logs carry it, and that is reported, not inferred.
 - CloudWatch `DatabaseConnections` is descriptive only. **Server connections for scoring are `Threads_connected` from the observer polls.**
 
+### 4.3 Observer occupancy and privileges (recorded before any load; descriptive) [DECISION, r1.2]
+At wait-ready, before the warmup of rung 1, the controller records:
+- **(a) Observer privileges:** `SHOW GRANTS` for the observer/polling DB user, and whether that user holds `SUPER` or `CONNECTION_ADMIN`. Either privilege allows use of MySQL's reserved administrative connection slot above `max_connections`.
+- **(b) Non-app occupancy:** a processlist snapshot (`information_schema.PROCESSLIST`) counting non-app connections by user, as observer, `rdsadmin`/system and other. App connections are expected to be zero at that point. The app-user count is recorded as well; if it is not zero, occupancy is reported as not cleanly established.
+- **(c)** The recorded `max_connections` (as in §4.2).
+
+Snapshot (b) is taken again once at the breach rung, within 60 s of the breach declaration, alongside the breach-time snapshot. These records are used only as described in §5.3 and never change the verdict.
+
 ## 5. Frozen predictions (written 2026-10-18, before any apply)
 
 ### 5.1 Locked candidate: the refit CWM server-limit candidate (unpublished, opt-in)
@@ -101,6 +109,7 @@ All are computed with `typical/dbsat-v1/score_dbsat_v1.py` (`record_from_collect
 
   - **Prepared statements:** 59.10268577018286 per open server connection, applied once to the total open connections (app + observer/system). The observer creates no statements.
   - **Restrictions (stated by the candidate).** TMC alone is a lower bound on total errors. **Latency and non-TMC errors are not modelled**, so the candidate's breach is a *conditional* error breach (conditional on server admission causing rejections). Above 900 RPS all values are extrapolations, with no measurement of the shape beyond the stop. The 2× transfer of the total-RPS demand curve is itself an extrapolation.
+  - **Rejection-share transfer is an assumption.** The ~13.6% rejection share at 900 was fitted on 3× and 4×, where the app pools could open more connections than the server allowed. Here it is transferred to a 2× pool whose capacity equals the server limit, with only one ordinary slot occupied.
 
 ### 5.2 Frozen primary matrix (scored assumption: one ordinary observer)
 Assumption: 1 ordinary observer/system connection, 0 exempt. App pool ceiling 500; effective server app ceiling 499. Counts are fractional model estimates, not measured samples. "TMC %" is TMC / all HTTP responses.
@@ -118,6 +127,7 @@ Assumption: 1 ordinary observer/system connection, 0 exempt. App pool ceiling 50
 - **First binding limit:** server admission (`max_connections`).
 - **First tested-ladder conditional error breach:** **900 RPS, rung 4.**
 - **Interpolated 5% TMC crossing:** 771.780 RPS (equality is not a breach). **Interpolated server saturation:** 802.335 RPS; first tested saturated rung 900. These are separate model estimates, not measured transitions, and are not scored.
+- **Disclosed inconsistency.** The interpolated 5% error crossing (~771.78 RPS) comes **before** the interpolated saturation (~802.34 RPS), although the candidate produces rejections only once server admission binds. The two come from separately interpolated curves, and the candidate does not establish a coherent continuous transition between saturation and breach. Both map to the 900 ladder rung, so the prediction is tested **only at ladder-rung resolution**: no breach at 700, breach at 900. Neither interpolated value is scored.
 - **Prepared-statement cap:** never reached (peak 29,551 ≪ 65,528).
 - Attempted app demand, leave-rep sensitivity range (not scored): 300: 95.466–134.230; 500: 236.564–253.461; 700: 384.890–429.124; 900: 525.667–669.126. Even the low fit exceeds the 499 app ceiling at 900, and even the high fit stays below it at 700.
 - 700-rung TMC share at the rep maximum (0.728%) is still below 5%, so the 700 no-breach prediction does not depend on the leave-rep choice. At 900 both rep shares (9.41%, 17.70%) exceed 5%. [DERIVED]
@@ -135,6 +145,10 @@ Assumption: 1 ordinary observer/system connection, 0 exempt. App pool ceiling 50
 - At rungs 1–3 all scenarios have the same total open connections as §5.2 (114.215, 245.867, 407.407) and the same prepared values. In the three-observer cases the attempted app demand is 2 lower (111.215, 242.867, 404.407, then 591.082 … 1275.865).
 - In the two exempt scenarios the pool and server limits tie, so the candidate makes **no** TMC or breach prediction ("unknown", not "no breach"). The three-exempt case matches a possible observed total of 503 but does not prove 500 app slots.
 - None of these scenarios changes §5.4–§5.6. They are reported next to the results for interpretation only.
+- **Scoring is always against the primary matrix [DECISION, r1.2].** H1/H0 (§5.4) are **always** scored against the §5.2 primary matrix (one ordinary observer, no other occupancy). No sensitivity case may be selected after results.
+  - The occupancy measured under §4.3 is reported and mapped descriptively to the nearest recorded scenario in this section. The mapping uses the number of non-app connections and whether they hold `SUPER` or `CONNECTION_ADMIN`.
+  - If the measured occupancy matches an exempt-observer case (where the candidate's breach prediction is "unknown"), the results state this explicitly as context. The rep is still scored against the primary prediction.
+  - If occupancy cannot be established (missing or ambiguous records, or app connections above zero at wait-ready), it is reported as **unknown**. Scoring is unaffected, and §4.3 is not an E1–E5 validity input.
 
 ### 5.4 Hypotheses (per rep, then campaign)
 Evaluated **per rep**, with each rep's own first breach rung B (B = "none" if all 7 rungs complete), using the §3.1 breach rule.
@@ -271,9 +285,15 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
      - the **full** k6 stdout/stderr log, not only the tail kept in the run record;
      - the run record's `error` field;
    - (d) keep conn3-1.0.0's wait-ready `max_connections` recording and timestamped problem records (stage + failure time) for §5.5;
-   - (e) compute TMC share of failures and TMC / all-responses at the breach rung in the run summary (descriptive; scoring recomputes both).
+   - (e) compute TMC share of failures and TMC / all-responses at the breach rung in the run summary (descriptive; scoring recomputes both);
+   - (f) record §4.3 at wait-ready, before rung-1 warmup:
+     - (a) `SHOW GRANTS` for the observer user, with a `SUPER`/`CONNECTION_ADMIN` flag;
+     - (b) the processlist count of non-app connections by user (observer, `rdsadmin`/system, other) and the app-user count;
+     - (c) `max_connections`.
 
-   Required offline tests: a simulated 2× breach captures the InnoDB/error snapshot; a gap in steady minutes resets the breach streak; an early-stopped rung's dropped ratios use elapsed-until-stop counts; a simulated breach stop yields exit 105 with only the interrupt `level=error` line and passes E5-breach, while an injected k6 script error, a non-105 exit, or a missing generator CPU minute fails it; an aborted rung keeps its original raw gzip; a simulated post-breach processing failure produces a timestamped problem record with E1–E5 intact. Record the new controller manifest SHA256, the diff and the test logs with the evidence.
+     Repeat (b) once at the breach rung, within 60 s of the declaration.
+
+   Required offline tests: a simulated 2× breach captures the InnoDB/error snapshot; a gap in steady minutes resets the breach streak; an early-stopped rung's dropped ratios use elapsed-until-stop counts; a simulated breach stop yields exit 105 with only the interrupt `level=error` line and passes E5-breach, while an injected k6 script error, a non-105 exit, or a missing generator CPU minute fails it; an aborted rung keeps its original raw gzip; a simulated post-breach processing failure produces a timestamped problem record with E1–E5 intact; against a fixture database, the wait-ready occupancy record captures grants with the correct reserved-slot flag (granted and not granted), non-app counts by user with app count zero, and `max_connections`, and the breach-rung processlist re-record is written. Record the new controller manifest SHA256, the diff and the test logs with the evidence.
 3. The wiring commit is `main` at freeze, with `git diff 881e0cf -- app-typical/ load/` empty. The evidence records both that commit and 881e0cf.
 
 ## 9. Names and paths
@@ -294,3 +314,10 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
 ## 11. Changelog
 - r1 (2026-10-18): initial draft.
 - r1.1 (2026-10-19, before freeze; approved by Kevin Brown): E5 split into E5-pre (strict dropped ratio, unchanged) and E5-breach (generator health instead of dropped iterations; both dropped ratios descriptive) (§5.5). Controller requirement (c2) and offline tests added (§8.2). Risk text updated (§10). **No change to predictions (§5.1–§5.3, §5.6) or to H1/H0 (§5.4).**
+- r1.2 (2026-10-19, before freeze; approved by Kevin Brown):
+  - observer occupancy and privilege records at wait-ready and at the breach rung (§4.3, §8.2 (f) with an offline test);
+  - scoring locked to the primary matrix, with measured occupancy reported descriptively only (§5.3);
+  - disclosure that the 5% crossing precedes saturation and that the test is at rung resolution only (§5.2);
+  - the rejection-share transfer stated as an assumption (§5.1).
+
+  **No change to frozen numbers, predictions or H1/H0.**
