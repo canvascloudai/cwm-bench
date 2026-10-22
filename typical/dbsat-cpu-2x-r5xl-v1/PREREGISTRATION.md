@@ -143,10 +143,15 @@ As v1.1 §7.3: destroy after each apply; immediate and ≥ 15-minute delayed cle
    - (c) record per-rung RDS `CPUUtilization` steady mean and peak 1-minute value, and per-rung failure-class shares, in the run summary (descriptive; scoring recomputes);
    - (d) the evaluation path handles a **full no-breach ladder**: E3/E4/E5-pre over all seven rungs.
    Required offline tests: a wrong instance class fails E1; a 7-rung no-breach fixture scores H1 with complete E2–E5; a breach fixture at 1500 with `queue_full` dominant scores H0 with the correct mechanism label. Full offline suites plus an EC2 no-load rehearsal on the exact final manifest, with cleanup passing in both regions.
-3. **Frozen harness/runner manifest [OPEN; filled in by the runner before freeze, approved by Kevin].**
-   - Manifest SHA256: `<TBD by runner>`
-   - Controller SHA256: `<TBD by runner>` (predecessor `52d8bc74c4cd0adfb55b24b082f8a230ea73a1a40177eb426a9e5a4c5e184434`)
-   - Offline suite counts, rehearsal and cleanup times: `<TBD by runner>`
+3. **Frozen harness/runner manifest [effective upon merge of this freeze update].**
+   - Manifest SHA256: `b1d51acee551062c6873e02c275c243dfcc12c4719780a19253138cd73c8cde1`
+   - Controller SHA256: `fed63760a38c1191feea485af4aa369d5bbdadd682ca246359496d0e2a8806ef` (predecessor `52d8bc74c4cd0adfb55b24b082f8a230ea73a1a40177eb426a9e5a4c5e184434`)
+   - Offline suites on the independent EC2 runner: **570 passed, 0 failed, 1 existing skip** (556 predecessor tests plus 14 CPU-specific tests), Node v22.23.2, completed `2026-10-22T19:06:22.340Z`.
+   - No-load rehearsal: actual 2-app/db.r5.xlarge apply started `2026-10-22T19:22:10.250Z`; zero workload rungs. AWS-reported DB class `db.r5.xlarge`, 4 vCPU via paired AWS EC2 DescribeInstanceTypes, required Topology tag verified. Retained same-ID prior-attempt evidence remained unchanged. The separate 13-phase rehearsal covered baseline, collect, transfer and archive with execution boundaries stubbed.
+   - Destroy completed `2026-10-22T19:35:32.497Z`; both-region immediate cleanup `2026-10-22T19:36:04.882Z`; delayed cleanup `2026-10-22T19:51:03.570Z` (us-east-2 and us-west-2). Private S3 backup round-trip SHA256 verified.
+   - Private rehearsal archive SHA256: `1c01118bd18d05d9ae3c0b03d8f5f68e9a68a112f262ee0d66a3887b3be24ab3` (625,982 bytes; private bootstrap logs excluded from public review).
+   - CPU test log SHA256: `34d9678b0fe4f9c5670d53303a81a9485d09b1e5e2cde91b47dc5870212fa909`; predecessor suite summary log SHA256: `1e24e4ca92101a1e915fc84b7aff8fe807bfbd3bf028625d18e44a3e8509234f`. Full logs accompany the review bundle.
+   - Runner CPU credit mode: owner-approved temporary `unlimited`, kept through both reps and restored to `standard` before stopping the runner.
    - Any later harness-only change means a new manifest SHA, recorded as a deviation under §7.1.
 4. The wiring commit is `main` at freeze, with `git diff 881e0cf -- app-typical/ load/` empty.
 
