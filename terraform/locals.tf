@@ -27,7 +27,7 @@ locals {
       Project   = "cwm-bench"
       TestId    = var.test_id
       ManagedBy = "terraform"
-      Topology  = "alb-${var.app_count}x-m5.large-db.r5.large-mysql80-single-az"
+      Topology  = "alb-${var.app_count}x-${var.app_instance_type}-${var.db_instance_class}-mysql80-single-az"
     },
     var.extra_tags,
   )
