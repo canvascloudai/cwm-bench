@@ -1,0 +1,21 @@
+{
+ "reps": {
+  "1": {
+   "B": 900,
+   "server_limit_reached": true,
+   "mysql_1461_total": 0,
+   "prepared_max": 29824,
+   "tmc_share_of_failures_at_B": 0.1456695898304228,
+   "verdict": "H0(c)"
+  },
+  "2": {
+   "B": 900,
+   "server_limit_reached": true,
+   "mysql_1461_total": 0,
+   "prepared_max": 29824,
+   "tmc_share_of_failures_at_B": 0.22058090012661627,
+   "verdict": "H0(c)"
+  }
+ },
+ "campaign": "H0"
+}
