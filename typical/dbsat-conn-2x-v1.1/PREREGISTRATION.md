@@ -313,7 +313,14 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
    - (b) **accurate launch/cleanup status reporting.** The status the runner reports for launch, rung, destroy and cleanup matches the recorded evidence.
 
    Then it must pass the full offline suites, plus an EC2 no-load rehearsal on the exact final manifest. The rehearsal includes retained prior-attempt state and must leave cleanup passing in both regions.
-4. **Frozen v1.1 harness/runner manifest SHA256: `<TBD — filled in after §8.3 passes, before freeze>`**. Any later change to the harness means a new manifest SHA, recorded as a deviation under §7.1 ("proceed, then report") only if it is harness-only. The §8.2 controller requirements carry over unchanged.
+4. **Frozen v1.1 harness/runner manifest [FACT, harness review 2026-10-22; frozen when Kevin approves].**
+   - Manifest SHA256: `3224461dbfd2ac7754e5133ae404100d767499fd92e7c9910e7108a603bc0021` (canonical digest over 122 per-file entries).
+   - Controller SHA256: `52d8bc74c4cd0adfb55b24b082f8a230ea73a1a40177eb426a9e5a4c5e184434` (predecessor `16ce1c03ca5bbbc856be5b6075df6b3bba530534f0b9b989b61cdaa5a71c5569`). Measurement code is unchanged at `881e0cffd51da084be4a24ffd13366dfbb67063f`.
+   - Full offline suites: 555 passed, 0 failed, 1 existing skip, on the hosted workspace and on the independent EC2 runner. The 16 new tests for retained state and status reporting passed on both hosts.
+   - EC2 no-load rehearsal on this exact manifest passed with retained same-ID readiness state. The old-path `EEXIST` collision was reproduced as a negative control, and the fixed path then succeeded. No benchmark resource was created.
+   - Live cleanup in both regions passed: immediate check 2026-10-22 01:38:09 UTC, delayed check 01:55:19 UTC.
+   - Changes are harness/runner only: attempt-scoped evidence roots, status read from recorded receipts, and a v1.1 namespace with an exact-manifest/freeze gate. The app, load, workload, breach, measurement and scoring code are unchanged.
+   - Any later harness change means a new manifest SHA, which is recorded as a deviation under §7.1 ("proceed, then report") only if it is harness-only.
 5. The wiring commit is `main` at freeze, with `git diff 881e0cf -- app-typical/ load/` empty. The evidence records both that commit and 881e0cf.
 
 ## 9. Names and paths
@@ -349,3 +356,4 @@ No new scorer. Per-rung records come from `score_dbsat_v1.record_from_collect` a
 
   **Frozen numbers, predictions and H1/H0 are unchanged.**
 - **v1.1 r1 (2026-10-21; rerun approved by Kevin Brown):** this is a new campaign version, created because the harness changed (independent AWS runner plus the §8.3 fixes). There is no pooling with v1, so v1 rep 1 is excluded, and two fresh valid reps are required. §7.2a (cleanup-only recovery after load), §8.3 and §8.4 (harness fixes and the manifest placeholder) were added, and §9 was updated with new names and a no-ID-reuse rule. The reason is v1's NOT DECIDED result (`typical/dbsat-conn-2x-v1/RESULTS.md`, PR #36). **Predictions, H1/H0, thresholds, scoring, workload and §7.1/§7.2 rules are unchanged from v1 r1.3.**
+- **v1.1 r2 (2026-10-22, before freeze):** §8.4 placeholder replaced with the reviewed harness manifest and controller SHA256, test counts, and rehearsal/cleanup times. **No change to predictions, H1/H0, thresholds, scoring, workload or §7 rules.**
