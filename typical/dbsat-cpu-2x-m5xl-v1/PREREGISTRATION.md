@@ -161,6 +161,10 @@ At each rep's observed qualifying breach rung:
 - **Invalidity rules** are as r5xl-v1 §5.5: the post-breach harness-failure rule applies, and "invalid is not a pass or fail".
 - **A wrong DB instance class or vCPU count makes the rep invalid** (reported, not scored).
 
+
+### 5.5b Validity precedence (clarification, 2026-10-24, before any paid apply; no rule changed)
+- **This preregistration governs run validity.** The v4 prediction report (Cloud World Model app, `reports/mysql-cpu-v4/FREEZE.md`) says a generator miss over 0.5% invalidates a run even under overload. That wording conflicts with this prereg and is superseded. The existing split rule in §5.5 applies unchanged: **E5-pre** (the ≤ 0.005 strict dropped ratio) applies before overload, to rungs below the breach rung and to every rung if there is no breach; at the breach rung, **E5-breach** applies, so missed requests are allowed provided the generator passes its separate health checks. The original report is preserved unmodified.
+- **Outcome vs mechanism.** As already stated in §5.4 and §5.5a, two valid reps that both first breach at 1500 RPS = **H1**; the §5.5a mechanism check is a separate finding that never changes H1/H0. "Breach point correct, mechanism not confirmed" is therefore a possible outcome.
 ## 6. Scoring
 No new scorer.
 - Per-rung records come from `score_dbsat_v1.record_from_collect` and `db_pressure`.
