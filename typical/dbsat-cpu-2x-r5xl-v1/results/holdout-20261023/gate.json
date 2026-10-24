@@ -1,0 +1,240 @@
+{
+ "2": {
+  "E": {
+   "E1": true,
+   "E2": true,
+   "E3": true,
+   "E4": true,
+   "E5": true
+  },
+  "intact": true,
+  "reasons": [],
+  "failure": null,
+  "breachDeclaredAt": "2026-10-23T06:37:06.558Z",
+  "failureStartedAfterBreach": false,
+  "noBreach": false,
+  "fullNoBreachCoverage": true,
+  "hardware": {
+   "at": "2026-10-23T02:44:44.238Z",
+   "DBInstanceClass": "db.r5.xlarge",
+   "vcpus": 4,
+   "capacitySource": "AWS EC2 DescribeInstanceTypes r5.xlarge; paired with AWS RDS DBInstanceClass",
+   "processorFeatures": [],
+   "reportedCoreCount": null,
+   "reportedThreadsPerCore": null,
+   "valid": true,
+   "requiredClass": "db.r5.xlarge",
+   "requiredVcpus": 4
+  },
+  "generator": [
+   {
+    "key": "typical-dbsat-2x-300",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 6.948137626373989,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-500",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 10.537891619090077,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-700",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 13.578727003683587,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-900",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 16.60115665678237,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-1100",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 19.702464633662082,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 8.656914364071727e-05
+   },
+   {
+    "key": "typical-dbsat-2x-1300",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 23.056436006235472,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0.0013434578583494368
+   },
+   {
+    "key": "typical-dbsat-2x-1500",
+    "valid": true,
+    "rule": "E5-breach",
+    "steadyGeneratorCpuMean": null,
+    "over70CpuMinutes": [],
+    "missingCpuMinutes": [],
+    "exitCode": 105,
+    "stopMarker": {
+     "reason": "breach",
+     "at": "2026-10-23T06:37:06.558Z"
+    },
+    "k6ErrorLines": [
+     "time=\"2026-10-23T06:37:19Z\" level=error msg=\"test run was aborted because k6 received a 'interrupt' signal\""
+    ],
+    "strictDroppedRatio": 0.006672352191995431
+   }
+  ]
+ },
+ "1": {
+  "E": {
+   "E1": true,
+   "E2": true,
+   "E3": true,
+   "E4": true,
+   "E5": true
+  },
+  "intact": true,
+  "reasons": [],
+  "failure": null,
+  "breachDeclaredAt": "2026-10-23T00:47:04.591Z",
+  "failureStartedAfterBreach": false,
+  "noBreach": false,
+  "fullNoBreachCoverage": true,
+  "hardware": {
+   "at": "2026-10-22T20:39:11.918Z",
+   "DBInstanceClass": "db.r5.xlarge",
+   "vcpus": 4,
+   "capacitySource": "AWS EC2 DescribeInstanceTypes r5.xlarge; paired with AWS RDS DBInstanceClass",
+   "processorFeatures": [],
+   "reportedCoreCount": null,
+   "reportedThreadsPerCore": null,
+   "valid": true,
+   "requiredClass": "db.r5.xlarge",
+   "requiredVcpus": 4
+  },
+  "generator": [
+   {
+    "key": "typical-dbsat-2x-300",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 6.072889940022462,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-500",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 9.513652502208405,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-700",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 12.551444142598395,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-900",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 15.497786588693506,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-1100",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 18.531670555395156,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0
+   },
+   {
+    "key": "typical-dbsat-2x-1300",
+    "valid": true,
+    "rule": "E5-pre",
+    "steadyGeneratorCpuMean": 21.814550157168703,
+    "over70CpuMinutes": null,
+    "missingCpuMinutes": null,
+    "exitCode": null,
+    "stopMarker": null,
+    "k6ErrorLines": null,
+    "strictDroppedRatio": 0.001050438635045094
+   },
+   {
+    "key": "typical-dbsat-2x-1500",
+    "valid": true,
+    "rule": "E5-breach",
+    "steadyGeneratorCpuMean": null,
+    "over70CpuMinutes": [],
+    "missingCpuMinutes": [],
+    "exitCode": 105,
+    "stopMarker": {
+     "reason": "breach",
+     "at": "2026-10-23T00:47:04.591Z"
+    },
+    "k6ErrorLines": [
+     "time=\"2026-10-23T00:47:11Z\" level=error msg=\"test run was aborted because k6 received a 'interrupt' signal\""
+    ],
+    "strictDroppedRatio": 0.0049232775123223245
+   }
+  ]
+ }
+}

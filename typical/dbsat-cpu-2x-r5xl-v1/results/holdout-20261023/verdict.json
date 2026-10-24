@@ -1,0 +1,42 @@
+{
+ "prediction_scored": "nominal \u00a75.2: no qualifying breach 300..1500",
+ "reps": {
+  "1": {
+   "campaign": "typical-dbsat-pscap-2x-r1a-20261022",
+   "valid": true,
+   "E1_detail": true,
+   "gate_E": {
+    "E1": true,
+    "E2": true,
+    "E3": true,
+    "E4": true,
+    "E5": true
+   },
+   "B_monitor": 1500,
+   "B_raw_recomputed": 1500,
+   "verdict": "H0",
+   "dominant_class_at_B": "queue_full",
+   "dominant_share_of_failures": 0.8158203889831614,
+   "mechanism": "queue_full dominant (>50% of failures)"
+  },
+  "2": {
+   "campaign": "typical-dbsat-pscap-2x-r2-20261023",
+   "valid": true,
+   "E1_detail": true,
+   "gate_E": {
+    "E1": true,
+    "E2": true,
+    "E3": true,
+    "E4": true,
+    "E5": true
+   },
+   "B_monitor": 1500,
+   "B_raw_recomputed": 1500,
+   "verdict": "H0",
+   "dominant_class_at_B": "queue_full",
+   "dominant_share_of_failures": 0.7986961940370051,
+   "mechanism": "queue_full dominant (>50% of failures)"
+  }
+ },
+ "campaign": "H0"
+}
