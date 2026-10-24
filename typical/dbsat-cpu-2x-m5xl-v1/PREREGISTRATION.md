@@ -207,10 +207,15 @@ As r5xl-v1 §7.3:
    - mechanism fixtures cover CPU 85.0% with `queue_full` uniquely dominant (DB-limited), CPU 84.9% (app-limited), and a tie (app-limited).
    
    Run the full offline suites plus an EC2 no-load rehearsal on the exact final manifest, with cleanup passing in both regions.
-3. **Frozen harness/runner manifest [TBD by the runner; effective upon merge of the §8.3 update].**
-   - Manifest SHA256: `TBD`
-   - Controller SHA256: `TBD` (predecessor `fed63760a38c1191feea485af4aa369d5bbdadd682ca246359496d0e2a8806ef`)
-   - Offline suite counts, rehearsal times, cleanup times, rehearsal archive SHA256 and test-log SHA256: `TBD`
+3. **Frozen harness/runner manifest (effective upon merge of this §8.3 update).**
+   - Manifest SHA256: `e8cc2cbe1d65dd24c5d2fa746634d98577476e51e69fb089d92e82d4454dc5ce`
+   - Controller SHA256: `fff73ab6f0452e5b13fa21885e5649e436f35b78410800424645ac6fd9e9b517` (predecessor `fed63760a38c1191feea485af4aa369d5bbdadd682ca246359496d0e2a8806ef`; unchanged by the launcher/test-fixture fixes).
+   - Full offline suites on the independent EC2 runner: **592 passed / 0 failed / 1 existing skip**, Node `v22.23.2`, completed `2026-10-24T19:39:51.799Z` UTC. Local full suites: **592 passed / 0 failed / 1 existing skip**, Node `v22.23.4`, completed `2026-10-24T19:37:56.162Z` UTC. Full suites were rerun, with no individual-test retries or deadline changes.
+   - Real no-load rehearsal: apply started `2026-10-24T19:56:27.156Z`; AWS-reported class **db.m5.xlarge**, **4 vCPU** via paired EC2 DescribeInstanceTypes, **2 app nodes**; Topology tag verified; **0 workload rungs**. Fresh full wiring checkout verified; `git diff 881e0cf -- app-typical/ load/` empty. Retained same-ID readiness evidence was preserved unchanged. Stubbed execution boundaries separately exercised baseline, collect and transfer.
+   - Destroy completed `2026-10-24T20:09:18.542Z`. Both-region immediate cleanup `2026-10-24T20:09:41.815Z`; delayed cleanup `2026-10-24T20:24:42.057Z` (us-east-2 and us-west-2, at least 15 minutes after destroy).
+   - Private rehearsal archive SHA256 `071a72122cbd6e8c2d655e901f0aa0a2df7149f695fcd630399261f7aba7db0d`, **627,061 bytes**; private S3 upload/download round-trip SHA256 verified. Bootstrap, stdout, SQL, state and raw cloud-command evidence remain private.
+   - Runner predecessor-suite summary log SHA256 `e4a781b583c4713a62dbca5ac9315d3866f1eb10cba0367ab4d6b240086d7572`; runner m5 test log SHA256 `ac1dddb6422fe5d8bfcfa1a06ee087b538685eb78c882aca7c9f99247c9425a8`. Local predecessor-suite summary log SHA256 `595169fed82674d65706fe728be3b7f5c455df91d2cbae4120b78fb3beff2719`; local m5 test log SHA256 `b8fd92cdd478658d5ede8b2e9bb5bb2200a76347f56b6e64a49659b1e2ec805f`.
+   - Harness-only repairs: preserve historical journal paths; verify the owner-approved unlimited CPU-credit receipt; preserve superseded launcher sources and receipts; route only the offline readiness-test fixture to a same-PID shell/sleep fake AWS executable. The 1000 ms diagnostic test deadline, production diagnostics, controller, app/load and scoring are unchanged. Runner CPU mode stays unlimited through the campaign and is restored to standard before stopping, not terminating, the runner.
    - Any later harness-only change means a new manifest SHA, recorded as a deviation under §7.1.
 4. The wiring commit is `main` at freeze, with `git diff 881e0cf -- app-typical/ load/` empty.
 
