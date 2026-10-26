@@ -21,12 +21,14 @@ export const DBSAT_LADDER = Object.freeze([300, 500, 700, 900, 1100, 1300, 1500]
 export const DBSAT_V1_TEST_ID_RE = /^typical-dbsat-(2x|3x|4x)-(r[12]|c1|d1)([a-z]?)-\d{8}$/;
 /** typical-dbsat-pscap-v1 (max_prepared_stmt_count holdout): reps r1..r9; optional replacement letter. */
 export const DBSAT_PSCAP_TEST_ID_RE = /^typical-dbsat-pscap-(2x|3x|4x)-(r[1-9])([a-z]?)-\d{8}$/;
-/** Any typical-dbsat apply id (v1 or pscap). Group 1 or 4 is the scale. */
-export const DBSAT_TEST_ID_RE = /^typical-dbsat-(?:(2x|3x|4x)-(?:r[12]|c1|d1)|pscap-(2x|3x|4x)-r[1-9])[a-z]?-\d{8}$/;
+/** typical-dbsat-pscap16k-2x-v1 (16,382 prepared-statement cap holdout, 2x only): reps r1..r9; optional replacement letter. */
+export const DBSAT_PSCAP16K_TEST_ID_RE = /^typical-dbsat-pscap16k-(2x)-(r[1-9])([a-z]?)-\d{8}$/;
+/** Any typical-dbsat apply id (v1, pscap or pscap16k). Group 1, 2 or 3 is the scale. */
+export const DBSAT_TEST_ID_RE = /^typical-dbsat-(?:(2x|3x|4x)-(?:r[12]|c1|d1)|pscap-(2x|3x|4x)-r[1-9]|pscap16k-(2x)-r[1-9])[a-z]?-\d{8}$/;
 
 export function dbsatScale(id) {
   const match = DBSAT_TEST_ID_RE.exec(String(id || ''));
-  return match ? (match[1] || match[2]) : null;
+  return match ? (match[1] || match[2] || match[3]) : null;
 }
 
 export function parseLadder(value) {
@@ -120,7 +122,7 @@ function assertDbsatTestId(spec, id) {
     const scale = dbsatScale(id);
     if (!scale) {
       const err = new Error(
-        `scenario ${spec.key} requires test id typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD or typical-dbsat-pscap-{2x|3x|4x}-r<n>[letter]-YYYYMMDD; got ${id || 'unset'}`,
+        `scenario ${spec.key} requires test id typical-dbsat-{2x|3x|4x}-{r1|r2|c1|d1}[letter]-YYYYMMDD or typical-dbsat-pscap-{2x|3x|4x}-r<n>[letter]-YYYYMMDD or typical-dbsat-pscap16k-2x-r<n>[letter]-YYYYMMDD; got ${id || 'unset'}`,
       );
       err.code = 'TEST_ID_MISMATCH';
       throw err;

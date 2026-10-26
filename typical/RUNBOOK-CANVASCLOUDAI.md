@@ -471,3 +471,14 @@ As CONTROLLER-SPEC §1–§4 and prereg §7. In short: 3 consecutive steady minu
 ### 13.5 IAM
 
 The runner identity additionally needs `pi:GetResourceMetrics` (plus `pi:DescribeDimensionKeys`, `pi:ListAvailableResourceMetrics`) on `arn:aws:pi:us-east-2:<ACCOUNT>:metrics/rds/*`, and `rds:DescribeDBInstances`. Policy JSON: CONTROLLER-SPEC §6.
+
+## 14. Prepared-statement cap holdout (typical-dbsat-pscap16k-2x-v1)
+
+Authority: `typical/dbsat-pscap16k-2x-v1/PREREGISTRATION.md`. Everything is as for `typical-dbsat-conn-2x-v1.1` except `mysql_max_prepared_stmt_count = 16382`.
+
+- Apply IDs: `typical-dbsat-pscap16k-2x-r{1,2}[letter]-YYYYMMDD`. IDs are never reused. Replacements use the next letter.
+- Terraform: `-var mysql_max_prepared_stmt_count=16382`. All other variables are as conn-2x-v1.1. `wait-ready` rejects a pscap16k ID unless 16382 is declared. It also checks the live parameter group (16382, `in-sync`) even though 16382 is the engine default.
+- Ladder: 300 → 500 → 700 → 900 → 1100 → 1300 → 1500. Steps are 300 s warmup + 900 s steady, with the 15 s observer polls. Stop at the §3.1 breach.
+- Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.5, §7.1).
+- Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
+- Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
