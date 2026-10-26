@@ -1,0 +1,38 @@
+{
+ "r1b": {
+  "at": "2026-10-25T16:33:45.042Z",
+  "E": {
+   "E1": true,
+   "E2": true,
+   "E3": true,
+   "E4": true,
+   "E5": true
+  },
+  "intact": true,
+  "reasons": []
+ },
+ "r2": {
+  "at": "2026-10-25T23:10:46.322Z",
+  "E": {
+   "E1": true,
+   "E2": true,
+   "E3": true,
+   "E4": true,
+   "E5": true
+  },
+  "intact": true,
+  "reasons": []
+ },
+ "r1a_unscored": {
+  "at": "2026-10-25T02:54:10.971Z",
+  "E": {
+   "E1": true,
+   "E2": true,
+   "E3": true,
+   "E4": false,
+   "E5": true
+  },
+  "intact": false,
+  "reasons": []
+ }
+}
