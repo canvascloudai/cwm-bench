@@ -1,0 +1,3071 @@
+{
+ "r1a": {
+  "campaign": "typical-dbsat-pscap-2x-r1a-20261024",
+  "scored": false,
+  "first_breach_rps": null,
+  "rungs": [
+   {
+    "rps": 300,
+    "steady_first_utc": "2026-10-24T23:35:42.109597+00:00",
+    "steady_last_utc": "2026-10-24T23:50:42.118416+00:00",
+    "window_end_utc": "2026-10-24T23:50:52+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.00016665740792178211,
+    "max_eligible_p95_ms": 49.608259,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-24T23:35:00+00:00",
+      "eligible": false,
+      "responses": 5369,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 10.249672,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:36:00+00:00",
+      "eligible": true,
+      "responses": 18000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.84883,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:37:00+00:00",
+      "eligible": true,
+      "responses": 17996,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 9.668466,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:38:00+00:00",
+      "eligible": true,
+      "responses": 18004,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 14.302009,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:39:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 2,
+      "errorRate": 0.00011111728429357187,
+      "p95Ms": 29.555629,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:40:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 2,
+      "errorRate": 0.00011110493861452142,
+      "p95Ms": 46.631506,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:41:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 16.585885,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:42:00+00:00",
+      "eligible": true,
+      "responses": 18000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 25.550862,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:43:00+00:00",
+      "eligible": true,
+      "responses": 17991,
+      "failures": 2,
+      "errorRate": 0.00011116669445834028,
+      "p95Ms": 45.562185,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:44:00+00:00",
+      "eligible": true,
+      "responses": 18010,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 20.115589,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:45:00+00:00",
+      "eligible": true,
+      "responses": 17998,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 12.683457,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:46:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 3,
+      "errorRate": 0.00016665740792178211,
+      "p95Ms": 38.132239,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:47:00+00:00",
+      "eligible": true,
+      "responses": 18000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 28.535074,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:48:00+00:00",
+      "eligible": true,
+      "responses": 17993,
+      "failures": 1,
+      "errorRate": 5.557716889901629e-05,
+      "p95Ms": 42.338655,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:49:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 49.608259,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-24T23:50:00+00:00",
+      "eligible": false,
+      "responses": 12641,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 33.004757,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 500,
+    "steady_first_utc": "2026-10-25T00:02:21.832603+00:00",
+    "steady_last_utc": "2026-10-25T00:17:21.827481+00:00",
+    "window_end_utc": "2026-10-25T00:17:39+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.00043346337234503684,
+    "max_eligible_p95_ms": 89.260176,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T00:02:00+00:00",
+      "eligible": false,
+      "responses": 19087,
+      "failures": 2,
+      "errorRate": 0.00010478336040236811,
+      "p95Ms": 91.287207,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:03:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 2,
+      "errorRate": 6.666666666666667e-05,
+      "p95Ms": 89.260176,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:04:00+00:00",
+      "eligible": true,
+      "responses": 29995,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 80.799591,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:05:00+00:00",
+      "eligible": true,
+      "responses": 30006,
+      "failures": 7,
+      "errorRate": 0.0002332866759981337,
+      "p95Ms": 75.874862,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:06:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 1,
+      "errorRate": 3.333444448148272e-05,
+      "p95Ms": 76.568494,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:07:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 4,
+      "errorRate": 0.00013333777792593087,
+      "p95Ms": 76.078251,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:08:00+00:00",
+      "eligible": true,
+      "responses": 29991,
+      "failures": 13,
+      "errorRate": 0.00043346337234503684,
+      "p95Ms": 75.669749,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:09:00+00:00",
+      "eligible": true,
+      "responses": 30003,
+      "failures": 1,
+      "errorRate": 3.3330000333300005e-05,
+      "p95Ms": 60.526352,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:10:00+00:00",
+      "eligible": true,
+      "responses": 30008,
+      "failures": 5,
+      "errorRate": 0.00016662223407091443,
+      "p95Ms": 74.597727,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:11:00+00:00",
+      "eligible": true,
+      "responses": 29977,
+      "failures": 1,
+      "errorRate": 3.3358908496513995e-05,
+      "p95Ms": 81.62638,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:12:00+00:00",
+      "eligible": true,
+      "responses": 30022,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 87.486317,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:13:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 6,
+      "errorRate": 0.0002000066668888963,
+      "p95Ms": 84.592974,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:14:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 3,
+      "errorRate": 9.999666677777408e-05,
+      "p95Ms": 87.526038,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:15:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 13,
+      "errorRate": 0.0004333188893703543,
+      "p95Ms": 85.487101,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:16:00+00:00",
+      "eligible": true,
+      "responses": 29991,
+      "failures": 1,
+      "errorRate": 3.3343336334233605e-05,
+      "p95Ms": 83.546614,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:17:00+00:00",
+      "eligible": false,
+      "responses": 10922,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 94.041789,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 700,
+    "steady_first_utc": "2026-10-25T00:32:27.101871+00:00",
+    "steady_last_utc": "2026-10-25T00:47:27.096987+00:00",
+    "window_end_utc": "2026-10-25T00:47:51+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0006667301647775979,
+    "max_eligible_p95_ms": 130.510192,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T00:32:00+00:00",
+      "eligible": false,
+      "responses": 23028,
+      "failures": 1,
+      "errorRate": 4.342539517109606e-05,
+      "p95Ms": 95.805899,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:33:00+00:00",
+      "eligible": true,
+      "responses": 42003,
+      "failures": 1,
+      "errorRate": 2.3807823250720186e-05,
+      "p95Ms": 115.730891,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:34:00+00:00",
+      "eligible": true,
+      "responses": 41998,
+      "failures": 22,
+      "errorRate": 0.0005238344683080147,
+      "p95Ms": 105.213678,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:35:00+00:00",
+      "eligible": true,
+      "responses": 42001,
+      "failures": 9,
+      "errorRate": 0.00021428061236637222,
+      "p95Ms": 105.403775,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:36:00+00:00",
+      "eligible": true,
+      "responses": 41996,
+      "failures": 28,
+      "errorRate": 0.0006667301647775979,
+      "p95Ms": 99.777849,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:37:00+00:00",
+      "eligible": true,
+      "responses": 42007,
+      "failures": 22,
+      "errorRate": 0.0005237222367700621,
+      "p95Ms": 115.535277,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:38:00+00:00",
+      "eligible": true,
+      "responses": 41988,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 130.510192,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:39:00+00:00",
+      "eligible": true,
+      "responses": 42010,
+      "failures": 12,
+      "errorRate": 0.0002856462746965008,
+      "p95Ms": 116.045571,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:40:00+00:00",
+      "eligible": true,
+      "responses": 41978,
+      "failures": 7,
+      "errorRate": 0.00016675401400733717,
+      "p95Ms": 106.411055,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:41:00+00:00",
+      "eligible": true,
+      "responses": 42018,
+      "failures": 3,
+      "errorRate": 7.139797229758674e-05,
+      "p95Ms": 103.818443,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:42:00+00:00",
+      "eligible": true,
+      "responses": 42004,
+      "failures": 7,
+      "errorRate": 0.0001666507951623655,
+      "p95Ms": 117.136444,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:43:00+00:00",
+      "eligible": true,
+      "responses": 42001,
+      "failures": 2,
+      "errorRate": 4.7617913859193826e-05,
+      "p95Ms": 104.851142,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:44:00+00:00",
+      "eligible": true,
+      "responses": 42000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 106.767018,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:45:00+00:00",
+      "eligible": true,
+      "responses": 41995,
+      "failures": 5,
+      "errorRate": 0.00011906179307060365,
+      "p95Ms": 100.520549,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:46:00+00:00",
+      "eligible": true,
+      "responses": 42005,
+      "failures": 23,
+      "errorRate": 0.0005475538626354005,
+      "p95Ms": 113.221834,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T00:47:00+00:00",
+      "eligible": false,
+      "responses": 18969,
+      "failures": 19,
+      "errorRate": 0.0010016342453476725,
+      "p95Ms": 97.735737,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 900,
+    "steady_first_utc": "2026-10-25T01:05:16.226088+00:00",
+    "steady_last_utc": "2026-10-25T01:20:16.124859+00:00",
+    "window_end_utc": "2026-10-25T01:20:47+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0010557119573270115,
+    "max_eligible_p95_ms": 201.183502,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T01:05:00+00:00",
+      "eligible": false,
+      "responses": 39486,
+      "failures": 4,
+      "errorRate": 0.00010130172719444867,
+      "p95Ms": 173.892169,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:06:00+00:00",
+      "eligible": true,
+      "responses": 53992,
+      "failures": 16,
+      "errorRate": 0.000296340198547933,
+      "p95Ms": 167.324958,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:07:00+00:00",
+      "eligible": true,
+      "responses": 53951,
+      "failures": 2,
+      "errorRate": 3.707067524234954e-05,
+      "p95Ms": 177.974332,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:08:00+00:00",
+      "eligible": true,
+      "responses": 54054,
+      "failures": 45,
+      "errorRate": 0.0008325008325008325,
+      "p95Ms": 158.396699,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:09:00+00:00",
+      "eligible": true,
+      "responses": 53998,
+      "failures": 4,
+      "errorRate": 7.407681765991333e-05,
+      "p95Ms": 144.468073,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:10:00+00:00",
+      "eligible": true,
+      "responses": 54002,
+      "failures": 3,
+      "errorRate": 5.55534980185919e-05,
+      "p95Ms": 150.720062,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:11:00+00:00",
+      "eligible": true,
+      "responses": 53992,
+      "failures": 57,
+      "errorRate": 0.0010557119573270115,
+      "p95Ms": 169.042146,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:12:00+00:00",
+      "eligible": true,
+      "responses": 53995,
+      "failures": 16,
+      "errorRate": 0.00029632373367904436,
+      "p95Ms": 162.24506,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:13:00+00:00",
+      "eligible": true,
+      "responses": 53996,
+      "failures": 2,
+      "errorRate": 3.703978072449811e-05,
+      "p95Ms": 155.071007,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:14:00+00:00",
+      "eligible": true,
+      "responses": 54011,
+      "failures": 9,
+      "errorRate": 0.0001666327229638407,
+      "p95Ms": 158.015852,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:15:00+00:00",
+      "eligible": true,
+      "responses": 54010,
+      "failures": 6,
+      "errorRate": 0.00011109053878911313,
+      "p95Ms": 174.277098,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:16:00+00:00",
+      "eligible": true,
+      "responses": 54001,
+      "failures": 7,
+      "errorRate": 0.00012962722912538658,
+      "p95Ms": 197.709,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:17:00+00:00",
+      "eligible": true,
+      "responses": 53988,
+      "failures": 1,
+      "errorRate": 1.8522634659553976e-05,
+      "p95Ms": 176.882419,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:18:00+00:00",
+      "eligible": true,
+      "responses": 53902,
+      "failures": 4,
+      "errorRate": 7.420874921153204e-05,
+      "p95Ms": 163.911945,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:19:00+00:00",
+      "eligible": true,
+      "responses": 54102,
+      "failures": 9,
+      "errorRate": 0.0001663524453809471,
+      "p95Ms": 201.183502,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:20:00+00:00",
+      "eligible": false,
+      "responses": 14521,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 140.953018,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1100,
+    "steady_first_utc": "2026-10-25T01:41:35.724709+00:00",
+    "steady_last_utc": "2026-10-25T01:56:35.715374+00:00",
+    "window_end_utc": "2026-10-25T01:57:27+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0007137867144549403,
+    "max_eligible_p95_ms": 345.263126,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T01:41:00+00:00",
+      "eligible": false,
+      "responses": 26691,
+      "failures": 7,
+      "errorRate": 0.00026226068712300026,
+      "p95Ms": 287.051758,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:42:00+00:00",
+      "eligible": true,
+      "responses": 65937,
+      "failures": 4,
+      "errorRate": 6.066396712012982e-05,
+      "p95Ms": 323.087808,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:43:00+00:00",
+      "eligible": true,
+      "responses": 66080,
+      "failures": 2,
+      "errorRate": 3.026634382566586e-05,
+      "p95Ms": 242.93721,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:44:00+00:00",
+      "eligible": true,
+      "responses": 66009,
+      "failures": 25,
+      "errorRate": 0.0003787362329379327,
+      "p95Ms": 326.167221,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:45:00+00:00",
+      "eligible": true,
+      "responses": 65913,
+      "failures": 21,
+      "errorRate": 0.0003186017932729507,
+      "p95Ms": 327.164162,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:46:00+00:00",
+      "eligible": true,
+      "responses": 65983,
+      "failures": 12,
+      "errorRate": 0.00018186502583998908,
+      "p95Ms": 316.977304,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:47:00+00:00",
+      "eligible": true,
+      "responses": 66076,
+      "failures": 45,
+      "errorRate": 0.0006810339608935166,
+      "p95Ms": 285.49035,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:48:00+00:00",
+      "eligible": true,
+      "responses": 65710,
+      "failures": 1,
+      "errorRate": 1.5218383807639629e-05,
+      "p95Ms": 320.240684,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:49:00+00:00",
+      "eligible": true,
+      "responses": 66198,
+      "failures": 9,
+      "errorRate": 0.00013595576905646697,
+      "p95Ms": 292.454428,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:50:00+00:00",
+      "eligible": true,
+      "responses": 66119,
+      "failures": 27,
+      "errorRate": 0.00040835463331266353,
+      "p95Ms": 320.725155,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:51:00+00:00",
+      "eligible": true,
+      "responses": 65938,
+      "failures": 38,
+      "errorRate": 0.0005762989474961327,
+      "p95Ms": 345.263126,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:52:00+00:00",
+      "eligible": true,
+      "responses": 66053,
+      "failures": 21,
+      "errorRate": 0.0003179265135572949,
+      "p95Ms": 293.907009,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:53:00+00:00",
+      "eligible": true,
+      "responses": 65846,
+      "failures": 47,
+      "errorRate": 0.0007137867144549403,
+      "p95Ms": 288.964512,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:54:00+00:00",
+      "eligible": true,
+      "responses": 65911,
+      "failures": 40,
+      "errorRate": 0.0006068789731607774,
+      "p95Ms": 342.194507,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:55:00+00:00",
+      "eligible": true,
+      "responses": 66204,
+      "failures": 27,
+      "errorRate": 0.0004078303425774878,
+      "p95Ms": 336.379177,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T01:56:00+00:00",
+      "eligible": false,
+      "responses": 39334,
+      "failures": 23,
+      "errorRate": 0.000584735851934713,
+      "p95Ms": 356.28253,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   }
+  ]
+ },
+ "r1b": {
+  "campaign": "typical-dbsat-pscap-2x-r1b-20261025",
+  "scored": true,
+  "first_breach_rps": 1500,
+  "rungs": [
+   {
+    "rps": 300,
+    "steady_first_utc": "2026-10-25T10:57:08.615059+00:00",
+    "steady_last_utc": "2026-10-25T11:12:08.610594+00:00",
+    "window_end_utc": "2026-10-25T11:12:19+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.00011110493861452142,
+    "max_eligible_p95_ms": 42.019344,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T10:57:00+00:00",
+      "eligible": false,
+      "responses": 15416,
+      "failures": 1,
+      "errorRate": 6.486766995329527e-05,
+      "p95Ms": 8.96973,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T10:58:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.011123,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T10:59:00+00:00",
+      "eligible": true,
+      "responses": 17998,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.204587,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:00:00+00:00",
+      "eligible": true,
+      "responses": 18002,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 42.019344,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:01:00+00:00",
+      "eligible": true,
+      "responses": 17995,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 13.489679,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:02:00+00:00",
+      "eligible": true,
+      "responses": 18003,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 27.088992,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:03:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 13.778532,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:04:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 1,
+      "errorRate": 5.555246930726071e-05,
+      "p95Ms": 12.536746,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:05:00+00:00",
+      "eligible": true,
+      "responses": 17998,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 24.830498,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:06:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 2,
+      "errorRate": 0.00011110493861452142,
+      "p95Ms": 20.869414,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:07:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 10.362658,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:08:00+00:00",
+      "eligible": true,
+      "responses": 18000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 18.822194,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:09:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 11.286005,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:10:00+00:00",
+      "eligible": true,
+      "responses": 17996,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 14.044366,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:11:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 26.968972,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:12:00+00:00",
+      "eligible": false,
+      "responses": 2588,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 21.974086,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 500,
+    "steady_first_utc": "2026-10-25T11:25:16.967939+00:00",
+    "steady_last_utc": "2026-10-25T11:40:16.967869+00:00",
+    "window_end_utc": "2026-10-25T11:40:34+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0010000666711114075,
+    "max_eligible_p95_ms": 89.215904,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T11:25:00+00:00",
+      "eligible": false,
+      "responses": 21516,
+      "failures": 1,
+      "errorRate": 4.6477040342071015e-05,
+      "p95Ms": 20.695144,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:26:00+00:00",
+      "eligible": true,
+      "responses": 29996,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 62.521757,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:27:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 66.449645,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:28:00+00:00",
+      "eligible": true,
+      "responses": 30005,
+      "failures": 18,
+      "errorRate": 0.0005999000166638893,
+      "p95Ms": 79.933988,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:29:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 3,
+      "errorRate": 0.0001,
+      "p95Ms": 71.104756,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:30:00+00:00",
+      "eligible": true,
+      "responses": 29997,
+      "failures": 5,
+      "errorRate": 0.00016668333500016668,
+      "p95Ms": 81.138058,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:31:00+00:00",
+      "eligible": true,
+      "responses": 29998,
+      "failures": 30,
+      "errorRate": 0.0010000666711114075,
+      "p95Ms": 76.422089,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:32:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 7,
+      "errorRate": 0.000233341111370379,
+      "p95Ms": 89.215904,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:33:00+00:00",
+      "eligible": true,
+      "responses": 30002,
+      "failures": 4,
+      "errorRate": 0.00013332444503699753,
+      "p95Ms": 76.292422,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:34:00+00:00",
+      "eligible": true,
+      "responses": 30003,
+      "failures": 13,
+      "errorRate": 0.00043329000433290005,
+      "p95Ms": 78.465184,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:35:00+00:00",
+      "eligible": true,
+      "responses": 30002,
+      "failures": 4,
+      "errorRate": 0.00013332444503699753,
+      "p95Ms": 80.407272,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:36:00+00:00",
+      "eligible": true,
+      "responses": 29972,
+      "failures": 1,
+      "errorRate": 3.3364473508608036e-05,
+      "p95Ms": 69.470156,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:37:00+00:00",
+      "eligible": true,
+      "responses": 30028,
+      "failures": 11,
+      "errorRate": 0.00036632476355401625,
+      "p95Ms": 83.66685,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:38:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 1,
+      "errorRate": 3.333444448148272e-05,
+      "p95Ms": 84.801679,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:39:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 2,
+      "errorRate": 6.666666666666667e-05,
+      "p95Ms": 81.78374,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:40:00+00:00",
+      "eligible": false,
+      "responses": 8484,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 48.24789,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 700,
+    "steady_first_utc": "2026-10-25T11:57:23.025217+00:00",
+    "steady_last_utc": "2026-10-25T12:12:23.075325+00:00",
+    "window_end_utc": "2026-10-25T12:12:47+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0006905419563767978,
+    "max_eligible_p95_ms": 114.687746,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T11:57:00+00:00",
+      "eligible": false,
+      "responses": 25884,
+      "failures": 19,
+      "errorRate": 0.0007340441971874517,
+      "p95Ms": 102.230207,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:58:00+00:00",
+      "eligible": true,
+      "responses": 41972,
+      "failures": 9,
+      "errorRate": 0.0002144286667302011,
+      "p95Ms": 104.791539,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T11:59:00+00:00",
+      "eligible": true,
+      "responses": 42027,
+      "failures": 11,
+      "errorRate": 0.00026173650272443905,
+      "p95Ms": 95.353752,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:00:00+00:00",
+      "eligible": true,
+      "responses": 42000,
+      "failures": 7,
+      "errorRate": 0.00016666666666666666,
+      "p95Ms": 114.284657,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:01:00+00:00",
+      "eligible": true,
+      "responses": 41996,
+      "failures": 29,
+      "errorRate": 0.0006905419563767978,
+      "p95Ms": 100.889979,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:02:00+00:00",
+      "eligible": true,
+      "responses": 42005,
+      "failures": 1,
+      "errorRate": 2.3806689679800024e-05,
+      "p95Ms": 108.40503,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:03:00+00:00",
+      "eligible": true,
+      "responses": 41994,
+      "failures": 6,
+      "errorRate": 0.00014287755393627662,
+      "p95Ms": 114.411346,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:04:00+00:00",
+      "eligible": true,
+      "responses": 42005,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 105.030724,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:05:00+00:00",
+      "eligible": true,
+      "responses": 41974,
+      "failures": 28,
+      "errorRate": 0.000667079620717587,
+      "p95Ms": 97.651768,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:06:00+00:00",
+      "eligible": true,
+      "responses": 42009,
+      "failures": 12,
+      "errorRate": 0.00028565307434121257,
+      "p95Ms": 100.692411,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:07:00+00:00",
+      "eligible": true,
+      "responses": 42016,
+      "failures": 5,
+      "errorRate": 0.000119002284843869,
+      "p95Ms": 100.612992,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:08:00+00:00",
+      "eligible": true,
+      "responses": 41983,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 109.683815,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:09:00+00:00",
+      "eligible": true,
+      "responses": 42018,
+      "failures": 29,
+      "errorRate": 0.0006901803988766719,
+      "p95Ms": 111.411876,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:10:00+00:00",
+      "eligible": true,
+      "responses": 42000,
+      "failures": 7,
+      "errorRate": 0.00016666666666666666,
+      "p95Ms": 100.564345,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:11:00+00:00",
+      "eligible": true,
+      "responses": 41983,
+      "failures": 5,
+      "errorRate": 0.00011909582450039302,
+      "p95Ms": 114.687746,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:12:00+00:00",
+      "eligible": false,
+      "responses": 16135,
+      "failures": 4,
+      "errorRate": 0.0002479082739386427,
+      "p95Ms": 104.735884,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 900,
+    "steady_first_utc": "2026-10-25T12:32:33.647031+00:00",
+    "steady_last_utc": "2026-10-25T12:47:33.670221+00:00",
+    "window_end_utc": "2026-10-25T12:48:05+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0006296646109969072,
+    "max_eligible_p95_ms": 208.771707,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T12:32:00+00:00",
+      "eligible": false,
+      "responses": 23718,
+      "failures": 8,
+      "errorRate": 0.0003372965680074205,
+      "p95Ms": 151.528952,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:33:00+00:00",
+      "eligible": true,
+      "responses": 53972,
+      "failures": 4,
+      "errorRate": 7.411250277921885e-05,
+      "p95Ms": 192.855366,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:34:00+00:00",
+      "eligible": true,
+      "responses": 54027,
+      "failures": 13,
+      "errorRate": 0.000240620430525478,
+      "p95Ms": 189.414689,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:35:00+00:00",
+      "eligible": true,
+      "responses": 53997,
+      "failures": 34,
+      "errorRate": 0.0006296646109969072,
+      "p95Ms": 153.862132,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:36:00+00:00",
+      "eligible": true,
+      "responses": 54008,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 208.771707,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:37:00+00:00",
+      "eligible": true,
+      "responses": 54005,
+      "failures": 23,
+      "errorRate": 0.00042588649199148227,
+      "p95Ms": 168.870848,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:38:00+00:00",
+      "eligible": true,
+      "responses": 53941,
+      "failures": 9,
+      "errorRate": 0.00016684896460948074,
+      "p95Ms": 152.87777,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:39:00+00:00",
+      "eligible": true,
+      "responses": 53990,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 154.239182,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:40:00+00:00",
+      "eligible": true,
+      "responses": 54069,
+      "failures": 2,
+      "errorRate": 3.698977232795132e-05,
+      "p95Ms": 165.807444,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:41:00+00:00",
+      "eligible": true,
+      "responses": 53989,
+      "failures": 9,
+      "errorRate": 0.00016670062420122617,
+      "p95Ms": 172.920501,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:42:00+00:00",
+      "eligible": true,
+      "responses": 53925,
+      "failures": 10,
+      "errorRate": 0.0001854427445526194,
+      "p95Ms": 197.036271,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:43:00+00:00",
+      "eligible": true,
+      "responses": 54073,
+      "failures": 12,
+      "errorRate": 0.00022192221626319975,
+      "p95Ms": 156.446338,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:44:00+00:00",
+      "eligible": true,
+      "responses": 53934,
+      "failures": 10,
+      "errorRate": 0.000185411799606927,
+      "p95Ms": 160.917973,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:45:00+00:00",
+      "eligible": true,
+      "responses": 54070,
+      "failures": 21,
+      "errorRate": 0.0003883854262992417,
+      "p95Ms": 174.376584,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:46:00+00:00",
+      "eligible": true,
+      "responses": 54008,
+      "failures": 22,
+      "errorRate": 0.00040734705969486,
+      "p95Ms": 162.526903,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T12:47:00+00:00",
+      "eligible": false,
+      "responses": 30275,
+      "failures": 1,
+      "errorRate": 3.3030553261767136e-05,
+      "p95Ms": 152.184362,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1100,
+    "steady_first_utc": "2026-10-25T13:13:10.257388+00:00",
+    "steady_last_utc": "2026-10-25T13:28:10.281365+00:00",
+    "window_end_utc": "2026-10-25T13:29:02+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0010004547521600727,
+    "max_eligible_p95_ms": 402.476715,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T13:13:00+00:00",
+      "eligible": false,
+      "responses": 54441,
+      "failures": 11,
+      "errorRate": 0.00020205359930934407,
+      "p95Ms": 342.961777,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:14:00+00:00",
+      "eligible": true,
+      "responses": 66273,
+      "failures": 29,
+      "errorRate": 0.00043758393312510373,
+      "p95Ms": 348.018459,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:15:00+00:00",
+      "eligible": true,
+      "responses": 65970,
+      "failures": 66,
+      "errorRate": 0.0010004547521600727,
+      "p95Ms": 384.517863,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:16:00+00:00",
+      "eligible": true,
+      "responses": 65924,
+      "failures": 18,
+      "errorRate": 0.00027304168436381287,
+      "p95Ms": 293.923014,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:17:00+00:00",
+      "eligible": true,
+      "responses": 66082,
+      "failures": 25,
+      "errorRate": 0.00037831784752277476,
+      "p95Ms": 375.168459,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:18:00+00:00",
+      "eligible": true,
+      "responses": 65807,
+      "failures": 30,
+      "errorRate": 0.0004558785539532269,
+      "p95Ms": 402.476715,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:19:00+00:00",
+      "eligible": true,
+      "responses": 66065,
+      "failures": 37,
+      "errorRate": 0.0005600544917883902,
+      "p95Ms": 388.871266,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:20:00+00:00",
+      "eligible": true,
+      "responses": 65936,
+      "failures": 7,
+      "errorRate": 0.00010616355253579229,
+      "p95Ms": 333.710563,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:21:00+00:00",
+      "eligible": true,
+      "responses": 66075,
+      "failures": 40,
+      "errorRate": 0.0006053726825576996,
+      "p95Ms": 362.76904,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:22:00+00:00",
+      "eligible": true,
+      "responses": 66017,
+      "failures": 3,
+      "errorRate": 4.54428404804823e-05,
+      "p95Ms": 282.394393,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:23:00+00:00",
+      "eligible": true,
+      "responses": 65858,
+      "failures": 6,
+      "errorRate": 9.11051049227125e-05,
+      "p95Ms": 343.280684,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:24:00+00:00",
+      "eligible": true,
+      "responses": 66100,
+      "failures": 16,
+      "errorRate": 0.00024205748865355523,
+      "p95Ms": 318.381057,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:25:00+00:00",
+      "eligible": true,
+      "responses": 66036,
+      "failures": 12,
+      "errorRate": 0.00018171906232963838,
+      "p95Ms": 326.061276,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:26:00+00:00",
+      "eligible": true,
+      "responses": 65889,
+      "failures": 19,
+      "errorRate": 0.00028836376329888143,
+      "p95Ms": 288.710818,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:27:00+00:00",
+      "eligible": true,
+      "responses": 66021,
+      "failures": 10,
+      "errorRate": 0.00015146695748322503,
+      "p95Ms": 310.426511,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:28:00+00:00",
+      "eligible": false,
+      "responses": 11371,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 279.958122,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1300,
+    "steady_first_utc": "2026-10-25T13:57:05.978008+00:00",
+    "steady_last_utc": "2026-10-25T14:12:06.077832+00:00",
+    "window_end_utc": "2026-10-25T14:13:08+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.03387888074788498,
+    "max_eligible_p95_ms": 896.737693,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T13:57:00+00:00",
+      "eligible": false,
+      "responses": 69523,
+      "failures": 802,
+      "errorRate": 0.011535750758741711,
+      "p95Ms": 764.765353,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:58:00+00:00",
+      "eligible": true,
+      "responses": 77771,
+      "failures": 975,
+      "errorRate": 0.012536806778876445,
+      "p95Ms": 792.522684,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T13:59:00+00:00",
+      "eligible": true,
+      "responses": 77856,
+      "failures": 704,
+      "errorRate": 0.009042334566378957,
+      "p95Ms": 690.71299,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:00:00+00:00",
+      "eligible": true,
+      "responses": 77813,
+      "failures": 2509,
+      "errorRate": 0.03224396951666174,
+      "p95Ms": 841.635435,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:01:00+00:00",
+      "eligible": true,
+      "responses": 77592,
+      "failures": 2471,
+      "errorRate": 0.03184606660480462,
+      "p95Ms": 853.920495,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:02:00+00:00",
+      "eligible": true,
+      "responses": 78317,
+      "failures": 1794,
+      "errorRate": 0.022906903992747425,
+      "p95Ms": 783.84366,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:03:00+00:00",
+      "eligible": true,
+      "responses": 77569,
+      "failures": 1650,
+      "errorRate": 0.021271384186981913,
+      "p95Ms": 792.838518,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:04:00+00:00",
+      "eligible": true,
+      "responses": 77850,
+      "failures": 1949,
+      "errorRate": 0.02503532434168272,
+      "p95Ms": 821.190477,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:05:00+00:00",
+      "eligible": true,
+      "responses": 78317,
+      "failures": 2020,
+      "errorRate": 0.025792612076560646,
+      "p95Ms": 813.965136,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:06:00+00:00",
+      "eligible": true,
+      "responses": 77946,
+      "failures": 1517,
+      "errorRate": 0.019462191773792114,
+      "p95Ms": 752.901842,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:07:00+00:00",
+      "eligible": true,
+      "responses": 77761,
+      "failures": 2222,
+      "errorRate": 0.02857473540720927,
+      "p95Ms": 857.566546,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:08:00+00:00",
+      "eligible": true,
+      "responses": 78169,
+      "failures": 1216,
+      "errorRate": 0.015556038838925918,
+      "p95Ms": 759.928404,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:09:00+00:00",
+      "eligible": true,
+      "responses": 77575,
+      "failures": 1924,
+      "errorRate": 0.024801804705124074,
+      "p95Ms": 832.742455,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:10:00+00:00",
+      "eligible": true,
+      "responses": 78215,
+      "failures": 1611,
+      "errorRate": 0.02059707217285687,
+      "p95Ms": 787.089216,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:11:00+00:00",
+      "eligible": true,
+      "responses": 77659,
+      "failures": 2631,
+      "errorRate": 0.03387888074788498,
+      "p95Ms": 896.737693,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:12:00+00:00",
+      "eligible": false,
+      "responses": 8481,
+      "failures": 591,
+      "errorRate": 0.06968517863459497,
+      "p95Ms": 1045.294666,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1500,
+    "steady_first_utc": "2026-10-25T14:50:11.860370+00:00",
+    "steady_last_utc": "2026-10-25T14:54:33.246365+00:00",
+    "window_end_utc": "2026-10-25T14:54:07.724000+00:00",
+    "eligible_minutes": 3,
+    "max_eligible_error_rate": 0.1614256468772024,
+    "max_eligible_p95_ms": 1033.992125,
+    "breach_third_minute_utc": "2026-10-25T14:53:00+00:00",
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T14:50:00+00:00",
+      "eligible": false,
+      "responses": 70997,
+      "failures": 10060,
+      "errorRate": 0.14169612800540868,
+      "p95Ms": 1011.479451,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T14:51:00+00:00",
+      "eligible": true,
+      "responses": 89391,
+      "failures": 14430,
+      "errorRate": 0.1614256468772024,
+      "p95Ms": 1033.992125,
+      "overLimit": true,
+      "consecutive": 1
+     },
+     {
+      "minuteUtc": "2026-10-25T14:52:00+00:00",
+      "eligible": true,
+      "responses": 89584,
+      "failures": 13741,
+      "errorRate": 0.15338676549383817,
+      "p95Ms": 1030.997222,
+      "overLimit": true,
+      "consecutive": 2
+     },
+     {
+      "minuteUtc": "2026-10-25T14:53:00+00:00",
+      "eligible": true,
+      "responses": 89645,
+      "failures": 13817,
+      "errorRate": 0.15413018015505606,
+      "p95Ms": 1003.553928,
+      "overLimit": true,
+      "consecutive": 3
+     },
+     {
+      "minuteUtc": "2026-10-25T14:54:00+00:00",
+      "eligible": false,
+      "responses": 49614,
+      "failures": 8368,
+      "errorRate": 0.1686620711895836,
+      "p95Ms": 991.233204,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   }
+  ]
+ },
+ "r2": {
+  "campaign": "typical-dbsat-pscap-2x-r2-20261025",
+  "scored": true,
+  "first_breach_rps": 1500,
+  "rungs": [
+   {
+    "rps": 300,
+    "steady_first_utc": "2026-10-25T17:37:47.991479+00:00",
+    "steady_last_utc": "2026-10-25T17:52:47.984142+00:00",
+    "window_end_utc": "2026-10-25T17:52:58+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0001666759264403578,
+    "max_eligible_p95_ms": 35.097868,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T17:37:00+00:00",
+      "eligible": false,
+      "responses": 3604,
+      "failures": 6,
+      "errorRate": 0.001664816870144284,
+      "p95Ms": 9.776657,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:38:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.721399,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:39:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.801786,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:40:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 3,
+      "errorRate": 0.0001666759264403578,
+      "p95Ms": 24.859185,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:41:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 14.884712,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:42:00+00:00",
+      "eligible": true,
+      "responses": 18000,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 35.097868,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:43:00+00:00",
+      "eligible": true,
+      "responses": 18000,
+      "failures": 1,
+      "errorRate": 5.555555555555556e-05,
+      "p95Ms": 15.058041,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:44:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 2,
+      "errorRate": 0.00011111728429357187,
+      "p95Ms": 28.766738,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:45:00+00:00",
+      "eligible": true,
+      "responses": 17995,
+      "failures": 1,
+      "errorRate": 5.557099194220617e-05,
+      "p95Ms": 21.629737,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:46:00+00:00",
+      "eligible": true,
+      "responses": 18006,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.60566,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:47:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.511295,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:48:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.030809,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:49:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 7.723968,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:50:00+00:00",
+      "eligible": true,
+      "responses": 18001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 7.973239,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:51:00+00:00",
+      "eligible": true,
+      "responses": 17999,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 8.449167,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T17:52:00+00:00",
+      "eligible": false,
+      "responses": 14397,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 7.488879,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 500,
+    "steady_first_utc": "2026-10-25T18:06:01.308221+00:00",
+    "steady_last_utc": "2026-10-25T18:21:01.306872+00:00",
+    "window_end_utc": "2026-10-25T18:21:18+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0014,
+    "max_eligible_p95_ms": 85.358333,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T18:06:00+00:00",
+      "eligible": false,
+      "responses": 29346,
+      "failures": 1,
+      "errorRate": 3.407619437061269e-05,
+      "p95Ms": 76.439559,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:07:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 3,
+      "errorRate": 9.999666677777408e-05,
+      "p95Ms": 53.787588,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:08:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 79.871488,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:09:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 42,
+      "errorRate": 0.0014,
+      "p95Ms": 74.799513,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:10:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 7,
+      "errorRate": 0.000233341111370379,
+      "p95Ms": 75.136431,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:11:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 1,
+      "errorRate": 3.333222225925803e-05,
+      "p95Ms": 66.450896,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:12:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 1,
+      "errorRate": 3.3333333333333335e-05,
+      "p95Ms": 66.971204,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:13:00+00:00",
+      "eligible": true,
+      "responses": 29994,
+      "failures": 4,
+      "errorRate": 0.00013336000533440022,
+      "p95Ms": 62.814169,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:14:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 9,
+      "errorRate": 0.0003,
+      "p95Ms": 66.66679,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:15:00+00:00",
+      "eligible": true,
+      "responses": 29999,
+      "failures": 12,
+      "errorRate": 0.0004000133337777926,
+      "p95Ms": 85.358333,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:16:00+00:00",
+      "eligible": true,
+      "responses": 30007,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 71.319973,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:17:00+00:00",
+      "eligible": true,
+      "responses": 29998,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 76.999258,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:18:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 8,
+      "errorRate": 0.0002666577780740642,
+      "p95Ms": 83.396592,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:19:00+00:00",
+      "eligible": true,
+      "responses": 30001,
+      "failures": 1,
+      "errorRate": 3.333222225925803e-05,
+      "p95Ms": 79.888785,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:20:00+00:00",
+      "eligible": true,
+      "responses": 30000,
+      "failures": 12,
+      "errorRate": 0.0004,
+      "p95Ms": 69.983581,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:21:00+00:00",
+      "eligible": false,
+      "responses": 653,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 21.814185,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 700,
+    "steady_first_utc": "2026-10-25T18:37:55.703959+00:00",
+    "steady_last_utc": "2026-10-25T18:52:55.699945+00:00",
+    "window_end_utc": "2026-10-25T18:53:20+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0003813428033462831,
+    "max_eligible_p95_ms": 115.994733,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T18:37:00+00:00",
+      "eligible": false,
+      "responses": 3003,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 102.563691,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:38:00+00:00",
+      "eligible": true,
+      "responses": 42004,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 107.563264,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:39:00+00:00",
+      "eligible": true,
+      "responses": 41997,
+      "failures": 8,
+      "errorRate": 0.00019048979689025407,
+      "p95Ms": 100.326689,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:40:00+00:00",
+      "eligible": true,
+      "responses": 41957,
+      "failures": 16,
+      "errorRate": 0.0003813428033462831,
+      "p95Ms": 99.709951,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:41:00+00:00",
+      "eligible": true,
+      "responses": 42044,
+      "failures": 10,
+      "errorRate": 0.00023784606602606794,
+      "p95Ms": 101.550139,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:42:00+00:00",
+      "eligible": true,
+      "responses": 42004,
+      "failures": 7,
+      "errorRate": 0.0001666507951623655,
+      "p95Ms": 103.964071,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:43:00+00:00",
+      "eligible": true,
+      "responses": 41975,
+      "failures": 2,
+      "errorRate": 4.764740917212627e-05,
+      "p95Ms": 115.213922,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:44:00+00:00",
+      "eligible": true,
+      "responses": 42026,
+      "failures": 14,
+      "errorRate": 0.0003331271117879408,
+      "p95Ms": 115.994733,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:45:00+00:00",
+      "eligible": true,
+      "responses": 41982,
+      "failures": 1,
+      "errorRate": 2.381973226620933e-05,
+      "p95Ms": 100.432337,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:46:00+00:00",
+      "eligible": true,
+      "responses": 42016,
+      "failures": 9,
+      "errorRate": 0.0002142041127189642,
+      "p95Ms": 102.052379,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:47:00+00:00",
+      "eligible": true,
+      "responses": 42000,
+      "failures": 6,
+      "errorRate": 0.00014285714285714287,
+      "p95Ms": 114.377519,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:48:00+00:00",
+      "eligible": true,
+      "responses": 42002,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 101.950021,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:49:00+00:00",
+      "eligible": true,
+      "responses": 41958,
+      "failures": 4,
+      "errorRate": 9.5333428666762e-05,
+      "p95Ms": 103.342147,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:50:00+00:00",
+      "eligible": true,
+      "responses": 42041,
+      "failures": 3,
+      "errorRate": 7.135891153873599e-05,
+      "p95Ms": 100.696339,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:51:00+00:00",
+      "eligible": true,
+      "responses": 41933,
+      "failures": 3,
+      "errorRate": 7.154269906756016e-05,
+      "p95Ms": 112.127989,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T18:52:00+00:00",
+      "eligible": false,
+      "responses": 39059,
+      "failures": 5,
+      "errorRate": 0.00012801146982769655,
+      "p95Ms": 109.971324,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 900,
+    "steady_first_utc": "2026-10-25T19:13:40.530706+00:00",
+    "steady_last_utc": "2026-10-25T19:28:40.546580+00:00",
+    "window_end_utc": "2026-10-25T19:29:12+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0011107408641563923,
+    "max_eligible_p95_ms": 186.676791,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T19:13:00+00:00",
+      "eligible": false,
+      "responses": 17520,
+      "failures": 27,
+      "errorRate": 0.0015410958904109589,
+      "p95Ms": 255.475078,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:14:00+00:00",
+      "eligible": true,
+      "responses": 54003,
+      "failures": 3,
+      "errorRate": 5.555246930726071e-05,
+      "p95Ms": 140.022867,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:15:00+00:00",
+      "eligible": true,
+      "responses": 53963,
+      "failures": 10,
+      "errorRate": 0.00018531215833070809,
+      "p95Ms": 186.676791,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:16:00+00:00",
+      "eligible": true,
+      "responses": 54032,
+      "failures": 1,
+      "errorRate": 1.8507551080840982e-05,
+      "p95Ms": 170.932241,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:17:00+00:00",
+      "eligible": true,
+      "responses": 53940,
+      "failures": 24,
+      "errorRate": 0.0004449388209121246,
+      "p95Ms": 156.078608,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:18:00+00:00",
+      "eligible": true,
+      "responses": 54034,
+      "failures": 1,
+      "errorRate": 1.850686604730355e-05,
+      "p95Ms": 151.304598,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:19:00+00:00",
+      "eligible": true,
+      "responses": 54018,
+      "failures": 60,
+      "errorRate": 0.0011107408641563923,
+      "p95Ms": 167.546358,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:20:00+00:00",
+      "eligible": true,
+      "responses": 54018,
+      "failures": 12,
+      "errorRate": 0.00022214817283127845,
+      "p95Ms": 155.868658,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:21:00+00:00",
+      "eligible": true,
+      "responses": 53938,
+      "failures": 3,
+      "errorRate": 5.561941488375542e-05,
+      "p95Ms": 153.810601,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:22:00+00:00",
+      "eligible": true,
+      "responses": 54051,
+      "failures": 10,
+      "errorRate": 0.00018501045309059962,
+      "p95Ms": 166.879536,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:23:00+00:00",
+      "eligible": true,
+      "responses": 54009,
+      "failures": 8,
+      "errorRate": 0.00014812346090466405,
+      "p95Ms": 147.917822,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:24:00+00:00",
+      "eligible": true,
+      "responses": 53869,
+      "failures": 1,
+      "errorRate": 1.8563552321372217e-05,
+      "p95Ms": 146.440264,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:25:00+00:00",
+      "eligible": true,
+      "responses": 54109,
+      "failures": 17,
+      "errorRate": 0.00031418063538413203,
+      "p95Ms": 156.281203,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:26:00+00:00",
+      "eligible": true,
+      "responses": 53957,
+      "failures": 17,
+      "errorRate": 0.00031506570046518526,
+      "p95Ms": 165.727667,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:27:00+00:00",
+      "eligible": true,
+      "responses": 54061,
+      "failures": 25,
+      "errorRate": 0.0004624405763859344,
+      "p95Ms": 135.861018,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:28:00+00:00",
+      "eligible": false,
+      "responses": 36479,
+      "failures": 21,
+      "errorRate": 0.0005756736752652211,
+      "p95Ms": 142.456375,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1100,
+    "steady_first_utc": "2026-10-25T19:54:20.844914+00:00",
+    "steady_last_utc": "2026-10-25T20:09:20.948423+00:00",
+    "window_end_utc": "2026-10-25T20:10:12+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.0008631394045852388,
+    "max_eligible_p95_ms": 361.831737,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T19:54:00+00:00",
+      "eligible": false,
+      "responses": 43026,
+      "failures": 5,
+      "errorRate": 0.00011620880397898944,
+      "p95Ms": 299.192119,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:55:00+00:00",
+      "eligible": true,
+      "responses": 66050,
+      "failures": 24,
+      "errorRate": 0.00036336109008327025,
+      "p95Ms": 284.937825,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:56:00+00:00",
+      "eligible": true,
+      "responses": 65901,
+      "failures": 8,
+      "errorRate": 0.00012139421253091758,
+      "p95Ms": 247.309588,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:57:00+00:00",
+      "eligible": true,
+      "responses": 66091,
+      "failures": 7,
+      "errorRate": 0.00010591457233208758,
+      "p95Ms": 262.973272,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:58:00+00:00",
+      "eligible": true,
+      "responses": 66005,
+      "failures": 49,
+      "errorRate": 0.0007423680024240588,
+      "p95Ms": 289.264011,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T19:59:00+00:00",
+      "eligible": true,
+      "responses": 65999,
+      "failures": 36,
+      "errorRate": 0.0005454628100425764,
+      "p95Ms": 243.710546,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:00:00+00:00",
+      "eligible": true,
+      "responses": 65779,
+      "failures": 6,
+      "errorRate": 9.12145213517992e-05,
+      "p95Ms": 346.851174,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:01:00+00:00",
+      "eligible": true,
+      "responses": 66069,
+      "failures": 5,
+      "errorRate": 7.567845737032497e-05,
+      "p95Ms": 268.293121,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:02:00+00:00",
+      "eligible": true,
+      "responses": 66038,
+      "failures": 57,
+      "errorRate": 0.0008631394045852388,
+      "p95Ms": 361.831737,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:03:00+00:00",
+      "eligible": true,
+      "responses": 66119,
+      "failures": 14,
+      "errorRate": 0.00021173943949545515,
+      "p95Ms": 278.289546,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:04:00+00:00",
+      "eligible": true,
+      "responses": 66000,
+      "failures": 7,
+      "errorRate": 0.00010606060606060606,
+      "p95Ms": 272.694346,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:05:00+00:00",
+      "eligible": true,
+      "responses": 65882,
+      "failures": 8,
+      "errorRate": 0.0001214292219422604,
+      "p95Ms": 268.612759,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:06:00+00:00",
+      "eligible": true,
+      "responses": 65948,
+      "failures": 13,
+      "errorRate": 0.00019712500758173107,
+      "p95Ms": 265.771276,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:07:00+00:00",
+      "eligible": true,
+      "responses": 66147,
+      "failures": 25,
+      "errorRate": 0.00037794608976975526,
+      "p95Ms": 295.024577,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:08:00+00:00",
+      "eligible": true,
+      "responses": 65955,
+      "failures": 15,
+      "errorRate": 0.00022742779167614282,
+      "p95Ms": 311.034483,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:09:00+00:00",
+      "eligible": false,
+      "responses": 22992,
+      "failures": 1,
+      "errorRate": 4.349338900487126e-05,
+      "p95Ms": 345.799319,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1300,
+    "steady_first_utc": "2026-10-25T20:39:11.131240+00:00",
+    "steady_last_utc": "2026-10-25T20:54:11.328132+00:00",
+    "window_end_utc": "2026-10-25T20:55:13+00:00",
+    "eligible_minutes": 14,
+    "max_eligible_error_rate": 0.011759129978095738,
+    "max_eligible_p95_ms": 745.136435,
+    "breach_third_minute_utc": null,
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T20:39:00+00:00",
+      "eligible": false,
+      "responses": 62705,
+      "failures": 56,
+      "errorRate": 0.0008930707280121202,
+      "p95Ms": 534.511571,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:40:00+00:00",
+      "eligible": true,
+      "responses": 78374,
+      "failures": 138,
+      "errorRate": 0.0017607880164340216,
+      "p95Ms": 605.530006,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:41:00+00:00",
+      "eligible": true,
+      "responses": 77989,
+      "failures": 460,
+      "errorRate": 0.0058982677044198545,
+      "p95Ms": 658.564164,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:42:00+00:00",
+      "eligible": true,
+      "responses": 77586,
+      "failures": 317,
+      "errorRate": 0.0040857886732142395,
+      "p95Ms": 663.400984,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:43:00+00:00",
+      "eligible": true,
+      "responses": 77667,
+      "failures": 626,
+      "errorRate": 0.00806005124441526,
+      "p95Ms": 719.025413,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:44:00+00:00",
+      "eligible": true,
+      "responses": 78067,
+      "failures": 918,
+      "errorRate": 0.011759129978095738,
+      "p95Ms": 745.136435,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:45:00+00:00",
+      "eligible": true,
+      "responses": 77835,
+      "failures": 507,
+      "errorRate": 0.006513779148198112,
+      "p95Ms": 659.505299,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:46:00+00:00",
+      "eligible": true,
+      "responses": 78069,
+      "failures": 629,
+      "errorRate": 0.008056975239851926,
+      "p95Ms": 658.53559,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:47:00+00:00",
+      "eligible": true,
+      "responses": 77953,
+      "failures": 485,
+      "errorRate": 0.006221697689633497,
+      "p95Ms": 620.787091,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:48:00+00:00",
+      "eligible": true,
+      "responses": 78285,
+      "failures": 488,
+      "errorRate": 0.0062336335185540015,
+      "p95Ms": 673.356699,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:49:00+00:00",
+      "eligible": true,
+      "responses": 77869,
+      "failures": 456,
+      "errorRate": 0.005855988904442075,
+      "p95Ms": 646.768524,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:50:00+00:00",
+      "eligible": true,
+      "responses": 77641,
+      "failures": 244,
+      "errorRate": 0.0031426694658749886,
+      "p95Ms": 558.565954,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:51:00+00:00",
+      "eligible": true,
+      "responses": 78229,
+      "failures": 200,
+      "errorRate": 0.0025565966585281673,
+      "p95Ms": 633.424576,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:52:00+00:00",
+      "eligible": true,
+      "responses": 77982,
+      "failures": 33,
+      "errorRate": 0.00042317457874894207,
+      "p95Ms": 490.51201,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:53:00+00:00",
+      "eligible": true,
+      "responses": 78183,
+      "failures": 177,
+      "errorRate": 0.0022639192663366716,
+      "p95Ms": 543.559868,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T20:54:00+00:00",
+      "eligible": false,
+      "responses": 14485,
+      "failures": 0,
+      "errorRate": 0.0,
+      "p95Ms": 529.065669,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   },
+   {
+    "rps": 1500,
+    "steady_first_utc": "2026-10-25T21:29:43.675214+00:00",
+    "steady_last_utc": "2026-10-25T21:33:39.939368+00:00",
+    "window_end_utc": "2026-10-25T21:33:08.760000+00:00",
+    "eligible_minutes": 3,
+    "max_eligible_error_rate": 0.10156581563135206,
+    "max_eligible_p95_ms": 957.793373,
+    "breach_third_minute_utc": "2026-10-25T21:32:00+00:00",
+    "minutes": [
+     {
+      "minuteUtc": "2026-10-25T21:29:00+00:00",
+      "eligible": false,
+      "responses": 23944,
+      "failures": 1181,
+      "errorRate": 0.04932342131640494,
+      "p95Ms": 807.226331,
+      "overLimit": false,
+      "consecutive": 0
+     },
+     {
+      "minuteUtc": "2026-10-25T21:30:00+00:00",
+      "eligible": true,
+      "responses": 88729,
+      "failures": 6848,
+      "errorRate": 0.07717882541221022,
+      "p95Ms": 940.539509,
+      "overLimit": true,
+      "consecutive": 1
+     },
+     {
+      "minuteUtc": "2026-10-25T21:31:00+00:00",
+      "eligible": true,
+      "responses": 89448,
+      "failures": 8772,
+      "errorRate": 0.09806815132814596,
+      "p95Ms": 957.793373,
+      "overLimit": true,
+      "consecutive": 2
+     },
+     {
+      "minuteUtc": "2026-10-25T21:32:00+00:00",
+      "eligible": true,
+      "responses": 89538,
+      "failures": 9094,
+      "errorRate": 0.10156581563135206,
+      "p95Ms": 937.576982,
+      "overLimit": true,
+      "consecutive": 3
+     },
+     {
+      "minuteUtc": "2026-10-25T21:33:00+00:00",
+      "eligible": false,
+      "responses": 60005,
+      "failures": 6025,
+      "errorRate": 0.10040829930839097,
+      "p95Ms": 921.591977,
+      "overLimit": false,
+      "consecutive": 0
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "campaign": "typical-dbsat-cpu-2x-m5xl-v1",
+ "prediction": "v4 freeze \u00a75.2 (first breach 1500)",
+ "reps": {
+  "r1a": {
+   "campaign": "typical-dbsat-pscap-2x-r1a-20261024",
+   "scored": false,
+   "note": "preserved runner-fault replacement candidate (PR #44); 300-1100 only, 1300 never started"
+  },
+  "r1b": {
+   "campaign": "typical-dbsat-pscap-2x-r1b-20261025",
+   "scored": true,
+   "valid": true,
+   "first_breach_rps_runner": 1500,
+   "first_breach_rps_recompute": 1500,
+   "breach_third_minute_utc": "2026-10-25T14:53:00+00:00",
+   "verdict": "H1",
+   "mechanism": "DB-limited",
+   "dominant_class": "queue_full"
+  },
+  "r2": {
+   "campaign": "typical-dbsat-pscap-2x-r2-20261025",
+   "scored": true,
+   "valid": true,
+   "first_breach_rps_runner": 1500,
+   "first_breach_rps_recompute": 1500,
+   "breach_third_minute_utc": "2026-10-25T21:32:00+00:00",
+   "verdict": "H1",
+   "mechanism": "DB-limited",
+   "dominant_class": "queue_full"
+  }
+ },
+ "campaign_verdict": "H1"
+}
