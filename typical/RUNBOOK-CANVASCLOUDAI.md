@@ -482,3 +482,15 @@ Authority: `typical/dbsat-pscap16k-2x-v1/PREREGISTRATION.md`. Everything is as f
 - Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.5, §7.1).
 - Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
 - Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
+
+## 15. Prepared-statement cap holdout (typical-dbsat-pscap24k-2x-v1)
+
+Authority: `typical/dbsat-pscap24k-2x-v1/PREREGISTRATION.md`. Everything is as for `typical-dbsat-pscap16k-2x-v1` (§14) except `mysql_max_prepared_stmt_count = 24576`.
+
+- Apply IDs: `typical-dbsat-pscap24k-2x-r{1,2}[letter]-YYYYMMDD`. IDs are never reused. Replacements use the next letter.
+- Terraform: `-var mysql_max_prepared_stmt_count=24576`. All other variables are as conn-2x-v1.1 (2× m5.large, pool 250 per app server, db.r5.large, `max_connections = 500`). `wait-ready` rejects a pscap24k ID unless 24576 is declared. It also checks the live parameter group (24576, `in-sync`).
+- Ladder: 300 → 500 → 700 → 900 → 1100 → 1300 → 1500. Steps are 300 s warmup + 900 s steady, with the 15 s observer polls. Stop at the §3.1 breach. Inter-rung gaps are not paced. Record every rung's `startedAt` and `endedAt`/`stoppedAt` from the controller journal, because the prediction is evaluated on the measured `startedAt` offsets (`typical/dbsat-pscap24k-2x-v1/predict.mjs`, prereg §5.2).
+- Verdict (prereg §5.5): PASS needs the first errno 1461 in the rung the formula predicts from the rep's own offsets, or within 34 polls (510 s) of the predicted crossing poll, in both valid reps. A rep that stops before the predicted crossing with no 1461 is not assessable. Up to 2 replacements are allowed for invalid or not-assessable reps, one at a time, and none after a valid assessable FAIL. Never change the controller to continue past a breach without pausing (parent §7.1).
+- Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.9, §7).
+- Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
+- Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
