@@ -482,3 +482,15 @@ Authority: `typical/dbsat-pscap16k-2x-v1/PREREGISTRATION.md`. Everything is as f
 - Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.5, §7.1).
 - Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
 - Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
+
+## 15. Prepared-statement cap holdout (typical-dbsat-pscap24630-2x-v1)
+
+Authority: `typical/dbsat-pscap24630-2x-v1/PREREGISTRATION.md`. Everything is as for `typical-dbsat-pscap16k-2x-v1` (§14) except `mysql_max_prepared_stmt_count = 24630`.
+
+- Apply IDs: `typical-dbsat-pscap24630-2x-r{1,2}[letter]-YYYYMMDD`. IDs are never reused. Replacements use the next letter.
+- Terraform: `-var mysql_max_prepared_stmt_count=24630`. All other variables are as conn-2x-v1.1 (2× m5.large, pool 250 per app server, db.r5.large, `max_connections = 500`). `wait-ready` rejects a pscap24630 ID unless 24630 is declared. It also checks the live parameter group (24630, `in-sync`).
+- Ladder: 300 → 500 → 700 → 900 → 1100 → 1300 → 1500. Steps are 300 s warmup + 900 s steady, with the 15 s observer polls. Stop at the §3.1 breach. Inter-rung gaps are not paced, and nothing may be delayed or retried in a way that changes timing (prereg §5.4). Record for every rung the generator `actualStartedAt` (workload start; the first rung's is t = 0) and `completed_at` (workload stop; `persistedBoundaries` for a breached rung). Journal `startedAt` is only the dispatch time and `stoppedAt` is only the breach declaration (prereg §5.2).
+- Verdict (prereg §5.4–§5.5): at each rung's workload start, before any outcome, write and hash the schedule-conditioned forecast with `predict.mjs forecastRecord` (frozen formula, t = 0 at the first rung's generator start, observed windows of earlier rungs, the rung's observed start, gaps excluded; no measured count or connection is an input). PASS needs the first errno 1461 inside the rung whose forecast predicts the crossing, with no 1461 and no forecast crossing in an earlier rung, in both valid reps. There is no timing tolerance. An adjacent rung is FAIL. A gap or boundary-straddling onset, or a valid early stop before the predicted rung ends with no 1461, is NOT ASSESSABLE and is **not replaced**. Replacements (max 2, one at a time, none after a valid FAIL) are only for INVALID reps, i.e. independently established execution faults (prereg §5.10, §7). The state-anchored forecast and timing errors are descriptive only. Score with `score.mjs`, not in the runner. Never change the controller to continue past a breach without pausing (parent §7.1).
+- Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.10, §7).
+- Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
+- Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.

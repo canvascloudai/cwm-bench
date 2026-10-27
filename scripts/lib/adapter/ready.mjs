@@ -2,7 +2,7 @@ import { ADAPTER_VERSION, PRIMARY_REGION, SECOND_REGION } from './version.mjs';
 import { listScenarioKeys, scenarioCatalog, scenariosRequiringCompleteCollect } from './scenarios.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { awsJson, describeSsmInstance, runRemoteShell } from './aws.mjs';
-import { DBSAT_PSCAP_TEST_ID_RE, DBSAT_PSCAP16K_TEST_ID_RE } from './ladder.mjs';
+import { DBSAT_PSCAP_TEST_ID_RE, DBSAT_PSCAP16K_TEST_ID_RE, DBSAT_PSCAP24630_TEST_ID_RE } from './ladder.mjs';
 import { redact } from './redact.mjs';
 
 const DEFAULT_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
@@ -219,7 +219,8 @@ export function preparedStmtCheckRequired(outputs, env = {}) {
   const id = String((env && env.CWM_CAMPAIGN_ID) || (outputs.topology && outputs.topology.test_id) || '');
   return (declared != null && declared !== MYSQL_DEFAULT_MAX_PREPARED_STMT_COUNT)
     || DBSAT_PSCAP_TEST_ID_RE.test(id)
-    || DBSAT_PSCAP16K_TEST_ID_RE.test(id);
+    || DBSAT_PSCAP16K_TEST_ID_RE.test(id)
+    || DBSAT_PSCAP24630_TEST_ID_RE.test(id);
 }
 
 /** typical-dbsat-pscap-v1 §2: the only intervention is the MySQL maximum. */
@@ -228,11 +229,19 @@ export const PSCAP_MAX_PREPARED_STMT_COUNT = 65528;
 /** typical-dbsat-pscap16k-2x-v1 §2: the only intervention vs conn-2x-v1.1 is the MySQL maximum, back at 16,382. */
 export const PSCAP16K_MAX_PREPARED_STMT_COUNT = 16382;
 
+/** typical-dbsat-pscap24630-2x-v1 §2: the only intervention vs conn-2x-v1.1 is the MySQL maximum, set to 24,630. */
+export const PSCAP24630_MAX_PREPARED_STMT_COUNT = 24630;
+
 export async function checkPreparedStmtParameter(runAws, outputs, region, env = {}) {
   const declared = outputs.mysqlMaxPreparedStmtCount;
   const id = String((env && env.CWM_CAMPAIGN_ID) || (outputs.topology && outputs.topology.test_id) || '');
   if (DBSAT_PSCAP16K_TEST_ID_RE.test(id) && declared !== PSCAP16K_MAX_PREPARED_STMT_COUNT) {
     const err = new Error(`pscap16k apply ${id} must declare mysql_max_prepared_stmt_count=${PSCAP16K_MAX_PREPARED_STMT_COUNT}; got ${declared == null ? 'unset' : declared}`);
+    err.code = 'DB_PARAMETER_MISMATCH';
+    throw err;
+  }
+  if (DBSAT_PSCAP24630_TEST_ID_RE.test(id) && declared !== PSCAP24630_MAX_PREPARED_STMT_COUNT) {
+    const err = new Error(`pscap24630 apply ${id} must declare mysql_max_prepared_stmt_count=${PSCAP24630_MAX_PREPARED_STMT_COUNT}; got ${declared == null ? 'unset' : declared}`);
     err.code = 'DB_PARAMETER_MISMATCH';
     throw err;
   }

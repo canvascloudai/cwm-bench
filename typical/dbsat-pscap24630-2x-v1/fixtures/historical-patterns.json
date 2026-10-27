@@ -1,0 +1,131 @@
+{
+ "pscap16k-2x-v1 r1b": {
+  "t0": "2026-10-26T19:21:43.632Z",
+  "source": "controller journal runner-state.json (startedAt, actualStartedAt, endedAt) + persisted generator boundaries for the stopped rung",
+  "intervals": [
+   {
+    "rps": 300,
+    "dispatchS": 0.0,
+    "startS": 45.368,
+    "stopS": 1257.368,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 500,
+    "dispatchS": 1804.885,
+    "startS": 1827.368,
+    "stopS": 3048.368,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 700,
+    "dispatchS": 3865.928,
+    "startS": 3884.368,
+    "stopS": 4448.368,
+    "breachDeclaredS": 4406.62
+   }
+  ]
+ },
+ "pscap16k-2x-v1 r2": {
+  "t0": "2026-10-26T22:10:04.943Z",
+  "source": "controller journal runner-state.json (startedAt, actualStartedAt, endedAt) + persisted generator boundaries for the stopped rung",
+  "intervals": [
+   {
+    "rps": 300,
+    "dispatchS": 0.0,
+    "startS": 27.057,
+    "stopS": 1240.057,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 500,
+    "dispatchS": 1763.857,
+    "startS": 1798.057,
+    "stopS": 3018.057,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 700,
+    "dispatchS": 3846.406,
+    "startS": 3879.057,
+    "stopS": 5108.057,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 900,
+    "dispatchS": 6240.832,
+    "startS": 6268.057,
+    "stopS": 6838.057,
+    "breachDeclaredS": 6780.881
+   }
+  ]
+ },
+ "conn-2x-v1.1 r1": {
+  "t0": "2026-10-22T04:08:33.754Z",
+  "source": "rung-tables.json window_start_utc/window_end_utc (controller journal) and records.json steady_span_utc minus 300 s (k6 request-level start)",
+  "intervals": [
+   {
+    "rps": 300,
+    "dispatchS": 0.0,
+    "startS": 21.749871,
+    "stopS": 1231.246,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 500,
+    "dispatchS": 1505.56,
+    "startS": 1516.095109,
+    "stopS": 2733.246,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 700,
+    "dispatchS": 3129.582,
+    "startS": 3142.276489,
+    "stopS": 4366.246,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 900,
+    "dispatchS": 4925.817,
+    "startS": 4940.800744,
+    "stopS": 5443.139093,
+    "breachDeclaredS": 5433.798
+   }
+  ]
+ },
+ "conn-2x-v1.1 r2": {
+  "t0": "2026-10-22T07:05:36.258Z",
+  "source": "rung-tables.json window_start_utc/window_end_utc (controller journal) and records.json steady_span_utc minus 300 s (k6 request-level start)",
+  "intervals": [
+   {
+    "rps": 300,
+    "dispatchS": 0.0,
+    "startS": 18.508639,
+    "stopS": 1228.742,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 500,
+    "dispatchS": 1528.505,
+    "startS": 1548.208002,
+    "stopS": 2764.742,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 700,
+    "dispatchS": 3128.904,
+    "startS": 3146.294892,
+    "stopS": 4370.742,
+    "breachDeclaredS": null
+   },
+   {
+    "rps": 900,
+    "dispatchS": 5755.243,
+    "startS": 5802.040242,
+    "stopS": 6343.609845,
+    "breachDeclaredS": 6329.891
+   }
+  ]
+ }
+}
