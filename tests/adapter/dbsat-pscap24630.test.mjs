@@ -5,7 +5,7 @@ import { main } from '../../scripts/lib/adapter/main.mjs';
 import {
   DBSAT_PSCAP_TEST_ID_RE,
   DBSAT_PSCAP16K_TEST_ID_RE,
-  DBSAT_PSCAP23K_TEST_ID_RE,
+  DBSAT_PSCAP24630_TEST_ID_RE,
   DBSAT_TEST_ID_RE,
   DBSAT_V1_TEST_ID_RE,
   assertP95TestId,
@@ -33,7 +33,7 @@ async function waitReady(aws, outputs, env = {}) {
   return { code, payload: JSON.parse(stdout.toString()) };
 }
 
-function pscapOutputs(declared = 23552, testId = 'typical-dbsat-pscap23k-2x-r1-20261027') {
+function pscapOutputs(declared = 24630, testId = 'typical-dbsat-pscap24630-2x-r1-20261027') {
   return terraformOutputFixture({
     mysql_max_prepared_stmt_count: { value: declared },
     db_parameter_group_name: { value: `cwm-bench-${testId}` },
@@ -46,7 +46,7 @@ function pscapOutputs(declared = 23552, testId = 'typical-dbsat-pscap23k-2x-r1-2
   });
 }
 
-function rdsHandlers({ live = '23552', applyStatus = ['in-sync'], group = 'cwm-bench-typical-dbsat-pscap23k-2x-r1-20261027' } = {}) {
+function rdsHandlers({ live = '24630', applyStatus = ['in-sync'], group = 'cwm-bench-typical-dbsat-pscap24630-2x-r1-20261027' } = {}) {
   let statusIndex = 0;
   return {
     'rds.describe-db-parameters': async (args) => {
@@ -71,44 +71,44 @@ function rdsHandlers({ live = '23552', applyStatus = ['in-sync'], group = 'cwm-b
   };
 }
 
-// typical-dbsat-pscap23k-2x-v1: 23,552 prepared-statement cap holdout (prereg §2, §9).
+// typical-dbsat-pscap24630-2x-v1: 24,630 prepared-statement cap holdout (prereg §2, §9).
 
-test('pscap23k ids are accepted on 2x only; other families unchanged', () => {
-  for (const id of ['typical-dbsat-pscap23k-2x-r1-20261028', 'typical-dbsat-pscap23k-2x-r2a-20261029']) {
-    assert.match(id, DBSAT_PSCAP23K_TEST_ID_RE);
+test('pscap24630 ids are accepted on 2x only; other families unchanged', () => {
+  for (const id of ['typical-dbsat-pscap24630-2x-r1-20261028', 'typical-dbsat-pscap24630-2x-r2a-20261029']) {
+    assert.match(id, DBSAT_PSCAP24630_TEST_ID_RE);
     assert.match(id, DBSAT_TEST_ID_RE);
     assert.doesNotMatch(id, DBSAT_PSCAP_TEST_ID_RE);
     assert.doesNotMatch(id, DBSAT_PSCAP16K_TEST_ID_RE);
     assert.equal(dbsatScale(id), '2x');
   }
-  for (const id of ['typical-dbsat-pscap23k-3x-r1-20261028', 'typical-dbsat-pscap23k-4x-r1-20261028',
-    'typical-dbsat-pscap23k-2x-c1-20261028', 'typical-dbsat-pscap23k-2x-r0-20261028', 'typical-dbsat-pscap23k-2x-r1']) {
+  for (const id of ['typical-dbsat-pscap24630-3x-r1-20261028', 'typical-dbsat-pscap24630-4x-r1-20261028',
+    'typical-dbsat-pscap24630-2x-c1-20261028', 'typical-dbsat-pscap24630-2x-r0-20261028', 'typical-dbsat-pscap24630-2x-r1']) {
     assert.doesNotMatch(id, DBSAT_TEST_ID_RE);
   }
-  assert.doesNotMatch('typical-dbsat-pscap16k-2x-r1-20261027', DBSAT_PSCAP23K_TEST_ID_RE);
+  assert.doesNotMatch('typical-dbsat-pscap16k-2x-r1-20261027', DBSAT_PSCAP24630_TEST_ID_RE);
   assert.equal(dbsatScale('typical-dbsat-pscap16k-2x-r1-20261027'), '2x');
   assert.equal(dbsatScale('typical-dbsat-pscap-4x-r1-20261017'), '4x');
   assert.equal(dbsatScale('typical-dbsat-3x-r2-20261016'), '3x');
 });
 
-test('pscap23k id passes the dbsat 2x scenario guard and enforces scale', () => {
+test('pscap24630 id passes the dbsat 2x scenario guard and enforces scale', () => {
   const spec = getScenario('typical-dbsat-2x-300');
-  assert.equal(assertP95TestId(spec, 'typical-dbsat-pscap23k-2x-r1-20261028'), 'typical-dbsat-pscap23k-2x-r1-20261028');
-  assert.throws(() => assertP95TestId(getScenario('typical-dbsat-3x-300'), 'typical-dbsat-pscap23k-2x-r1-20261028'),
+  assert.equal(assertP95TestId(spec, 'typical-dbsat-pscap24630-2x-r1-20261028'), 'typical-dbsat-pscap24630-2x-r1-20261028');
+  assert.throws(() => assertP95TestId(getScenario('typical-dbsat-3x-300'), 'typical-dbsat-pscap24630-2x-r1-20261028'),
     { code: 'TEST_ID_MISMATCH' });
 });
 
-test('pscap23k wait-ready verifies live 23552', async () => {
+test('pscap24630 wait-ready verifies live 24630', async () => {
   const aws = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ applyStatus: ['applying', 'in-sync'] }) });
   const { code, payload } = await waitReady(aws, pscapOutputs());
   assert.equal(code, 0, JSON.stringify(payload));
   assert.equal(payload.ready.dbParameters, true);
-  assert.equal(payload.dbParameters.declared, 23552);
-  assert.equal(payload.dbParameters.live, 23552);
+  assert.equal(payload.dbParameters.declared, 24630);
+  assert.equal(payload.dbParameters.live, 24630);
   assert.ok(aws.calls.filter((args) => args[0] === 'rds').length > 0);
 });
 
-test('pscap23k wait-ready fails on a live 16382 or 65528 left over', async () => {
+test('pscap24630 wait-ready fails on a live 16382 or 65528 left over', async () => {
   for (const live of ['16382', '65528']) {
     const aws = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ live }) });
     const { code, payload } = await waitReady(aws, pscapOutputs());
@@ -117,20 +117,20 @@ test('pscap23k wait-ready fails on a live 16382 or 65528 left over', async () =>
   }
 });
 
-test('pscap23k wait-ready fails when the parameter group is not in-sync', async () => {
+test('pscap24630 wait-ready fails when the parameter group is not in-sync', async () => {
   const aws = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ applyStatus: ['pending-reboot'] }) });
   const { code, payload } = await waitReady(aws, pscapOutputs());
   assert.equal(code, 1);
   assert.ok(payload.error);
 });
 
-test('pscap23k campaign must declare 23552', async () => {
+test('pscap24630 campaign must declare 24630', async () => {
   for (const declared of [16382, 65528]) {
     const aws = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ live: String(declared) }) });
     const { code, payload } = await waitReady(aws, pscapOutputs(declared));
     assert.equal(code, 1);
     assert.equal(payload.error.code, 'DB_PARAMETER_MISMATCH');
-    assert.match(payload.error.message, /pscap23k.*23552/);
+    assert.match(payload.error.message, /pscap24630.*24630/);
   }
 });
 
@@ -138,12 +138,12 @@ test('pscap16k (16382) and pscap (65528) gates are unchanged', async () => {
   const aws16 = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ live: '16382', group: 'cwm-bench-typical-dbsat-pscap16k-2x-r1-20261027' }) });
   const ok16 = await waitReady(aws16, pscapOutputs(16382, 'typical-dbsat-pscap16k-2x-r1-20261027'));
   assert.equal(ok16.code, 0, JSON.stringify(ok16.payload));
-  const aws16bad = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ live: '23552', group: 'cwm-bench-typical-dbsat-pscap16k-2x-r1-20261027' }) });
-  const bad16 = await waitReady(aws16bad, pscapOutputs(23552, 'typical-dbsat-pscap16k-2x-r1-20261027'));
+  const aws16bad = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ live: '24630', group: 'cwm-bench-typical-dbsat-pscap16k-2x-r1-20261027' }) });
+  const bad16 = await waitReady(aws16bad, pscapOutputs(24630, 'typical-dbsat-pscap16k-2x-r1-20261027'));
   assert.equal(bad16.code, 1);
   assert.match(bad16.payload.error.message, /pscap16k.*16382/);
   const aws = createAwsMock({ ...ssmOnlineHandlers(), ...rdsHandlers({ live: null, group: 'cwm-bench-typical-dbsat-pscap-4x-r1-20261017' }) });
-  const { code, payload } = await waitReady(aws, pscapOutputs(23552, 'typical-dbsat-pscap-4x-r1-20261017'));
+  const { code, payload } = await waitReady(aws, pscapOutputs(24630, 'typical-dbsat-pscap-4x-r1-20261017'));
   assert.equal(code, 1);
   assert.match(payload.error.message, /65528/);
 });

@@ -1,15 +1,15 @@
-// typical-dbsat-pscap23k-2x-v1: executable verdict table (prereg §5.5-§5.9, §6). The scorer is separate from the runner.
+// typical-dbsat-pscap24630-2x-v1: executable verdict table (prereg §5.4-§5.11, §6). The scorer is separate from the runner.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import {
-  ANCHOR_STALE_S, CAP, CONNECTIONS, MODEL, SKEW_LIMIT_S, anchoredForecast, anchoredForecastRecord, modeledPolls,
-  predictCrossing, selectAnchor, unanchoredForecastRecord,
-} from '../../typical/dbsat-pscap23k-2x-v1/predict.mjs';
-import { scoreCampaign, scoreRep } from '../../typical/dbsat-pscap23k-2x-v1/score.mjs';
+  ANCHOR_STALE_S, CAP, CONNECTIONS, FORECAST_RECORD_DEADLINE_S, MODEL, SKEW_LIMIT_S, anchoredForecast, forecastRecord, intervalsFromTimes,
+  modeledPolls, offered, predictCrossing, scheduleConditionedForecast, selectAnchor,
+} from '../../typical/dbsat-pscap24630-2x-v1/predict.mjs';
+import { scoreCampaign, scoreRep } from '../../typical/dbsat-pscap24630-2x-v1/score.mjs';
 
-const DIR = new URL('../../typical/dbsat-pscap23k-2x-v1/', import.meta.url);
+const DIR = new URL('../../typical/dbsat-pscap24630-2x-v1/', import.meta.url);
 const T0 = Date.parse('2026-11-01T00:00:00.000Z');
 const iso = (s) => new Date(T0 + s * 1000).toISOString();
 
@@ -45,17 +45,16 @@ function makeRep(o = {}) {
   }
   for (const extra of o.extraPolls || []) polls.push(extra);
   polls.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
+  const evRungs = rungs.map((r) => ({ rps: r.rps, startAt: r.startS == null ? undefined : iso(r.startS), stopAt: r.stopS == null ? undefined : iso(r.stopS) }));
   const ev = {
-    t0: o.t0 === null ? undefined : iso(0),
     preflight: { liveParameter: CAP, inSync: true, harnessIntact: true, ...(o.preflight || {}) },
     polls,
     faults: o.faults || [],
-    rungs: rungs.map((r, k) => {
-      const apolls = polls.map((p) => ({ atS: (Date.parse(p.at) - T0) / 1000, count: p.prepared }));
-      const rec = anchoredForecastRecord({ polls: apolls, startS: r.startS, rps: r.rps, prevRps: k ? rungs[k - 1].rps : null }, iso(r.startS + 1));
-      const out = { rps: r.rps, startAt: r.startS == null ? undefined : iso(r.startS), stopAt: r.stopS == null ? undefined : iso(r.stopS), forecast: rec.anchorStatus === 'ok' ? rec : null };
+    rungs: evRungs.map((r, k) => {
+      const rec = forecastRecord({ rungs: evRungs, k }, iso(rungs[k].startS + 1));
+      const out = { ...r, forecast: rec };
       if (o.tamper && o.tamper === r.rps && out.forecast) out.forecast = { ...out.forecast, inputSha256: '0'.repeat(64) };
-      if (o.lateRecord && o.lateRecord === r.rps && out.forecast) out.forecast = { ...out.forecast, recordedAt: iso(r.startS + 90) };
+      if (o.lateRecord && o.lateRecord === r.rps && out.forecast) out.forecast = { ...out.forecast, recordedAt: iso(rungs[k].startS + 90) };
       return out;
     }),
   };
@@ -66,14 +65,15 @@ const verdictOf = (o, cap) => scoreRep(makeRep(o), cap);
 
 // ---- frozen model facts --------------------------------------------------------------------------------------------------
 test('cap and model constants are the frozen ones', () => {
-  assert.equal(CAP, 23552);
+  assert.equal(CAP, 24630);
   assert.deepEqual({ ...MODEL }, {
     betaTime: 29.8120561524, betaRequests: 33.6008348159, betaConnections: 38.9871549291,
     initialPrepared: 928, initialConnections: 20,
   });
-  for (const bad of [16382, 32764, 65528]) assert.notEqual(CAP, bad);
+  for (const bad of [16382, 32764, 65528]) assert.notEqual(CAP, bad); // never a value in the fit data or the superseded scenario
   assert.equal(SKEW_LIMIT_S, 10);
-  assert.equal(ANCHOR_STALE_S, 45);
+  assert.equal(ANCHOR_STALE_S, 45); // descriptive anchored forecast only
+  assert.equal(FORECAST_RECORD_DEADLINE_S, 30);
 });
 
 test('startup assumption: first modeled poll of rung 1 is 5,216.6 + time term, from frozen connections never observed ones', () => {
@@ -83,45 +83,87 @@ test('startup assumption: first modeled poll of rung 1 is 5,216.6 + time term, f
   assert.ok(Math.abs(MODEL.initialPrepared + MODEL.betaConnections * 110 - 5216.6) < 0.1);
 });
 
-// ---- anchor selection ------------------------------------------------------------------------------------------------------
-test('anchor: latest poll at or before start minus skew; polls inside the skew band are never used', () => {
+// ---- the primary predictor: schedule-conditioned forecast ---------------------------------------------------------------------
+const RUNGS3 = [
+  { rps: 300, startAt: iso(30), stopAt: iso(1250) },
+  { rps: 500, startAt: iso(1800), stopAt: iso(3020) },
+  { rps: 700, startAt: iso(3900) },
+];
+test('intervals: t = 0 is the first rung generator start; earlier rungs use observed windows, the current one is planned', () => {
+  const iv = intervalsFromTimes(RUNGS3, 2);
+  assert.deepEqual(iv, [{ rps: 300, startS: 0, stopS: 1220 }, { rps: 500, startS: 1770, stopS: 2990 }, { rps: 700, startS: 3870, stopS: null }]);
+  assert.equal(intervalsFromTimes(RUNGS3, 0)[0].stopS, null);
+  assert.equal(intervalsFromTimes([{ rps: 300, startAt: iso(30) }, { rps: 500, startAt: iso(1800) }], 1), null, 'an earlier rung without stopAt');
+  assert.equal(intervalsFromTimes([{ rps: 300 }], 0), null);
+});
+test('forecast arithmetic: frozen formula, observed exposure windows, gaps excluded, frozen connection estimates', () => {
+  const iv = intervalsFromTimes(RUNGS3, 2);
+  const f = scheduleConditionedForecast(iv, 2);
+  assert.ok(f && f.s >= 0 && f.s < 1200);
+  // by hand at the crossing poll: time from the first rung start, cumulative scheduled requests over the observed windows
+  const cum = offered(300, 1200) + offered(500, 1200); // min(stop - start, 1200) of the earlier rungs
+  const by = 928 + MODEL.betaTime * (((3870 + f.s) / 600) ** 2) + (MODEL.betaRequests * (cum + offered(700, f.s))) / 1e4 + MODEL.betaConnections * (491 - 20);
+  assert.ok(Math.abs(by - f.count) < 1e-6, `${by} vs ${f.count}`);
+  assert.ok(f.count >= CAP);
+  const polls = modeledPolls(iv).filter((p) => p.k === 2);
+  assert.ok(polls.find((p) => p.s === f.s - 15 && p.count < CAP), 'the poll before the crossing is below the cap');
+  assert.equal(scheduleConditionedForecast(intervalsFromTimes(RUNGS3, 0), 0), null, 'the 300 rung never reaches the cap');
+  assert.equal(scheduleConditionedForecast(intervalsFromTimes(RUNGS3, 1), 1), null, 'nor the 500 rung');
+});
+test('forecast is schedule-conditioned: a later observed start or a shorter earlier window moves it; nothing after rung start does', () => {
+  const base = scheduleConditionedForecast(intervalsFromTimes(RUNGS3, 2), 2);
+  const later = scheduleConditionedForecast(intervalsFromTimes([RUNGS3[0], RUNGS3[1], { rps: 700, startAt: iso(3900 + 600) }], 2), 2);
+  assert.ok(later.t > base.t - 1 && later.s < base.s, 'a later start adds elapsed time, so the crossing comes earlier in the rung');
+  const shorter = scheduleConditionedForecast(intervalsFromTimes([RUNGS3[0], { ...RUNGS3[1], stopAt: iso(1800 + 600) }, RUNGS3[2]], 2), 2);
+  assert.ok(shorter.s > base.s, 'less observed exposure delays the crossing');
+  const a = forecastRecord({ rungs: RUNGS3, k: 2 }, 'x');
+  const b = forecastRecord({ rungs: [...RUNGS3.slice(0, 2), { ...RUNGS3[2], stopAt: iso(5120) }, { rps: 900, startAt: iso(6000) }], k: 2 }, 'y');
+  assert.equal(a.inputSha256, b.inputSha256, 'later rungs and this rung stop time are not inputs');
+  assert.equal(a.outputSha256, b.outputSha256);
+  const c = forecastRecord({ rungs: RUNGS3.map((r, i) => (i === 0 ? { ...r, stopAt: iso(1251) } : r)), k: 2 }, 'x');
+  assert.notEqual(a.inputSha256, c.inputSha256, 'observed earlier windows are hashed inputs');
+});
+test('forecast record: kind, rung, crossing and hashes', () => {
+  const rec = forecastRecord({ rungs: RUNGS3, k: 2 }, 'now');
+  assert.equal(rec.kind, 'schedule-conditioned forecast');
+  assert.equal(rec.rps, 700);
+  assert.ok(rec.crossing && rec.crossing.s >= 0);
+  assert.match(rec.inputSha256, /^[0-9a-f]{64}$/);
+  assert.equal(forecastRecord({ rungs: [{ rps: 300 }], k: 0 }, 'now'), null);
+});
+
+// ---- descriptive state-anchored forecast (no verdict effect) ---------------------------------------------------------------------
+test('descriptive anchor selection: latest poll at or before start minus skew; missing and stale are reported, not guessed', () => {
   const polls = [{ atS: 3860, count: 100 }, { atS: 3875, count: 200 }, { atS: 3890, count: 300 }, { atS: 3895, count: 999 }, { atS: 3900, count: 888 }];
   const a = selectAnchor(polls, 3900);
   assert.equal(a.status, 'ok');
   assert.equal(a.poll.count, 300);
   assert.equal(a.ageS, 10);
-});
-test('anchor: missing poll and stale poll are reported, not guessed', () => {
   assert.equal(selectAnchor([], 100).status, 'missing');
-  assert.equal(selectAnchor([{ atS: 95, count: 5 }], 100).status, 'missing'); // inside the skew band
+  assert.equal(selectAnchor([{ atS: 95, count: 5 }], 100).status, 'missing');
   assert.equal(selectAnchor([{ atS: 3900 - 45.5, count: 5 }], 3900).status, 'stale');
-  assert.equal(selectAnchor([{ atS: 3900 - 45, count: 5 }], 3900).status, 'ok'); // limit is inclusive
+  assert.equal(selectAnchor([{ atS: 3900 - 45, count: 5 }], 3900).status, 'ok');
   assert.equal(selectAnchor([{ atS: 10, count: NaN }, { atS: 20, count: undefined }], 100).status, 'missing');
-  assert.equal(anchoredForecastRecord({ polls: [], startS: 100, rps: 300 }, 'x').anchorStatus, 'missing');
 });
-test('scorer: a missing or stale anchor makes the rep not assessable', () => {
-  const noPolls = verdictOf({ onsetS: 4200, dropPolls: [3700, 3905] }); // no poll in (3700, 3905)
-  assert.equal(noPolls.verdict, 'NOT_ASSESSABLE');
-  assert.match(noPolls.reason, /anchor poll (stale|missing)/);
-  const stale = verdictOf({ onsetS: 4200, dropPolls: [3820, 3905] }); // last poll 3815, 85 s old
-  assert.equal(stale.verdict, 'NOT_ASSESSABLE');
-  assert.match(stale.reason, /stale/);
+test('a missing anchor does not change the verdict (the anchored forecast is descriptive only)', () => {
+  const ref = verdictOf({ onsetS: 4200 });
+  const noFirstAnchor = verdictOf({ onsetS: 4200, mutate: (ev) => { ev.polls = ev.polls.filter((p) => Date.parse(p.at) - T0 > 25000); } });
+  assert.equal(ref.verdict, 'PASS');
+  assert.equal(noFirstAnchor.verdict, 'PASS'); // no poll at or before the first rung start - 10 s: anchor missing for rung 1 only
+  assert.equal(ref.descriptive.anchoredForecastRungRps, 700);
+  assert.equal(noFirstAnchor.descriptive.anchoredForecastRungRps, 700);
+  // a stale anchor needs a poll gap above 45 s, which is itself an E7 fault before the decisive result
+  const stale = verdictOf({ onsetS: 4200, dropPolls: [3820, 3905] });
+  assert.equal(stale.verdict, 'INVALID');
+  assert.ok(stale.invalid.every((x) => x.rule === 'E7'));
 });
-
-// ---- anchored forecast arithmetic ----------------------------------------------------------------------------------------------
-test('anchored forecast uses only the model increments from the anchor count', () => {
+test('descriptive anchored forecast arithmetic uses only the model increments from the anchor count', () => {
   const anchor = { atS: 3885, count: 14000 };
   const f = anchoredForecast({ anchor, startS: 3900, rps: 700, prevRps: 500 });
-  // by hand at s = 300: time + request + connection deltas
-  const dT = MODEL.betaTime * (((3900 + 300) / 600) ** 2 - (3885 / 600) ** 2);
-  const dR = (MODEL.betaRequests * (700 * 150)) / 1e4;
-  const dC = MODEL.betaConnections * (491 - 279);
-  const c300 = 14000 + dT + dR + dC;
-  assert.ok(c300 < CAP + 400);
-  const g = anchoredForecast({ anchor: { atS: 3885, count: 23552 }, startS: 3900, rps: 700, prevRps: 500 });
-  assert.deepEqual(g.crossing && g.crossing.s, 0);
-  assert.equal(g.anchorAtCap, true);
   assert.ok(f.crossing === null || f.crossing.s >= 0);
+  const g = anchoredForecast({ anchor: { atS: 3885, count: CAP }, startS: 3900, rps: 700, prevRps: 500 });
+  assert.equal(g.crossing.s, 0);
+  assert.equal(g.anchorAtCap, true);
 });
 
 // ---- verdict table: primary criterion --------------------------------------------------------------------------------------------
@@ -129,9 +171,9 @@ test('PASS: first 1461 in the predicted 700 rung, far from the predicted instant
   const r = verdictOf({ onsetS: 3900 + 100 });
   assert.equal(r.verdict, 'PASS');
   assert.equal(r.descriptive.onsetRungRps, 700);
-  assert.equal(r.descriptive.anchoredForecastRungRps, 700);
-  assert.ok(Math.abs(r.descriptive.onsetMinusAnchoredS) > 100, 'timing error is reported only');
-  assert.ok(Number.isFinite(r.descriptive.onsetMinusUnanchoredS));
+  assert.equal(r.descriptive.forecastRungRps, 700);
+  assert.ok(Math.abs(r.descriptive.onsetMinusForecastS) > 100, 'timing error is reported only, with no hurdle');
+  assert.ok(Number.isFinite(r.descriptive.onsetMinusAnchoredS));
 });
 test('FAIL: first 1461 in an adjacent rung, even when close in time to the predicted instant', () => {
   const next = verdictOf({ // 900 rung started and the onset is in it; the 700 rung ran fully with no 1461
@@ -142,12 +184,12 @@ test('FAIL: first 1461 in an adjacent rung, even when close in time to the predi
   assert.match(next.reason, /700 rung predicted to contain the first 1461, but none occurred in it/);
   const earlier = verdictOf({ onsetS: 2500 }); // 500 rung, forecast has no crossing there
   assert.equal(earlier.verdict, 'FAIL');
-  assert.match(earlier.reason, /500 rung, which the anchored forecast did not predict/);
+  assert.match(earlier.reason, /500 rung, which the schedule-conditioned forecast did not predict/);
 });
-test('FAIL: first 1461 in a rung whose anchored forecast has no crossing (low anchor)', () => {
-  const r = verdictOf({ onsetS: 4400, prepared: (s) => (s >= 3900 ? 5000 + (s - 3900) : preparedAt(s, DEFAULT_RUNGS) / 2) });
-  assert.equal(r.descriptive.anchoredForecastRungRps, null);
+test('FAIL: first 1461 in the 300 rung, whose forecast has no crossing', () => {
+  const r = verdictOf({ onsetS: 600 });
   assert.equal(r.verdict, 'FAIL');
+  assert.equal(r.descriptive.forecastRungRps, 700);
 });
 test('gap onset: a 1461 first seen outside every workload interval is not assessable', () => {
   const r = verdictOf({ onsetS: 3300 }); // between the 500 stop (3020) and the 700 start (3900)
@@ -194,7 +236,7 @@ test('missing journal fields make the rep invalid (E9)', () => {
   for (const mutate of [
     (ev) => { delete ev.rungs[2].startAt; },
     (ev) => { delete ev.rungs[1].stopAt; },
-    (ev) => { delete ev.t0; },
+    (ev) => { delete ev.rungs[0].startAt; },
     (ev) => { ev.rungs[2].stopAt = ev.rungs[2].startAt; },
     (ev) => { ev.polls[3].e1461 = undefined; },
   ]) {
@@ -256,21 +298,83 @@ const FILES = {
 };
 const csv = (name) => readFileSync(new URL(`fixtures/${FILES[name]}`, DIR), 'utf8').trim().split(/\r?\n/).slice(1).map((l) => l.split(','));
 
-test('historical patterns: unanchored forecast and anchored forecasts at the chosen cap (descriptive table, prereg §5.6)', () => {
-  const expected = { // anchored 700-rung crossing offset s*, unanchored 700-rung crossing offset
-    'pscap16k-2x-v1 r1b': [0, 165], 'pscap16k-2x-v1 r2': [225, 165], 'conn-2x-v1.1 r1': [0, 345], 'conn-2x-v1.1 r2': [1095, 345],
+// Historical gap patterns, rebased so t = 0 is each rep's first-rung generator start (k6 start). Earlier rungs use their observed
+// [start, stop) windows; the 700 rung is planned.
+const rebased = (p) => { const o = p.intervals[0].startS; return p.intervals.slice(0, 3).map((iv, i) => ({ rps: iv.rps, startS: iv.startS - o, stopS: i < 2 ? iv.stopS - o : null })); };
+function margins(cap) {
+  const per = {};
+  for (const [name, p] of Object.entries(patterns)) {
+    const all = modeledPolls(rebased(p));
+    const r = all.filter((q) => q.k === 2);
+    const prevMax = Math.max(...all.filter((q) => q.k < 2).map((q) => q.count));
+    const i = r.findIndex((q) => q.count >= cap);
+    if (prevMax >= cap || i < 0) return null; // the 700 rung must be the predicted rung
+    per[name] = { s: r[i].s, time: Math.min(r[i].s, 1200 - r[i].s), startGap: cap - r[0].count, endGap: r.at(-1).count - cap };
+    per[name].stmts = Math.min(per[name].startGap, per[name].endGap);
+  }
+  const v = Object.values(per);
+  return { per, time: Math.min(...v.map((x) => x.time)), stmts: Math.min(...v.map((x) => x.stmts)) };
+}
+
+test('historical patterns: the schedule-conditioned forecast puts the first 1461 mid-700 under all four gap patterns (prereg §5.8)', () => {
+  const expectedS = { 'pscap16k-2x-v1 r1b': 555, 'pscap16k-2x-v1 r2': 555, 'conn-2x-v1.1 r1': 705, 'conn-2x-v1.1 r2': 705 };
+  const m = margins(CAP);
+  assert.ok(m, 'every pattern predicts the 700 rung');
+  for (const name of Object.keys(patterns)) assert.equal(m.per[name].s, expectedS[name], name);
+  assert.ok(m.time >= 495, `min time margin ${m.time}`);
+  assert.ok(m.stmts >= 1287, `min statement margin ${m.stmts}`);
+  for (const [name, p] of Object.entries(patterns)) {
+    const iv = rebased(p);
+    const f0 = scheduleConditionedForecast(iv, 0);
+    const f1 = scheduleConditionedForecast(iv, 1);
+    assert.equal(f0, null, name);
+    assert.equal(f1, null, name);
+    assert.equal(scheduleConditionedForecast(iv, 2).s, expectedS[name], name);
+  }
+});
+
+test('cap choice rule: maximize the minimum margin in time and in statements over the four gap patterns, excluding fit-data caps', () => {
+  const EXCLUDED = new Set([16382, 32764, 65528]);
+  const rows = [];
+  for (let c = 20000; c <= 30000; c += 1) { if (EXCLUDED.has(c)) continue; const m = margins(c); if (m) rows.push({ c, time: m.time, stmts: m.stmts }); }
+  const tMax = Math.max(...rows.map((r) => r.time));
+  const aMax = Math.max(...rows.map((r) => r.stmts));
+  assert.equal(tMax, 525);
+  assert.ok(Math.abs(aMax - 1369.9) < 0.1, String(aMax));
+  const best = rows.reduce((a, r) => (Math.min(r.time / tMax, r.stmts / aMax) > Math.min(a.time / tMax, a.stmts / aMax) ? r : a));
+  assert.equal(best.c, CAP);
+  assert.equal(best.time, 495);
+  assert.ok(Math.abs(best.stmts - 1287.8) < 0.1, String(best.stmts));
+  // the individual optima bracket the choice: time margin peaks at 24,536-24,541, statement margin at 24,712-24,714
+  assert.deepEqual(rows.filter((r) => r.time === tMax).map((r) => r.c).filter((c) => c === 24536 || c === 24541).length, 2);
+  assert.ok(rows.some((r) => r.c === 24713 && Math.abs(r.stmts - aMax) < 1.5));
+});
+
+test('descriptive anchored forecast at the chosen cap (no verdict effect): anchors and crossings under the four patterns', () => {
+  const expected = { // [anchor count at the 700 start, anchored crossing offset in the 700 rung or null]
+    'pscap16k-2x-v1 r1b': [16382, 0], 'pscap16k-2x-v1 r2': [14955, 585], 'conn-2x-v1.1 r1': [16412, 0], 'conn-2x-v1.1 r2': [12396, null],
   };
   for (const [name, p] of Object.entries(patterns)) {
+    const o = p.intervals[0].startS;
     const t0 = Date.parse(p.t0);
-    const polls = csv(name).map((r) => ({ atS: (Date.parse(r[1]) - t0) / 1000, count: Number(r[4]) }));
-    const recs = p.intervals.slice(0, 3).map((iv, k) => anchoredForecastRecord({ polls, startS: iv.startS, rps: iv.rps, prevRps: k ? p.intervals[k - 1].rps : null }, null));
-    assert.ok(recs.every((r) => r.anchorStatus === 'ok'), name);
-    assert.equal(recs[0].crossing, null, name);
-    assert.equal(recs[1].crossing, null, name);
-    assert.equal(recs[2].crossing.s, expected[name][0], name);
-    const un = predictCrossing(p.intervals.slice(0, 3).map((iv, i) => ({ rps: iv.rps, startS: iv.startS, stopS: i < 2 ? iv.stopS : null })));
-    assert.equal(un.rps, 700, name);
-    assert.equal(un.s, expected[name][1], name);
+    const polls = csv(name).map((r) => ({ atS: (Date.parse(r[1]) - t0) / 1000 - o, count: Number(r[4]) }));
+    const iv = p.intervals[2];
+    const a = selectAnchor(polls, iv.startS - o);
+    assert.equal(a.status, 'ok', name);
+    assert.equal(a.poll.count, expected[name][0], name);
+    const f = anchoredForecast({ anchor: a.poll, startS: iv.startS - o, rps: 700, prevRps: 500 });
+    assert.equal(f.crossing ? f.crossing.s : null, expected[name][1], name);
+  }
+});
+
+test('time-origin shift: the prospective t = 0 (first rung generator start) is 18-47 s after the fit origin; the effect is under 45 statements', () => {
+  for (const [name, p] of Object.entries(patterns)) {
+    const iv = rebased(p);
+    const shift = p.intervals[0].startS; // seconds the fit's elapsed time is ahead
+    const fit = modeledPolls(iv.map((r) => ({ ...r, startS: r.startS + shift, stopS: r.stopS == null ? null : r.stopS + shift })));
+    const pro = modeledPolls(iv);
+    const maxDiff = Math.max(...fit.map((q, i) => q.count - pro[i].count));
+    assert.ok(maxDiff > 0 && maxDiff < 45, `${name} ${maxDiff}`);
   }
 });
 
@@ -306,8 +410,8 @@ test('fit-pipeline fixture: origin, baseline and exposure windows of the fit map
   const median = (x) => { const s = [...x].sort((p, q) => p - q); return (s[1] + s[2]) / 2; };
   assert.equal(median(firsts.map((f) => f.P0)), MODEL.initialPrepared);
   assert.equal(median(firsts.map((f) => f.N0)), MODEL.initialConnections);
-  // Origin: the fit's t = 0 (first tagged poll) is within 3 s of the controller dispatch (journal startedAt) of rung 1, so the
-  // prospective T0 (rung-1 dispatch) is the same origin. The k6 start is 18-47 s later and starts the request exposure.
+  // Origin: the fit's t = 0 (first tagged poll) is within 3 s of the controller dispatch (journal startedAt) of rung 1. The
+  // prospective t = 0 is the first rung's generator start (k6), 18-47 s later; the effect on the model is bounded below.
   for (const [name, p] of Object.entries(patterns)) {
     const first = Date.parse(csv(name).find((r) => r[8] !== '')[1]);
     const lag = (first - Date.parse(p.t0)) / 1000;
@@ -332,14 +436,9 @@ test('frozen files are pinned by hash in the prereg', () => {
     const h = createHash('sha256').update(readFileSync(new URL(f, DIR))).digest('hex');
     assert.ok(doc.includes(h), `${f} sha256 ${h} is not pinned in the prereg`);
   }
-  for (const needle of ['29.8120561524', '33.6008348159', '38.9871549291', '23552', '23,552', 'ba432f902ba8c35de670448f4e43fdfce204c2ff',
+  for (const needle of ['29.8120561524', '33.6008348159', '38.9871549291', '24630', '24,630', 'ba432f902ba8c35de670448f4e43fdfce204c2ff',
     '8747a554126ee34b57898be44a74e579913f570b', '300: 130; 500: 279; 700: 491; 900: 500']) {
     assert.ok(doc.includes(needle), `prereg is missing ${needle}`);
   }
   assert.ok(!doc.includes('N = 34') && !/within\s+±510/.test(doc), 'the 510 s tolerance was dropped from the verdict');
-});
-test('unanchored record is descriptive and hashed', () => {
-  const rec = unanchoredForecastRecord([{ rps: 300, startS: 30, stopS: 1250 }, { rps: 500, startS: 1800, stopS: 3020 }, { rps: 700, startS: 3900, stopS: null }], 'x');
-  assert.match(rec.kind, /descriptive/);
-  assert.match(rec.inputSha256, /^[0-9a-f]{64}$/);
 });
