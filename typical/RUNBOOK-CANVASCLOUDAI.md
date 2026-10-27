@@ -483,14 +483,14 @@ Authority: `typical/dbsat-pscap16k-2x-v1/PREREGISTRATION.md`. Everything is as f
 - Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
 - Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
 
-## 15. Prepared-statement cap holdout (typical-dbsat-pscap24k-2x-v1)
+## 15. Prepared-statement cap holdout (typical-dbsat-pscap23k-2x-v1)
 
-Authority: `typical/dbsat-pscap24k-2x-v1/PREREGISTRATION.md`. Everything is as for `typical-dbsat-pscap16k-2x-v1` (§14) except `mysql_max_prepared_stmt_count = 24576`.
+Authority: `typical/dbsat-pscap23k-2x-v1/PREREGISTRATION.md`. Everything is as for `typical-dbsat-pscap16k-2x-v1` (§14) except `mysql_max_prepared_stmt_count = 23552`.
 
-- Apply IDs: `typical-dbsat-pscap24k-2x-r{1,2}[letter]-YYYYMMDD`. IDs are never reused. Replacements use the next letter.
-- Terraform: `-var mysql_max_prepared_stmt_count=24576`. All other variables are as conn-2x-v1.1 (2× m5.large, pool 250 per app server, db.r5.large, `max_connections = 500`). `wait-ready` rejects a pscap24k ID unless 24576 is declared. It also checks the live parameter group (24576, `in-sync`).
-- Ladder: 300 → 500 → 700 → 900 → 1100 → 1300 → 1500. Steps are 300 s warmup + 900 s steady, with the 15 s observer polls. Stop at the §3.1 breach. Inter-rung gaps are not paced. Record every rung's `startedAt` and `endedAt`/`stoppedAt` from the controller journal, because the prediction is evaluated on the measured `startedAt` offsets (`typical/dbsat-pscap24k-2x-v1/predict.mjs`, prereg §5.2).
-- Verdict (prereg §5.5): PASS needs the first errno 1461 in the rung the formula predicts from the rep's own offsets, or within 34 polls (510 s) of the predicted crossing poll, in both valid reps. A rep that stops before the predicted crossing with no 1461 is not assessable. Up to 2 replacements are allowed for invalid or not-assessable reps, one at a time, and none after a valid assessable FAIL. Never change the controller to continue past a breach without pausing (parent §7.1).
-- Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.9, §7).
+- Apply IDs: `typical-dbsat-pscap23k-2x-r{1,2}[letter]-YYYYMMDD`. IDs are never reused. Replacements use the next letter.
+- Terraform: `-var mysql_max_prepared_stmt_count=23552`. All other variables are as conn-2x-v1.1 (2× m5.large, pool 250 per app server, db.r5.large, `max_connections = 500`). `wait-ready` rejects a pscap23k ID unless 23552 is declared. It also checks the live parameter group (23552, `in-sync`).
+- Ladder: 300 → 500 → 700 → 900 → 1100 → 1300 → 1500. Steps are 300 s warmup + 900 s steady, with the 15 s observer polls. Stop at the §3.1 breach. Inter-rung gaps are not paced, and nothing may be delayed or retried in a way that changes timing (prereg §5.4). Record T0 (rung-1 journal `startedAt`), and for every rung the generator `actualStartedAt` (workload start) and `completed_at` (workload stop; `persistedBoundaries` for a breached rung). Journal `startedAt` is only the dispatch time and `stoppedAt` is only the breach declaration (prereg §5.2).
+- Verdict (prereg §5.4–§5.5): at each rung's workload start, before any outcome, write and hash the state-anchored forecast with `predict.mjs` (latest poll at or before start − 10 s, at most 45 s old; frozen increments only). PASS needs the first errno 1461 inside the rung whose anchored forecast predicts the crossing, with no 1461 and no forecast crossing in an earlier rung, in both valid reps. There is no timing tolerance. An adjacent rung is FAIL. A gap or boundary-straddling onset, a stale or missing anchor, or a valid early stop before the predicted rung ends with no 1461 is NOT ASSESSABLE and is **not replaced**. Replacements (max 2, one at a time, none after a valid FAIL) are only for INVALID reps, i.e. independently established execution faults (prereg §5.10, §7). Score with `score.mjs`, not in the runner. Never change the controller to continue past a breach without pausing (parent §7.1).
+- Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.10, §7).
 - Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
 - Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
