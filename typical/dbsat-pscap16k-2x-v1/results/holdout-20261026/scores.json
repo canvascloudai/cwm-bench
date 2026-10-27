@@ -1,0 +1,72 @@
+{
+ "r1b": {
+  "campaign": "typical-dbsat-pscap16k-2x-r1b-20261026",
+  "polls": 379,
+  "modes": {
+   "--run": 379
+  },
+  "first_poll": "2026-10-26T19:21:45.552Z",
+  "base1461": 0,
+  "c": 59.10268577018286,
+  "cross": {
+   "idx": 154,
+   "at": "2026-10-26T20:00:15.639Z",
+   "threads": 482,
+   "pred": 28487.494541228138,
+   "prep": 12414
+  },
+  "onset": {
+   "idx": 166,
+   "at": "2026-10-26T20:03:15.742Z",
+   "threads": 482,
+   "prep": 16382,
+   "e1461": 63,
+   "pred": 28487.494541228138
+  },
+  "peak_prep": 16382,
+  "peak_prep_at": "2026-10-26T20:03:15.742Z",
+  "peak_threads": 482,
+  "max_stmt_values": [
+   "16382"
+  ],
+  "onset_minus_cross_polls_index": 12,
+  "onset_minus_cross_seconds": 180.103,
+  "pre_window_1461_max": 0,
+  "max_gap_s": 15.17
+ },
+ "r2": {
+  "campaign": "typical-dbsat-pscap16k-2x-r2-20261026",
+  "polls": 588,
+  "modes": {
+   "--run": 588
+  },
+  "first_poll": "2026-10-26T22:10:06.979Z",
+  "base1461": 0,
+  "c": 59.10268577018286,
+  "cross": {
+   "idx": 200,
+   "at": "2026-10-26T23:00:07.191Z",
+   "threads": 333,
+   "pred": 19681.19436147089,
+   "prep": 14955
+  },
+  "onset": {
+   "idx": 273,
+   "at": "2026-10-26T23:18:22.229Z",
+   "threads": 333,
+   "prep": 16382,
+   "e1461": 904,
+   "pred": 19681.19436147089
+  },
+  "peak_prep": 16382,
+  "peak_prep_at": "2026-10-26T23:18:22.229Z",
+  "peak_threads": 353,
+  "max_stmt_values": [
+   "16382"
+  ],
+  "onset_minus_cross_polls_index": 73,
+  "onset_minus_cross_seconds": 1095.038,
+  "pre_window_1461_max": 0,
+  "max_gap_s": 15.233
+ }
+}
