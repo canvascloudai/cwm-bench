@@ -91,3 +91,13 @@ Observer polls run every **15 s** and record `Threads_connected`, `Prepared_stmt
 
 ## 11. Changelog
 - **r1 (2026-10-26):** initial draft.
+
+- **r2 (2026-10-26; recorded in the results PR, because the runner kept r2–r5 as local receipts with no GitHub write):**
+  - Wiring: PR #46, `main` `d7153815a2782223b34c4db1ebde8bf17621ca05`.
+  - At r2 time the campaign manifest SHA256 was `6f54b24d7a09728a1aae162a61fbdc04ff9e882a3efb362753afe07843623d96` and the controller SHA256 was `803bb9403ca9bd708ba62279370dd6c9d5c2ba0280dac1c24d529d9f7ee797b8`.
+  - r3, a pre-workload harness correction: the readiness-helper name derivation pointed at a nonexistent renamed helper, so the unchanged reviewed predecessor helper is used. Manifest `c87aae0aca6059c72ae34834a37d192d00d12e926c052333490249ee3243a296`, controller `1cace4511c217097718f321822b3bf037fd5dd5e538424fc27d7cb0ddcd3a110`. Apply `r1` stays invalid and unscored.
+  - r4, a pre-workload path correction: a campaign-local observer, claimed by the runner to differ from the predecessor only in the directory-prefix literal. Manifest `1357b1f7ce8b670a62967b8cb3b3705d1114842f87cc93f7e002d5f808076f46`, controller unchanged. Apply `r1a` stays invalid and unscored.
+  - r5, a test-only fixture change: atomic marker publication. **Executed** manifest `c728cec226f4c474ee5805cc95a77dd3f689cb918e505f818da4eece2d38f93f`, **executed** controller `1cace4511c217097718f321822b3bf037fd5dd5e538424fc27d7cb0ddcd3a110`. Both scored reps (`r1b`, `r2`) ran under this pair.
+  - Measurement SHA is unchanged: `881e0cffd51da084be4a24ffd13366dfbb67063f`.
+  - The raw archive is not in git. SHA256 `c0eb0633527592f9c3b48507688cb32f2be32b4e4941024188c9b7dc21f3476d`.
+  - No change to the prediction, H1/H0, thresholds or scoring. Results: `RESULTS.md`.
