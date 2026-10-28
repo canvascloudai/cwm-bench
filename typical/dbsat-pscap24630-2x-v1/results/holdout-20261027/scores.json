@@ -1,0 +1,46 @@
+{
+  "reps": {
+    "r1": {
+      "verdict": "PASS",
+      "reason": "first 1461 in the predicted 700 rung",
+      "decisiveS": 3394.105,
+      "invalid": [],
+      "descriptive": {
+        "onsetS": 3394.105,
+        "onsetRungRps": 700,
+        "forecastRungRps": 700,
+        "forecastCrossingS": 3777,
+        "onsetMinusForecastS": -382.895,
+        "wholeScheduleCrossingS": 3777,
+        "anchoredForecastRungRps": 700,
+        "anchoredCrossingS": 3057,
+        "onsetMinusAnchoredS": 337.105
+      }
+    },
+    "r2": {
+      "verdict": "PASS",
+      "reason": "first 1461 in the predicted 700 rung",
+      "decisiveS": 3784.214,
+      "invalid": [],
+      "descriptive": {
+        "onsetS": 3784.214,
+        "onsetRungRps": 700,
+        "forecastRungRps": 700,
+        "forecastCrossingS": 4070,
+        "onsetMinusForecastS": -285.78600000000006,
+        "wholeScheduleCrossingS": 4070,
+        "anchoredForecastRungRps": 700,
+        "anchoredCrossingS": 3425,
+        "onsetMinusAnchoredS": 359.21399999999994
+      }
+    }
+  },
+  "campaign": {
+    "verdict": "H1",
+    "slots": [
+      "PASS",
+      "PASS"
+    ],
+    "deviations": []
+  }
+}
