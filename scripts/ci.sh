@@ -103,6 +103,11 @@ if command -v terraform >/dev/null 2>&1; then
   terraform -chdir=terraform init -backend=false -input=false
   terraform -chdir=terraform validate
   terraform -chdir=terraform test
+  echo "==> terraform/gcp fmt/validate/test (no apply)"
+  terraform -chdir=terraform/gcp fmt -check -recursive
+  terraform -chdir=terraform/gcp init -backend=false -input=false
+  terraform -chdir=terraform/gcp validate
+  terraform -chdir=terraform/gcp test
 else
   echo "terraform not installed; skip terraform" >&2
   exit 1

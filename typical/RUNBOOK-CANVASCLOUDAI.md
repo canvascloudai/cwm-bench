@@ -494,3 +494,113 @@ Authority: `typical/dbsat-pscap24630-2x-v1/PREREGISTRATION.md`. Everything is as
 - Runner: unlimited CPU-credit mode for the whole campaign, and runner-side faults are invalid reps (prereg §5.10, §7).
 - Budget: soft cap $25. At the cap, pause and ask Kevin. Never auto-stop.
 - Evidence path: `typical/campaign/<apply-id>/`. Redact AWS account, resource and ARN IDs.
+
+## 16. GCP fit calibration (gcp-fit-v1)
+
+This is not part of sections 6 or 10–15. It is **fit / calibration** data, not a holdout. The plan is `typical/gcp-fit-v1/PREREGISTRATION.md`. Do not score it against an AWS fit and do not call it a holdout.
+
+The runner **does not use GitHub**. It does not clone, fetch, or open a browser session against GitHub. It runs from the **pinned merged commit** you were given (a full checkout of that SHA, already on disk). A branch name is not a pin. `<SHA>` below means that commit. `<PROJECT>` is the project id Kevin gives you at run time. Do not write `<PROJECT>`, a project number, a service-account email, or a billing account id into the repo.
+
+### 16.1 Step 1 — validate, plan, and a zero-cost dry run, then stop
+
+Do this before any apply. Then **stop for review**. Do not apply in this step.
+
+```bash
+cd terraform/gcp
+terraform init -backend=false -input=false
+terraform validate
+terraform plan \
+  -var="project_id=<PROJECT>" \
+  -var='region=us-central1' \
+  -var='zone=us-central1-a' \
+  -var='app_image=<PINNED_IMAGE>' \
+  -var='test_id=gcp-fit-v1-plan-review' \
+  -var='app_profile=typical' \
+  -var='app_workers=2' \
+  -var="app_source_git_ref=<SHA>" \
+  -out=/tmp/gcp-fit-v1.tfplan
+terraform show -json /tmp/gcp-fit-v1.tfplan > /tmp/gcp-fit-v1.plan.json
+```
+
+Zero-cost dry run, from the pinned checkout, with no cloud calls except what `terraform plan` itself makes. Do not set `CWM_GCP_BILLING_EXPORT_TABLE` yet. From the repo root:
+
+```bash
+export CWM_CAMPAIGN_ID=gcp-fit-v1-r1-YYYYMMDD
+export CWM_SCENARIO=gcp-fit-200
+export CWM_RUN_ID=gcp-fit-200-r1
+node scripts/worker-adapter.mjs wait-ready --json > /tmp/gcp-fit-v1-capability.json
+```
+
+Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is still `1.7.1` (AWS behavior is unchanged; these keys are additive).
+
+Stop. Hand Kevin the plan JSON and the capability JSON. Do not apply, do not start k6, and do not create a billing export query until he says to continue.
+
+### 16.2 One apply (only after review)
+
+Apply id / `test_id`: `gcp-fit-v1-r${K}-YYYYMMDD` (`K` is 1 or 2). A whole-apply replacement adds one letter (`r1a`, then `r1b`, then `r1c`). At most three replacements per rep. Parent id: `gcp-fit-v1-YYYYMMDD` using the UTC date of the first apply.
+
+```bash
+cd terraform/gcp
+terraform apply \
+  -var="project_id=<PROJECT>" \
+  -var='region=us-central1' \
+  -var='zone=us-central1-a' \
+  -var='app_image=<PINNED_IMAGE>' \
+  -var="test_id=gcp-fit-v1-r${K}-YYYYMMDD" \
+  -var='app_profile=typical' \
+  -var='app_workers=2' \
+  -var="app_source_git_ref=<SHA>"
+terraform output -json > ../out/01-terraform-outputs.json
+cd ..
+export CWM_TERRAFORM_DIR="$PWD/terraform/gcp"
+export GOOGLE_CLOUD_PROJECT=<PROJECT>
+export CLOUDSDK_COMPUTE_REGION=us-central1
+export CWM_CAMPAIGN_ID=gcp-fit-v1-r${K}-YYYYMMDD
+export CWM_MEASUREMENT_SHA=<SHA>
+export CWM_GCP_BILLING_EXPORT_TABLE=<BILLING_EXPORT_TABLE>
+node scripts/worker-adapter.mjs wait-ready --json > out/02-wait-ready.json
+for RPS in 200 400 600; do
+  KEY=gcp-fit-$RPS
+  export CWM_SCENARIO=$KEY CWM_RUN_ID=$KEY-r$K
+  node scripts/worker-adapter.mjs run --scenario $KEY --json > out/10-$KEY.run.json
+  # Set CWM_RUN_STARTED_AT and CWM_RUN_ENDED_AT to the steady window
+  # (exclude the 300 s warmup) before collect.
+  node scripts/worker-adapter.mjs collect --scenario $KEY --json > out/11-$KEY.collect.json
+done
+```
+
+`collect` prints a document that matches `schema/run.schema.json`. `split` is `fit`. Do not wrap it again.
+
+Gates:
+
+- Plan: region `us-central1`, MIG size 2, machine type `n2-standard-2`, Cloud SQL `MYSQL_8_0` / `db-custom-2-16384`, `max_connections` 500, prepared-statement flag omitted at 16382.
+- After wait-ready: `ok`, `cloud` `gcp`, profile `typical`, workers 2, `gitSha` `<SHA>`.
+- After each run: `ok`, ladder `[200,400,600]`, `rung_pos` 1 then 2 then 3.
+- After each collect: `isExample` false, `split` `fit`, steady p50/p95/p99 present, `latency.source` `k6`, error classes present, `cost.source` `bigquery_billing_export` when the export table is set.
+
+A runner fault replaces the whole apply (letter suffix, max 3). Do not re-run one rung in place. Workload errors stay on the apply.
+
+### 16.3 Spend and cleanup
+
+Keep a running sum of billed cost. The cap is **$60**. When `spendCapDecision` would return `action: "pause"`, stop, leave the question for Kevin, and do not apply the next rep. `autoStop` is false. Do not invent a stop.
+
+```bash
+cd terraform/gcp
+terraform destroy \
+  -var="project_id=<PROJECT>" \
+  -var='region=us-central1' \
+  -var='zone=us-central1-a' \
+  -var='app_image=<PINNED_IMAGE>' \
+  -var="test_id=$APPLY" \
+  -var='app_profile=typical' \
+  -var='app_workers=2' \
+  -var="app_source_git_ref=<SHA>" \
+  -auto-approve
+cd ..
+export CWM_TEST_ID=$APPLY
+scripts/gcp-cleanup-sweep.sh > out/90-sweep-immediate.json
+# 24 hours later, same command:
+scripts/gcp-cleanup-sweep.sh > out/91-sweep-24h.json
+```
+
+The sweep is cleanup only. It is not a campaign result. Do not delete leftovers by hand unless Kevin says so. Redact project ids, project numbers, service-account emails, and billing account ids before anything is published.

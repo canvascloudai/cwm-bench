@@ -42,5 +42,47 @@
     "aws_lb_target_group_attachment.app",
     "aws_lb_listener.http",
     "aws_lb_listener.https"
-  ]
+  ],
+  "gcp": {
+    "module": "terraform/gcp",
+    "note": "GCP fit campaigns destroy from terraform/gcp. Do not rename these addresses. The pinned cleanup revision is the merge commit that added this entry; record that SHA on the campaign after merge. Do not invent a SHA here. The AWS pin above is unchanged.",
+    "sweep": {
+      "immediate": true,
+      "delayedHours": 24
+    },
+    "resourceAddresses": [
+      "random_password.db",
+      "google_secret_manager_secret.db_password",
+      "google_secret_manager_secret_version.db_password",
+      "google_service_account.app",
+      "google_service_account.generator",
+      "google_secret_manager_secret_iam_member.app_accessor",
+      "google_project_iam_member.app_log",
+      "google_project_iam_member.app_metric",
+      "google_project_iam_member.generator_log",
+      "google_project_iam_member.generator_metric",
+      "google_compute_network.main",
+      "google_compute_subnetwork.public",
+      "google_compute_subnetwork.private",
+      "google_compute_global_address.psa",
+      "google_service_networking_connection.private",
+      "google_compute_firewall.health",
+      "google_compute_firewall.iap_ssh",
+      "google_compute_health_check.app",
+      "google_compute_backend_service.app",
+      "google_compute_url_map.app",
+      "google_compute_target_http_proxy.app",
+      "google_compute_global_address.lb",
+      "google_compute_global_forwarding_rule.http",
+      "google_compute_target_https_proxy.app",
+      "google_compute_global_forwarding_rule.https",
+      "google_compute_instance_template.app",
+      "google_compute_region_instance_group_manager.app",
+      "google_sql_database_instance.main",
+      "google_sql_database.main",
+      "google_sql_user.main",
+      "google_compute_instance.generator",
+      "google_monitoring_dashboard.main"
+    ]
+  }
 }

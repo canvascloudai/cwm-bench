@@ -29,3 +29,11 @@ Destroy order for the RDS path is instance first, then
 `aws_db_subnet_group.main`, then security groups / VPC. RDS-managed
 ENIs are released by waiting for instance deletion, not by
 `DetachNetworkInterface`.
+
+## GCP fit (`terraform/gcp`)
+
+`scripts/cleanup-compat.json` has a separate `gcp` object. It does not change `pinnedCleanupRevision` or `resourceAddresses`. Those stay the AWS cleanup pin.
+
+GCP resource addresses live under `gcp.resourceAddresses` and must stay destroy-compatible for `terraform/gcp`. The pinned GCP cleanup revision is the merge commit that adds this entry. Record that SHA on the campaign after merge. Do not invent it in this file.
+
+Sweep leftovers immediately after destroy and again 24 hours later (`gcp.sweep.delayedHours`). The sweep is cleanup only. It is not a campaign result.

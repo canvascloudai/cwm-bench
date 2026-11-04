@@ -52,6 +52,7 @@ export function createDefaultDeps(repoRoot, env) {
     : path.join(repoRoot, 'terraform');
   return {
     runAws: createProcessRunner('aws'),
+    runGcloud: createProcessRunner('gcloud'),
     runTerraform: createProcessRunner('terraform', { cwd: terraformDir }),
     terraformDir,
   };
