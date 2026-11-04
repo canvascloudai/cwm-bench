@@ -93,6 +93,9 @@ export const SCENARIO_KEYS = Object.freeze([
   'typical-dbsat-4x-1100',
   'typical-dbsat-4x-1300',
   'typical-dbsat-4x-1500',
+  'gcp-fit-200',
+  'gcp-fit-400',
+  'gcp-fit-600',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -172,6 +175,36 @@ function typicalP95Scenario(key, appCount, rps) {
       `Terraform region ${TYPICAL_REGION}, topology app_count=${appCount}, and test id ` +
       `typical-p95-${appCount}x-r{1..3}-YYYYMMDD. Not a typical-fit, typical-holdout, or typical-scale key. ` +
       'Scored latency is the untagged whole-run http_req_duration aggregate.',
+  };
+}
+
+function gcpFitScenario(key, rps) {
+  return {
+    key,
+    kind: 'fit',
+    rps,
+    split: 'fit',
+    cloud: 'gcp',
+    regionRole: 'primary',
+    requiredRegion: 'us-central1',
+    workload: { script: 'typical.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'typical',
+    expectedWorkers: 2,
+    expectedAppCount: 2,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    ladder: [200, 400, 600],
+    enforceLadder: true,
+    requestLevelRaw: true,
+    recordMeasurementSha: true,
+    warmup: '300s',
+    duration: '900s',
+    description:
+      `gcp-fit-v1 calibration at ${rps} total RPS on 2 × n2-standard-2 in us-central1. ` +
+      'Fit data, not a holdout. Ladder 200 → 400 → 600, 300s warmup and 900s steady. ' +
+      'Not an AWS typical-fit key.',
   };
 }
 
@@ -426,6 +459,9 @@ const DEFINITIONS = {
   'typical-dbsat-4x-1100': typicalDbsatScenario('typical-dbsat-4x-1100', 4, 1100),
   'typical-dbsat-4x-1300': typicalDbsatScenario('typical-dbsat-4x-1300', 4, 1300),
   'typical-dbsat-4x-1500': typicalDbsatScenario('typical-dbsat-4x-1500', 4, 1500),
+  'gcp-fit-200': gcpFitScenario('gcp-fit-200', 200),
+  'gcp-fit-400': gcpFitScenario('gcp-fit-400', 400),
+  'gcp-fit-600': gcpFitScenario('gcp-fit-600', 600),
 };
 
 export function scenariosRequiringCompleteCollect() {
@@ -597,6 +633,18 @@ export function assertExpectedAppCount(spec, outputs) {
   const declared = topology.app_count;
   const declaredMissing = declared == null || declared === '';
   const declaredNum = declaredMissing ? NaN : Number(declared);
+  if (spec.cloud === 'gcp') {
+    if (declaredNum !== expected) {
+      const err = new Error(
+        `scenario ${spec.key} expects ${expected} app server(s); ` +
+          `topology.app_count=${declaredMissing ? 'unset' : declared}. ` +
+          'MIG membership is read from Cloud Monitoring, not from a terraform instance list.',
+      );
+      err.code = 'APP_COUNT_MISMATCH';
+      throw err;
+    }
+    return;
+  }
   if (ids.length !== expected || declaredNum !== expected) {
     const err = new Error(
       `scenario ${spec.key} expects ${expected} app server(s); ` +

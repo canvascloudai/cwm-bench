@@ -13,6 +13,7 @@ import json
 import math
 import os
 import sys
+from datetime import datetime
 
 RATIO = 1.001
 LOG_RATIO = math.log(RATIO)
@@ -29,6 +30,26 @@ def bucket(value):
     return int(math.floor(math.log(max(value, 1e-3)) / LOG_RATIO))
 
 
+ERROR_CLASSES = (
+    "db_timeout",
+    "too_many_connections",
+    "queue_full",
+    "cpu_overload",
+    "internal",
+    "unclassified",
+)
+
+
+def parse_time(value):
+    text = str(value or "")
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        return datetime.fromisoformat(text).timestamp()
+    except ValueError:
+        return None
+
+
 def main(run_dir):
     path = os.path.join(run_dir, "k6.json.gz")
     opener = gzip.open
@@ -42,6 +63,11 @@ def main(run_dir):
     hist = {}
     minutes = {}
     dropped = 0.0
+    failed_count = 0
+    saw_error_metric = False
+    error_counts = {}
+    first_ts = None
+    last_ts = None
     with opener(path, "rt", encoding="utf-8", errors="replace") as handle:
         for line in handle:
             if '"Point"' not in line:
@@ -49,7 +75,8 @@ def main(run_dir):
             is_duration = '"http_req_duration"' in line
             is_failed = '"http_req_failed"' in line
             is_dropped = '"dropped_iterations"' in line
-            if not (is_duration or is_failed or is_dropped):
+            is_errors = '"errors_by_class"' in line
+            if not (is_duration or is_failed or is_dropped or is_errors):
                 continue
             try:
                 obj = json.loads(line)
@@ -62,6 +89,17 @@ def main(run_dir):
                 continue
             if tags.get("phase") != "steady":
                 continue
+            stamp = parse_time(data.get("time"))
+            if stamp is not None:
+                first_ts = stamp if first_ts is None else min(first_ts, stamp)
+                last_ts = stamp if last_ts is None else max(last_ts, stamp)
+            if obj.get("metric") == "errors_by_class":
+                saw_error_metric = True
+                klass = tags.get("error_class") or "unclassified"
+                if klass not in ERROR_CLASSES:
+                    klass = "unclassified"
+                error_counts[klass] = error_counts.get(klass, 0) + float(data.get("value", 0))
+                continue
             minute = str(data.get("time", ""))[:16]
             row = minutes.setdefault(minute, {"values": [], "requests": 0, "failed": 0})
             value = float(data.get("value", 0))
@@ -73,6 +111,7 @@ def main(run_dir):
             elif obj.get("metric") == "http_req_failed":
                 row["requests"] += 1
                 row["failed"] += 1 if value else 0
+                failed_count += 1 if value else 0
     per_minute = [
         {
             "minuteUtc": minute,
@@ -84,11 +123,31 @@ def main(run_dir):
         }
         for minute, row in sorted(minutes.items())
     ]
+    span = (last_ts - first_ts) if first_ts is not None and last_ts is not None else None
+    request_count = len(durations)
+    if saw_error_metric:
+        error_classes = {key: int(error_counts.get(key, 0)) for key in ERROR_CLASSES}
+    elif request_count and failed_count == 0:
+        error_classes = {key: 0 for key in ERROR_CLASSES}
+    elif failed_count:
+        error_classes = {key: None for key in ERROR_CLASSES}
+        error_classes["unclassified"] = failed_count
+    else:
+        error_classes = None
+    throughput = (request_count / span) if span else None
+    goodput = ((request_count - failed_count) / span) if span else None
     print(json.dumps({
         "present": True,
         "source": os.path.basename(path),
         "n": len(durations),
+        "steadyP50Ms": nearest_rank(durations, 50),
         "steadyP95Ms": nearest_rank(durations, 95),
+        "steadyP99Ms": nearest_rank(durations, 99),
+        "requestCount": request_count,
+        "failedCount": failed_count,
+        "steadyThroughputRps": throughput,
+        "steadyGoodputRps": goodput,
+        "errorClasses": error_classes,
         "droppedIterations": dropped,
         "method": "nearest-rank, phase=steady, all http_req_duration points",
         "logHistogram": {"ratio": RATIO, "buckets": {str(k): v for k, v in sorted(hist.items())}},

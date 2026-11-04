@@ -199,6 +199,10 @@ export const TYPICAL_RPS = Object.freeze({
   'typical-dbsat-4x-1100': 1100,
   'typical-dbsat-4x-1300': 1300,
   'typical-dbsat-4x-1500': 1500,
+  // gcp-fit-v1 calibration rungs. The adapter, not this map, locks us-central1.
+  'gcp-fit-200': 200,
+  'gcp-fit-400': 400,
+  'gcp-fit-600': 600,
 });
 
 /**

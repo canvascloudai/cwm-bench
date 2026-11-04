@@ -5,6 +5,14 @@
  */
 
 const PATTERNS = [
+  [/projects\/[0-9]{6,20}\b/g, 'projects/[REDACTED_GCP_PROJECT_NUMBER]'],
+  [/projects\/[a-z][a-z0-9-]{4,28}[a-z0-9]/g, 'projects/[REDACTED_GCP_PROJECT_ID]'],
+  [/--project(?:=|\s+)[0-9]{6,20}\b/g, '--project=[REDACTED_GCP_PROJECT_NUMBER]'],
+  [/--project(?:=|\s+)[a-z][a-z0-9-]{4,28}[a-z0-9]\b/g, '--project=[REDACTED_GCP_PROJECT_ID]'],
+  [/project\.id\s*=\s*"[^"]+"/g, 'project.id = "[REDACTED_GCP_PROJECT_ID]"'],
+  [/project\.id\s*=\s*'[^']+'/g, "project.id = '[REDACTED_GCP_PROJECT_ID]'"],
+  [/\b[a-zA-Z0-9-]{6,30}@[a-zA-Z0-9-]+\.iam\.gserviceaccount\.com\b/g, '[REDACTED_GCP_SERVICE_ACCOUNT]'],
+  [/\b[0-9A-Fa-f]{6}-[0-9A-Fa-f]{6}-[0-9A-Fa-f]{6}\b/g, '[REDACTED_GCP_BILLING_ACCOUNT]'],
   [/\bAKIA[0-9A-Z]{16}\b/g, '[REDACTED_ACCESS_KEY_ID]'],
   [/\bASIA[0-9A-Z]{16}\b/g, '[REDACTED_SESSION_KEY_ID]'],
   [/(?<=AWS_SECRET_ACCESS_KEY[=:\s]+)['"]?([A-Za-z0-9/+=]{20,})['"]?/gi, '[REDACTED]'],

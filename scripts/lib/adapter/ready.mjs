@@ -4,6 +4,7 @@ import { readTerraformOutputs } from './terraform.mjs';
 import { awsJson, describeSsmInstance, runRemoteShell } from './aws.mjs';
 import { DBSAT_PSCAP_TEST_ID_RE, DBSAT_PSCAP16K_TEST_ID_RE, DBSAT_PSCAP24630_TEST_ID_RE } from './ladder.mjs';
 import { redact } from './redact.mjs';
+import { waitReadyGcp } from './gcp.mjs';
 
 const DEFAULT_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
 const DEFAULT_READINESS_POLL_MS = 10 * 1000;
@@ -27,7 +28,7 @@ function capabilityPayload() {
       description: spec.description,
     })),
     matrixNote:
-      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical and app_workers=2. They require us-east-2, except typical-second-region and typical-second-region-300, which require us-west-2. typical-later-day and typical-later-day-300 also require a later UTC day than the fit campaign. typical-scale-{1x,2x,3x}-{100,200,300} are us-east-2 validation keys and require topology app_count 1, 2, or 3. typical-p95-{1x,2x,3x}-{300,200,100} are the typical-p95-v1 keys, reverse ladder 300→200→100, and are not fit, holdout, or scale keys. typical-dbsat-{2x,3x,4x}-{300..1500} are the typical-dbsat-v1 keys, ascending ladder 300→1500, app_count 2, 3, or 4. Every other typical key expects 2 app servers (APP_COUNT_MISMATCH).',
+      'Implemented keys come from this repo (load/scenarios.js, load/diagnostics.js, load/typical.js, schema holdout) and the public CWM accuracy rungs idle/normal/peak/burst. No unverified CWM-internal keys were added. Burst and CPU-only require complete collect evidence before they are treated as measured. typical-* keys run only against app_profile=typical and app_workers=2. They require us-east-2, except typical-second-region and typical-second-region-300, which require us-west-2. typical-later-day and typical-later-day-300 also require a later UTC day than the fit campaign. typical-scale-{1x,2x,3x}-{100,200,300} are us-east-2 validation keys and require topology app_count 1, 2, or 3. typical-p95-{1x,2x,3x}-{300,200,100} are the typical-p95-v1 keys, reverse ladder 300→200→100, and are not fit, holdout, or scale keys. typical-dbsat-{2x,3x,4x}-{300..1500} are the typical-dbsat-v1 keys, ascending ladder 300→1500, app_count 2, 3, or 4. Every other typical key expects 2 app servers (APP_COUNT_MISMATCH). gcp-fit-200/400/600 are the gcp-fit-v1 calibration keys in us-central1 and are not AWS typical keys.',
     primaryRegion: PRIMARY_REGION,
     secondRegion: SECOND_REGION,
     knownGaps: [],
@@ -328,6 +329,9 @@ export async function waitReady(ctx) {
 
   payload.provisioned = true;
   payload.ready.terraformOutputs = true;
+  if (outputs.topology && outputs.topology.cloud === 'gcp') {
+    return waitReadyGcp(ctx, payload, outputs);
+  }
   payload.terraform = {
     region: outputs.region,
     albDns: outputs.albDns,
