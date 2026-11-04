@@ -24,8 +24,8 @@ run "default_is_max_connections_only" {
     error_message = "default region must be us-central1"
   }
   assert {
-    condition     = google_sql_database_instance.main.settings[0].tier == "db-custom-2-16384"
-    error_message = "default tier must be db-custom-2-16384"
+    condition     = google_sql_database_instance.main.settings[0].tier == "db-custom-2-13312"
+    error_message = "default tier must be db-custom-2-13312"
   }
   assert {
     condition     = length(google_sql_database_instance.main.settings[0].database_flags) == 1

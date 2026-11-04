@@ -290,8 +290,8 @@ export function assertGcpFitIdentity(spec, env, outputs) {
     err.code = 'GCP_TOPOLOGY_MISMATCH';
     throw err;
   }
-  if (outputs.topology.db_instance_class && outputs.topology.db_instance_class !== 'db-custom-2-16384') {
-    const err = new Error(`gcp-fit-v1 Cloud SQL tier must be db-custom-2-16384; got ${outputs.topology.db_instance_class}`);
+  if (outputs.topology.db_instance_class && outputs.topology.db_instance_class !== 'db-custom-2-13312') {
+    const err = new Error(`gcp-fit-v1 Cloud SQL tier must be db-custom-2-13312; got ${outputs.topology.db_instance_class}`);
     err.code = 'GCP_TOPOLOGY_MISMATCH';
     throw err;
   }
@@ -510,7 +510,7 @@ function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, gen
         rootVolumeGiB: 30,
       },
       database: {
-        instanceClass: topology.db_instance_class || 'db-custom-2-16384',
+        instanceClass: topology.db_instance_class || 'db-custom-2-13312',
         engine: 'mysql',
         engineVersion: '8.0',
         multiAz: false,

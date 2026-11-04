@@ -13,7 +13,7 @@ Authority for the runner is this file and section 16 of `typical/RUNBOOK-CANVASC
 | Load balancer | External HTTP(S) load balancer, HTTP:80 |
 | App | 2 × `n2-standard-2` regional managed instance group, pinned image |
 | App workload | `app_profile=typical`, `app_workers=2`, pool 250, same systemd unit and seed as the AWS typical app |
-| Database | Cloud SQL MySQL 8.0 `db-custom-2-16384` (requested stand-in for db.r5.large) |
+| Database | Cloud SQL MySQL 8.0 `db-custom-2-13312` (2 vCPU, 13 GiB). db.r5.large is 2 vCPU and 16 GiB; 16 GiB is above the Cloud SQL per-vCPU cap, so this fit uses 13 GiB |
 | Flags | `max_connections=500`. `max_prepared_stmt_count` stays at the engine default 16382 unless a later campaign sets it |
 | Generator | `c2-standard-4` in-region |
 

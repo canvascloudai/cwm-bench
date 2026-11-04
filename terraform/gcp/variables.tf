@@ -146,8 +146,8 @@ variable "k6_version" {
 
 variable "db_tier" {
   type        = string
-  description = "Cloud SQL tier. Default db-custom-2-16384 (2 vCPU, 16384 MB) is the requested stand-in for db.r5.large (2 vCPU, 16 GiB). Cloud SQL Enterprise custom types document a 0.9-6.5 GiB per vCPU cap, so this tier may be rejected at apply. Apply was not run from this repo."
-  default     = "db-custom-2-16384"
+  description = "Cloud SQL tier. Default db-custom-2-13312 is the largest valid 2 vCPU Enterprise custom tier (2 vCPU, 13312 MB = 13 GiB). db.r5.large is 2 vCPU and 16 GiB; 16 GiB is above the 6.5 GiB per vCPU cap, so this fit uses 13 GiB."
+  default     = "db-custom-2-13312"
 }
 
 variable "db_disk_gb" {

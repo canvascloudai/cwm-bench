@@ -47,7 +47,7 @@ function gcpOutputs() {
         app_pool_size: 250,
         app_profile: 'typical',
         app_workers: 2,
-        db_instance_class: 'db-custom-2-16384',
+        db_instance_class: 'db-custom-2-13312',
         db_engine: 'mysql',
         db_engine_version: '8.0',
         mysql_max_connections: 500,

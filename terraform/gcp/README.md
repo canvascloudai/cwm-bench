@@ -11,7 +11,7 @@ Project id, region, and credentials come only from variables. This directory com
 | Region | `us-central1` | Generator zone `us-central1-a`. |
 | Load balancer | External HTTP(S), HTTP:80 | `EXTERNAL_MANAGED`. HTTPS only if `https_certificate` is set. No certificate is committed. |
 | App | **2 × n2-standard-2** | Regional managed instance group. pd-balanced boot disk, 30 GiB. |
-| Database | **db-custom-2-16384** MySQL **8.0** zonal | 2 vCPU, 16384 MB. Private IP. PD_SSD 100 GiB. No BurstBalance metric. |
+| Database | **db-custom-2-13312** MySQL **8.0** zonal | 2 vCPU, 13 GiB. Valid Enterprise custom tier. db.r5.large is 16 GiB. Private IP. PD_SSD 100 GiB. No BurstBalance metric. |
 | Generator | **c2-standard-4** | In-region. Stand-in for c6i.xlarge; not measured against it. |
 | Image | `app_image` (required) | No family lookup. The same pin boots the app and the generator. |
 

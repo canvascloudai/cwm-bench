@@ -573,7 +573,7 @@ done
 
 Gates:
 
-- Plan: region `us-central1`, MIG size 2, machine type `n2-standard-2`, Cloud SQL `MYSQL_8_0` / `db-custom-2-16384`, `max_connections` 500, prepared-statement flag omitted at 16382.
+- Plan: region `us-central1`, MIG size 2, machine type `n2-standard-2`, Cloud SQL `MYSQL_8_0` / `db-custom-2-13312` (13 GiB; db.r5.large is 16 GiB), `max_connections` 500, prepared-statement flag omitted at 16382.
 - After wait-ready: `ok`, `cloud` `gcp`, profile `typical`, workers 2, `gitSha` `<SHA>`.
 - After each run: `ok`, ladder `[200,400,600]`, `rung_pos` 1 then 2 then 3.
 - After each collect: `isExample` false, `split` `fit`, steady p50/p95/p99 present, `latency.source` `k6`, error classes present, `cost.source` `bigquery_billing_export` when the export table is set.
