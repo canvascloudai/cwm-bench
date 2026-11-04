@@ -46,7 +46,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const LEAN_SHA256 = Object.freeze({
   'app/src/server.js': 'b19fe09a4ac4f29b282971fe4d2d6e362c6a076156637ad8d2d0f4586c94b7a9',
   'app/package.json': 'c2003aa81d096e51921fc718c0657a11e64b092555bcc91bc1ae19ad509f9311',
-  'app/package-lock.json': '28a3d01a677434c3e81db1c6ce8a617eb8d092177374538748837d6e05a79edf',
+  'app/package-lock.json': '7cf332a4e652b24ca81db1c8aeef105e6893a75beae0d0a5968629552797a4cd',
   'app/seed/seed.sql': '0dd5e5ba340b885f4fc03af917ea900875ba096bbf44a0709cdcb7b93758235d',
   'load/scenarios.js': '62015feee74f8824b064c7098b27e4a3c01fc2f9dedbfd9f5afa9b67e4245f80',
   'load/diagnostics.js': 'bdfd3f9b6dea70a85cfbf48a2f461c4b3e0cb52b65e0dec071a2b028113aabad',
