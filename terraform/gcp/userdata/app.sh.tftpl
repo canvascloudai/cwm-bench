@@ -25,7 +25,7 @@ retry() {
 }
 
 # Do not run a full OS update during measured-instance bootstrap.
-retry 4 15 dnf -y install git python3 mariadb105
+retry 4 15 dnf -y install git python3 mariadb
 
 # Node 20 (major pin). NodeSource first; nodejs20 as fallback.
 if retry 4 15 curl -fsSL https://rpm.nodesource.com/setup_20.x -o /tmp/nodesource-setup.sh && bash /tmp/nodesource-setup.sh; then
