@@ -20,7 +20,7 @@ async function appMeta(stdout) {
 
 /**
  * GCP client and gcp-fit-v1 run/collect path.
- * AWS commands never call these functions. Adapter version stays 1.7.1.
+ * AWS commands never call these functions. Adapter 1.7.2 changed only the GCP CLI transport (see gcp-cli.mjs).
  */
 
 export const GCP_FIT_REGION = 'us-central1';

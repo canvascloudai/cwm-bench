@@ -531,7 +531,35 @@ export CWM_RUN_ID=gcp-fit-200-r1
 node scripts/worker-adapter.mjs wait-ready --json > /tmp/gcp-fit-v1-capability.json
 ```
 
-Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is still `1.7.1` (AWS behavior is unchanged; these keys are additive).
+Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is `1.7.2` (GCP collector transport fix; AWS behavior is unchanged; these keys are additive).
+
+Check the installed tools and live API availability with the same authorized
+GCP credentials before any paid apply:
+
+```bash
+GOOGLE_CLOUD_PROJECT=<PROJECT> node scripts/gcp-preflight.mjs --json > /tmp/gcp-fit-v1-api-preflight.json
+```
+
+Require `ok: true`. This checks the real gcloud command, a `bq query
+--use_legacy_sql=false --dry_run` of `SELECT 1`, and a read-only Cloud Monitoring
+`timeSeries.list` request using the existing app CPU filter. It does not create
+resources, run load, query billing-export rows, or change measurement windows.
+Authentication and API/permission failures are preflight failures, not a reason
+to skip collection or manufacture missing metrics. The collector uses `bq query`
+for billing and the Monitoring REST API for time series; SSH still uses gcloud.
+
+VM CPU collection resolves the original `role` and `test_id` labels through
+Compute Engine instance inventory, then requests raw Monitoring series using
+the matching numeric instance IDs. It does not add alignment, reducers, or
+change the original measurement interval or calculations. Inventory is
+paginated and identity-checked; empty, partial, conflicting, or in-window
+replacement inventories fail closed during collection.
+
+Before apply, zero matching campaign VMs is expected. Preflight separately
+checks the label-inventory API and a raw, metric-type-only Monitoring read
+over its availability window. This proves API availability, not a completed
+measurement: `measurementCollectionValidated` remains `false`. Collection
+never falls back to that broad availability query when no campaign VM matches.
 
 Stop. Hand Kevin the plan JSON and the capability JSON. Do not apply, do not start k6, and do not create a billing export query until he says to continue.
 
