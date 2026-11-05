@@ -153,6 +153,16 @@ function env(extra = {}) {
   };
 }
 
+function completedStatePath(prefix) {
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), prefix)), 'state.json');
+  writeFileSync(statePath, JSON.stringify({
+    ladderByCampaign: {
+      [CAMPAIGN]: [{ scenario: 'gcp-fit-200', rps: 200, runId: 'gcp-fit-200-r1', rung_pos: 1 }],
+    },
+  }));
+  return statePath;
+}
+
 async function runAdapter(args, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
@@ -299,7 +309,7 @@ test('raw instance selection produces byte-identical collect JSON to original la
   });
   const collect = (runGcloud) => runAdapter(['collect', '--scenario', 'gcp-fit-200', '--json'], {
     now: () => new Date('2026-11-04T01:20:00.000Z'), env: env(),
-    statePath: path.join(mkdtempSync(path.join(tmpdir(), 'gcp-selector-golden-')), 'state.json'),
+    statePath: completedStatePath('gcp-selector-golden-'),
     deps: { runGcloud, runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }) },
   });
   const before = await collect(gcloudMock().runGcloud);
@@ -311,7 +321,7 @@ test('raw instance selection produces byte-identical collect JSON to original la
 
 test('gcp collect prints a run document and hides the project id', async () => {
   const gcloud = gcloudMock();
-  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-collect-')), 'state.json');
+  const statePath = completedStatePath('gcp-collect-');
   const result = await runAdapter(['collect', '--scenario', 'gcp-fit-200', '--json'], {
     now: () => new Date('2026-11-04T01:20:00.000Z'),
     statePath,
@@ -401,6 +411,177 @@ test('gcp run enforces 200 then 400 then 600 and does not touch AWS SSM', async 
   assert.match(startCommand, /DURATION='900s'/);
   assert.match(startCommand, /SCENARIO='gcp-fit-200'/);
   assert.equal(first.gcloud.calls.some((args) => args[0] === 'ssm'), false);
+});
+
+test('gcp full 200/400/600 run-collect sequence uses persistent state and the real CLI transport offline', async () => {
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-full-ladder-')), 'state.json');
+  const mock = gcloudMock();
+  const restCalls = [];
+  const bqCalls = [];
+  let activeWindow;
+  const rungWindow = (rps) => {
+    const start = Date.parse('2026-11-04T01:00:00.000Z') + [200, 400, 600].indexOf(rps) * 1200_000 + 300_000;
+    return { start: new Date(start).toISOString(), end: new Date(start + 900_000).toISOString() };
+  };
+  const cli = createGcpCliRunner({
+    getAccessToken: async () => 'private-offline-fixture-token',
+    runGcloud: mock.runGcloud,
+    runBq: async (args) => {
+      bqCalls.push(args);
+      assert.ok(args.at(-1).includes(activeWindow.start));
+      assert.ok(args.at(-1).includes(activeWindow.end));
+      return mock.runGcloud([
+        'bigquery', 'query', '--use_legacy_sql=false', '--format=json',
+        `--project=${PROJECT}`, args.at(-1),
+      ]);
+    },
+    fetchFn: async (url) => {
+      restCalls.push(String(url));
+      const filter = url.searchParams.get('filter');
+      let body;
+      if (url.hostname === 'compute.googleapis.com') {
+        const generator = filter.includes('role = "generator"');
+        const ids = generator ? ['9001'] : ['111', '222'];
+        const zone = `https://www.googleapis.com/compute/v1/projects/${PROJECT}/zones/us-central1-a`;
+        body = { items: { 'zones/us-central1-a': { instances: ids.map((id) => ({
+          id, name: `vm-${id}`, labels: { role: generator ? 'generator' : 'app', test_id: CAMPAIGN },
+          zone, selfLink: `${zone}/instances/vm-${id}`, creationTimestamp: '2026-11-01T00:00:00Z',
+        })) } } };
+      } else {
+        assert.equal(url.hostname, 'monitoring.googleapis.com');
+        assert.equal(url.searchParams.get('interval.startTime'), activeWindow.start);
+        assert.equal(url.searchParams.get('interval.endTime'), activeWindow.end);
+        assert.equal([...url.searchParams.keys()].some((key) => key.startsWith('aggregation')), false);
+        let legacyFilter = filter;
+        if (filter.includes('instance_id=')) {
+          legacyFilter = vmCpuFilter(filter.includes('"9001"') ? 'generator' : 'app', CAMPAIGN);
+        }
+        const reply = await mock.runGcloud(['monitoring', 'time-series', 'list', `--filter=${legacyFilter}`]);
+        const rows = JSON.parse(reply.stdout);
+        body = { timeSeries: filter.includes('instance_id=') ? rows.map((row) => ({
+          ...row,
+          resource: { ...row.resource, type: 'gce_instance', labels: {
+            ...row.resource.labels, project_id: PROJECT,
+          } },
+        })) : rows };
+      }
+      return { ok: true, status: 200, json: async () => body };
+    },
+  });
+  const invoke = (command, rps, overrides = {}) => {
+    activeWindow = rungWindow(rps);
+    return runAdapter(
+    [command, '--scenario', `gcp-fit-${rps}`, '--json'],
+    {
+      now: () => new Date(Date.parse(activeWindow.end) + 20_000),
+      statePath,
+      env: env({
+        CWM_SCENARIO: `gcp-fit-${rps}`, CWM_RUN_ID: `gcp-fit-${rps}-r1`,
+        CWM_RUN_STARTED_AT: activeWindow.start, CWM_RUN_ENDED_AT: activeWindow.end,
+        ...overrides,
+      }),
+      deps: {
+        runGcloud: cli,
+        runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+        runAws: async () => { throw new Error('AWS is forbidden in this offline GCP fixture'); },
+        k6PollMs: 1, k6WaitMs: 1000,
+      },
+    },
+  );
+  };
+  const noRun = await invoke('collect', 200);
+  assert.equal(noRun.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
+  assert.equal(mock.calls.length, 0);
+  for (const [index, rps] of [200, 400, 600].entries()) {
+    const started = await invoke('run', rps);
+    assert.equal(started.code, 0, started.stdout);
+    assert.equal(started.payload.rung_pos, index + 1);
+    const beforeCollect = readFileSync(statePath, 'utf8');
+    const collected = await invoke('collect', rps);
+    assert.equal(collected.code, 0, collected.stdout);
+    assert.equal(collected.payload.scenario, `gcp-fit-${rps}`);
+    assert.equal(collected.payload.concurrency.targetRps, rps);
+    assert.equal(collected.payload.gitSha, SHA);
+    assert.equal(collected.payload.split, 'fit');
+    assert.equal(collected.payload.isExample, false);
+    assert.deepEqual(collected.payload.latency, { p50Ms: 11, p95Ms: 22, p99Ms: 33, source: 'k6' });
+    assert.equal(collected.payload.goodputRps, 180.5);
+    assert.equal(collected.payload.databaseConnections.max, 30);
+    assert.equal(collected.payload.cost.hourlyUsd, 10);
+    assert.equal(readFileSync(statePath, 'utf8'), beforeCollect, 'collect must never advance or rewrite state');
+    const replay = await invoke('run', rps);
+    assert.equal(replay.payload.error.code, 'LADDER_ORDER', 'collect must not enable a rung retry');
+    if (rps === 200) {
+      const skipped = await invoke('run', 600);
+      assert.equal(skipped.payload.error.code, 'LADDER_ORDER');
+    }
+  }
+  const completeState = readFileSync(statePath, 'utf8');
+  assert.deepEqual(JSON.parse(completeState).ladderByCampaign[CAMPAIGN].map((row) => row.rps), [200, 400, 600]);
+  for (const rps of [200, 400, 600]) {
+    const collected = await invoke('collect', rps);
+    assert.equal(collected.code, 0, collected.stdout);
+    assert.equal(readFileSync(statePath, 'utf8'), completeState);
+  }
+  const wrongRun = await invoke('collect', 200, { CWM_RUN_ID: 'gcp-fit-200-wrong-run' });
+  assert.equal(wrongRun.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
+  const wrongScenario = await invoke('collect', 400, { CWM_RUN_ID: 'gcp-fit-200-r1' });
+  assert.equal(wrongScenario.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
+  const wrongCampaign = await invoke('collect', 200, { CWM_CAMPAIGN_ID: 'gcp-fit-v1-r2-20261104' });
+  assert.equal(wrongCampaign.payload.error.code, 'TEST_ID_MISMATCH');
+  const starts = mock.calls.filter((args) => args.some((arg) => String(arg).includes('ADAPTER_K6_START')));
+  assert.equal(starts.length, 3);
+  for (const [index, args] of starts.entries()) {
+    const command = args[args.indexOf('--command') + 1];
+    assert.match(command, /WARMUP='300s'/);
+    assert.match(command, /DURATION='900s'/);
+    assert.ok(command.includes(`SCENARIO='gcp-fit-${[200, 400, 600][index]}'`));
+  }
+  assert.equal(bqCalls.length, 6);
+  assert.ok(bqCalls.every((args) => args.includes('--use_legacy_sql=false')));
+  assert.ok(restCalls.some((url) => url.includes('compute.googleapis.com')));
+  assert.ok(restCalls.some((url) => url.includes('monitoring.googleapis.com')));
+});
+
+test('gcp collect rejects corrupt, overlong and ambiguous completed-run history before cloud access', async () => {
+  const row = (rps, runId = `gcp-fit-${rps}-r1`) => ({ scenario: `gcp-fit-${rps}`, rps, runId });
+  for (const [history, code] of [
+    [[row(200), row(600)], 'LADDER_ORDER'],
+    [[row(200), row(400), row(600), row(600, 'extra')], 'LADDER_ORDER'],
+    [[row(200), row(400, 'gcp-fit-200-r1')], 'GCP_COLLECT_RUN_MISSING'],
+    [[{ ...row(200), scenario: 'gcp-fit-400' }], 'GCP_COLLECT_RUN_MISSING'],
+  ]) {
+    const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-corrupt-ladder-')), 'state.json');
+    writeFileSync(statePath, JSON.stringify({ ladderByCampaign: { [CAMPAIGN]: history } }));
+    const result = await runAdapter(['collect', '--scenario', 'gcp-fit-200', '--json'], {
+      statePath, env: env(),
+      deps: {
+        runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+        runGcloud: async () => { throw new Error('Cloud must not be contacted'); },
+      },
+    });
+    assert.equal(result.payload.error.code, code, result.stdout);
+  }
+});
+
+test('gcp a failed run cannot be collected as a completed rung', async () => {
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-failed-run-')), 'state.json');
+  const mock = gcloudMock();
+  const deps = {
+    runGcloud: async (args) => args.some((arg) => String(arg).includes('ADAPTER_K6_STATUS'))
+      ? { code: 0, stdout: 'ADAPTER_K6_COMPLETE exit=1\n', stderr: '' }
+      : mock.runGcloud(args),
+    runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+    k6PollMs: 1, k6WaitMs: 1000,
+  };
+  const failed = await runAdapter(['run', '--scenario', 'gcp-fit-200', '--json'], {
+    statePath, env: env(), deps,
+  });
+  assert.equal(failed.payload.ok, false);
+  const collected = await runAdapter(['collect', '--scenario', 'gcp-fit-200', '--json'], {
+    statePath, env: env(), deps,
+  });
+  assert.equal(collected.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
 });
 
 test('gcp userdata follows the typical app and cleanup lists GCP addresses only under gcp', () => {
