@@ -749,7 +749,9 @@ export async function runGcpScenario(ctx, spec) {
     }),
   });
 
-  const deadline = (ctx.deps.nowMs || Date.now)() + Number(ctx.deps.k6WaitMs || 20 * 60 * 1000);
+  // The frozen workload is 20 minutes. Its completion marker is written only
+  // after raw-output gzip finishes; allow a bounded five minutes for finalization.
+  const deadline = (ctx.deps.nowMs || Date.now)() + Number(ctx.deps.k6WaitMs || 25 * 60 * 1000);
   let exitCode = null;
   for (;;) {
     const status = await runRemoteShell(ctx.deps.runGcloud, {

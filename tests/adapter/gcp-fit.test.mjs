@@ -416,6 +416,8 @@ test('gcp run enforces 200 then 400 then 600 and does not touch AWS SSM', async 
 test('gcp full 200/400/600 run-collect sequence uses persistent state and the real CLI transport offline', async () => {
   const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-full-ladder-')), 'state.json');
   const mock = gcloudMock();
+  let elapsedMs = 0;
+  const delayedCompletionPolls = [];
   const restCalls = [];
   const bqCalls = [];
   let activeWindow;
@@ -425,7 +427,13 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
   };
   const cli = createGcpCliRunner({
     getAccessToken: async () => 'private-offline-fixture-token',
-    runGcloud: mock.runGcloud,
+    runGcloud: async (args) => {
+      if (args.some((arg) => String(arg).includes('ADAPTER_K6_STATUS')) && elapsedMs < 1_232_000) {
+        delayedCompletionPolls.push(elapsedMs);
+        return { code: 0, stdout: 'ADAPTER_K6_RUNNING\n', stderr: '' };
+      }
+      return mock.runGcloud(args);
+    },
     runBq: async (args) => {
       bqCalls.push(args);
       assert.ok(args.at(-1).includes(activeWindow.start));
@@ -469,6 +477,7 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     },
   });
   const invoke = (command, rps, overrides = {}) => {
+    if (command === 'run') elapsedMs = 0;
     activeWindow = rungWindow(rps);
     return runAdapter(
     [command, '--scenario', `gcp-fit-${rps}`, '--json'],
@@ -484,7 +493,8 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
         runGcloud: cli,
         runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
         runAws: async () => { throw new Error('AWS is forbidden in this offline GCP fixture'); },
-        k6PollMs: 1, k6WaitMs: 1000,
+        nowMs: () => elapsedMs,
+        wait: async (ms) => { elapsedMs += ms; },
       },
     },
   );
@@ -496,6 +506,7 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     const started = await invoke('run', rps);
     assert.equal(started.code, 0, started.stdout);
     assert.equal(started.payload.rung_pos, index + 1);
+    assert.ok(elapsedMs >= 1_232_000, 'wait for gzip/completion beyond the unchanged 20-minute workload');
     const beforeCollect = readFileSync(statePath, 'utf8');
     const collected = await invoke('collect', rps);
     assert.equal(collected.code, 0, collected.stdout);
@@ -517,6 +528,7 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     }
   }
   const completeState = readFileSync(statePath, 'utf8');
+  assert.ok(delayedCompletionPolls.includes(1_200_000), 'each rung must tolerate post-workload finalization');
   assert.deepEqual(JSON.parse(completeState).ladderByCampaign[CAMPAIGN].map((row) => row.rps), [200, 400, 600]);
   for (const rps of [200, 400, 600]) {
     const collected = await invoke('collect', rps);
@@ -562,6 +574,59 @@ test('gcp collect rejects corrupt, overlong and ambiguous completed-run history 
     });
     assert.equal(result.payload.error.code, code, result.stdout);
   }
+});
+
+async function completionWaitFixture({ completeAtMs = Infinity, exitCode = 0, waitMs } = {}) {
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-completion-wait-')), 'state.json');
+  writeFileSync(statePath, '{}\n');
+  const mock = gcloudMock();
+  let elapsedMs = 0;
+  const result = await runAdapter(['run', '--scenario', 'gcp-fit-200', '--json'], {
+    statePath, env: env(),
+    deps: {
+      runGcloud: async (args) => {
+        if (args.some((arg) => String(arg).includes('ADAPTER_K6_STATUS'))) {
+          return {
+            code: 0,
+            stdout: elapsedMs >= completeAtMs
+              ? `ADAPTER_K6_COMPLETE exit=${exitCode}\n` : 'ADAPTER_K6_RUNNING\n',
+            stderr: '',
+          };
+        }
+        return mock.runGcloud(args);
+      },
+      runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+      runAws: async () => { throw new Error('AWS is forbidden in this offline fixture'); },
+      nowMs: () => elapsedMs,
+      wait: async (ms) => { elapsedMs += ms; },
+      k6WaitMs: waitMs,
+    },
+  });
+  const state = JSON.parse(readFileSync(statePath, 'utf8'));
+  assert.equal(readFileSync(statePath, 'utf8'), '{}\n', 'failed runs must leave the initial state byte-identical');
+  assert.equal((state.ladderByCampaign?.[CAMPAIGN] || []).length, 0,
+    'timeouts and failed k6 exits must not advance the ladder');
+  return { result, elapsedMs };
+}
+
+test('gcp completion wait stays bounded when the marker never arrives', async () => {
+  const { result, elapsedMs } = await completionWaitFixture();
+  assert.equal(result.code, 1, result.stdout);
+  assert.equal(result.payload.error.code, 'GCP_RUN_TIMEOUT');
+  assert.equal(elapsedMs, 25 * 60 * 1000);
+});
+
+test('gcp completion wait preserves an explicit injected deadline', async () => {
+  const { result, elapsedMs } = await completionWaitFixture({ waitMs: 60_000 });
+  assert.equal(result.payload.error.code, 'GCP_RUN_TIMEOUT');
+  assert.equal(elapsedMs, 60_000);
+});
+
+test('gcp delayed nonzero k6 exit remains a workload failure, not success', async () => {
+  const { result, elapsedMs } = await completionWaitFixture({ completeAtMs: 1_232_000, exitCode: 1 });
+  assert.equal(result.payload.ok, false);
+  assert.equal(result.payload.error.code, 'K6_FAILED');
+  assert.ok(elapsedMs >= 1_232_000);
 });
 
 test('gcp a failed run cannot be collected as a completed rung', async () => {
