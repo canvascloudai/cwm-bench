@@ -1,5 +1,11 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.7.2 changes GCP collector transport only: billing runs through
+ * `bq query --use_legacy_sql=false` and Monitoring through the timeSeries.list
+ * REST API (the gcloud routes the collector called do not exist), and VM CPU
+ * series are selected raw by instance_id resolved from the existing role/test_id
+ * labels. SQL, filters' semantics, windows, alignment and calculations are
+ * unchanged; AWS behavior is unchanged. Historical artifacts keep their versions.
  * 1.7.1 fixes SSM truncation in DB-saturation collect using immutable,
  * SHA256-verified gzip snapshots and bounded redaction-safe hex chunks.
  * Measurement scripts, workload settings, and historical artifact versions are unchanged.
@@ -21,7 +27,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.7.1';
+export const ADAPTER_VERSION = '1.7.2';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';

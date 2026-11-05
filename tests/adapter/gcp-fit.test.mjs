@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 import { main } from '../../scripts/lib/adapter/main.mjs';
+import { createGcpCliRunner } from '../../scripts/lib/adapter/gcp-cli.mjs';
 import { redact } from '../../scripts/lib/adapter/redact.mjs';
 import { getScenario } from '../../scripts/lib/adapter/scenarios.mjs';
 import { ADAPTER_VERSION, TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
@@ -166,7 +167,7 @@ async function runAdapter(args, options) {
 }
 
 test('AWS typical keys stay on us-east-2 and the adapter version is unchanged', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.1');
+  assert.equal(ADAPTER_VERSION, '1.7.2');
   const aws = getScenario('typical-fit-200');
   assert.equal(aws.requiredRegion, TYPICAL_REGION);
   assert.equal(aws.cloud, undefined);
@@ -255,6 +256,57 @@ test('steady_p95.py reports steady p50/p95/p99, error classes, and throughput', 
   assert.equal(out.errorClasses.db_timeout, 0);
   assert.ok(out.steadyGoodputRps > 0);
   assert.equal(out.method, 'nearest-rank, phase=steady, all http_req_duration points');
+});
+
+test('raw instance selection produces byte-identical collect JSON to original label-selected fixture', async () => {
+  const original = gcloudMock();
+  const readFixture = async (filter) => JSON.parse((await original.runGcloud([
+    'monitoring', 'time-series', 'list', `--filter=${filter}`,
+  ])).stdout);
+  const cli = createGcpCliRunner({
+    getAccessToken: async () => 'private-offline-fixture-token',
+    runGcloud: original.runGcloud,
+    runBq: async (args) => original.runGcloud([
+      'bigquery', 'query', '--use_legacy_sql=false', '--format=json',
+      `--project=${PROJECT}`, args.at(-1),
+    ]),
+    fetchFn: async (url) => {
+      let body;
+      const filter = url.searchParams.get('filter');
+      if (url.hostname === 'compute.googleapis.com') {
+        const role = filter.includes('role = "app"') ? 'app' : 'generator';
+        const ids = role === 'app' ? ['111', '222'] : ['9001'];
+        const zone = `https://www.googleapis.com/compute/v1/projects/${PROJECT}/zones/us-central1-a`;
+        body = { items: { 'zones/us-central1-a': { instances: ids.map((id) => ({
+          id, name: `vm-${id}`, labels: { role, test_id: CAMPAIGN }, zone,
+          selfLink: `${zone}/instances/vm-${id}`, creationTimestamp: '2026-11-01T00:00:00Z',
+        })) } } };
+      } else if (filter.includes('instance_id=')) {
+        assert.equal([...url.searchParams.keys()].some((key) => key.startsWith('aggregation')), false);
+        assert.equal(url.searchParams.get('interval.startTime'), env().CWM_RUN_STARTED_AT);
+        assert.equal(url.searchParams.get('interval.endTime'), env().CWM_RUN_ENDED_AT);
+        const role = filter.includes('"9001"') ? 'generator' : 'app';
+        const rows = await readFixture(vmCpuFilter(role, CAMPAIGN));
+        body = { timeSeries: rows.map((row) => ({ ...row, resource: {
+          ...row.resource, type: 'gce_instance',
+          labels: { ...row.resource.labels, project_id: PROJECT },
+        } })) };
+      } else {
+        body = { timeSeries: await readFixture(filter) };
+      }
+      return { ok: true, status: 200, json: async () => body };
+    },
+  });
+  const collect = (runGcloud) => runAdapter(['collect', '--scenario', 'gcp-fit-200', '--json'], {
+    now: () => new Date('2026-11-04T01:20:00.000Z'), env: env(),
+    statePath: path.join(mkdtempSync(path.join(tmpdir(), 'gcp-selector-golden-')), 'state.json'),
+    deps: { runGcloud, runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }) },
+  });
+  const before = await collect(gcloudMock().runGcloud);
+  const after = await collect(cli);
+  assert.equal(before.code, 0, before.stdout);
+  assert.equal(after.code, 0, after.stdout);
+  assert.equal(after.stdout, before.stdout);
 });
 
 test('gcp collect prints a run document and hides the project id', async () => {

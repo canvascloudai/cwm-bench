@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { redact } from './redact.mjs';
+import { createGcpCliRunner } from './gcp-cli.mjs';
 
 function stripSecretsFromEnv(env) {
   const copy = { ...env };
@@ -52,7 +53,10 @@ export function createDefaultDeps(repoRoot, env) {
     : path.join(repoRoot, 'terraform');
   return {
     runAws: createProcessRunner('aws'),
-    runGcloud: createProcessRunner('gcloud'),
+    runGcloud: createGcpCliRunner({
+      runGcloud: createProcessRunner('gcloud'),
+      runBq: createProcessRunner('bq'),
+    }),
     runTerraform: createProcessRunner('terraform', { cwd: terraformDir }),
     terraformDir,
   };
