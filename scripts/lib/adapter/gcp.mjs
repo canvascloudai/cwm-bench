@@ -595,7 +595,23 @@ export async function collectGcpScenario(ctx, spec) {
   }
   const state = await loadState(ctx.statePath, ctx.deps.fs || {});
   const ladderPlan = resolveLadder(spec, ctx.env);
-  assertLadderPosition(spec, ladderPlan, ladderHistory(state, identity.campaignId));
+  const history = ladderHistory(state, identity.campaignId);
+  // run has already advanced the ladder. Collect must attest that completed
+  // run, not ask whether it would be permitted to execute again.
+  const matches = history.filter((row) => row.runId === identity.runId);
+  if (matches.length !== 1 || matches[0].scenario !== spec.key || matches[0].rps !== spec.rps) {
+    const err = new Error(
+      `scenario ${spec.key} requires one completed matching run for CWM_RUN_ID ${identity.runId} in this campaign`,
+    );
+    err.code = 'GCP_COLLECT_RUN_MISSING';
+    throw err;
+  }
+  // Validate the entire recorded prefix, including a finished three-rung
+  // ladder, without modifying state or permitting any new load.
+  for (let index = 0; index < history.length; index += 1) {
+    const row = history[index];
+    assertLadderPosition({ key: row.scenario, rps: row.rps }, ladderPlan, history.slice(0, index));
+  }
   const window = requireWindow(ctx.env);
   const runGcloud = requireGcloud(ctx);
   const fields = gcpFields(outputs);
