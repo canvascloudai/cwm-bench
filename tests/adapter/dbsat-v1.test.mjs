@@ -19,7 +19,7 @@ import {
 } from '../../scripts/lib/adapter/dbsat-collect.mjs';
 import { ADAPTER_VERSION } from '../../scripts/lib/adapter/version.mjs';
 import { localSsmText } from '../remote-text-helper.mjs';
-import { MemoryStream, createAwsMock, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
+import { MemoryStream, createAwsMock, isolatedStatePath, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const META = { poolSize: 250, profile: 'typical', workers: 2 };
@@ -60,7 +60,7 @@ function dbsatTerraform(appCount, testId, generators = ['i-gen1']) {
 async function runWith(argv, { env, ...options }) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(argv, { stdout, stderr, ...options, env });
+  const code = await main(argv, { stdout, stderr, ...options, statePath: options.statePath || isolatedStatePath(), env });
   let payload;
   try {
     payload = JSON.parse(stdout.toString());
@@ -79,8 +79,8 @@ function sentScripts(aws) {
     }));
 }
 
-test('adapter is 1.7.3 with 21 ascending dbsat keys at 2x/3x/4x', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.3');
+test('adapter is 1.7.4 with 21 ascending dbsat keys at 2x/3x/4x', () => {
+  assert.equal(ADAPTER_VERSION, '1.7.4');
   const keys = SCENARIO_KEYS.filter((key) => key.startsWith('typical-dbsat-'));
   assert.equal(keys.length, 21);
   assert.deepEqual(DBSAT_LADDER, [300, 500, 700, 900, 1100, 1300, 1500]);
@@ -107,6 +107,7 @@ test('dbsat test ids: discovery r1/r2, confirmation c1, dry run d1', () => {
 test('dbsat run starts at 300, splits across two generators, scales VUs', async () => {
   const fs = memoryFs();
   const campaign = 'typical-dbsat-2x-d1-20261013';
+  const statePath = isolatedStatePath('dbsat-a-');
   const deps = {
     runTerraform: async () => ({ code: 0, stdout: dbsatTerraform(2, campaign, ['i-gen1', 'i-gen2']), stderr: '' }),
     fs,
@@ -116,13 +117,13 @@ test('dbsat run starts at 300, splits across two generators, scales VUs', async 
   });
   const early = createAwsMock(ssmOnlineHandlers({ meta: META }));
   const rejected = await runWith(['run', '--scenario', 'typical-dbsat-2x-500', '--json'], {
-    now: () => new Date('2026-10-13T00:00:00Z'), statePath: '/tmp/dbsat-a.json', deps: { ...deps, runAws: early }, env: env('typical-dbsat-2x-500'),
+    now: () => new Date('2026-10-13T00:00:00Z'), statePath, deps: { ...deps, runAws: early }, env: env('typical-dbsat-2x-500'),
   });
   assert.equal(rejected.payload.error.code, 'LADDER_ORDER');
 
   const aws = createAwsMock(ssmOnlineHandlers({ meta: META }));
   const result = await runWith(['run', '--scenario', 'typical-dbsat-2x-300', '--json'], {
-    now: () => new Date('2026-10-13T00:10:00Z'), statePath: '/tmp/dbsat-a.json', deps: { ...deps, runAws: aws }, env: env('typical-dbsat-2x-300'),
+    now: () => new Date('2026-10-13T00:10:00Z'), statePath, deps: { ...deps, runAws: aws }, env: env('typical-dbsat-2x-300'),
   });
   assert.equal(result.code, 0, result.stdout);
   assert.equal(result.payload.stepStatus, 'complete');
@@ -180,7 +181,7 @@ test('a controller breach stop is a partial step (overload observation), not a f
   });
   const result = await runWith(['run', '--scenario', 'typical-dbsat-3x-300', '--json'], {
     now: () => new Date('2026-10-13T01:00:00Z'),
-    statePath: '/tmp/dbsat-b.json',
+    statePath: isolatedStatePath('dbsat-b-'),
     deps: {
       runTerraform: async () => ({ code: 0, stdout: dbsatTerraform(3, campaign), stderr: '' }),
       fs: memoryFs(),

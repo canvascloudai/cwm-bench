@@ -1,3 +1,11 @@
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+export function isolatedStatePath(prefix = 'cwm-adapter-state-') {
+  return path.join(mkdtempSync(path.join(tmpdir(), prefix)), 'state.json');
+}
+
 export class MemoryStream {
   constructor() {
     this.chunks = [];

@@ -11,6 +11,7 @@ import { buildK6Command } from '../../scripts/lib/adapter/run.mjs';
 import {
   MemoryStream,
   createAwsMock,
+  isolatedStatePath,
   ssmOnlineHandlers,
   terraformOutputFixture,
 } from '../helpers.mjs';
@@ -99,6 +100,7 @@ async function runWith(argv, options) {
     stdout,
     stderr,
     ...options,
+    statePath: options.statePath || isolatedStatePath(),
     env: {
       CWM_CAMPAIGN_ID: 'test-campaign',
       CWM_RUN_ID: `${scenario}-1`,
@@ -222,7 +224,7 @@ test('run idle records a fit date and uses SCENARIO=idle', async () => {
   const aws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const result = await runWith(['run', '--scenario', 'idle', '--json'], {
     now: () => new Date('2026-09-01T08:00:00.000Z'),
-    statePath: '/tmp/cwm-adapter-state-test.json',
+    statePath: isolatedStatePath('cwm-adapter-state-test-'),
     deps: {
       runAws: aws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -272,7 +274,7 @@ test('run launches k6 as a detached process and waits with one run-scoped superv
   const aws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
     now: laterDayNow,
-    statePath: '/tmp/cwm-adapter-detached-run.json',
+    statePath: isolatedStatePath('cwm-adapter-detached-run-'),
     env: { CWM_CAMPAIGN_ID: 'detached', CWM_RUN_ID: 'cpu-only-1', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws: aws,
@@ -295,7 +297,7 @@ test('run reattaches after transient SSM supervisor control loss', async () => {
   const aws = createAwsMock(ssmOnlineHandlers({ poolSize: 250, k6WaitFailures: 1 }));
   const result = await runWith(['run', '--scenario', 'cpu-only', '--json'], {
     now: laterDayNow,
-    statePath: '/tmp/cwm-adapter-ssm-reattach.json',
+    statePath: isolatedStatePath('cwm-adapter-ssm-reattach-'),
     env: { CWM_CAMPAIGN_ID: 'reattach', CWM_RUN_ID: 'cpu-only-1', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws: aws,
@@ -330,7 +332,7 @@ for (const key of ALL_RUNNABLE) {
     });
     const result = await runWith(['run', '--scenario', key, '--json'], {
       now: laterDayNow,
-      statePath: '/tmp/cwm-adapter-state-matrix.json',
+      statePath: isolatedStatePath('cwm-adapter-state-matrix-'),
       env: {
         CWM_CAMPAIGN_ID: 'matrix',
         CWM_RUN_ID: `${key}-1`,

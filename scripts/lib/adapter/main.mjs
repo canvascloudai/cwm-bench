@@ -18,13 +18,18 @@ function writeJson(stream, payload) {
 
 function failPayload(err, extras = {}) {
   const redacted = redactError(err);
+  const error = {
+    code: err && err.code ? err.code : 'ADAPTER_ERROR',
+    message: redacted.message,
+  };
+  if (err && err.replaceable != null) error.replaceable = Boolean(err.replaceable);
+  if (err && err.faultClass) error.faultClass = String(err.faultClass);
+  if (err && err.preRung != null) error.preRung = Boolean(err.preRung);
+  if (err && err.backendHealth) error.backendHealth = err.backendHealth;
   return {
     ok: false,
     adapterVersion: ADAPTER_VERSION,
-    error: {
-      code: err && err.code ? err.code : 'ADAPTER_ERROR',
-      message: redacted.message,
-    },
+    error,
     ...extras,
   };
 }

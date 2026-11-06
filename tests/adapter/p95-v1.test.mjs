@@ -7,7 +7,7 @@ import { main } from '../../scripts/lib/adapter/main.mjs';
 import { parseK6Summary } from '../../scripts/lib/adapter/assemble.mjs';
 import { getScenario } from '../../scripts/lib/adapter/scenarios.mjs';
 import { ADAPTER_VERSION } from '../../scripts/lib/adapter/version.mjs';
-import { MemoryStream, createAwsMock, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
+import { MemoryStream, createAwsMock, isolatedStatePath, ssmOnlineHandlers, terraformOutputFixture } from '../helpers.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const APPLY = 'typical-p95-1x-r1-20261012';
@@ -54,6 +54,7 @@ async function runWith(argv, options) {
     stdout,
     stderr,
     ...options,
+    statePath: options.statePath || isolatedStatePath(),
     env: {
       CWM_CAMPAIGN_ID: APPLY,
       CWM_RUN_ID: `${scenario}-r1`,
@@ -128,7 +129,7 @@ function bothDurations() {
 }
 
 test('typical-p95 keys are a reverse ladder and are not scale keys', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.3');
+  assert.equal(ADAPTER_VERSION, '1.7.4');
   for (const [key, appCount, rps] of [
     ['typical-p95-1x-300', 1, 300],
     ['typical-p95-1x-200', 1, 200],
@@ -153,7 +154,7 @@ test('typical-p95 keys are a reverse ladder and are not scale keys', () => {
 
 test('p95 apply runs 300 then 200 then 100 and records ladder metadata', async () => {
   const fs = memoryFs();
-  const statePath = '/tmp/cwm-p95-ladder.json';
+  const statePath = isolatedStatePath('cwm-p95-ladder-');
   const deps = {
     runTerraform: async () => ({ code: 0, stdout: p95Terraform(1), stderr: '' }),
     fs,
@@ -175,7 +176,7 @@ test('p95 apply runs 300 then 200 then 100 and records ladder metadata', async (
     deps: { ...deps, runAws: first },
   });
   assert.equal(start.code, 0, start.stdout);
-  assert.equal(start.payload.adapterVersion, '1.7.3');
+  assert.equal(start.payload.adapterVersion, '1.7.4');
   assert.deepEqual(start.payload.ladder, [300, 200, 100]);
   assert.equal(start.payload.rung_pos, 1);
   assert.deepEqual(start.payload.ladder_history, [300]);
