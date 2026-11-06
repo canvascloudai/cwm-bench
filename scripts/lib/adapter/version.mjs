@@ -1,5 +1,11 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.7.5 accepts gcp-holdout-v2 campaign IDs
+ * (gcp-holdout-v2-r{1|2}[a-c]?-YYYYMMDD) on the existing
+ * gcp-holdout-{300,400,500} keys and labels collect notes from the ID.
+ * Zone suffixes remain a/b/c only. Request mix, timings, Terraform,
+ * scoring, the 1.7.4 backend-health gate, gcp-fit-v1 behavior,
+ * gcp-holdout-v1 IDs, and AWS behavior are unchanged.
  * 1.7.4 adds a GCP pre-load backend-health gate: run refuses to start k6 until
  * every MIG backend in the external HTTP load balancer backend service is
  * HEALTHY for 60 consecutive seconds. A timeout is a replaceable pre-rung
@@ -39,7 +45,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.7.4';
+export const ADAPTER_VERSION = '1.7.5';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';

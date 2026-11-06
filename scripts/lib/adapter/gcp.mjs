@@ -35,6 +35,7 @@ async function appMeta(stdout) {
  * GCP client and gcp-fit-v1 run/collect path.
  * AWS commands never call these functions. Adapter 1.7.2 changed only the GCP CLI transport (see gcp-cli.mjs).
  * Adapter 1.7.4 adds a pre-load backend-health gate before k6 starts.
+ * Adapter 1.7.5 accepts gcp-holdout-v2 campaign IDs on the existing holdout keys.
  */
 
 export const GCP_FIT_REGION = 'us-central1';
@@ -44,7 +45,19 @@ export const GCP_FIT_DURATION = '900s';
 export const GCP_FIT_SPEND_CAP_USD = 60;
 export const GCP_FIT_MAX_REPLACEMENTS = 3;
 export const GCP_FIT_TEST_ID_RE = /^gcp-fit-v1-r[12][a-c]?-\d{8}$/;
-export const GCP_HOLDOUT_TEST_ID_RE = /^gcp-holdout-v1-r[12][a-c]?-\d{8}$/;
+export const GCP_HOLDOUT_TEST_ID_RE = /^gcp-holdout-v(?:1|2)-r[12][a-c]?-\d{8}$/;
+
+export function gcpHoldoutFamilyFromId(id) {
+  const match = String(id || '').match(/^(gcp-holdout-v[12])(?=-r[12][a-c]?-\d{8}$)/);
+  return match ? match[1] : null;
+}
+
+function gcpHoldoutNotesPrefix(family) {
+  if (family === 'gcp-holdout-v2') {
+    return 'gcp-holdout-v2 holdout rung. Not fit data; never pool with gcp-fit-v1 or gcp-holdout-v1. ';
+  }
+  return 'gcp-holdout-v1 holdout rung. Not fit data; never pool with gcp-fit-v1. ';
+}
 
 const STEADY_SCRIPT = readFileSync(fileURLToPath(new URL('./steady_p95.py', import.meta.url)), 'utf8');
 
@@ -290,7 +303,7 @@ export function assertGcpFitIdentity(spec, env, outputs) {
   const id = fromEnv || fromTf;
   const holdout = spec.split === 'holdout';
   const idPattern = holdout ? GCP_HOLDOUT_TEST_ID_RE : GCP_FIT_TEST_ID_RE;
-  const idFamily = holdout ? 'gcp-holdout-v1' : 'gcp-fit-v1';
+  const idFamily = holdout ? 'gcp-holdout-v{1|2}' : 'gcp-fit-v1';
   if (!idPattern.test(id)) {
     const err = new Error(
       `scenario ${spec.key} requires test id ${idFamily}-r{1|2}[a-c]-YYYYMMDD; got ${id || 'unset'}`,
@@ -515,7 +528,7 @@ function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, gen
     diagnostic: 'none',
     scenario: spec.key,
     notes: (spec.split === 'holdout'
-      ? 'gcp-holdout-v1 holdout rung. Not fit data; never pool with gcp-fit-v1. '
+      ? gcpHoldoutNotesPrefix(gcpHoldoutFamilyFromId(identity.campaignId) || 'gcp-holdout-v1')
       : 'gcp-fit-v1 calibration rung. Not a holdout. ') +
       'Latency is steady-only nearest-rank from raw k6 samples. categories is the typical tag count, products is the article count, ordersAtSeed is 0 because seed-typical has no orders table. runtime.version is the Node 20 major pin. iops_throttle is null because Cloud SQL PD_SSD has no BurstBalance.',
     gitSha: sha,
@@ -577,7 +590,7 @@ function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, gen
     duration: spec.duration,
     repetitions: {
       count: 1,
-      varianceNotes: `${spec.split === 'holdout' ? 'gcp-holdout-v1' : 'gcp-fit-v1'} plans 2 reps on separate applies. This document is one rep.`,
+      varianceNotes: `${spec.split === 'holdout' ? (gcpHoldoutFamilyFromId(identity.campaignId) || 'gcp-holdout-v1') : 'gcp-fit-v1'} plans 2 reps on separate applies. This document is one rep.`,
     },
     perNode,
     latency: {

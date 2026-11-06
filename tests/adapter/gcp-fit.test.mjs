@@ -225,7 +225,7 @@ async function runAdapter(args, options) {
 }
 
 test('AWS typical keys stay on us-east-2 and the adapter version is unchanged', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.4');
+  assert.equal(ADAPTER_VERSION, '1.7.5');
   const aws = getScenario('typical-fit-200');
   assert.equal(aws.requiredRegion, TYPICAL_REGION);
   assert.equal(aws.cloud, undefined);
@@ -454,6 +454,82 @@ test('GCP holdout identity, ladder and workload keys are distinct from fit', () 
   }
 });
 
+test('GCP holdout keys reuse the 300/400/500 ladder and accept gcp-holdout-v2 ids', () => {
+  const outputs = JSON.parse(gcpOutputs());
+  const declaration = outputs.topology_declaration.value;
+  const normalized = { region: 'us-central1', topology: declaration };
+  const spec = getScenario('gcp-holdout-300');
+  assert.deepEqual(spec.ladder, [300, 400, 500]);
+  for (const id of [
+    'gcp-holdout-v2-r1-20261106',
+    'gcp-holdout-v2-r2-20261106',
+    'gcp-holdout-v2-r1a-20261106',
+    'gcp-holdout-v2-r1b-20261106',
+    'gcp-holdout-v2-r1c-20261106',
+    'gcp-holdout-v1-r2b-20261106',
+  ]) {
+    declaration.test_id = id;
+    assert.equal(assertGcpFitIdentity(spec, { CWM_CAMPAIGN_ID: id }, normalized), id);
+  }
+  for (const bad of [
+    'gcp-holdout-v2-r1d-20261106',
+    'gcp-holdout-v2-r1f-20261106',
+    'gcp-holdout-v2-r3-20261106',
+    'gcp-holdout-v3-r1-20261106',
+    'gcp-holdout-v2.1-r1-20261106',
+  ]) {
+    declaration.test_id = bad;
+    assert.throws(
+      () => assertGcpFitIdentity(spec, { CWM_CAMPAIGN_ID: bad }, normalized),
+      { code: 'TEST_ID_MISMATCH' },
+    );
+  }
+  for (const key of ['gcp-holdout-v2-300', 'gcp-holdout-v2-400', 'gcp-holdout-v2-500']) {
+    assert.throws(() => getScenario(key), { code: 'UNKNOWN_SCENARIO' });
+  }
+});
+
+test('gcp-holdout-v2 campaign ids are accepted and labeled on collect', async () => {
+  const campaign = 'gcp-holdout-v2-r1-20261106';
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-holdout-v2-')), 'state.json');
+  const mock = gcloudMock();
+  const deps = {
+    runGcloud: mock.runGcloud,
+    runTerraform: async () => ({ code: 0, stdout: gcpOutputs(campaign), stderr: '' }),
+    ...fakeClock(),
+    k6PollMs: 1,
+    k6WaitMs: 1000,
+  };
+  const runEnv = env({
+    CWM_CAMPAIGN_ID: campaign,
+    CWM_SCENARIO: 'gcp-holdout-300',
+    CWM_RUN_ID: 'gcp-holdout-300-r1',
+  });
+  const started = await runAdapter(['run', '--scenario', 'gcp-holdout-300', '--json'], {
+    now: () => new Date('2026-11-06T16:00:00.000Z'),
+    statePath,
+    env: runEnv,
+    deps,
+  });
+  assert.equal(started.code, 0, started.stdout);
+  assert.equal(started.payload.ok, true);
+  assert.equal(started.payload.backendHealth.status, 'passed');
+  const collected = await runAdapter(['collect', '--scenario', 'gcp-holdout-300', '--json'], {
+    now: () => new Date('2026-11-06T16:25:00.000Z'),
+    statePath,
+    env: runEnv,
+    deps,
+  });
+  assert.equal(collected.code, 0, collected.stdout);
+  assert.equal(collected.payload.split, 'holdout');
+  assert.equal(collected.payload.campaign_id, campaign);
+  assert.equal(collected.payload.scenario, 'gcp-holdout-300');
+  assert.match(collected.payload.notes, /gcp-holdout-v2 holdout rung/);
+  assert.match(collected.payload.notes, /never pool with gcp-fit-v1 or gcp-holdout-v1/);
+  assert.match(collected.payload.repetitions.varianceNotes, /^gcp-holdout-v2 plans 2 reps/);
+  assert.doesNotMatch(collected.stdout, new RegExp(PROJECT));
+});
+
 test('gcp run enforces 200 then 400 then 600 and does not touch AWS SSM', async () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'gcp-run-'));
   const statePath = path.join(dir, 'state.json');
@@ -609,7 +685,9 @@ test(`${campaign.prefix} full ${campaign.ladder.join('/')} run-collect sequence 
     assert.equal(collected.payload.concurrency.targetRps, rps);
     assert.equal(collected.payload.gitSha, SHA);
     assert.equal(collected.payload.split, campaign.split);
+    assert.match(collected.payload.notes, campaign.split === 'holdout' ? /gcp-holdout-v1 holdout rung/ : /gcp-fit-v1 calibration rung/);
     assert.match(collected.payload.notes, campaign.split === 'holdout' ? /Not fit data/ : /Not a holdout/);
+    assert.match(collected.payload.repetitions.varianceNotes, campaign.split === 'holdout' ? /^gcp-holdout-v1 / : /^gcp-fit-v1 /);
     assert.equal(collected.payload.isExample, false);
     assert.deepEqual(collected.payload.latency, { p50Ms: 11, p95Ms: 22, p99Ms: 33, source: 'k6' });
     assert.equal(collected.payload.goodputRps, 180.5);
