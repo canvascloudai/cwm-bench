@@ -1,4 +1,5 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 
 export function defaultStatePath(repoRoot) {
@@ -18,10 +19,19 @@ export async function loadState(filePath, io = {}) {
 }
 
 export async function saveState(filePath, state, io = {}) {
-  const write = io.writeFile || writeFile;
+  const payload = `${JSON.stringify(state, null, 2)}\n`;
   const mkdirFn = io.mkdir || mkdir;
   await mkdirFn(path.dirname(filePath), { recursive: true });
-  await write(filePath, `${JSON.stringify(state, null, 2)}\n`, 'utf8');
+  // Injected test filesystems implement writeFile in memory. Use a direct
+  // write there. On the real filesystem, write a sibling temp file and
+  // rename so a reader never sees partial JSON (shared-state flake).
+  if (io.writeFile) {
+    await io.writeFile(filePath, payload, 'utf8');
+    return;
+  }
+  const tmpPath = `${filePath}.${process.pid}.${randomBytes(6).toString('hex')}.tmp`;
+  await writeFile(tmpPath, payload, 'utf8');
+  await rename(tmpPath, filePath);
 }
 
 export async function updateAdapterState(filePath, mutator, io = {}) {

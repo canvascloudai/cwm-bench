@@ -9,6 +9,7 @@ import {
   artifactListingStdout,
   collectCompleteHandlers,
   createAwsMock,
+  isolatedStatePath,
   k6SummaryFixture,
   ssmOnlineHandlers,
   terraformOutputFixture,
@@ -17,7 +18,7 @@ import {
 async function runWith(argv, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
-  const code = await main(argv, { stdout, stderr, ...options });
+  const code = await main(argv, { stdout, stderr, ...options, statePath: options.statePath || isolatedStatePath() });
   return { code, payload: JSON.parse(stdout.toString()), stdout: stdout.toString(), stderr: stderr.toString() };
 }
 
@@ -31,8 +32,8 @@ const memoryFs = {
   mkdir: async () => {},
 };
 
-test('adapter version is 1.7.3', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.3');
+test('adapter version is 1.7.4', () => {
+  assert.equal(ADAPTER_VERSION, '1.7.4');
 });
 
 test('persisted CloudWatch windows exclude the unstable terminal minute', () => {
@@ -169,10 +170,11 @@ test('collect burst with complete CloudWatch but missing k6 summary fails', asyn
 
 test('collect accepts the explicit run identity after a successful run', async () => {
   const stored = { body: null };
+  const statePath = isolatedStatePath('cwm-adapter-state-lastrun-');
   const runAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const runResult = await runWith(['run', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T08:00:00.000Z'),
-    statePath: '/tmp/cwm-adapter-state-lastrun.json',
+    statePath,
     env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_RUN_ID: 'burst-1', CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws,
@@ -207,7 +209,7 @@ test('collect accepts the explicit run identity after a successful run', async (
   );
   const collectResult = await runWith(['collect', '--scenario', 'burst', '--json'], {
     now: () => new Date('2026-09-01T08:20:00.000Z'),
-    statePath: '/tmp/cwm-adapter-state-lastrun.json',
+    statePath,
     env: { CWM_CAMPAIGN_ID: 'persisted-campaign', CWM_RUN_ID: 'burst-1', CWM_SCENARIO: 'burst' },
     deps: {
       runAws: collectAws,

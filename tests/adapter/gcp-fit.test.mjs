@@ -13,6 +13,7 @@ import { getScenario } from '../../scripts/lib/adapter/scenarios.mjs';
 import { ADAPTER_VERSION, TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
 import {
   assertGcpFitIdentity,
+  GCP_BACKEND_HEALTH_SUSTAINED_MS,
   GCP_FIT_SPEND_CAP_USD,
   replacementDecision,
   spendCapDecision,
@@ -88,11 +89,49 @@ function series(instanceId, values, extraLabels = {}) {
   };
 }
 
-function gcloudMock() {
+function healthyBackends(project = PROJECT) {
+  return [{
+    backend: `https://www.googleapis.com/compute/v1/projects/${project}/regions/us-central1/instanceGroups/cwm-bench-app`,
+    status: {
+      healthStatus: [
+        {
+          instance: `https://www.googleapis.com/compute/v1/projects/${project}/zones/us-central1-b/instances/cwm-bench-app-one`,
+          healthState: 'HEALTHY',
+        },
+        {
+          instance: `https://www.googleapis.com/compute/v1/projects/${project}/zones/us-central1-f/instances/cwm-bench-app-two`,
+          healthState: 'HEALTHY',
+        },
+      ],
+    },
+  }];
+}
+
+function oneHealthyBackend(project = PROJECT) {
+  return [{
+    backend: `https://www.googleapis.com/compute/v1/projects/${project}/regions/us-central1/instanceGroups/cwm-bench-app`,
+    status: {
+      healthStatus: [
+        {
+          instance: `https://www.googleapis.com/compute/v1/projects/${project}/zones/us-central1-b/instances/cwm-bench-app-one`,
+          healthState: 'HEALTHY',
+        },
+      ],
+    },
+  }];
+}
+
+function gcloudMock(options = {}) {
   const calls = [];
   async function runGcloud(args) {
     calls.push(args);
     const command = args.includes('--command') ? args[args.indexOf('--command') + 1] : '';
+    if (args[0] === 'compute' && args[1] === 'backend-services' && args[2] === 'get-health') {
+      const payload = typeof options.backendHealth === 'function'
+        ? options.backendHealth()
+        : healthyBackends();
+      return { code: 0, stdout: JSON.stringify(payload), stderr: '' };
+    }
     if (args[0] === 'compute' && args[1] === 'ssh') {
       if (command.includes('/api/meta')) {
         return {
@@ -164,6 +203,14 @@ function completedStatePath(prefix) {
   return statePath;
 }
 
+function fakeClock() {
+  let elapsedMs = 0;
+  return {
+    nowMs: () => elapsedMs,
+    wait: async (ms) => { elapsedMs += ms; },
+  };
+}
+
 async function runAdapter(args, options) {
   const stdout = new MemoryStream();
   const stderr = new MemoryStream();
@@ -178,7 +225,7 @@ async function runAdapter(args, options) {
 }
 
 test('AWS typical keys stay on us-east-2 and the adapter version is unchanged', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.3');
+  assert.equal(ADAPTER_VERSION, '1.7.4');
   const aws = getScenario('typical-fit-200');
   assert.equal(aws.requiredRegion, TYPICAL_REGION);
   assert.equal(aws.cloud, undefined);
@@ -233,6 +280,13 @@ test('spend cap pauses and asks, and only runner faults replace the whole apply'
   assert.equal(capped.autoStop, false);
   const workload = replacementDecision({ faultClass: 'workload', replacementsUsed: 0 });
   assert.equal(workload.replaceApply, false);
+  const healthTimeout = replacementDecision({
+    errorCode: 'GCP_BACKEND_HEALTH_TIMEOUT',
+    replacementsUsed: 0,
+  });
+  assert.equal(healthTimeout.replaceApply, true);
+  assert.equal(healthTimeout.preRung, true);
+  assert.match(healthTimeout.reason, /backend health timeout/);
 });
 
 test('steady_p95.py reports steady p50/p95/p99, error classes, and throughput', () => {
@@ -411,6 +465,7 @@ test('gcp run enforces 200 then 400 then 600 and does not touch AWS SSM', async 
         runGcloud: gcloud.runGcloud,
         runAws: async () => { throw new Error('AWS must not be called'); },
         runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+        ...fakeClock(),
         k6PollMs: 1,
         k6WaitMs: 1000,
       },
@@ -645,9 +700,10 @@ async function completionWaitFixture({ completeAtMs = Infinity, exitCode = 0, wa
     },
   });
   const state = JSON.parse(readFileSync(statePath, 'utf8'));
-  assert.equal(readFileSync(statePath, 'utf8'), '{}\n', 'failed runs must leave the initial state byte-identical');
   assert.equal((state.ladderByCampaign?.[CAMPAIGN] || []).length, 0,
     'timeouts and failed k6 exits must not advance the ladder');
+  assert.equal(state.backendHealthByRun?.[env().CWM_RUN_ID]?.status, 'passed',
+    'the health gate records evidence even when k6 later fails');
   return { result, elapsedMs };
 }
 
@@ -655,13 +711,13 @@ test('gcp completion wait stays bounded when the marker never arrives', async ()
   const { result, elapsedMs } = await completionWaitFixture();
   assert.equal(result.code, 1, result.stdout);
   assert.equal(result.payload.error.code, 'GCP_RUN_TIMEOUT');
-  assert.equal(elapsedMs, 25 * 60 * 1000);
+  assert.equal(elapsedMs, GCP_BACKEND_HEALTH_SUSTAINED_MS + 25 * 60 * 1000);
 });
 
 test('gcp completion wait preserves an explicit injected deadline', async () => {
   const { result, elapsedMs } = await completionWaitFixture({ waitMs: 60_000 });
   assert.equal(result.payload.error.code, 'GCP_RUN_TIMEOUT');
-  assert.equal(elapsedMs, 60_000);
+  assert.equal(elapsedMs, GCP_BACKEND_HEALTH_SUSTAINED_MS + 60_000);
 });
 
 test('gcp delayed nonzero k6 exit remains a workload failure, not success', async () => {
@@ -679,6 +735,7 @@ test('gcp a failed run cannot be collected as a completed rung', async () => {
       ? { code: 0, stdout: 'ADAPTER_K6_COMPLETE exit=1\n', stderr: '' }
       : mock.runGcloud(args),
     runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+    ...fakeClock(),
     k6PollMs: 1, k6WaitMs: 1000,
   };
   const failed = await runAdapter(['run', '--scenario', 'gcp-fit-200', '--json'], {
@@ -689,6 +746,105 @@ test('gcp a failed run cannot be collected as a completed rung', async () => {
     statePath, env: env(), deps,
   });
   assert.equal(collected.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
+});
+
+test('existing GCP scenario keys remain accepted after the backend-health gate', () => {
+  for (const key of [
+    'gcp-fit-200', 'gcp-fit-400', 'gcp-fit-600',
+    'gcp-holdout-300', 'gcp-holdout-400', 'gcp-holdout-500',
+  ]) {
+    const spec = getScenario(key);
+    assert.equal(spec.key, key);
+    assert.equal(spec.cloud, 'gcp');
+  }
+  for (const key of ['gcp-holdout-200', 'gcp-holdout-600', 'gcp-fit-300']) {
+    assert.throws(() => getScenario(key), { code: 'UNKNOWN_SCENARIO' });
+  }
+});
+
+test('gcp run waits for sustained backend health before starting k6 and records evidence', async () => {
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-health-pass-')), 'state.json');
+  const mock = gcloudMock();
+  let elapsedMs = 0;
+  const result = await runAdapter(['run', '--scenario', 'gcp-fit-200', '--json'], {
+    now: () => new Date('2026-11-06T14:00:00.000Z'),
+    statePath,
+    env: env(),
+    deps: {
+      runGcloud: mock.runGcloud,
+      runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+      nowMs: () => elapsedMs,
+      wait: async (ms) => { elapsedMs += ms; },
+      k6PollMs: 1,
+      k6WaitMs: 1000,
+    },
+  });
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(result.payload.ok, true);
+  assert.equal(result.payload.backendHealth.status, 'passed');
+  assert.equal(result.payload.backendHealth.expectedCount, 2);
+  assert.equal(result.payload.backendHealth.lastSnapshot.healthyCount, 2);
+  assert.doesNotMatch(result.stdout, new RegExp(PROJECT));
+  const healthIdx = mock.calls.findIndex((args) => args[1] === 'backend-services' && args[2] === 'get-health');
+  const startIdx = mock.calls.findIndex((args) => args.some((arg) => String(arg).includes('ADAPTER_K6_START')));
+  assert.ok(healthIdx >= 0);
+  assert.ok(startIdx > healthIdx, 'k6 must not start before the backend-health gate passes');
+  assert.ok(mock.calls[healthIdx].includes('--global'));
+  assert.ok(elapsedMs >= GCP_BACKEND_HEALTH_SUSTAINED_MS);
+  const collected = await runAdapter(['collect', '--scenario', 'gcp-fit-200', '--json'], {
+    now: () => new Date('2026-11-06T14:20:00.000Z'),
+    statePath,
+    env: env(),
+    deps: {
+      runGcloud: mock.runGcloud,
+      runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+    },
+  });
+  assert.equal(collected.code, 0, collected.stdout);
+  assert.equal(collected.payload.backendHealth.status, 'passed');
+  assert.equal(collected.payload.backendHealth.lastSnapshot.backends.length, 2);
+  assert.doesNotMatch(collected.stdout, new RegExp(PROJECT));
+  const checked = spawnSync('python3', ['-c', `
+import json, sys
+from jsonschema import Draft202012Validator
+schema = json.load(open(${JSON.stringify(path.join(ROOT, 'schema/run.schema.json'))}))
+doc = json.load(sys.stdin)
+errors = list(Draft202012Validator(schema).iter_errors(doc))
+if errors:
+    raise SystemExit('; '.join(f"{e.json_path}: {e.message}" for e in errors))
+`], { input: collected.stdout, encoding: 'utf8' });
+  assert.equal(checked.status, 0, checked.stderr || checked.stdout);
+});
+
+test('gcp run does not start k6 when only one MIG backend is healthy', async () => {
+  const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-health-timeout-')), 'state.json');
+  const mock = gcloudMock({ backendHealth: () => oneHealthyBackend() });
+  let elapsedMs = 0;
+  const result = await runAdapter(['run', '--scenario', 'gcp-fit-200', '--json'], {
+    now: () => new Date('2026-11-06T14:00:00.000Z'),
+    statePath,
+    env: env(),
+    deps: {
+      runGcloud: mock.runGcloud,
+      runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+      nowMs: () => elapsedMs,
+      wait: async (ms) => { elapsedMs += ms; },
+      backendHealthTimeoutMs: 30_000,
+      backendHealthPollMs: 5_000,
+    },
+  });
+  assert.equal(result.code, 1, result.stdout);
+  assert.equal(result.payload.error.code, 'GCP_BACKEND_HEALTH_TIMEOUT');
+  assert.equal(result.payload.error.replaceable, true);
+  assert.equal(result.payload.error.faultClass, 'runner');
+  assert.equal(result.payload.error.preRung, true);
+  assert.equal(result.payload.error.backendHealth.status, 'timeout');
+  assert.equal(result.payload.error.backendHealth.lastSnapshot.healthyCount, 1);
+  assert.doesNotMatch(result.stdout, new RegExp(PROJECT));
+  assert.equal(mock.calls.some((args) => args.some((arg) => String(arg).includes('ADAPTER_K6_START'))), false);
+  const state = JSON.parse(readFileSync(statePath, 'utf8'));
+  assert.equal((state.ladderByCampaign?.[CAMPAIGN] || []).length, 0);
+  assert.equal(state.backendHealthByRun?.[env().CWM_RUN_ID]?.status, 'timeout');
 });
 
 test('gcp userdata follows the typical app and cleanup lists GCP addresses only under gcp', () => {

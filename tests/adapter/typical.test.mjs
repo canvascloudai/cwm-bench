@@ -26,6 +26,7 @@ import {
 import {
   MemoryStream,
   createAwsMock,
+  isolatedStatePath,
   ssmOnlineHandlers,
   terraformOutputFixture,
 } from '../helpers.mjs';
@@ -87,6 +88,7 @@ async function runWith(argv, options) {
     stdout,
     stderr,
     ...options,
+    statePath: options.statePath || isolatedStatePath(),
     env: {
       CWM_CAMPAIGN_ID: 'test-campaign',
       CWM_RUN_ID: `${scenario}-1`,
@@ -325,7 +327,7 @@ test('profile mismatch is rejected in both directions before k6', async () => {
   const leanAws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta }));
   const leanOnTypical = await runWith(['run', '--scenario', 'idle', '--json'], {
     now: () => new Date('2026-09-02T12:00:00.000Z'),
-    statePath: '/tmp/cwm-typical-lean-mismatch.json',
+    statePath: isolatedStatePath('cwm-typical-lean-mismatch-'),
     deps: {
       runAws: leanAws,
       runTerraform: async () => ({ code: 0, stdout: terraformOutputFixture(), stderr: '' }),
@@ -339,7 +341,7 @@ test('profile mismatch is rejected in both directions before k6', async () => {
   const typicalAws = createAwsMock(ssmOnlineHandlers({ poolSize: 250 }));
   const typicalOnLean = await runWith(['run', '--scenario', 'typical-fit-100', '--json'], {
     now: () => new Date('2026-09-02T12:00:00.000Z'),
-    statePath: '/tmp/cwm-typical-on-lean.json',
+    statePath: isolatedStatePath('cwm-typical-on-lean-'),
     deps: {
       runAws: typicalAws,
       runTerraform: async () => ({
@@ -406,7 +408,7 @@ test('typical run in us-east-2 starts typical.js when profile and pool match', a
   }));
   const result = await runWith(['run', '--scenario', 'typical-fit-200', '--json'], {
     now: () => new Date('2026-09-02T12:00:00.000Z'),
-    statePath: '/tmp/cwm-typical-run.json',
+    statePath: isolatedStatePath('cwm-typical-run-'),
     env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws: aws,
@@ -580,7 +582,7 @@ test('run typical-later-day on a later UTC day in us-east-2 starts typical.js', 
   const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
   const result = await runWith(['run', '--scenario', 'typical-later-day', '--json'], {
     now: DAY_AFTER_TYPICAL_FIT,
-    statePath: '/tmp/cwm-typical-later-day.json',
+    statePath: isolatedStatePath('cwm-typical-later-day-'),
     env: {
       CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE,
       CWM_WARMUP: '1s',
@@ -667,7 +669,7 @@ test('run typical-second-region accepts only us-west-2 and keeps other typical k
   const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
   const westResult = await runWith(['run', '--scenario', 'typical-second-region', '--json'], {
     now: DAY_AFTER_TYPICAL_FIT,
-    statePath: '/tmp/cwm-typical-second-region.json',
+    statePath: isolatedStatePath('cwm-typical-second-region-'),
     env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws: west,
@@ -726,7 +728,7 @@ test('run typical-later-day-300 on a later UTC day in us-east-2 starts typical.j
   const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
   const result = await runWith(['run', '--scenario', 'typical-later-day-300', '--json'], {
     now: DAY_AFTER_TYPICAL_FIT,
-    statePath: '/tmp/cwm-typical-later-day-300.json',
+    statePath: isolatedStatePath('cwm-typical-later-day-300-'),
     env: {
       CWM_FIT_CAMPAIGN_DATE: TYPICAL_FIT_DATE,
       CWM_WARMUP: '1s',
@@ -793,7 +795,7 @@ test('run typical-second-region-300 accepts only us-west-2', async () => {
   const west = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
   const westResult = await runWith(['run', '--scenario', 'typical-second-region-300', '--json'], {
     now: DAY_AFTER_TYPICAL_FIT,
-    statePath: '/tmp/cwm-typical-second-region-300.json',
+    statePath: isolatedStatePath('cwm-typical-second-region-300-'),
     env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws: west,
@@ -840,7 +842,7 @@ function scaleTerraform(region, appCount) {
 }
 
 test('typical-scale keys are us-east-2 holdouts with the key app count', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.3');
+  assert.equal(ADAPTER_VERSION, '1.7.4');
   for (const [key, appCount, rps] of SCALE_KEYS) {
     const spec = getScenario(key);
     assert.equal(spec.rps, rps);
@@ -954,7 +956,7 @@ test('run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS', async
   const aws = createAwsMock(ssmOnlineHandlers({ meta: typicalMeta() }));
   const result = await runWith(['run', '--scenario', 'typical-scale-1x-100', '--json'], {
     now: () => new Date('2026-10-06T16:00:00.000Z'),
-    statePath: '/tmp/cwm-typical-scale-1x-100.json',
+    statePath: isolatedStatePath('cwm-typical-scale-1x-100-'),
     env: { CWM_WARMUP: '1s', CWM_DURATION: '1s' },
     deps: {
       runAws: aws,
@@ -964,7 +966,7 @@ test('run typical-scale-1x-100 in us-east-2 starts typical.js at 100 RPS', async
   });
   assert.equal(result.code, 0, result.stdout);
   assert.equal(result.payload.ok, true);
-  assert.equal(result.payload.adapterVersion, '1.7.3');
+  assert.equal(result.payload.adapterVersion, '1.7.4');
   assert.equal(result.payload.scenario, 'typical-scale-1x-100');
   assert.equal(result.payload.rps, 100);
   assert.equal(result.payload.split, 'holdout');
@@ -1001,7 +1003,7 @@ test('wait-ready lists the nine typical-scale keys', async () => {
   });
   assert.equal(code, 0, stdout.toString());
   const payload = JSON.parse(stdout.toString());
-  assert.equal(payload.adapterVersion, '1.7.3');
+  assert.equal(payload.adapterVersion, '1.7.4');
   for (const [key, appCount, rps] of SCALE_KEYS) {
     assert.ok(payload.supportedScenarios.includes(key), key);
     const spec = payload.scenarios.find((item) => item.key === key);

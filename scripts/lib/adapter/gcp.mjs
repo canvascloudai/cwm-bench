@@ -12,6 +12,19 @@ import { requireRunIdentity } from './identity.mjs';
 import { assertLadderPosition, ladderHistory, resolveLadder } from './ladder.mjs';
 import { readTerraformOutputs } from './terraform.mjs';
 import { loadState, updateAdapterState } from './state.mjs';
+import {
+  GCP_BACKEND_HEALTH_POLL_MS,
+  GCP_BACKEND_HEALTH_SUSTAINED_MS,
+  GCP_BACKEND_HEALTH_TIMEOUT_MS,
+  backendsFromHealthResponse,
+  waitForBackendHealth,
+} from './gcp-backend-health.mjs';
+
+export {
+  GCP_BACKEND_HEALTH_POLL_MS,
+  GCP_BACKEND_HEALTH_SUSTAINED_MS,
+  GCP_BACKEND_HEALTH_TIMEOUT_MS,
+};
 
 async function appMeta(stdout) {
   const ready = await import('./ready.mjs');
@@ -21,6 +34,7 @@ async function appMeta(stdout) {
 /**
  * GCP client and gcp-fit-v1 run/collect path.
  * AWS commands never call these functions. Adapter 1.7.2 changed only the GCP CLI transport (see gcp-cli.mjs).
+ * Adapter 1.7.4 adds a pre-load backend-health gate before k6 starts.
  */
 
 export const GCP_FIT_REGION = 'us-central1';
@@ -169,7 +183,10 @@ export function spendCapDecision(spentUsd, capUsd = GCP_FIT_SPEND_CAP_USD) {
   return { action: 'continue', autoStop: false, ask: false, reason: 'under cap' };
 }
 
-export function replacementDecision({ faultClass, replacementsUsed } = {}) {
+export function replacementDecision({ faultClass, replacementsUsed, errorCode } = {}) {
+  if (errorCode === 'GCP_BACKEND_HEALTH_TIMEOUT') {
+    faultClass = 'runner';
+  }
   const used = Number(replacementsUsed || 0);
   if (faultClass !== 'runner') {
     return {
@@ -194,8 +211,11 @@ export function replacementDecision({ faultClass, replacementsUsed } = {}) {
     scope: 'whole-apply',
     autoStop: false,
     ask: false,
-    reason: 'runner fault replaces the whole apply',
+    reason: errorCode === 'GCP_BACKEND_HEALTH_TIMEOUT'
+      ? 'pre-rung backend health timeout replaces the whole apply'
+      : 'runner fault replaces the whole apply',
     nextIndex: used + 1,
+    ...(errorCode === 'GCP_BACKEND_HEALTH_TIMEOUT' ? { preRung: true } : {}),
   };
 }
 
@@ -450,7 +470,7 @@ function attestedSha(meta, env) {
   return fromMeta;
 }
 
-function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, generatorCpu, sqlCpu, connections, cost, window }) {
+function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, generatorCpu, sqlCpu, connections, cost, window, backendHealth }) {
   const fields = gcpFields(outputs);
   const topology = outputs.topology || {};
   const vu = vuBudget(spec.rps);
@@ -576,6 +596,7 @@ function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, gen
     burstBalanceMin: { rds: null, appVolumes: [] },
     cost,
     timestamp: window.start,
+    ...(backendHealth ? { backendHealth } : {}),
   };
 }
 
@@ -698,6 +719,10 @@ export async function collectGcpScenario(ctx, spec) {
     }
   }
 
+  const backendHealth = state.backendHealthByRun && state.backendHealthByRun[identity.runId]
+    ? state.backendHealthByRun[identity.runId]
+    : null;
+
   return redactDocument(assembleRunDocument({
     spec,
     outputs,
@@ -710,7 +735,78 @@ export async function collectGcpScenario(ctx, spec) {
     connections,
     cost,
     window,
+    backendHealth,
   }));
+}
+
+function backendServiceName(outputs) {
+  const name = outputs && Array.isArray(outputs.appInstanceIds) ? outputs.appInstanceIds[0] : null;
+  if (!name) {
+    const err = new Error('GCP backend health gate needs the MIG name from app_instance_ids');
+    err.code = 'GCP_BACKEND_SERVICE_MISSING';
+    throw err;
+  }
+  return String(name);
+}
+
+async function recordBackendHealth(ctx, runId, evidence) {
+  await updateAdapterState(ctx.statePath, (next) => {
+    next.backendHealthByRun = next.backendHealthByRun && typeof next.backendHealthByRun === 'object'
+      ? next.backendHealthByRun
+      : {};
+    next.backendHealthByRun[runId] = evidence;
+  }, ctx.deps.fs || {});
+}
+
+async function awaitGcpBackendHealth(ctx, { fields, outputs, spec, identity }) {
+  const backendService = backendServiceName(outputs);
+  const expectedCount = Number(
+    (outputs.topology && outputs.topology.app_count) || spec.expectedAppCount,
+  );
+  if (!Number.isFinite(expectedCount) || expectedCount < 1) {
+    const err = new Error('GCP backend health gate needs topology.app_count');
+    err.code = 'GCP_BACKEND_SERVICE_MISSING';
+    throw err;
+  }
+  const runGcloud = requireGcloud(ctx);
+  try {
+    const evidence = await waitForBackendHealth({
+      probe: async () => {
+        try {
+          const payload = await gcloudJson(runGcloud, [
+            'compute', 'backend-services', 'get-health', backendService,
+            '--global',
+            `--project=${fields.project}`,
+            '--format=json',
+          ], { wait: ctx.deps.wait });
+          return backendsFromHealthResponse(payload);
+        } catch (err) {
+          return {
+            backends: [],
+            error: {
+              code: err && err.code ? err.code : 'GCP_CLI_FAILED',
+              message: redact(err && err.message ? err.message : String(err)),
+            },
+          };
+        }
+      },
+      nowMs: ctx.deps.nowMs || Date.now,
+      wait: ctx.deps.wait || ((ms) => new Promise((resolve) => setTimeout(resolve, ms))),
+      wallMs: () => (ctx.now || (() => new Date()))().getTime(),
+      sustainedMs: Number(ctx.deps.backendHealthSustainedMs || GCP_BACKEND_HEALTH_SUSTAINED_MS),
+      timeoutMs: Number(ctx.deps.backendHealthTimeoutMs || GCP_BACKEND_HEALTH_TIMEOUT_MS),
+      pollMs: Number(ctx.deps.backendHealthPollMs || GCP_BACKEND_HEALTH_POLL_MS),
+      expectedCount,
+      backendService,
+    });
+    await recordBackendHealth(ctx, identity.runId, evidence);
+    return evidence;
+  } catch (err) {
+    if (err && err.backendHealth) {
+      await recordBackendHealth(ctx, identity.runId, err.backendHealth);
+    }
+    throw err;
+  }
 }
 
 async function prepareGcp(ctx, spec) {
@@ -728,6 +824,7 @@ async function prepareGcp(ctx, spec) {
   const timing = assertTiming(spec, ctx.env);
   requireGcloud(ctx);
   const fields = gcpFields(outputs);
+  const backendHealth = await awaitGcpBackendHealth(ctx, { fields, outputs, spec, identity });
   const metaInvocation = await runRemoteShell(ctx.deps.runGcloud, {
     name: fields.generatorName,
     zone: fields.zone,
@@ -737,12 +834,12 @@ async function prepareGcp(ctx, spec) {
   const meta = await appMeta(metaInvocation.stdout);
   assertExpectedProfile(spec, meta);
   assertExpectedPool(spec, meta && meta.poolSize);
-  return { identity, outputs, fields, ladderPlan, ladderMeta, timing, meta };
+  return { identity, outputs, fields, ladderPlan, ladderMeta, timing, meta, backendHealth };
 }
 
 export async function runGcpScenario(ctx, spec) {
   const prepared = await prepareGcp(ctx, spec);
-  const { identity, fields, ladderPlan, ladderMeta, timing } = prepared;
+  const { identity, fields, ladderPlan, ladderMeta, timing, backendHealth } = prepared;
   const runId = identity.runId;
   await runRemoteShell(ctx.deps.runGcloud, {
     name: fields.generatorName,
@@ -816,6 +913,7 @@ export async function runGcpScenario(ctx, spec) {
     rung_pos: ladderMeta.rung_pos,
     ladder: ladderPlan.ladder,
     exitCode,
+    backendHealth,
     ...(ok ? {} : { error: { code: 'K6_FAILED', message: `k6 exit ${exitCode}` } }),
   };
 }

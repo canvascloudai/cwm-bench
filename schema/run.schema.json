@@ -46,8 +46,8 @@
     },
     "scenario": {
       "type": "string",
-      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic", "typical-fit-20", "typical-fit-100", "typical-fit-200", "typical-holdout-300", "typical-saturation-500", "typical-later-day", "typical-later-day-300", "typical-second-region", "typical-second-region-300", "typical-scale-1x-100", "typical-scale-1x-200", "typical-scale-1x-300", "typical-scale-2x-100", "typical-scale-2x-200", "typical-scale-2x-300", "typical-scale-3x-100", "typical-scale-3x-200", "typical-scale-3x-300", "typical-p95-1x-300", "typical-p95-1x-200", "typical-p95-1x-100", "typical-p95-2x-300", "typical-p95-2x-200", "typical-p95-2x-100", "typical-p95-3x-300", "typical-p95-3x-200", "typical-p95-3x-100", "gcp-fit-200", "gcp-fit-400", "gcp-fit-600"],
-      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal. typical-* keys are the flag-gated typical profile. typical-later-day and typical-later-day-300 are 100 and 300 RPS holdouts on a later UTC day in us-east-2. typical-second-region and typical-second-region-300 are the same rates in us-west-2. typical-scale-{1x,2x,3x}-{100,200,300} are the typical-scale-v1 validation keys in us-east-2 and require that app count. typical-p95-{1x,2x,3x}-{300,200,100} are the typical-p95-v1 keys and are not fit, holdout, or scale keys. gcp-fit-200/400/600 are gcp-fit-v1 calibration keys, split fit, not holdouts."
+      "enum": ["idle", "normal", "peak", "burst", "later-day", "second-region", "diagnostic", "typical-fit-20", "typical-fit-100", "typical-fit-200", "typical-holdout-300", "typical-saturation-500", "typical-later-day", "typical-later-day-300", "typical-second-region", "typical-second-region-300", "typical-scale-1x-100", "typical-scale-1x-200", "typical-scale-1x-300", "typical-scale-2x-100", "typical-scale-2x-200", "typical-scale-2x-300", "typical-scale-3x-100", "typical-scale-3x-200", "typical-scale-3x-300", "typical-p95-1x-300", "typical-p95-1x-200", "typical-p95-1x-100", "typical-p95-2x-300", "typical-p95-2x-200", "typical-p95-2x-100", "typical-p95-3x-300", "typical-p95-3x-200", "typical-p95-3x-100", "gcp-fit-200", "gcp-fit-400", "gcp-fit-600", "gcp-holdout-300", "gcp-holdout-400", "gcp-holdout-500"],
+      "description": "Traffic rung or holdout key. Diagnostics at 1000 RPS still set this (usually burst). later-day and second-region are distinct holdouts, not aliases of normal. typical-* keys are the flag-gated typical profile. typical-later-day and typical-later-day-300 are 100 and 300 RPS holdouts on a later UTC day in us-east-2. typical-second-region and typical-second-region-300 are the same rates in us-west-2. typical-scale-{1x,2x,3x}-{100,200,300} are the typical-scale-v1 validation keys in us-east-2 and require that app count. typical-p95-{1x,2x,3x}-{300,200,100} are the typical-p95-v1 keys and are not fit, holdout, or scale keys. gcp-fit-200/400/600 are gcp-fit-v1 calibration keys, split fit, not holdouts. gcp-holdout-300/400/500 are gcp-holdout-v1 keys on the same topology and are never pooled with fit data."
     },
     "notes": { "type": "string" },
     "gitSha": {
@@ -314,6 +314,26 @@
     "timestamp": {
       "type": "string",
       "description": "ISO-8601 start of the run, or EXAMPLE placeholder."
+    },
+    "backendHealth": {
+      "type": "object",
+      "description": "Optional GCP pre-load load-balancer backend-health gate evidence, recorded before k6 starts. Omitted on AWS keys and on collects with no recorded gate. Must not contain project ids.",
+      "required": ["status", "backendService", "expectedCount", "sustainedMs", "timeoutMs", "pollMs", "startedAt", "probeCount", "lastSnapshot"],
+      "properties": {
+        "status": { "type": "string", "enum": ["passed", "timeout"] },
+        "backendService": { "type": "string" },
+        "expectedCount": { "type": ["integer", "null"] },
+        "sustainedMs": { "type": "integer" },
+        "timeoutMs": { "type": "integer" },
+        "pollMs": { "type": "integer" },
+        "startedAt": { "type": "string" },
+        "firstAllHealthyAt": { "type": ["string", "null"] },
+        "passedAt": { "type": ["string", "null"] },
+        "timedOutAt": { "type": ["string", "null"] },
+        "probeCount": { "type": "integer" },
+        "probes": { "type": "array" },
+        "lastSnapshot": { "type": "object" }
+      }
     }
   }
 }

@@ -1,5 +1,12 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.7.4 adds a GCP pre-load backend-health gate: run refuses to start k6 until
+ * every MIG backend in the external HTTP load balancer backend service is
+ * HEALTHY for 60 consecutive seconds. A timeout is a replaceable pre-rung
+ * runner fault (GCP_BACKEND_HEALTH_TIMEOUT) and records a redacted health
+ * snapshot plus timestamps in adapter state and collect evidence. Existing
+ * scenario keys, request mix, timings, Terraform, scoring, and AWS behavior
+ * are unchanged. Test adapter-state files are isolated per test.
  * 1.7.3 registers the gcp-holdout-v1 keys gcp-holdout-{300,400,500}
  * (ladder 300→400→500, 300s warmup and 900s steady) on the unchanged
  * gcp-fit-v1 topology, with holdout ID validation and collect labeling.
@@ -32,7 +39,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.7.3';
+export const ADAPTER_VERSION = '1.7.4';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';
