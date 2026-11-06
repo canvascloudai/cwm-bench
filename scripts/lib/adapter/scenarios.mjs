@@ -96,6 +96,9 @@ export const SCENARIO_KEYS = Object.freeze([
   'gcp-fit-200',
   'gcp-fit-400',
   'gcp-fit-600',
+  'gcp-holdout-300',
+  'gcp-holdout-400',
+  'gcp-holdout-500',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -205,6 +208,19 @@ function gcpFitScenario(key, rps) {
       `gcp-fit-v1 calibration at ${rps} total RPS on 2 × n2-standard-2 in us-central1. ` +
       'Fit data, not a holdout. Ladder 200 → 400 → 600, 300s warmup and 900s steady. ' +
       'Not an AWS typical-fit key.',
+  };
+}
+
+function gcpHoldoutScenario(key, rps) {
+  return {
+    ...gcpFitScenario(key, rps),
+    kind: 'holdout',
+    split: 'holdout',
+    ladder: [300, 400, 500],
+    description:
+      `GCP holdout at ${rps} total RPS on the unchanged gcp-fit-v1 topology. ` +
+      'Holdout data, not fit data. Ladder 300 → 400 → 500, 300s warmup and 900s steady. ' +
+      'Never pool with gcp-fit-v1.',
   };
 }
 
@@ -462,6 +478,9 @@ const DEFINITIONS = {
   'gcp-fit-200': gcpFitScenario('gcp-fit-200', 200),
   'gcp-fit-400': gcpFitScenario('gcp-fit-400', 400),
   'gcp-fit-600': gcpFitScenario('gcp-fit-600', 600),
+  'gcp-holdout-300': gcpHoldoutScenario('gcp-holdout-300', 300),
+  'gcp-holdout-400': gcpHoldoutScenario('gcp-holdout-400', 400),
+  'gcp-holdout-500': gcpHoldoutScenario('gcp-holdout-500', 500),
 };
 
 export function scenariosRequiringCompleteCollect() {

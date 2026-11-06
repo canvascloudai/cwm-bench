@@ -12,6 +12,7 @@ import { redact } from '../../scripts/lib/adapter/redact.mjs';
 import { getScenario } from '../../scripts/lib/adapter/scenarios.mjs';
 import { ADAPTER_VERSION, TYPICAL_REGION } from '../../scripts/lib/adapter/version.mjs';
 import {
+  assertGcpFitIdentity,
   GCP_FIT_SPEND_CAP_USD,
   replacementDecision,
   spendCapDecision,
@@ -24,7 +25,7 @@ const SHA = '881e0cffd51da084be4a24ffd13366dfbb67063f';
 const PROJECT = 'example-project';
 const CAMPAIGN = 'gcp-fit-v1-r1-20261104';
 
-function gcpOutputs() {
+function gcpOutputs(campaign = CAMPAIGN) {
   return JSON.stringify({
     project_id: { value: PROJECT, sensitive: true },
     alb_dns: { value: '203.0.113.20' },
@@ -53,7 +54,7 @@ function gcpOutputs() {
         db_engine_version: '8.0',
         mysql_max_connections: 500,
         generator_instance_type: 'c2-standard-4',
-        test_id: CAMPAIGN,
+        test_id: campaign,
       },
     },
   });
@@ -177,7 +178,7 @@ async function runAdapter(args, options) {
 }
 
 test('AWS typical keys stay on us-east-2 and the adapter version is unchanged', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.2');
+  assert.equal(ADAPTER_VERSION, '1.7.3');
   const aws = getScenario('typical-fit-200');
   assert.equal(aws.requiredRegion, TYPICAL_REGION);
   assert.equal(aws.cloud, undefined);
@@ -368,6 +369,37 @@ if errors:
   assert.match(vmCpuFilter('app', CAMPAIGN), /role="app"/);
 });
 
+test('GCP holdout identity, ladder and workload keys are distinct from fit', () => {
+  const outputs = JSON.parse(gcpOutputs());
+  const declaration = outputs.topology_declaration.value;
+  const normalized = { region: 'us-central1', topology: declaration };
+  const holdoutId = 'gcp-holdout-v1-r1-20261104';
+  for (const rps of [300, 400, 500]) {
+    const spec = getScenario(`gcp-holdout-${rps}`);
+    assert.equal(spec.split, 'holdout');
+    assert.equal(spec.kind, 'holdout');
+    assert.equal(spec.rps, rps);
+    assert.deepEqual(spec.ladder, [300, 400, 500]);
+    assert.equal(spec.warmup, '300s');
+    assert.equal(spec.duration, '900s');
+    assert.equal(spec.aliasOf, null);
+    assert.throws(() => assertGcpFitIdentity(spec, {}, normalized), { code: 'TEST_ID_MISMATCH' });
+    declaration.test_id = holdoutId;
+    assert.equal(assertGcpFitIdentity(spec, {}, normalized), holdoutId);
+    for (const bad of ['gcp-holdout-v1-r3-20261104', 'gcp-holdout-v1-r1d-20261104']) {
+      declaration.test_id = bad;
+      assert.throws(() => assertGcpFitIdentity(spec, {}, normalized), { code: 'TEST_ID_MISMATCH' });
+    }
+    declaration.test_id = CAMPAIGN;
+  }
+  declaration.test_id = holdoutId;
+  assert.throws(() => assertGcpFitIdentity(getScenario('gcp-fit-400'), {}, normalized),
+    { code: 'TEST_ID_MISMATCH' });
+  for (const key of ['gcp-holdout-200', 'gcp-holdout-600']) {
+    assert.throws(() => getScenario(key), { code: 'UNKNOWN_SCENARIO' });
+  }
+});
+
 test('gcp run enforces 200 then 400 then 600 and does not touch AWS SSM', async () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'gcp-run-'));
   const statePath = path.join(dir, 'state.json');
@@ -413,7 +445,14 @@ test('gcp run enforces 200 then 400 then 600 and does not touch AWS SSM', async 
   assert.equal(first.gcloud.calls.some((args) => args[0] === 'ssm'), false);
 });
 
-test('gcp full 200/400/600 run-collect sequence uses persistent state and the real CLI transport offline', async () => {
+for (const campaign of [
+  { prefix: 'gcp-fit', ladder: [200, 400, 600], split: 'fit' },
+  { prefix: 'gcp-holdout', ladder: [300, 400, 500], split: 'holdout' },
+]) {
+test(`${campaign.prefix} full ${campaign.ladder.join('/')} run-collect sequence uses persistent state and the real CLI transport offline`, async () => {
+  const CAMPAIGN = `${campaign.prefix}-v1-r1-20261104`;
+  const key = (rps) => `${campaign.prefix}-${rps}`;
+  const [first, second, last] = campaign.ladder;
   const statePath = path.join(mkdtempSync(path.join(tmpdir(), 'gcp-full-ladder-')), 'state.json');
   const mock = gcloudMock();
   let elapsedMs = 0;
@@ -422,7 +461,7 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
   const bqCalls = [];
   let activeWindow;
   const rungWindow = (rps) => {
-    const start = Date.parse('2026-11-04T01:00:00.000Z') + [200, 400, 600].indexOf(rps) * 1200_000 + 300_000;
+    const start = Date.parse('2026-11-04T01:00:00.000Z') + campaign.ladder.indexOf(rps) * 1200_000 + 300_000;
     return { start: new Date(start).toISOString(), end: new Date(start + 900_000).toISOString() };
   };
   const cli = createGcpCliRunner({
@@ -480,18 +519,19 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     if (command === 'run') elapsedMs = 0;
     activeWindow = rungWindow(rps);
     return runAdapter(
-    [command, '--scenario', `gcp-fit-${rps}`, '--json'],
+    [command, '--scenario', key(rps), '--json'],
     {
       now: () => new Date(Date.parse(activeWindow.end) + 20_000),
       statePath,
       env: env({
-        CWM_SCENARIO: `gcp-fit-${rps}`, CWM_RUN_ID: `gcp-fit-${rps}-r1`,
+        CWM_CAMPAIGN_ID: CAMPAIGN,
+        CWM_SCENARIO: key(rps), CWM_RUN_ID: `${key(rps)}-r1`,
         CWM_RUN_STARTED_AT: activeWindow.start, CWM_RUN_ENDED_AT: activeWindow.end,
         ...overrides,
       }),
       deps: {
         runGcloud: cli,
-        runTerraform: async () => ({ code: 0, stdout: gcpOutputs(), stderr: '' }),
+        runTerraform: async () => ({ code: 0, stdout: gcpOutputs(CAMPAIGN), stderr: '' }),
         runAws: async () => { throw new Error('AWS is forbidden in this offline GCP fixture'); },
         nowMs: () => elapsedMs,
         wait: async (ms) => { elapsedMs += ms; },
@@ -499,10 +539,10 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     },
   );
   };
-  const noRun = await invoke('collect', 200);
+  const noRun = await invoke('collect', first);
   assert.equal(noRun.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
   assert.equal(mock.calls.length, 0);
-  for (const [index, rps] of [200, 400, 600].entries()) {
+  for (const [index, rps] of campaign.ladder.entries()) {
     const started = await invoke('run', rps);
     assert.equal(started.code, 0, started.stdout);
     assert.equal(started.payload.rung_pos, index + 1);
@@ -510,10 +550,11 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     const beforeCollect = readFileSync(statePath, 'utf8');
     const collected = await invoke('collect', rps);
     assert.equal(collected.code, 0, collected.stdout);
-    assert.equal(collected.payload.scenario, `gcp-fit-${rps}`);
+    assert.equal(collected.payload.scenario, key(rps));
     assert.equal(collected.payload.concurrency.targetRps, rps);
     assert.equal(collected.payload.gitSha, SHA);
-    assert.equal(collected.payload.split, 'fit');
+    assert.equal(collected.payload.split, campaign.split);
+    assert.match(collected.payload.notes, campaign.split === 'holdout' ? /Not fit data/ : /Not a holdout/);
     assert.equal(collected.payload.isExample, false);
     assert.deepEqual(collected.payload.latency, { p50Ms: 11, p95Ms: 22, p99Ms: 33, source: 'k6' });
     assert.equal(collected.payload.goodputRps, 180.5);
@@ -522,24 +563,24 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     assert.equal(readFileSync(statePath, 'utf8'), beforeCollect, 'collect must never advance or rewrite state');
     const replay = await invoke('run', rps);
     assert.equal(replay.payload.error.code, 'LADDER_ORDER', 'collect must not enable a rung retry');
-    if (rps === 200) {
-      const skipped = await invoke('run', 600);
+    if (rps === first) {
+      const skipped = await invoke('run', last);
       assert.equal(skipped.payload.error.code, 'LADDER_ORDER');
     }
   }
   const completeState = readFileSync(statePath, 'utf8');
   assert.ok(delayedCompletionPolls.includes(1_200_000), 'each rung must tolerate post-workload finalization');
-  assert.deepEqual(JSON.parse(completeState).ladderByCampaign[CAMPAIGN].map((row) => row.rps), [200, 400, 600]);
-  for (const rps of [200, 400, 600]) {
+  assert.deepEqual(JSON.parse(completeState).ladderByCampaign[CAMPAIGN].map((row) => row.rps), campaign.ladder);
+  for (const rps of campaign.ladder) {
     const collected = await invoke('collect', rps);
     assert.equal(collected.code, 0, collected.stdout);
     assert.equal(readFileSync(statePath, 'utf8'), completeState);
   }
-  const wrongRun = await invoke('collect', 200, { CWM_RUN_ID: 'gcp-fit-200-wrong-run' });
+  const wrongRun = await invoke('collect', first, { CWM_RUN_ID: `${key(first)}-wrong-run` });
   assert.equal(wrongRun.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
-  const wrongScenario = await invoke('collect', 400, { CWM_RUN_ID: 'gcp-fit-200-r1' });
+  const wrongScenario = await invoke('collect', second, { CWM_RUN_ID: `${key(first)}-r1` });
   assert.equal(wrongScenario.payload.error.code, 'GCP_COLLECT_RUN_MISSING');
-  const wrongCampaign = await invoke('collect', 200, { CWM_CAMPAIGN_ID: 'gcp-fit-v1-r2-20261104' });
+  const wrongCampaign = await invoke('collect', first, { CWM_CAMPAIGN_ID: `${campaign.prefix}-v1-r2-20261104` });
   assert.equal(wrongCampaign.payload.error.code, 'TEST_ID_MISMATCH');
   const starts = mock.calls.filter((args) => args.some((arg) => String(arg).includes('ADAPTER_K6_START')));
   assert.equal(starts.length, 3);
@@ -547,13 +588,14 @@ test('gcp full 200/400/600 run-collect sequence uses persistent state and the re
     const command = args[args.indexOf('--command') + 1];
     assert.match(command, /WARMUP='300s'/);
     assert.match(command, /DURATION='900s'/);
-    assert.ok(command.includes(`SCENARIO='gcp-fit-${[200, 400, 600][index]}'`));
+    assert.ok(command.includes(`SCENARIO='${key(campaign.ladder[index])}'`));
   }
   assert.equal(bqCalls.length, 6);
   assert.ok(bqCalls.every((args) => args.includes('--use_legacy_sql=false')));
   assert.ok(restCalls.some((url) => url.includes('compute.googleapis.com')));
   assert.ok(restCalls.some((url) => url.includes('monitoring.googleapis.com')));
 });
+}
 
 test('gcp collect rejects corrupt, overlong and ambiguous completed-run history before cloud access', async () => {
   const row = (rps, runId = `gcp-fit-${rps}-r1`) => ({ scenario: `gcp-fit-${rps}`, rps, runId });
@@ -680,7 +722,8 @@ test('gcp userdata follows the typical app and cleanup lists GCP addresses only 
   const sweep = readFileSync(path.join(ROOT, 'scripts/gcp-cleanup-sweep.sh'), 'utf8');
   assert.match(sweep, /24 hours/);
   assert.match(sweep, /not a campaign result/);
-  for (const key of ['gcp-fit-200', 'gcp-fit-400', 'gcp-fit-600']) {
+  for (const key of ['gcp-fit-200', 'gcp-fit-400', 'gcp-fit-600',
+    'gcp-holdout-300', 'gcp-holdout-400', 'gcp-holdout-500']) {
     const inspected = spawnSync('k6', ['inspect', '-e', `SCENARIO=${key}`, path.join(ROOT, 'load/typical.js')], { encoding: 'utf8' });
     assert.equal(inspected.status, 0, inspected.stderr);
   }

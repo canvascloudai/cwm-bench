@@ -141,6 +141,12 @@ Destroy with the same variables you applied. Then run `scripts/gcp-cleanup-sweep
 
 Any change to measurement code, the adapter, Terraform, or the scorer after this file is merged requires a **new version** (`gcp-holdout-v1.1`, with a new pin) and fresh frozen predictions. Results from different pins or versions are never pooled. Runner-side launcher or controller fixes outside cwm-bench are allowed only if they do not touch measurement, and their hash is recorded in the archive.
 
+## Amendment 2026-11-05
+
+Before any apply, the measurement pin moves from `bd3c1906731f6ab244a9760cdd4b50f1ccf02f52` (adapter 1.7.2) to this pull request's merge commit (adapter **1.7.3**). This change is wiring only: it registers `gcp-holdout-300`, `gcp-holdout-400`, and `gcp-holdout-500`, holdout ID validation, collect labeling, and the matching scenario-to-RPS map entries. The request mix, 300 s warmup, 900 s steady, topology, Terraform, scorer, and `gcp-fit-v1` behavior are unchanged. The frozen predictions, estimator method, and engine hashes above are unchanged.
+
+Source patch SHA-256: `26e456dcb7b1634916550e9573caa9d95b78574106dec38392627e37db99d1c8`.
+
 ## Privacy
 
 Archives and this directory contain no project id, project number, service-account email, billing account id, or instance identifiers beyond redacted forms.
