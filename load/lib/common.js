@@ -203,6 +203,10 @@ export const TYPICAL_RPS = Object.freeze({
   'gcp-fit-200': 200,
   'gcp-fit-400': 400,
   'gcp-fit-600': 600,
+  // Same request mix and timing; distinct keys prevent pooling fit and holdout.
+  'gcp-holdout-300': 300,
+  'gcp-holdout-400': 400,
+  'gcp-holdout-500': 500,
 });
 
 /**

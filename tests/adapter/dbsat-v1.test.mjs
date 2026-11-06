@@ -79,8 +79,8 @@ function sentScripts(aws) {
     }));
 }
 
-test('adapter is 1.7.2 with 21 ascending dbsat keys at 2x/3x/4x', () => {
-  assert.equal(ADAPTER_VERSION, '1.7.2');
+test('adapter is 1.7.3 with 21 ascending dbsat keys at 2x/3x/4x', () => {
+  assert.equal(ADAPTER_VERSION, '1.7.3');
   const keys = SCENARIO_KEYS.filter((key) => key.startsWith('typical-dbsat-'));
   assert.equal(keys.length, 21);
   assert.deepEqual(DBSAT_LADDER, [300, 500, 700, 900, 1100, 1300, 1500]);

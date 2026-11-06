@@ -30,6 +30,7 @@ export const GCP_FIT_DURATION = '900s';
 export const GCP_FIT_SPEND_CAP_USD = 60;
 export const GCP_FIT_MAX_REPLACEMENTS = 3;
 export const GCP_FIT_TEST_ID_RE = /^gcp-fit-v1-r[12][a-c]?-\d{8}$/;
+export const GCP_HOLDOUT_TEST_ID_RE = /^gcp-holdout-v1-r[12][a-c]?-\d{8}$/;
 
 const STEADY_SCRIPT = readFileSync(fileURLToPath(new URL('./steady_p95.py', import.meta.url)), 'utf8');
 
@@ -267,9 +268,12 @@ export function assertGcpFitIdentity(spec, env, outputs) {
     throw err;
   }
   const id = fromEnv || fromTf;
-  if (!GCP_FIT_TEST_ID_RE.test(id)) {
+  const holdout = spec.split === 'holdout';
+  const idPattern = holdout ? GCP_HOLDOUT_TEST_ID_RE : GCP_FIT_TEST_ID_RE;
+  const idFamily = holdout ? 'gcp-holdout-v1' : 'gcp-fit-v1';
+  if (!idPattern.test(id)) {
     const err = new Error(
-      `scenario ${spec.key} requires test id gcp-fit-v1-r{1|2}[a-c]-YYYYMMDD; got ${id || 'unset'}`,
+      `scenario ${spec.key} requires test id ${idFamily}-r{1|2}[a-c]-YYYYMMDD; got ${id || 'unset'}`,
     );
     err.code = 'TEST_ID_MISMATCH';
     throw err;
@@ -487,10 +491,13 @@ function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, gen
     isExample: false,
     campaign_id: identity.campaignId,
     run_id: identity.runId,
-    split: 'fit',
+    split: spec.split,
     diagnostic: 'none',
     scenario: spec.key,
-    notes: 'gcp-fit-v1 calibration rung. Not a holdout. Latency is steady-only nearest-rank from raw k6 samples. categories is the typical tag count, products is the article count, ordersAtSeed is 0 because seed-typical has no orders table. runtime.version is the Node 20 major pin. iops_throttle is null because Cloud SQL PD_SSD has no BurstBalance.',
+    notes: (spec.split === 'holdout'
+      ? 'gcp-holdout-v1 holdout rung. Not fit data; never pool with gcp-fit-v1. '
+      : 'gcp-fit-v1 calibration rung. Not a holdout. ') +
+      'Latency is steady-only nearest-rank from raw k6 samples. categories is the typical tag count, products is the article count, ordersAtSeed is 0 because seed-typical has no orders table. runtime.version is the Node 20 major pin. iops_throttle is null because Cloud SQL PD_SSD has no BurstBalance.',
     gitSha: sha,
     terraform: {
       applySha: sha,
@@ -550,7 +557,7 @@ function assembleRunDocument({ spec, outputs, identity, sha, steady, appCpu, gen
     duration: spec.duration,
     repetitions: {
       count: 1,
-      varianceNotes: 'gcp-fit-v1 plans 2 reps on separate applies. This document is one rep.',
+      varianceNotes: `${spec.split === 'holdout' ? 'gcp-holdout-v1' : 'gcp-fit-v1'} plans 2 reps on separate applies. This document is one rep.`,
     },
     perNode,
     latency: {

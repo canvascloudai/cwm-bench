@@ -1,5 +1,10 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.7.3 registers the gcp-holdout-v1 keys gcp-holdout-{300,400,500}
+ * (ladder 300→400→500, 300s warmup and 900s steady) on the unchanged
+ * gcp-fit-v1 topology, with holdout ID validation and collect labeling.
+ * Request mix, timings, Terraform, scoring, gcp-fit-v1 behavior, and AWS
+ * behavior are unchanged.
  * 1.7.2 changes GCP collector transport only: billing runs through
  * `bq query --use_legacy_sql=false` and Monitoring through the timeSeries.list
  * REST API (the gcloud routes the collector called do not exist), and VM CPU
@@ -27,7 +32,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.7.2';
+export const ADAPTER_VERSION = '1.7.3';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';

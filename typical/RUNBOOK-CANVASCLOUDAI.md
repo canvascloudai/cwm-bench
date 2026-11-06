@@ -531,7 +531,7 @@ export CWM_RUN_ID=gcp-fit-200-r1
 node scripts/worker-adapter.mjs wait-ready --json > /tmp/gcp-fit-v1-capability.json
 ```
 
-Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is `1.7.2` (GCP collector transport fix; AWS behavior is unchanged; these keys are additive).
+Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is `1.7.3` (1.7.3 wires the gcp-holdout-v1 keys; gcp-fit-v1 and AWS behavior are unchanged). Also confirm `gcp-holdout-300`, `gcp-holdout-400`, and `gcp-holdout-500` are present.
 
 Check the installed tools and live API availability with the same authorized
 GCP credentials before any paid apply:
