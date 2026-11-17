@@ -41,14 +41,13 @@ import {
  * ascending prefix-enforced ladder). Primary latency is steady-window P95
  * computed at collect; the whole-step untagged aggregate is kept alongside.
  *
- * oci-holdout-{10,100,500,1000} are the oci-holdout-v1 keys (adapter 1.8.0):
+ * oci-holdout-{10,100,500,1000} are the oci-holdout-v1 keys (adapter 1.9.0):
  * 2 x VM.Standard.E4.Flex app servers behind an OCI Flexible LB with a
  * MySQL HeatWave MySQL.2 DB system in us-ashburn-1, lean app, ladder
  * 10 -> 100 -> 500 -> 1000 enforced, 300s warmup + 900s steady. Each key runs
  * load/oci-holdout.js with SCENARIO=<its own key>: the lean request function
- * byte-for-byte, at the idle/normal/peak/burst rate (not an alias). They are
- * catalog entries only on this pin: run and
- * collect refuse them with OCI_HARNESS_NOT_PINNED until the OCI harness lands.
+ * byte-for-byte, at the idle/normal/peak/burst rate (not an alias). Adapter
+ * 1.9.0 pins the OCI harness: run and collect are supported.
  */
 
 export const SCENARIO_KEYS = Object.freeze([
@@ -274,7 +273,7 @@ function ociHoldoutScenario(key, rps) {
       `MySQL HeatWave MySQL.2 (HeatWave cluster disabled) in ${OCI_HOLDOUT_REGION}. Lean app, pool 250. ` +
       `k6 runs load/oci-holdout.js SCENARIO=${key} (same request function and rate as the lean ${leanRung} rung, own identity). ` +
       'Holdout data, not fit data. Ladder 10 → 100 → 500 → 1000, 300s warmup and 900s steady. ' +
-      'Never pool with AWS or GCP campaigns. Catalog only on adapter 1.8.0: run/collect refuse with OCI_HARNESS_NOT_PINNED.',
+      'Never pool with AWS or GCP campaigns. Adapter 1.9.0 pins the OCI harness: run and collect are supported.',
   };
 }
 
