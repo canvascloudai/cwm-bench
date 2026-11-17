@@ -1,9 +1,10 @@
 /**
- * oci-holdout-v1 catalog wiring (adapter 1.8.0).
+ * oci-holdout-v1 catalog wiring (adapter 1.9.0).
  *
- * Frozen catalog constants. The provider-isolated harness is in oci.mjs.
- * Implementation does not grant paid authority: the follow-up measurement
- * pin and separate paid go are still required before any apply.
+ * Frozen catalog constants. Adapter 1.9.0 pins the provider-isolated
+ * harness in oci.mjs: run and collect are supported. Implementation
+ * does not grant paid authority: the follow-up measurement pin and
+ * separate paid go are still required before any apply.
  */
 
 export const OCI_HOLDOUT_REGION = 'us-ashburn-1';
