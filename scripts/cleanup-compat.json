@@ -43,6 +43,21 @@
     "aws_lb_listener.http",
     "aws_lb_listener.https"
   ],
+  "oci": {
+    "module": "terraform/oci",
+    "note": "Record the actual harness merge commit on the campaign after merge. No OCI revision is invented here. Existing AWS/GCP contracts are unchanged. Preserve these addresses for destroy.",
+    "sweep": { "immediate": true, "delayedHours": 24, "destroyRetryHours": 2 },
+    "resourceAddresses": [
+      "random_password.db", "oci_core_vcn.main", "oci_core_internet_gateway.main",
+      "oci_core_route_table.public", "oci_core_security_list.nodes", "oci_core_security_list.lb",
+      "oci_core_security_list.db", "oci_core_subnet.lb", "oci_core_subnet.nodes",
+      "oci_core_subnet.db", "oci_core_instance.app", "oci_core_instance.generator",
+      "oci_mysql_mysql_configuration.main", "oci_mysql_mysql_db_system.main",
+      "oci_load_balancer_load_balancer.main", "oci_load_balancer_backend_set.app",
+      "oci_load_balancer_backend.app", "oci_load_balancer_listener.http",
+      "oci_budget_budget.main", "oci_budget_alert_rule.actual"
+    ]
+  },
   "gcp": {
     "module": "terraform/gcp",
     "note": "GCP fit campaigns destroy from terraform/gcp. Do not rename these addresses. The pinned cleanup revision is the merge commit that added this entry; record that SHA on the campaign after merge. Do not invent a SHA here. The AWS pin above is unchanged.",

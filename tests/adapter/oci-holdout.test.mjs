@@ -66,7 +66,7 @@ test('oci-holdout-v1 apply ids', () => {
 });
 
 for (const command of ['run', 'collect']) {
-  test(`${command} refuses every OCI key with OCI_HARNESS_NOT_PINNED before any cloud call`, async () => {
+  test(`${command} rejects missing run identity before any cloud call`, async () => {
     for (const key of KEYS) {
       const stdout = new MemoryStream();
       const stderr = new MemoryStream();
@@ -80,12 +80,13 @@ for (const command of ['run', 'collect']) {
         stderr,
         env: { CWM_TEST_ID: 'oci-holdout-v1-r1-ad1-20261120' },
         statePath: '/nonexistent/oci-holdout-state.json',
-        deps: { runAws: forbidden, runGcloud: forbidden, runTerraform: forbidden, fs: {} },
+        deps: { runAws: forbidden, runGcloud: forbidden, runTerraform: forbidden,
+          runOci: forbidden, runOciTerraform: forbidden, runOciSsh: forbidden, fs: {} },
       });
       assert.equal(code, 1);
       const payload = JSON.parse(stdout.toString());
       assert.equal(payload.ok, false);
-      assert.equal(payload.error.code, 'OCI_HARNESS_NOT_PINNED');
+      assert.equal(payload.error.code, 'RUN_IDENTITY_MISSING');
       assert.notEqual(payload.error.code, 'UNKNOWN_SCENARIO');
       assert.deepEqual(calls, []);
     }

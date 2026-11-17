@@ -225,7 +225,7 @@ async function runAdapter(args, options) {
 }
 
 test('AWS typical keys stay on us-east-2 and the adapter version is unchanged', () => {
-  assert.equal(ADAPTER_VERSION, '1.8.0');
+  assert.equal(ADAPTER_VERSION, '1.9.0');
   const aws = getScenario('typical-fit-200');
   assert.equal(aws.requiredRegion, TYPICAL_REGION);
   assert.equal(aws.cloud, undefined);

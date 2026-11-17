@@ -1,0 +1,56 @@
+#!/bin/bash
+set -euo pipefail
+umask 077
+exec >/var/log/cwm-bootstrap.log 2>&1
+dnf install -y git mariadb
+curl -fsSL https://rpm.nodesource.com/setup_20.x -o /tmp/node-setup.sh
+bash /tmp/node-setup.sh
+dnf install -y nodejs
+node --version | grep -E '^v20\.'
+git clone https://github.com/canvascloudai/cwm-bench.git /opt/cwm-source
+git -C /opt/cwm-source checkout --detach '${measurement_sha}'
+test "$(git -C /opt/cwm-source rev-parse HEAD)" = '${measurement_sha}'
+cd /opt/cwm-source/app
+npm ci --omit=dev --ignore-scripts
+export MYSQL_PWD='${db_password}'
+for i in $(seq 1 90); do
+  mysqladmin -h '${mysql_host}' -u cwmbench ping --silent && break
+  sleep 10
+done
+%{ if seed ~}
+mysql -h '${mysql_host}' -u cwmbench < seed/seed.sql
+%{ endif ~}
+# Applied SQL readback, not a Terraform plan assertion.
+mysql -h '${mysql_host}' -u cwmbench -N -B -e 'SELECT @@GLOBAL.max_connections, @@version' > /opt/cwm-mysql-readback.tsv
+test "$(cut -f1 /opt/cwm-mysql-readback.tsv)" = 1000
+grep -E '^1000[[:space:]]+8\.' /opt/cwm-mysql-readback.tsv
+cat >/etc/cwm-app.env <<'EOF'
+PORT=8080
+APP_POOL_SIZE=250
+APP_WORKERS=1
+APP_PROFILE=lean
+APP_GIT_SHA=${measurement_sha}
+MYSQL_HOST=${mysql_host}
+MYSQL_USER=cwmbench
+MYSQL_PASSWORD=${db_password}
+MYSQL_DATABASE=cwmbench
+EOF
+cat >/etc/systemd/system/cwm-app.service <<'EOF'
+[Unit]
+After=network-online.target
+Wants=network-online.target
+[Service]
+WorkingDirectory=/opt/cwm-source/app
+EnvironmentFile=/etc/cwm-app.env
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+# Oracle Linux's host firewall is distinct from the VCN security lists.
+if systemctl is-active --quiet firewalld; then
+  firewall-cmd --permanent --add-port=8080/tcp
+  firewall-cmd --reload
+fi
+systemctl daemon-reload
+systemctl enable --now cwm-app

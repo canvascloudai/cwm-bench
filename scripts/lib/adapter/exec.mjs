@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { redact } from './redact.mjs';
 import { createGcpCliRunner } from './gcp-cli.mjs';
+import { createOciDeps } from './oci-cli.mjs';
 
 function stripSecretsFromEnv(env) {
   const copy = { ...env };
@@ -52,6 +53,7 @@ export function createDefaultDeps(repoRoot, env) {
     ? path.resolve(env.CWM_TERRAFORM_DIR)
     : path.join(repoRoot, 'terraform');
   return {
+    ...createOciDeps(repoRoot, env),
     runAws: createProcessRunner('aws'),
     runGcloud: createGcpCliRunner({
       runGcloud: createProcessRunner('gcloud'),

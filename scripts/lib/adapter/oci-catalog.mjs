@@ -1,13 +1,10 @@
 /**
- * oci-holdout-v1 catalog wiring (adapter 1.8.0).
+ * oci-holdout-v1 catalog wiring (adapter 1.9.0).
  *
- * This module registers what the preregistration fixes: the OCI scenario
- * keys, region, ladder, timings and apply-id format. It does NOT contain an
- * OCI client, Terraform module, collector or cleanup sweep. Until the OCI
- * harness lands in a follow-up pull request (which moves the measurement pin
- * in typical/oci-holdout-v1/PREREGISTRATION.md), `run` and `collect` refuse
- * every OCI key with OCI_HARNESS_NOT_PINNED before touching any cloud API.
- * That refusal is deliberate: a runner on this pin must not apply.
+ * Frozen catalog constants. Adapter 1.9.0 pins the provider-isolated
+ * harness in oci.mjs: run and collect are supported. Implementation
+ * does not grant paid authority: the follow-up measurement pin and
+ * separate paid go are still required before any apply.
  */
 
 export const OCI_HOLDOUT_REGION = 'us-ashburn-1';
@@ -35,21 +32,15 @@ export const OCI_HOLDOUT_LEAN_RUNG = Object.freeze({
 
 export function assertOciHoldoutTestId(spec, testId) {
   if (spec.cloud !== 'oci') return;
-  if (!OCI_HOLDOUT_TEST_ID_RE.test(String(testId || ''))) {
+  const text = String(testId || '');
+  const stamp = text.slice(-8);
+  const date = new Date(`${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6)}T00:00:00Z`);
+  const validDate = Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10).replaceAll('-', '') === stamp;
+  if (!OCI_HOLDOUT_TEST_ID_RE.test(text) || !validDate) {
     const err = new Error(
       `scenario ${spec.key} requires test id oci-holdout-v1-r{1|2}-ad{1|2|3}[a-c]?-YYYYMMDD; got ${testId || 'unset'}`,
     );
     err.code = 'TEST_ID_MISMATCH';
     throw err;
   }
-}
-
-export function refuseOciUntilHarnessPinned(spec) {
-  const err = new Error(
-    `scenario ${spec.key} is registered for oci-holdout-v1, but this adapter has no OCI harness. ` +
-      'Do not apply. The measurement pin moves to the OCI harness merge commit in a follow-up pull request ' +
-      '(typical/oci-holdout-v1/PREREGISTRATION.md, "Measurement pin").',
-  );
-  err.code = 'OCI_HARNESS_NOT_PINNED';
-  throw err;
 }
