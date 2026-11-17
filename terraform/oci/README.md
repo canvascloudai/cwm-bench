@@ -68,6 +68,15 @@ HA, PITR, automatic backups, auto-expand storage and deletion protection are
 off. Automatic backups delete with the system; final backup is explicitly
 `SKIP_FINAL_BACKUP`. MySQL must remain 8.x, Node 20, k6 exactly v0.54.0.
 
+`mysql_version` is a required variable with no default, validated to start
+with `8.`. Before plan or apply, the runner runs
+`node scripts/oci-select-mysql-version.mjs`, which issues a read-only
+`oci mysql version list` and selects the newest listed 8.4.x version, or
+the newest listed 8.x if no 8.4 is available. If no 8.x exists, it
+refuses and the runner must not apply. The exact chosen version is
+written into `runtime.tfvars.json` and retained in evidence. The existing
+applied postcondition that `self.mysql_version` starts with `8.` remains.
+
 ## Adapter
 
 Install OCI CLI, OpenSSH, Node 20+ and Terraform on the trusted controller.

@@ -43,6 +43,13 @@ variable "measurement_sha" {
     error_message = "Supply the exact merged measurement commit, never a branch."
   }
 }
+variable "mysql_version" {
+  type = string
+  validation {
+    condition     = startswith(var.mysql_version, "8.")
+    error_message = "MySQL must remain 8.x; never substitute a database product."
+  }
+}
 
 data "oci_identity_compartment" "target" {
   id = var.compartment_id

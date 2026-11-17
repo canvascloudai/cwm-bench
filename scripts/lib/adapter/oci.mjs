@@ -44,6 +44,7 @@ export function assertConfiguration(f, spec, env) {
       f.app_ids?.length !== 2 || f.app_ips?.length !== 2 ||
       new Set([...f.app_ids, f.generator_id]).size !== 3) throw fault('OCI_TOPOLOGY_MISMATCH');
   if (!/^http:\/\/(?:\d{1,3}\.){3}\d{1,3}$/.test(f.target || '')) throw fault('OCI_TARGET_INVALID');
+  if (!String(f.mysql_version || '').startsWith('8.')) throw fault('OCI_MYSQL_VERSION_MISMATCH');
   runDirectory({ campaignId: f.test_id, runId: 'configuration', scenario: spec.key });
 }
 

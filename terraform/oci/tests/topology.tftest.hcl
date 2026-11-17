@@ -17,6 +17,7 @@ variables {
   budget_recipients   = "runner@example.invalid"
   test_id             = "oci-holdout-v1-r1-ad1-20261120"
   measurement_sha     = "1111111111111111111111111111111111111111"
+  mysql_version       = "8.4.7"
 }
 run "frozen_topology" {
   command = plan
@@ -48,6 +49,10 @@ run "frozen_topology" {
     condition     = random_password.db.length == 32 && random_password.db.special == true && random_password.db.min_special == 1 && random_password.db.min_upper == 1 && random_password.db.min_lower == 1 && random_password.db.min_numeric == 1 && random_password.db.override_special == "!#%*()-_=+[]{}:?"
     error_message = "OCI MySQL admin password must meet HeatWave 8-32 / complexity rules with a shell-safe override_special."
   }
+  assert {
+    condition     = oci_mysql_mysql_db_system.main.mysql_version == var.mysql_version && startswith(oci_mysql_mysql_db_system.main.mysql_version, "8.")
+    error_message = "mysql_version must be supplied and remain 8.x."
+  }
 }
 run "wrong_compartment" {
   command = plan
@@ -63,4 +68,11 @@ run "wrong_ad" {
     availability_domain = "runtime:US-ASHBURN-AD-2"
   }
   expect_failures = [oci_core_vcn.main]
+}
+run "rejects_mysql_9" {
+  command = plan
+  variables {
+    mysql_version = "9.0.0"
+  }
+  expect_failures = [var.mysql_version]
 }
