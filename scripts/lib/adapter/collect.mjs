@@ -28,6 +28,7 @@ import { assertCampaignIdentity, ladderHistory, resolveLadder } from './ladder.m
 import { metaFromStdout } from './ready.mjs';
 import { collectDbsatExtras } from './dbsat-collect.mjs';
 import { collectGcpScenario } from './gcp.mjs';
+import { refuseOciUntilHarnessPinned } from './oci-catalog.mjs';
 
 const APP_META_COMMAND = [
   'set -euo pipefail',
@@ -400,6 +401,7 @@ export async function collectCloudWatch(runAws, outputs, region, window, options
 export async function collectScenario(ctx, scenarioKey) {
   const spec = getScenario(scenarioKey);
   if (spec.cloud === 'gcp') return collectGcpScenario(ctx, spec);
+  if (spec.cloud === 'oci') refuseOciUntilHarnessPinned(spec);
   assertNotAliased(spec);
   const identity = requireRunIdentity(ctx.env, spec.key);
   const outputs = await readTerraformOutputs(ctx.deps);

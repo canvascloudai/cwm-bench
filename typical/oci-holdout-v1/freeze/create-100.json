@@ -1,0 +1,106 @@
+{
+ "name": "oci-holdout-v1-freeze-100",
+ "description": "cwm-bench oci-holdout-v1 prediction freeze; deleted after use",
+ "appWeight": "lean",
+ "seed": 20240601,
+ "traffic": 100,
+ "minInstances": 2,
+ "maxInstances": 2,
+ "resources": [
+  {
+   "id": "oci-lb",
+   "type": "network",
+   "name": "OCI Flexible LB (10-100 Mbps)",
+   "provider": "oci",
+   "location": {
+    "zoneKey": "us-ashburn-1-ad-1",
+    "regionKey": "us-ashburn-1",
+    "localityType": "availability_domain",
+    "providerLabel": "AD-1 (Ashburn)"
+   },
+   "characteristics": {
+    "serviceFamily": "oci-lb"
+   }
+  },
+  {
+   "id": "app-1",
+   "type": "compute",
+   "name": "App 1 (VM.Standard.E4.Flex 2 OCPU/16 GB)",
+   "provider": "oci",
+   "location": {
+    "zoneKey": "us-ashburn-1-ad-1",
+    "regionKey": "us-ashburn-1",
+    "localityType": "availability_domain",
+    "providerLabel": "AD-1 (Ashburn)"
+   },
+   "characteristics": {
+    "size": "VM.Standard.E4.Flex (2 OCPU)",
+    "serviceFamily": "oci-compute",
+    "autoscaling": false,
+    "workload": "crud",
+    "appRuntime": "node",
+    "appRuntimeVersion": "20",
+    "appWorkerCount": 1,
+    "appDbPoolSize": 250
+   }
+  },
+  {
+   "id": "app-2",
+   "type": "compute",
+   "name": "App 2 (VM.Standard.E4.Flex 2 OCPU/16 GB)",
+   "provider": "oci",
+   "location": {
+    "zoneKey": "us-ashburn-1-ad-1",
+    "regionKey": "us-ashburn-1",
+    "localityType": "availability_domain",
+    "providerLabel": "AD-1 (Ashburn)"
+   },
+   "characteristics": {
+    "size": "VM.Standard.E4.Flex (2 OCPU)",
+    "serviceFamily": "oci-compute",
+    "autoscaling": false,
+    "workload": "crud",
+    "appRuntime": "node",
+    "appRuntimeVersion": "20",
+    "appWorkerCount": 1,
+    "appDbPoolSize": 250
+   }
+  },
+  {
+   "id": "db",
+   "type": "database",
+   "name": "MySQL HeatWave DB system MySQL.2 (HeatWave cluster disabled)",
+   "provider": "oci",
+   "location": {
+    "zoneKey": "us-ashburn-1-ad-1",
+    "regionKey": "us-ashburn-1",
+    "localityType": "availability_domain",
+    "providerLabel": "AD-1 (Ashburn)"
+   },
+   "characteristics": {
+    "serviceFamily": "mysql-heatwave",
+    "size": "MySQL.2",
+    "workloadDatabaseEngine": "mysql",
+    "maxConnections": 1000
+   }
+  }
+ ],
+ "connections": [
+  {
+   "sourceId": "oci-lb",
+   "targetId": "app-1"
+  },
+  {
+   "sourceId": "oci-lb",
+   "targetId": "app-2"
+  },
+  {
+   "sourceId": "app-1",
+   "targetId": "db"
+  },
+  {
+   "sourceId": "app-2",
+   "targetId": "db"
+  }
+ ]
+}
