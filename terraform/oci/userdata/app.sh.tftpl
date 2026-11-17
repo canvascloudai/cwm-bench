@@ -32,7 +32,7 @@ APP_PROFILE=lean
 APP_GIT_SHA=${measurement_sha}
 MYSQL_HOST=${mysql_host}
 MYSQL_USER=cwmbench
-MYSQL_PASSWORD=${db_password}
+MYSQL_PASSWORD='${db_password}'
 MYSQL_DATABASE=cwmbench
 EOF
 cat >/etc/systemd/system/cwm-app.service <<'EOF'

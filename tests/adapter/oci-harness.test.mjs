@@ -4,6 +4,8 @@ import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dispatch } from '../../scripts/lib/adapter/main.mjs';
 import { getScenario } from '../../scripts/lib/adapter/scenarios.mjs';
@@ -12,6 +14,7 @@ import { launchCommand, ssh, ociJson, safeOci } from '../../scripts/lib/adapter/
 import { billedCost, csv, summarizeMetric } from '../../scripts/lib/adapter/oci-evidence.mjs';
 import { cleanup, makeManifest, ownedState } from '../../scripts/lib/adapter/oci-cleanup.mjs';
 
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const campaignId = 'oci-holdout-v1-r1-ad1-20261120';
 const pin = '1'.repeat(40);
 const fields = () => ({
@@ -420,4 +423,26 @@ test('Search failure after successful destroy preserves durable timestamps and r
     assert.equal(after.nextDestroyRetryAt, '2026-11-20T02:00:00.000Z');
     assert.equal(result.report.delayedSweepAt, '2026-11-21T00:00:00.000Z');
   } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+test('OCI MySQL admin password meets HeatWave rules and is passed safely, not via a URI', () => {
+  const tf = readFileSync(path.join(ROOT, 'terraform/oci/database.tf'), 'utf8');
+  assert.match(tf, /resource "random_password" "db"/);
+  assert.match(tf, /length\s*=\s*32/);
+  assert.match(tf, /special\s*=\s*true/);
+  assert.match(tf, /min_special\s*=\s*1/);
+  assert.match(tf, /min_upper\s*=\s*1/);
+  assert.match(tf, /min_lower\s*=\s*1/);
+  assert.match(tf, /min_numeric\s*=\s*1/);
+  assert.match(tf, /override_special\s*=\s*"!#%\*\(\)-_=\+\[\]\{\}:\?"/);
+  const userdata = readFileSync(path.join(ROOT, 'terraform/oci/userdata/app.sh.tftpl'), 'utf8');
+  assert.match(userdata, /export MYSQL_PWD='\$\{db_password\}'/);
+  assert.match(userdata, /MYSQL_PASSWORD='\$\{db_password\}'/);
+  assert.doesNotMatch(userdata, /mysql:\/\//);
+  const app = readFileSync(path.join(ROOT, 'app/src/server.js'), 'utf8');
+  assert.match(app, /password:\s*MYSQL_PASSWORD/);
+  assert.doesNotMatch(app, /mysql:\/\//);
+  const adapter = readFileSync(path.join(ROOT, 'scripts/lib/adapter/oci.mjs'), 'utf8');
+  assert.match(adapter, /MYSQL_PWD="\$MYSQL_PASSWORD"/);
+  assert.doesNotMatch(adapter, /mysql:\/\//);
 });

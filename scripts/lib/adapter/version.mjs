@@ -1,5 +1,13 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.9.1 meets OCI MySQL HeatWave admin-password rules in terraform/oci:
+ * 8–32 characters with at least one uppercase, lowercase, numeric, and
+ * special character (`special = true`, min_*, and an OCI-accepted
+ * override_special that is safe for shell, EnvironmentFile, and the Node
+ * mysql password field). The measurement pin is this pull request's merge
+ * commit; Kevin approved pinning without editing the frozen preregistration.
+ * AWS and GCP keys, request mixes, timings, scoring, and the 1.9.0 OCI
+ * harness behavior are otherwise unchanged.
  * 1.9.0 pins the oci-holdout-v1 harness: terraform/oci and the OCI run/collect
  * adapter for oci-holdout-{10,100,500,1000} (us-ashburn-1, ladder
  * 10→100→500→1000 enforced, 300s warmup and 900s steady, load/oci-holdout.js,
@@ -60,7 +68,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.9.0';
+export const ADAPTER_VERSION = '1.9.1';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';
