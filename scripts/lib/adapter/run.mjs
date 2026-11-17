@@ -21,6 +21,7 @@ import {
   resolveLadder,
 } from './ladder.mjs';
 import { runGcpScenario } from './gcp.mjs';
+import { refuseOciUntilHarnessPinned } from './oci-catalog.mjs';
 
 const DEFAULT_APP_META_READINESS_TIMEOUT_MS = 20 * 60 * 1000;
 const DEFAULT_APP_META_READINESS_POLL_MS = 5 * 1000;
@@ -440,6 +441,7 @@ async function waitForK6(ctx, runAws, options) {
 export async function runScenario(ctx, scenarioKey) {
   const spec = getScenario(scenarioKey);
   if (spec.cloud === 'gcp') return runGcpScenario(ctx, spec);
+  if (spec.cloud === 'oci') refuseOciUntilHarnessPinned(spec);
   assertNotAliased(spec);
 
   const now = ctx.now();

@@ -1,0 +1,38 @@
+{
+  "campaign": "oci-holdout-v1",
+  "note": "Frozen before any apply. Two prediction sets, scored separately, never combined. No account identifiers.",
+  "setA": {
+    "source": "published /accuracy OCI cell",
+    "url": "https://www.cloudworldmodel.ai/api/accuracy-benchmark?provider=oci",
+    "fetchedUtc": "2026-11-17T02:05:31Z",
+    "generatedAt": "2026-11-17T02:05:37.612Z",
+    "seed": 20240601,
+    "overallScore": 90,
+    "fileSha256": "dd16b96f3b2446ac4e1ecf663c4274720e1db5df906fd9b909b566caf7c9b292",
+    "rungs": {
+      "10":   { "p50Ms": 21,  "p95Ms": 46,  "appCpuPct": 4.3,  "throughputRps": 9.989,     "errorPct": 0.11,   "costPerHour": 0.249968 },
+      "100":  { "p50Ms": 32,  "p95Ms": 67,  "appCpuPct": 12.1, "throughputRps": 99.704614, "errorPct": 0.295,  "costPerHour": 0.249968 },
+      "500":  { "p50Ms": 83,  "p95Ms": 162, "appCpuPct": 44.4, "throughputRps": 486.845,   "errorPct": 2.631,  "costPerHour": 0.249968 },
+      "1000": { "p50Ms": 155, "p95Ms": 297, "appCpuPct": 82.6, "throughputRps": 883.00814, "errorPct": 11.699, "costPerHour": 0.249968 }
+    }
+  },
+  "setB": {
+    "source": "live Cloud World Model MCP simulation.create (owned simulations, deleted after read)",
+    "engineVersion": "1.2.77",
+    "revision": "fb400b40135f",
+    "evaluatorFingerprint": "sha256:f0b60f6be776ed681c61e0e77ba09eaca2b627564b5c69ac3fd1a161e3566712",
+    "identityNote": "revision and evaluatorFingerprint are as reported in the gcpFitPrediction.implementation block, the only revision the live engine exposes",
+    "scenarioHash": "1c3236de75c42171b18e3133abf862fd950e84225ffad4a8caa6f0054dadd1e3",
+    "replayEffectiveConfigHash": "7b489a10498e72fd81d6b5ac03374e91a9d71827d73ba4c6639c08efea83d357",
+    "createdUtc": "2026-11-17T02:07Z",
+    "readUtc": "2026-11-17T02:08Z",
+    "protocol": "create (5 steps), step 20, step 60, read metrics at currentStep 85; 60-step history flat",
+    "coverage": "modeled; loadScope not calibrated; P50/P95 generic internal-LB baseline; P99 uncalibrated",
+    "rungs": {
+      "10":   { "simulationId": "9d3aaae3-d7db-45f2-91ee-b22e130b486f", "effectiveConfigHash": "4a0e7aa679902f7d350d2b5afa7c84519ad4946854a8c67cc54f35143ce19f8b", "createInputSha256": "8743524823798941b9c52799b2c9d9136c18f7648972bfbe83467cedc9eeb721", "metricsSha256": "3a5eb4fba99e97744a7c31a8ec15e9c4c855bee7c3e9080f79274a3598c533b0", "p50Ms": 5, "p95Ms": 5, "p99Ms": 140,  "appCpuPct": 0.196, "dbCpuPct": 1,    "dbConnections": 2,   "throughputRps": 9.999992, "totalLossPct": 0.00008, "hardErrorPct": 0, "rampAveragingShortfallPct": null, "costPerHour": 0.1928 },
+      "100":  { "simulationId": "b60b2a54-4770-4851-a4d4-db08ca9ff1ea", "effectiveConfigHash": "751173184829b163d71ede5460acff1b779a1d46581b6dffbc7afcaf5e40ac66", "createInputSha256": "0f964e26edd08f2fe0384ce7665d8310da5817fa324dd8f3476fc95025f4f8fa", "metricsSha256": "8b2bc850cd4a54594308d326a57be6a305ad4d629a74993456f0c976f0a4b864", "p50Ms": 5, "p95Ms": 5, "p99Ms": 237,  "appCpuPct": 0.95,  "dbCpuPct": 1,    "dbConnections": 20,  "throughputRps": 99.99176, "totalLossPct": 0.00824, "hardErrorPct": 0, "rampAveragingShortfallPct": null, "costPerHour": 0.1928 },
+      "500":  { "simulationId": "9737f895-72a1-4d12-80a7-fecc9ab2cd30", "effectiveConfigHash": "d6c5ea5900c64dddaf180dc442d6001e3b04703c406dc8cf1875f1a5373a91fa", "createInputSha256": "54753927f6d4f66eb186d53b8fd103a13763c506900f793f8e2330b13dbe3b5e", "metricsSha256": "ea2bf03f44b68407299a83337782ecd5ae1d765a15a71e77b3b48de890036985", "p50Ms": 5, "p95Ms": 5, "p99Ms": 773,  "appCpuPct": 4.305, "dbCpuPct": 5.4,  "dbConnections": 100, "throughputRps": 498.97,   "totalLossPct": 0.206,   "hardErrorPct": 0, "rampAveragingShortfallPct": null, "costPerHour": 0.1928 },
+      "1000": { "simulationId": "d6ec3a4b-d6a6-4ffd-af19-c9b7937ea2d3", "effectiveConfigHash": "e547d9a78c68cff7de0c84b4cca5030119f892250e8a582d6d55c54279e0482a", "createInputSha256": "0cfa81f414ccb28a23335d51c05ed1a3953f666620be7f6ef56144c340a6e7e8", "metricsSha256": "b64a545d1da9fe5ec7cbeb887b047117445e49d969ba09e096b1c4522b7f5522", "p50Ms": 5, "p95Ms": 5, "p99Ms": 1686, "appCpuPct": 8.499, "dbCpuPct": 14.3, "dbConnections": 200, "throughputRps": 991.76,   "totalLossPct": 0.824,   "hardErrorPct": 0, "rampAveragingShortfallPct": null, "costPerHour": 0.22823 }
+    }
+  }
+}

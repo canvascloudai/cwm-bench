@@ -1,5 +1,12 @@
 import { PRIMARY_REGION, SECOND_REGION, TYPICAL_REGION } from './version.mjs';
 import { DBSAT_LADDER } from './ladder.mjs';
+import {
+  OCI_HOLDOUT_DURATION,
+  OCI_HOLDOUT_LADDER,
+  OCI_HOLDOUT_LEAN_RUNG,
+  OCI_HOLDOUT_REGION,
+  OCI_HOLDOUT_WARMUP,
+} from './oci-catalog.mjs';
 
 /**
  * Campaign matrix implemented by this adapter.
@@ -33,6 +40,15 @@ import { DBSAT_LADDER } from './ladder.mjs';
  * typical-dbsat-v1 DB-breakpoint discovery keys (us-east-2, app_count 2/3/4,
  * ascending prefix-enforced ladder). Primary latency is steady-window P95
  * computed at collect; the whole-step untagged aggregate is kept alongside.
+ *
+ * oci-holdout-{10,100,500,1000} are the oci-holdout-v1 keys (adapter 1.8.0):
+ * 2 x VM.Standard.E4.Flex app servers behind an OCI Flexible LB with a
+ * MySQL HeatWave MySQL.2 DB system in us-ashburn-1, lean app, ladder
+ * 10 -> 100 -> 500 -> 1000 enforced, 300s warmup + 900s steady. Each key runs
+ * load/oci-holdout.js with SCENARIO=<its own key>: the lean request function
+ * byte-for-byte, at the idle/normal/peak/burst rate (not an alias). They are
+ * catalog entries only on this pin: run and
+ * collect refuse them with OCI_HARNESS_NOT_PINNED until the OCI harness lands.
  */
 
 export const SCENARIO_KEYS = Object.freeze([
@@ -99,6 +115,10 @@ export const SCENARIO_KEYS = Object.freeze([
   'gcp-holdout-300',
   'gcp-holdout-400',
   'gcp-holdout-500',
+  'oci-holdout-10',
+  'oci-holdout-100',
+  'oci-holdout-500',
+  'oci-holdout-1000',
 ]);
 
 function typicalScenario(key, rps, split, kind, optionalRung) {
@@ -221,6 +241,40 @@ function gcpHoldoutScenario(key, rps) {
       `GCP holdout at ${rps} total RPS on the unchanged gcp-fit-v1 topology. ` +
       'Holdout data, not fit data. Ladder 300 → 400 → 500, 300s warmup and 900s steady. ' +
       'Never pool with gcp-fit-v1.',
+  };
+}
+
+function ociHoldoutScenario(key, rps) {
+  const leanRung = OCI_HOLDOUT_LEAN_RUNG[rps];
+  return {
+    key,
+    kind: 'holdout',
+    rps,
+    split: 'holdout',
+    cloud: 'oci',
+    regionRole: 'primary',
+    requiredRegion: OCI_HOLDOUT_REGION,
+    workload: { script: 'oci-holdout.js', envName: 'SCENARIO', envValue: key },
+    expectedPoolSize: 250,
+    expectedProfile: 'lean',
+    expectedWorkers: 1,
+    expectedAppCount: 2,
+    completeness: 'optional',
+    requiresCompleteCollect: false,
+    aliasOf: null,
+    ladder: OCI_HOLDOUT_LADDER.slice(),
+    enforceLadder: true,
+    requestLevelRaw: true,
+    recordMeasurementSha: true,
+    warmup: OCI_HOLDOUT_WARMUP,
+    duration: OCI_HOLDOUT_DURATION,
+    harnessRequired: 'oci',
+    description:
+      `oci-holdout-v1 at ${rps} total RPS on 2 x VM.Standard.E4.Flex (2 OCPU/16 GB) behind an OCI Flexible LB, ` +
+      `MySQL HeatWave MySQL.2 (HeatWave cluster disabled) in ${OCI_HOLDOUT_REGION}. Lean app, pool 250. ` +
+      `k6 runs load/oci-holdout.js SCENARIO=${key} (same request function and rate as the lean ${leanRung} rung, own identity). ` +
+      'Holdout data, not fit data. Ladder 10 → 100 → 500 → 1000, 300s warmup and 900s steady. ' +
+      'Never pool with AWS or GCP campaigns. Catalog only on adapter 1.8.0: run/collect refuse with OCI_HARNESS_NOT_PINNED.',
   };
 }
 
@@ -481,6 +535,10 @@ const DEFINITIONS = {
   'gcp-holdout-300': gcpHoldoutScenario('gcp-holdout-300', 300),
   'gcp-holdout-400': gcpHoldoutScenario('gcp-holdout-400', 400),
   'gcp-holdout-500': gcpHoldoutScenario('gcp-holdout-500', 500),
+  'oci-holdout-10': ociHoldoutScenario('oci-holdout-10', 10),
+  'oci-holdout-100': ociHoldoutScenario('oci-holdout-100', 100),
+  'oci-holdout-500': ociHoldoutScenario('oci-holdout-500', 500),
+  'oci-holdout-1000': ociHoldoutScenario('oci-holdout-1000', 1000),
 };
 
 export function scenariosRequiringCompleteCollect() {

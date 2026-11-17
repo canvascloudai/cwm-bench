@@ -1,5 +1,13 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.8.0 registers the oci-holdout-v1 keys oci-holdout-{10,100,500,1000}
+ * (us-ashburn-1, ladder 10→100→500→1000 enforced, 300s warmup and 900s
+ * steady, load/oci-holdout.js = the lean request function under each key's
+ * own SCENARIO value, apply id
+ * oci-holdout-v1-r{1|2}-ad{1|2|3}[a-c]?-YYYYMMDD) as catalog entries only.
+ * There is no OCI harness on this version: run and collect refuse every OCI
+ * key with OCI_HARNESS_NOT_PINNED before any cloud call. AWS and GCP keys,
+ * request mixes, timings, Terraform, scoring, and cleanup are unchanged.
  * 1.7.5 accepts gcp-holdout-v2 campaign IDs
  * (gcp-holdout-v2-r{1|2}[a-c]?-YYYYMMDD) on the existing
  * gcp-holdout-{300,400,500} keys and labels collect notes from the ID.
@@ -45,7 +53,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.7.5';
+export const ADAPTER_VERSION = '1.8.0';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';

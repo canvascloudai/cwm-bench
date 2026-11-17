@@ -243,3 +243,13 @@ export function dbsatArrivalScenarios(rps, warmup, duration, preSeconds, maxSeco
   }
   return scenarios;
 }
+
+// oci-holdout-v1 rungs (total RPS through the OCI Flexible LB). Same lean
+// request mix as the RPS object above, run by load/oci-holdout.js under each
+// key's own identity. The RPS object above is unchanged.
+export const OCI_HOLDOUT_RPS = Object.freeze({
+  'oci-holdout-10': 10,
+  'oci-holdout-100': 100,
+  'oci-holdout-500': 500,
+  'oci-holdout-1000': 1000,
+});
