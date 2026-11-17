@@ -4,7 +4,7 @@ This directory is the first **measured** OCI check. Today the OCI cell on `/accu
 
 If a calibration follows, r1 and r2 of this campaign become **fit data** and a new OCI holdout (new directory, new pin, new frozen predictions) is required before any accuracy claim. Results from different pins are never pooled.
 
-Authority for the runner is this file, run from the pinned merged commit given in **Measurement pin**. A branch name is not a pin. **No apply is allowed on this pull request's merge commit** (see Measurement pin).
+Authority for the runner is this file, run from the pinned merged commit given in **Measurement pin**. A branch name is not a pin. **No apply is allowed on this pull request's merge commit** (see Measurement pin). When to act and when to ask is the **Runner standing approvals and decision table**; ask Kevin only for the items listed there.
 
 ## Topology
 
@@ -147,3 +147,85 @@ Any change to measurement code, the load scripts, the adapter, Terraform, or the
 ## Privacy
 
 Archives and this directory contain no tenancy, user, or compartment OCID, API key, key fingerprint, or other account identifier. The compartment may be named (`cwm-bench-oci`) and, if needed, shown by its OCID suffix `…kghi7ge5q` only. Instance and resource identifiers appear only in redacted form.
+
+## Runner standing approvals and decision table
+
+This section is the complete list of when the runner acts and when it asks Kevin. It does not change the topology, ladder, timing, scoring, frozen predictions, or load-balancer bandwidth above. If a rule or row covers the situation, act on it; do not ask for confirmation of a listed action. Ask only for the items in the stop-and-ask list (item 13).
+
+### Standing rules
+
+**1. One go covers the whole campaign.** Kevin's single paid-run approval, given after the prereg and harness-pin pull requests merge, covers r1 and r2, every allowed replacement, and all cleanup. Once that go is given, do not ask again before r2. Run r2 automatically on a different calendar day (America/New_York), at least 12 hours after r1 ends. The Ladder section still requires the two reps to fall on different UTC days; wait until both that requirement and the 12-hour / ET-day rule are satisfied.
+
+**2. Transient errors are retried automatically with backoff.** This covers API throttling, 5xx responses, and read timeouts. Control-connection or SSH drops reconnect with backoff for up to about 10 minutes. Never stop k6: it runs independently on the generator. After reconnecting, wait for the completion marker. Stop only if the generator VM is gone or k6 exits nonzero. Record each reconnect in the evidence.
+
+**3. Stockouts** (E4 or MySQL.2 out of capacity) are AD-specific and transient:
+
+- Destroy the partial stack and verify it is gone, then do a fresh apply in the next AD (AD-1, then AD-2, then AD-3).
+- Record the AD used.
+- Stockouts do not count toward the deterministic-error guard.
+- Pause and ask only if stockouts alone use up the replacement allowance before any rung is measured, or if all three ADs are out.
+
+**4. Deterministic errors.** If two consecutive attempts fail with the same deterministic error (quota, an API not enabled, permission, or validator), stop and report. Do not spend further replacements on it.
+
+**5. Quota or limit exceeded.** Submit an OCI limit-increase request (to at least 2× the plan's need) and verify live headroom before the next apply. Never delete unrelated resources. Waiting on the request is a pause, not a failure, and not a reason to ask. If two consecutive apply attempts then fail with that same deterministic quota error, stop and report (item 4).
+
+**6. Runner self-fixes are allowed without asking,** as long as they live outside cwm-bench and leave the protocol and measurements unchanged. This covers launcher or controller bugs, retries, state isolation, and archive splitting. Record the controller hash in the evidence. Any change to cwm-bench code needs a new pin pull request, which the runner delivers as a patch. The runner never edits the merged prereg.
+
+**7. Version drift outside the prereg's pins** (OCI MySQL patch version, OS image patch, OCI provider patch): accept it if the major and minor versions match the prereg (MySQL 8.x, Node 20, k6 v0.54.0 exact), and record the exact versions. Anything else is a stop-and-ask.
+
+**8. Faults and replacements.** A pre-rung or runner-side fault means destroying the stack and replacing the whole apply, up to 3 per rep. A 4th pauses and asks. Workload errors and saturation are results, not faults: never retry a rung because of its results.
+
+**9. Spend.** The $25 soft cap pauses and asks; it never auto-stops or destroys mid-rung. The budget alerts are informational only.
+
+**10. Cleanup is fully autonomous.**
+
+- After each campaign: destroy, run the sweep, run the sweep again 24 hours later, and check backups.
+- Retry destroy-only cleanup every 2 hours until it is clean.
+- Delete CWM simulations the runner creates.
+- Only pause and ask if a resource still cannot be deleted after 24 hours.
+
+**11. Evidence delivery.**
+
+- Deliver results as archives, split into parts under 25 MB, each with sha256.
+- Deliver code changes as patch files.
+- Redact OCIDs, the key, the fingerprint, and account IDs (keep only the last 6 characters where an ID is needed).
+- The runner never contacts GitHub.
+
+**12. Ambiguity rule.** If something is not covered, follow this preregistration text first, then the gcp-holdout-v2 precedent. Record the deviation and the reasoning in the evidence, and continue. Only ask about what is listed in item 13.
+
+**13. The complete list of reasons to stop and ask Kevin:**
+
+- the paid go itself
+- the cap being reached
+- stockouts exhausting the replacements before a measurement, or all three ADs out
+- a 4th replacement
+- two consecutive identical deterministic errors
+- version drift beyond the major/minor pins
+- any change to the topology, ladder, timing, or scoring
+- a resource that cannot be cleaned up after 24 hours
+- anything that would require deleting resources the run did not create
+
+### Decision table
+
+| Situation | Action | Ask Kevin? |
+| --- | --- | --- |
+| Paid-run approval after the prereg and harness-pin PRs merge | This is the single go. It covers r1, r2, allowed replacements, and cleanup. Do not apply before it. | **Yes — this is the go** |
+| r2 scheduling after r1 ends | Run automatically on a different America/New_York calendar day, at least 12 hours later, and on a different UTC day as required by the Ladder section. | No |
+| API throttling, 5xx, or read timeout | Retry automatically with backoff. | No |
+| Control-connection or SSH drop | Reconnect with backoff for up to about 10 minutes. Never stop k6. After reconnecting, wait for the completion marker. Record the reconnect. | No |
+| Generator VM gone, or k6 exits nonzero | Stop that attempt. Treat it as a runner fault and follow the replacement rule. | No, unless it is a 4th replacement |
+| E4 or MySQL.2 stockout | Destroy the partial stack, verify it is gone, then a fresh apply in the next AD (AD-1 → AD-2 → AD-3). Record the AD. Do not count it toward the deterministic-error guard. | No, unless stockouts alone exhaust replacements before any rung is measured, or all three ADs are out |
+| Quota or limit exceeded | Submit an OCI limit-increase request to at least 2× the plan's need. Verify live headroom before the next apply. Never delete unrelated resources. Waiting is a pause, not a failure, and not a reason to ask. | No |
+| Two consecutive identical deterministic errors (quota, API not enabled, permission, or validator) | Stop and report. Do not spend further replacements. | **Yes** |
+| Runner-side launcher/controller bug, retry, state isolation, or archive split that lives outside cwm-bench and does not change the protocol or measurements | Self-fix without asking. Record the controller hash in the evidence. | No |
+| Change to cwm-bench code | Deliver a patch for a new pin pull request. Never edit the merged prereg. | No — deliver the patch; do not edit the repo |
+| Version drift that still matches the major/minor pins (MySQL 8.x, Node 20, k6 v0.54.0 exact) | Accept it. Record the exact versions. | No |
+| Version drift beyond those pins | Stop and report. | **Yes** |
+| Pre-rung or runner-side fault | Destroy the stack and replace the whole apply, up to 3 per rep. | No for the 1st–3rd; **Yes** for a 4th |
+| Workload errors, saturation, or a slow rung | Record as results. Never retry a rung because of its results. | No |
+| $25 soft cap reached | Pause. Do not auto-stop or destroy mid-rung. Budget alerts are informational only. | **Yes** |
+| Cleanup after each campaign | Destroy, sweep, sweep again 24 hours later, and check backups. Retry destroy-only cleanup every 2 hours until clean. Delete CWM simulations the runner created. | No, unless a resource still cannot be deleted after 24 hours (**Yes**) |
+| Evidence and patches | Archives split into parts under 25 MB, each with sha256. Code changes as patch files. Redact OCIDs, the key, the fingerprint, and account IDs to the last 6 characters. Never contact GitHub. | No |
+| Situation not covered here | Follow this preregistration first, then the gcp-holdout-v2 precedent. Record the deviation and the reasoning, and continue. | No, unless it is one of the stop-and-ask items |
+| Change to the topology, ladder, timing, or scoring | Do not make the change. | **Yes** |
+| Deleting resources the run did not create | Do not delete them. | **Yes** |
