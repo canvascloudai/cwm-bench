@@ -44,6 +44,10 @@ run "frozen_topology" {
     condition     = oci_budget_alert_rule.actual["15"].threshold == 15 && oci_budget_alert_rule.actual["25"].threshold == 25 && oci_budget_alert_rule.actual["25"].type == "ACTUAL" && oci_budget_alert_rule.actual["25"].threshold_type == "ABSOLUTE"
     error_message = "Budget rules must be alert-only actual USD thresholds."
   }
+  assert {
+    condition     = random_password.db.length == 32 && random_password.db.special == true && random_password.db.min_special == 1 && random_password.db.min_upper == 1 && random_password.db.min_lower == 1 && random_password.db.min_numeric == 1 && random_password.db.override_special == "!#%*()-_=+[]{}:?"
+    error_message = "OCI MySQL admin password must meet HeatWave 8-32 / complexity rules with a shell-safe override_special."
+  }
 }
 run "wrong_compartment" {
   command = plan

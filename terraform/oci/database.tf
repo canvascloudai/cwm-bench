@@ -1,6 +1,16 @@
 resource "random_password" "db" {
-  length  = 32
-  special = false
+  # OCI MySQL HeatWave requires 8–32 characters with at least one uppercase,
+  # lowercase, number, and special character. The override set is OCI-accepted
+  # and omits quotes, dollar, backtick, backslash, and similar characters that
+  # would break shell quoting, systemd EnvironmentFile, or the Node mysql
+  # password field. The app passes the password as a field, not a URI.
+  length           = 32
+  special          = true
+  min_special      = 1
+  min_upper        = 1
+  min_lower        = 1
+  min_numeric      = 1
+  override_special = "!#%*()-_=+[]{}:?"
 }
 resource "oci_mysql_mysql_configuration" "main" {
   compartment_id = var.compartment_id
