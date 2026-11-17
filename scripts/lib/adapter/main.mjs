@@ -9,6 +9,7 @@ import { runScenario, teardownScenario } from './run.mjs';
 import { collectScenario } from './collect.mjs';
 import { createDefaultDeps } from './exec.mjs';
 import { defaultStatePath } from './state.mjs';
+import { ociOutputs, waitReadyOci, teardownOciScenario } from './oci.mjs';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
@@ -26,6 +27,7 @@ function failPayload(err, extras = {}) {
   if (err && err.faultClass) error.faultClass = String(err.faultClass);
   if (err && err.preRung != null) error.preRung = Boolean(err.preRung);
   if (err && err.backendHealth) error.backendHealth = err.backendHealth;
+  if (err && err.ociEvidence) error.evidence = JSON.parse(redact(JSON.stringify(err.ociEvidence)));
   return {
     ok: false,
     adapterVersion: ADAPTER_VERSION,
@@ -61,10 +63,12 @@ export async function dispatch(parsed, ctx) {
   }
 
   if (parsed.command === 'wait-ready') {
+    if (ctx.env.CWM_CLOUD === 'oci') return waitReadyOci(ctx, await ociOutputs(ctx));
     return waitReady(ctx);
   }
 
   if (parsed.command === 'teardown') {
+    if (ctx.env.CWM_CLOUD === 'oci') return teardownOciScenario(ctx);
     return teardownScenario(ctx);
   }
 

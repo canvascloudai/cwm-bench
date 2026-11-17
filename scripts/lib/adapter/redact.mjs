@@ -5,6 +5,9 @@
  */
 
 const PATTERNS = [
+  [/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----[\s\S]*?-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/g, '[REDACTED_PRIVATE_KEY]'],
+  [/\bocid1\.[A-Za-z0-9._:-]+/g, '[REDACTED_OCI_ID]'],
+  [/\b(?:[a-fA-F0-9]{2}:){15}[a-fA-F0-9]{2}\b/g, '[REDACTED_OCI_FINGERPRINT]'],
   [/projects\/[0-9]{6,20}\b/g, 'projects/[REDACTED_GCP_PROJECT_NUMBER]'],
   [/projects\/[a-z][a-z0-9-]{4,28}[a-z0-9]/g, 'projects/[REDACTED_GCP_PROJECT_ID]'],
   [/--project(?:=|\s+)[0-9]{6,20}\b/g, '--project=[REDACTED_GCP_PROJECT_NUMBER]'],
