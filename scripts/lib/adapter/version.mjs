@@ -1,5 +1,13 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.9.2 requires terraform/oci mysql_version (8.x, no default) and resolves it
+ * before apply from a read-only `oci mysql version list`: newest 8.4.x, else
+ * newest 8.x, else refuse. The chosen exact version is recorded in evidence.
+ * The measurement pin is this pull request's merge commit, superseding
+ * 72ede655 after a pre-rung MySQL 8.x postcondition fault with no
+ * measurements. Kevin's approval to pin without editing the frozen
+ * preregistration still applies. AWS and GCP keys, request mixes, timings,
+ * scoring, and the 1.9.1 password rules are otherwise unchanged.
  * 1.9.1 meets OCI MySQL HeatWave admin-password rules in terraform/oci:
  * 8–32 characters with at least one uppercase, lowercase, numeric, and
  * special character (`special = true`, min_*, and an OCI-accepted
@@ -68,7 +76,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.9.1';
+export const ADAPTER_VERSION = '1.9.2';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';

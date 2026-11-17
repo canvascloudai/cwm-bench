@@ -27,6 +27,7 @@ resource "oci_mysql_mysql_db_system" "main" {
   subnet_id               = oci_core_subnet.db.id
   shape_name              = "MySQL.2"
   configuration_id        = oci_mysql_mysql_configuration.main.id
+  mysql_version           = var.mysql_version
   admin_username          = "cwmbench"
   admin_password          = random_password.db.result
   data_storage_size_in_gb = 100

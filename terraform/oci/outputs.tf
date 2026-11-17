@@ -8,6 +8,7 @@ output "oci" {
     availability_domain    = var.availability_domain
     test_id                = var.test_id
     measurement_sha        = var.measurement_sha
+    mysql_version          = var.mysql_version
     generator_id           = oci_core_instance.generator.id
     generator_ip           = oci_core_instance.generator.public_ip
     app_ids                = oci_core_instance.app[*].id

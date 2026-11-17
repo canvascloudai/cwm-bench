@@ -531,7 +531,7 @@ export CWM_RUN_ID=gcp-fit-200-r1
 node scripts/worker-adapter.mjs wait-ready --json > /tmp/gcp-fit-v1-capability.json
 ```
 
-Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is `1.9.1` (1.9.1 meets OCI MySQL HeatWave admin-password rules; 1.9.0 pins the oci-holdout-v1 harness and supports run/collect, and changes no GCP or AWS behavior; 1.8.0 registered the catalog-only oci-holdout-v1 keys; 1.7.5 accepts gcp-holdout-v2 campaign IDs on the existing gcp-holdout-300/400/500 keys; 1.7.4 added the pre-load GCP backend-health gate; existing gcp-fit-v1 keys, gcp-holdout-v1 IDs, and AWS behavior stay accepted). Also confirm `gcp-holdout-300`, `gcp-holdout-400`, and `gcp-holdout-500` are present.
+Confirm `supportedScenarios` contains `gcp-fit-200`, `gcp-fit-400`, and `gcp-fit-600`, and that `adapterVersion` is `1.9.2` (1.9.2 requires and resolves an OCI MySQL 8.x `mysql_version` before apply; 1.9.1 meets OCI MySQL HeatWave admin-password rules; 1.9.0 pins the oci-holdout-v1 harness and supports run/collect, and changes no GCP or AWS behavior; 1.8.0 registered the catalog-only oci-holdout-v1 keys; 1.7.5 accepts gcp-holdout-v2 campaign IDs on the existing gcp-holdout-300/400/500 keys; 1.7.4 added the pre-load GCP backend-health gate; existing gcp-fit-v1 keys, gcp-holdout-v1 IDs, and AWS behavior stay accepted). Also confirm `gcp-holdout-300`, `gcp-holdout-400`, and `gcp-holdout-500` are present.
 
 Check the installed tools and live API availability with the same authorized
 GCP credentials before any paid apply:
@@ -636,6 +636,15 @@ The sweep is cleanup only. It is not a campaign result. Do not delete leftovers 
 ## 17. OCI measured holdout (oci-holdout-v1)
 
 Authority for this campaign is `typical/oci-holdout-v1/PREREGISTRATION.md`, run from the pinned merged commit recorded in `typical/oci-holdout-v1/PIN.md`. A branch name is not a pin. Kevin explicitly approved using that pin without editing the frozen preregistration. Paid apply still needs Kevin's campaign go.
+
+Before any plan or apply, resolve `mysql_version` with a read-only list. From the pinned checkout, with `CWM_OCI_COMPARTMENT_ID` set to the runtime compartment (do not write that id into the repo or the evidence):
+
+```bash
+node scripts/oci-select-mysql-version.mjs > out/oci-mysql-version.json
+```
+
+The helper calls `oci mysql version list` only. It selects the newest listed **8.4.x** version; if none exists, the newest listed **8.x**; if no 8.x exists, it exits nonzero and you must not apply. Put the exact `mysqlVersion` from that JSON into the private `runtime.tfvars.json` as `mysql_version`. Terraform has no default. Keep the JSON in the campaign evidence. Never hard-code a version in the module.
+
 
 The rest of this section mirrors the preregistration's **Runner standing approvals and decision table**. If the two ever differ, the preregistration wins. Ask Kevin only for the items listed there.
 

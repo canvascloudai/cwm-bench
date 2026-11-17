@@ -13,6 +13,7 @@ import { assertConfiguration, noLoadAcceptance } from '../../scripts/lib/adapter
 import { launchCommand, ssh, ociJson, safeOci } from '../../scripts/lib/adapter/oci-commands.mjs';
 import { billedCost, csv, summarizeMetric } from '../../scripts/lib/adapter/oci-evidence.mjs';
 import { cleanup, makeManifest, ownedState } from '../../scripts/lib/adapter/oci-cleanup.mjs';
+import { selectMysqlVersion, resolveMysqlVersion } from '../../scripts/lib/adapter/oci-mysql-version.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const campaignId = 'oci-holdout-v1-r1-ad1-20261120';
@@ -20,7 +21,7 @@ const pin = '1'.repeat(40);
 const fields = () => ({
   cloud: 'oci', region: 'us-ashburn-1', compartment_id: 'private-compartment',
   compartment_name: 'cwm-bench-oci', availability_domain: 'runtime:US-ASHBURN-AD-1',
-  test_id: campaignId, measurement_sha: pin, generator_id: 'gen',
+  test_id: campaignId, measurement_sha: pin, mysql_version: '8.4.7', generator_id: 'gen',
   generator_ip: '192.0.2.3', app_ids: ['app0', 'app1'],
   app_ips: ['192.0.2.1', '192.0.2.2'], db_id: 'db', db_configuration_id: 'config', lb_id: 'lb',
   target: 'http://192.0.2.4', scored_resource_ids: ['app0', 'app1', 'db', 'lb'],
@@ -316,6 +317,7 @@ test('cleanup accepts only owned untaggable children and supports partial-apply 
       availability_domain: 'runtime:US-ASHBURN-AD-1', image_id: 'private-image',
       ssh_public_key: 'temporary-public-key', controller_cidr: '192.0.2.1/32',
       budget_recipients: 'test@example.invalid', test_id: campaignId, measurement_sha: pin,
+      mysql_version: '8.4.7',
     }));
     const h = harness();
     h.ctx.deps.runOciTerraform = async () => ({ code: 0, stdout: JSON.stringify({
@@ -445,4 +447,62 @@ test('OCI MySQL admin password meets HeatWave rules and is passed safely, not vi
   const adapter = readFileSync(path.join(ROOT, 'scripts/lib/adapter/oci.mjs'), 'utf8');
   assert.match(adapter, /MYSQL_PWD="\$MYSQL_PASSWORD"/);
   assert.doesNotMatch(adapter, /mysql:\/\//);
+});
+
+function mysqlListing(families) {
+  return families.map(([family, versions]) => ({
+    'version-family': family,
+    versions: versions.map((version) => ({ version, description: version })),
+  }));
+}
+
+test('MySQL version selection prefers newest 8.4.x, then newest 8.x, and refuses otherwise', () => {
+  const mixed = selectMysqlVersion(mysqlListing([
+    ['9.5', ['9.5.0']],
+    ['8.0', ['8.0.43', '8.0.40']],
+    ['8.4', ['8.4.6', '8.4.9', '8.4.10']],
+    ['8.5', ['8.5.0']],
+  ]));
+  assert.deepEqual(mixed, {
+    mysqlVersion: '8.4.10',
+    rule: 'newest_8_4',
+    considered: ['8.0.40', '8.0.43', '8.4.6', '8.4.9', '8.4.10', '8.5.0'],
+    source: 'oci mysql version list',
+    readOnly: true,
+  });
+  const only80 = selectMysqlVersion(mysqlListing([['9.0', ['9.0.1']], ['8.0', ['8.0.41', '8.0.43']]]));
+  assert.equal(only80.mysqlVersion, '8.0.43');
+  assert.equal(only80.rule, 'newest_8_x');
+  assert.throws(() => selectMysqlVersion(mysqlListing([['9.4', ['9.4.0']], ['9.5', ['9.5.1']]])), {
+    code: 'OCI_MYSQL_VERSION_UNAVAILABLE',
+  });
+  assert.throws(() => selectMysqlVersion([]), { code: 'OCI_MYSQL_VERSION_UNAVAILABLE' });
+});
+
+test('MySQL version resolve is a mocked read-only list and records the exact version', async () => {
+  const calls = [];
+  const ctx = {
+    env: { CWM_OCI_COMPARTMENT_ID: 'private-compartment' },
+    deps: {
+      runOci: async (args) => {
+        calls.push(args);
+        return {
+          code: 0,
+          stdout: JSON.stringify({ data: mysqlListing([['8.4', ['8.4.6', '8.4.7']], ['8.0', ['8.0.43']]]) }),
+        };
+      },
+    },
+  };
+  const selection = await resolveMysqlVersion(ctx, ctx.env.CWM_OCI_COMPARTMENT_ID);
+  assert.equal(selection.mysqlVersion, '8.4.7');
+  assert.equal(selection.rule, 'newest_8_4');
+  assert.equal(calls.length, 1);
+  assert.deepEqual(calls[0].slice(0, 4), ['mysql', 'version', 'list', '--compartment-id']);
+  assert.ok(calls[0].includes('--all'));
+  assert.ok(calls[0].includes('us-ashburn-1'));
+  const evidence = JSON.stringify(selection);
+  assert.ok(evidence.includes('8.4.7'));
+  assert.ok(!evidence.includes('private-compartment'));
+  assert.doesNotMatch(evidence, /ocid1\./i);
+  assert.ok(!calls.some((args) => args.includes('apply') || args.includes('db-system')));
 });
