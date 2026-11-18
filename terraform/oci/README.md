@@ -79,6 +79,63 @@ applied postcondition that `self.mysql_version` starts with `8.` remains.
 
 ## Adapter
 
+### SSH identity (adapter 1.9.3 candidate; no execution authority)
+
+Terraform generates three distinct Ed25519 host keys with `hashicorp/tls`.
+Cloud-init's SSH module deletes image keys and installs the matching key pair
+before the existing app/generator bootstrap runs through `runcmd`. Automatic
+host-key generation and console/key-server publication are disabled. The
+existing bootstrap scripts, workload and topology are unchanged.
+
+**Private keys now live in Terraform state and instance metadata/user_data.**
+Use private state/plan/output storage, restrict OCI metadata access and destroy
+the per-apply working directory according to evidence-retention policy. Do not
+archive plan/state, user_data, provider diagnostics or private keys. Terraform's
+`sensitive` flag suppresses display; it is not encryption. Only public keys are
+added to the existing sensitive `oci` output. Redact those public identities
+and addresses from delivered evidence as well.
+
+After `terraform output -json` has been captured privately from the exact
+successful apply, and **before any SSH, readiness or transfer**, invoke:
+
+```text
+node scripts/oci-pin-ssh-hosts.mjs \
+  --terraform-output-file PRIVATE_OUTPUT_JSON \
+  --test-id APPLY_ID \
+  --known-hosts PRIVATE_KNOWN_HOSTS
+```
+
+Replace the external controller's entire serial-console/keyscan trust step
+with this invocation. Check its exit status; failure is a pre-rung runner fault.
+Keep passing that exact private file through `CWM_OCI_KNOWN_HOSTS` and to the
+raw-transfer launcher. Do not fall back to console, keyscan, TOFU, `accept-new`
+or disabled host checking. The unchanged SSH adapter and transfer launcher
+must retain `StrictHostKeyChecking=yes`. A server offering any other key fails
+closed even when bootstrap is delayed. Retry readiness under existing bounded
+SSH rules, never trust a replacement network key.
+
+The launcher verifies the apply ID, region, compartment name, all three roles,
+each actual output IP and each Ed25519 wire-format key; duplicates and partial
+sets are refused. It atomically writes a fresh mode-0600 file, never appending
+stale identities. It makes no cloud, serial-console or SSH calls and emits
+only a safe result and its reproducible controller hash:
+
+```text
+node scripts/oci-pin-ssh-hosts.mjs --controller-hash
+```
+
+That hash binds the launcher, identity validator and apply-ID catalog. Record
+the external orchestrator's full updated hash separately; this component hash
+does not pretend to cover unrelated controller files or a future merge SHA.
+Plan inventory gains only three local `tls_private_key` resources (26 total,
+still 23 OCI/random resources); the launcher plan guard must validate their
+addresses and algorithms, not merely relax its original count of 23.
+
+This is an unmerged harness/launcher fix, not an engine change or permission to
+resume measurement. **No apply until the PR is merged, a genuine measurement
+pin is supplied, and Kevin gives a new paid go.** Do not modify the frozen
+preregistration or insert an invented pin.
+
 Install OCI CLI, OpenSSH, Node 20+ and Terraform on the trusted controller.
 Set `CWM_CLOUD=oci`, `CWM_TERRAFORM_DIR` to this apply's module working directory,
 and `CWM_ADAPTER_STATE` to its private state file. Provide

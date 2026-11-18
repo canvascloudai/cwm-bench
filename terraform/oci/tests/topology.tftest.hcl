@@ -1,4 +1,9 @@
 mock_provider "oci" {
+  mock_resource "oci_load_balancer_load_balancer" {
+    defaults = {
+      ip_address_details = [{ ip_address = "192.0.2.10", is_public = true }]
+    }
+  }
   mock_data "oci_identity_compartment" {
     defaults = {
       name = "cwm-bench-oci"
@@ -6,6 +11,7 @@ mock_provider "oci" {
   }
 }
 mock_provider "random" {}
+mock_provider "tls" {}
 
 variables {
   compartment_id      = "runtime-compartment"
@@ -75,4 +81,28 @@ run "rejects_mysql_9" {
     mysql_version = "9.0.0"
   }
   expect_failures = [var.mysql_version]
+}
+run "host_identity_bootstrap" {
+  # All providers are mocked: no OCI calls, key generation or paid resources.
+  command = apply
+  assert {
+    condition     = length(tls_private_key.app_host) == 2 && tls_private_key.app_host[0].algorithm == "ED25519" && tls_private_key.generator_host.algorithm == "ED25519"
+    error_message = "Every instance must have its own Terraform-generated Ed25519 identity."
+  }
+  assert {
+    condition     = alltrue([for i in range(2) : yamldecode(base64decode(oci_core_instance.app[i].metadata.user_data)).ssh_keys.ed25519_private == tls_private_key.app_host[i].private_key_openssh && yamldecode(base64decode(oci_core_instance.app[i].metadata.user_data)).ssh_keys.ed25519_public == trimspace(tls_private_key.app_host[i].public_key_openssh)])
+    error_message = "Cloud-init must install exactly the app's Terraform identity."
+  }
+  assert {
+    condition     = yamldecode(base64decode(oci_core_instance.generator.metadata.user_data)).ssh_keys.ed25519_private == tls_private_key.generator_host.private_key_openssh && yamldecode(base64decode(oci_core_instance.generator.metadata.user_data)).ssh_keys.ed25519_public == trimspace(tls_private_key.generator_host.public_key_openssh)
+    error_message = "Cloud-init must install exactly the generator's Terraform identity."
+  }
+  assert {
+    condition     = alltrue([for vm in concat(oci_core_instance.app, [oci_core_instance.generator]) : yamldecode(base64decode(vm.metadata.user_data)).ssh_deletekeys && length(yamldecode(base64decode(vm.metadata.user_data)).ssh_genkeytypes) == 0 && !yamldecode(base64decode(vm.metadata.user_data)).ssh_publish_hostkeys.enabled && !yamldecode(base64decode(vm.metadata.user_data)).ssh.emit_keys_to_console && yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][0] == "bash"])
+    error_message = "Remove image keys, generate no replacements, suppress publication and preserve bootstrap."
+  }
+  assert {
+    condition     = output.oci.ssh_host_identities[0].host == oci_core_instance.app[0].public_ip && output.oci.ssh_host_identities[0].public_key == trimspace(tls_private_key.app_host[0].public_key_openssh) && output.oci.ssh_host_identities[1].public_key == trimspace(tls_private_key.app_host[1].public_key_openssh) && output.oci.ssh_host_identities[2].host == oci_core_instance.generator.public_ip && output.oci.ssh_host_identities[2].public_key == trimspace(tls_private_key.generator_host.public_key_openssh)
+    error_message = "Private output must pair the public identity with the actual instance."
+  }
 }

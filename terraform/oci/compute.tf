@@ -27,12 +27,22 @@ resource "oci_core_instance" "app" {
   }
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-    user_data = base64encode(templatefile("${path.module}/userdata/app.sh.tftpl", {
-      measurement_sha = var.measurement_sha
-      mysql_host      = oci_mysql_mysql_db_system.main.ip_address
-      db_password     = random_password.db.result
-      seed            = count.index == 0
-    }))
+    user_data = base64encode("#cloud-config\n${yamlencode({
+      ssh_deletekeys  = true
+      ssh_genkeytypes = []
+      ssh_keys = {
+        ed25519_private = tls_private_key.app_host[count.index].private_key_openssh
+        ed25519_public  = trimspace(tls_private_key.app_host[count.index].public_key_openssh)
+      }
+      ssh                  = { emit_keys_to_console = false }
+      ssh_publish_hostkeys = { enabled = false }
+      runcmd = [["bash", "-c", templatefile("${path.module}/userdata/app.sh.tftpl", {
+        measurement_sha = var.measurement_sha
+        mysql_host      = oci_mysql_mysql_db_system.main.ip_address
+        db_password     = random_password.db.result
+        seed            = count.index == 0
+      })]]
+    })}")
   }
 }
 resource "oci_core_instance" "generator" {
@@ -56,8 +66,18 @@ resource "oci_core_instance" "generator" {
   }
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-    user_data = base64encode(templatefile("${path.module}/userdata/generator.sh.tftpl", {
-      measurement_sha = var.measurement_sha
-    }))
+    user_data = base64encode("#cloud-config\n${yamlencode({
+      ssh_deletekeys  = true
+      ssh_genkeytypes = []
+      ssh_keys = {
+        ed25519_private = tls_private_key.generator_host.private_key_openssh
+        ed25519_public  = trimspace(tls_private_key.generator_host.public_key_openssh)
+      }
+      ssh                  = { emit_keys_to_console = false }
+      ssh_publish_hostkeys = { enabled = false }
+      runcmd = [["bash", "-c", templatefile("${path.module}/userdata/generator.sh.tftpl", {
+        measurement_sha = var.measurement_sha
+      })]]
+    })}")
   }
 }
