@@ -77,7 +77,7 @@ export async function checkReady(ctx, f, reconnects = []) {
   if (Number(config.variables?.['max-connections']) !== 1000) throw fault('OCI_DB_CONNECTIONS_MISMATCH');
   const lb = await read(['lb', 'load-balancer', 'get', '--load-balancer-id', f.lb_id]);
   if (lb['lifecycle-state'] !== 'ACTIVE' || lb['compartment-id'] !== f.compartment_id ||
-      lb.shape !== 'flexible' || lb['is-private'] !== false ||
+      lb['shape-name'] !== 'flexible' || lb['is-private'] !== false ||
       lb['shape-details']?.['minimum-bandwidth-in-mbps'] !== 10 ||
       lb['shape-details']?.['maximum-bandwidth-in-mbps'] !== 100 ||
       lb.listeners?.http?.protocol !== 'HTTP' || lb.listeners?.http?.port !== 80 ||

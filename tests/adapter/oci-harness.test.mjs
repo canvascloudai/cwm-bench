@@ -70,7 +70,7 @@ function harness() {
         else if (args[0] === 'mysql') data = { variables: { 'max-connections': 1000 } };
         else if (args[0] === 'lb' && args[1] === 'load-balancer') data = {
           'lifecycle-state': 'ACTIVE', 'compartment-id': f.compartment_id,
-          shape: 'flexible', 'is-private': false,
+          'shape-name': 'flexible', 'is-private': false,
           'shape-details': { 'minimum-bandwidth-in-mbps': 10, 'maximum-bandwidth-in-mbps': 100 },
           listeners: { http: { protocol: 'HTTP', port: 80 } }, 'freeform-tags': { test_id: campaignId },
         };
@@ -107,6 +107,25 @@ function harness() {
   return { ctx, f, calls, select, state: () => JSON.parse(state), launched: () => launch,
     recovered: () => recovered, marker: () => current };
 }
+
+test('LB readiness uses the live shape-name field, not Compute shape or a fallback', async () => {
+  await checkReady(harness().ctx, fields());
+  for (const value of [undefined, null, '100Mbps', 'VM.Standard.E4.Flex']) {
+    const h = harness(), original = h.ctx.deps.runOci;
+    h.ctx.deps.runOci = async args => {
+      const response = await original(args);
+      if (args.slice(0, 3).join(' ') === 'lb load-balancer get') {
+        const parsed = JSON.parse(response.stdout);
+        parsed.data['shape-name'] = value;
+        // A Compute-style field must not hide a missing/wrong LB field.
+        parsed.data.shape = 'flexible';
+        return {...response, stdout: JSON.stringify(parsed)};
+      }
+      return response;
+    };
+    await assert.rejects(checkReady(h.ctx, h.f), {code: 'OCI_LB_MISMATCH'});
+  }
+});
 
 test('only a successful empty backup list means zero backups', async () => {
   const ctx = {deps:{runOci:async()=>({code:0,stdout:'',stderr:''})}};
