@@ -48,7 +48,8 @@
     "note": "Record the actual harness merge commit on the campaign after merge. No OCI revision is invented here. Existing AWS/GCP contracts are unchanged. Preserve these addresses for destroy.",
     "sweep": { "immediate": true, "delayedHours": 24, "destroyRetryHours": 2 },
     "resourceAddresses": [
-      "random_password.db", "oci_core_vcn.main", "oci_core_internet_gateway.main",
+      "random_password.db", "tls_private_key.app_host", "tls_private_key.generator_host",
+      "oci_core_vcn.main", "oci_core_internet_gateway.main",
       "oci_core_route_table.public", "oci_core_security_list.nodes", "oci_core_security_list.lb",
       "oci_core_security_list.db", "oci_core_subnet.lb", "oci_core_subnet.nodes",
       "oci_core_subnet.db", "oci_core_instance.app", "oci_core_instance.generator",

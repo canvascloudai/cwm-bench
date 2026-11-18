@@ -67,7 +67,7 @@ export async function checkReady(ctx, f, reconnects = []) {
   const db = await read(['mysql', 'db-system', 'get', '--db-system-id', f.db_id]);
   if (db['lifecycle-state'] !== 'ACTIVE' || db['compartment-id'] !== f.compartment_id ||
       db['availability-domain'] !== f.availability_domain || db['shape-name'] !== 'MySQL.2' ||
-      db['data-storage-size-in-gb'] !== 100 || db['is-highly-available'] !== false ||
+      db['data-storage-size-in-gbs'] !== 100 || db['is-highly-available'] !== false ||
       db['is-heat-wave-cluster-attached'] !== false || db['backup-policy']?.['is-enabled'] !== false ||
       db['deletion-policy']?.['is-delete-protected'] !== false ||
       db['deletion-policy']?.['final-backup'] !== 'SKIP_FINAL_BACKUP' ||

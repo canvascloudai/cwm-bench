@@ -11,6 +11,10 @@ export async function ociJson(ctx, args) {
   for (let n = 0; n < 4; n++) {
     const r = await ctx.deps.runOci([...args, '--region', 'us-ashburn-1', '--output', 'json']);
     if (r.code === 0) {
+      // OCI CLI emits no stdout for a successful empty backup list. This
+      // convention was independently checked against the read-only API.
+      // Scope this normalization to that list; errors never become [].
+      if (args.slice(0, 3).join(' ') === 'mysql backup list' && !r.stdout?.trim()) return [];
       try { return JSON.parse(r.stdout || '{}').data; }
       catch { throw fault('OCI_JSON_INVALID'); }
     }

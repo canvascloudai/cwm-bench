@@ -9,6 +9,7 @@ const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 export function ownedState(state, testId) {
   const ids = [];
+  const localKeyRoles = new Set();
   const parents = {};
   for (const r of state.resources || []) {
     for (const i of r.instances || []) {
@@ -29,6 +30,18 @@ export function ownedState(state, testId) {
     for (const instance of r.instances || []) {
       const a = instance.attributes || {};
       if (r.type === 'random_password') continue;
+      if (r.type === 'tls_private_key') {
+        // These are local provider state, never OCI resources or Search IDs.
+        // Only the exact three identities introduced in adapter 1.9.3 qualify.
+        const role = r.name === 'app_host' && [0, 1].includes(instance.index_key)
+          ? `app-${instance.index_key}` : r.name === 'generator_host' &&
+            instance.index_key == null ? 'generator' : null;
+        if (r.mode !== 'managed' || r.provider !== 'provider["registry.terraform.io/hashicorp/tls"]' ||
+            !role || localKeyRoles.has(role) || a.algorithm !== 'ED25519')
+          throw fault('OCI_CLEANUP_UNOWNED_STATE');
+        localKeyRoles.add(role);
+        continue;
+      }
       // No arbitrary addresses or untagged provider resources may enter destroy.
       const parent = children[r.type];
       const owned = parent ? parents[parent[0]]?.has(a[parent[1]]) : a.freeform_tags?.test_id === testId;

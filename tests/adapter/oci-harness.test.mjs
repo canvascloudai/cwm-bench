@@ -9,7 +9,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dispatch } from '../../scripts/lib/adapter/main.mjs';
 import { getScenario } from '../../scripts/lib/adapter/scenarios.mjs';
-import { assertConfiguration, noLoadAcceptance } from '../../scripts/lib/adapter/oci.mjs';
+import { assertConfiguration, noLoadAcceptance, checkReady } from '../../scripts/lib/adapter/oci.mjs';
 import { launchCommand, ssh, ociJson, safeOci } from '../../scripts/lib/adapter/oci-commands.mjs';
 import { billedCost, csv, summarizeMetric } from '../../scripts/lib/adapter/oci-evidence.mjs';
 import { cleanup, makeManifest, ownedState } from '../../scripts/lib/adapter/oci-cleanup.mjs';
@@ -62,7 +62,7 @@ function harness() {
         else if (args[0] === 'mysql' && args[1] === 'db-system') data = {
           'lifecycle-state': 'ACTIVE', 'compartment-id': f.compartment_id,
           'availability-domain': f.availability_domain, 'shape-name': 'MySQL.2',
-          'data-storage-size-in-gb': 100, 'is-highly-available': false,
+          'data-storage-size-in-gbs': 100, 'is-highly-available': false,
           'is-heat-wave-cluster-attached': false, 'backup-policy': { 'is-enabled': false },
           'deletion-policy': { 'is-delete-protected': false, 'final-backup': 'SKIP_FINAL_BACKUP' },
           'configuration-id': 'config', 'mysql-version': '8.4.7', 'freeform-tags': { test_id: campaignId },
@@ -107,6 +107,62 @@ function harness() {
   return { ctx, f, calls, select, state: () => JSON.parse(state), launched: () => launch,
     recovered: () => recovered, marker: () => current };
 }
+
+test('only a successful empty backup list means zero backups', async () => {
+  const ctx = {deps:{runOci:async()=>({code:0,stdout:'',stderr:''})}};
+  assert.deepEqual(await ociJson(ctx,['mysql','backup','list']),[]);
+  assert.equal(await ociJson(ctx,['mysql','db-system','get']),undefined);
+  ctx.deps.runOci=async()=>({code:1,stdout:'',stderr:'denied'});
+  await assert.rejects(ociJson(ctx,['mysql','backup','list']),{code:'OCI_API_FAILED'});
+  ctx.deps.runOci=async()=>({code:0,stdout:'invalid-json',stderr:''});
+  await assert.rejects(ociJson(ctx,['mysql','backup','list']),{code:'OCI_JSON_INVALID'});
+});
+
+test('readiness uses the live OCI plural storage field and still requires exactly 100 GiB', async () => {
+  await checkReady(harness().ctx, fields());
+  for (const value of [undefined, null, 99, 101, '100']) {
+    const h = harness(), original = h.ctx.deps.runOci;
+    h.ctx.deps.runOci = async args => {
+      const response = await original(args);
+      if (args.slice(0, 3).join(' ') === 'mysql db-system get') {
+        const parsed = JSON.parse(response.stdout);
+        parsed.data['data-storage-size-in-gbs'] = value;
+        // A legacy/wrong field must never mask a missing or incorrect live one.
+        parsed.data['data-storage-size-in-gb'] = 100;
+        return {...response, stdout: JSON.stringify(parsed)};
+      }
+      return response;
+    };
+    await assert.rejects(checkReady(h.ctx, h.f), {code: 'OCI_DATABASE_MISMATCH'});
+  }
+});
+
+test('cleanup admits only the three local Ed25519 keys without admitting unowned cloud state', () => {
+  const keys = [
+    {type:'tls_private_key',name:'app_host',mode:'managed',
+      provider:'provider["registry.terraform.io/hashicorp/tls"]',
+      instances:[0,1].map(index_key => ({index_key,attributes:{algorithm:'ED25519',id:'local-only'}}))},
+    {type:'tls_private_key',name:'generator_host',mode:'managed',
+      provider:'provider["registry.terraform.io/hashicorp/tls"]',
+      instances:[{attributes:{algorithm:'ED25519',id:'local-only'}}]},
+  ];
+  assert.deepEqual(ownedState({resources:keys}, campaignId), []);
+  for (const mutate of [
+    x => {x[0].name = 'unrelated';},
+    x => {x[0].provider = 'other-provider';},
+    x => {x[0].instances[0].index_key = 8;},
+    x => {x[1].instances[0].index_key = 0;},
+    x => {x[0].instances[0].attributes.algorithm = 'RSA';},
+    x => {x[0].instances.push(structuredClone(x[0].instances[0]));},
+    x => {x.push({type:'oci_core_instance',name:'app',instances:[
+      {attributes:{id:'unrelated',freeform_tags:{test_id:'another-apply'}}}]});},
+  ]) {
+    const invalid = structuredClone(keys); mutate(invalid);
+    assert.throws(() => ownedState({resources:invalid}, campaignId), {code:'OCI_CLEANUP_UNOWNED_STATE'});
+  }
+  const partial = structuredClone(keys);partial[0].instances.pop();
+  assert.deepEqual(ownedState({resources:partial},campaignId), []);
+});
 
 test('all four OCI keys execute and collect via OCI only with their own identities', async () => {
   const h = harness();

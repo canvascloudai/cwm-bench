@@ -1,5 +1,10 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.9.4 corrects OCI MySQL's live data-storage-size-in-gbs response field and
+ * admits only the three local Ed25519 host-key states to guarded cleanup.
+ * Successful empty OCI CLI backup lists are recognized explicitly; errors
+ * remain inconclusive and can never be reported as zero backups.
+ * No workload, topology, prediction, scoring or frozen-input changes.
  * 1.9.3 generates per-instance OCI SSH host identities in Terraform and supplies
  * them through cloud-init. The launcher pins known_hosts from authenticated
  * Terraform output before its first connection, without serial-console trust.
@@ -80,7 +85,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.9.3';
+export const ADAPTER_VERSION = '1.9.4';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';
