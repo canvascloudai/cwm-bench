@@ -1,5 +1,9 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.9.3 generates per-instance OCI SSH host identities in Terraform and supplies
+ * them through cloud-init. The launcher pins known_hosts from authenticated
+ * Terraform output before its first connection, without serial-console trust.
+ * No engine, workload, prediction, timing, scoring or topology change.
  * 1.9.2 requires terraform/oci mysql_version (8.x, no default) and resolves it
  * before apply from a read-only `oci mysql version list`: newest 8.4.x, else
  * newest 8.x, else refuse. The chosen exact version is recorded in evidence.
@@ -76,7 +80,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.9.2';
+export const ADAPTER_VERSION = '1.9.3';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';

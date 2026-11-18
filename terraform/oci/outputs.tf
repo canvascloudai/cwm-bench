@@ -1,18 +1,31 @@
 output "oci" {
   sensitive = true
   value = {
-    cloud                  = "oci"
-    region                 = "us-ashburn-1"
-    compartment_id         = var.compartment_id
-    compartment_name       = data.oci_identity_compartment.target.name
-    availability_domain    = var.availability_domain
-    test_id                = var.test_id
-    measurement_sha        = var.measurement_sha
-    mysql_version          = var.mysql_version
-    generator_id           = oci_core_instance.generator.id
-    generator_ip           = oci_core_instance.generator.public_ip
-    app_ids                = oci_core_instance.app[*].id
-    app_ips                = oci_core_instance.app[*].public_ip
+    cloud               = "oci"
+    region              = "us-ashburn-1"
+    compartment_id      = var.compartment_id
+    compartment_name    = data.oci_identity_compartment.target.name
+    availability_domain = var.availability_domain
+    test_id             = var.test_id
+    measurement_sha     = var.measurement_sha
+    mysql_version       = var.mysql_version
+    generator_id        = oci_core_instance.generator.id
+    generator_ip        = oci_core_instance.generator.public_ip
+    app_ids             = oci_core_instance.app[*].id
+    app_ips             = oci_core_instance.app[*].public_ip
+    # Authenticated Terraform output is the trust source, never the SSH network
+    # or serial console. Keys remain paired with each instance's current IP.
+    ssh_host_identities = concat([
+      for index, instance in oci_core_instance.app : {
+        role       = "app-${index + 1}"
+        host       = instance.public_ip
+        public_key = trimspace(tls_private_key.app_host[index].public_key_openssh)
+      }
+      ], [{
+        role       = "generator"
+        host       = oci_core_instance.generator.public_ip
+        public_key = trimspace(tls_private_key.generator_host.public_key_openssh)
+    }])
     db_id                  = oci_mysql_mysql_db_system.main.id
     db_configuration_id    = oci_mysql_mysql_configuration.main.id
     lb_id                  = oci_load_balancer_load_balancer.main.id
