@@ -37,7 +37,7 @@ variable "app_count" {
 variable "app_instance_type" {
   type        = string
   description = "App instance type. Canonical topology is m5.large."
-  default     = "m5.large"
+  default     = "m5.xlarge"
 }
 
 variable "app_root_volume_gb" {
