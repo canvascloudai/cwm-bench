@@ -209,6 +209,32 @@ test('no-load acceptance is pure and preserves ladder and script identity', () =
   assert.ok(noLoadAcceptance().every((r) => r.script === 'load/oci-holdout.js' && r.noLoad && r.cloudCalls === 0));
 });
 
+test('archive receipt precedes parser failures, and runs for nonzero exit markers', async () => {
+  const first = harness(); first.select(10);
+  const ssh = first.ctx.deps.runOciSsh;
+  let archived = false;
+  first.ctx.deps.archiveOciRung = async ({ identity, marker }) => {
+    assert.equal(identity.scenario, 'oci-holdout-10');
+    assert.equal(marker.exitCode, 0);
+    archived = true;
+  };
+  first.ctx.deps.runOciSsh = async (args, opts) => {
+    if (opts.input.includes('OCI_RAW_PY')) {
+      assert.equal(archived, true);
+      return { code: 1, stderr: 'OCI_RAW_EVIDENCE_INVALID:SUMMARY_READ' };
+    }
+    return ssh(args, opts);
+  };
+  await assert.rejects(dispatch({ command: 'run', scenario: 'oci-holdout-10' }, first.ctx), { code: 'OCI_RAW_UNRECOVERABLE' });
+  assert.equal(first.state().oci[campaignId].history.length, 0);
+  const failed = harness(); failed.select(10);
+  failed.marker().exitCode = 7;
+  let failedArchived = false;
+  failed.ctx.deps.archiveOciRung = async ({ marker }) => { failedArchived = marker.exitCode === 7; };
+  await assert.rejects(dispatch({ command: 'run', scenario: 'oci-holdout-10' }, failed.ctx), { code: 'OCI_GENERATOR_FAILED' });
+  assert.equal(failedArchived, true);
+});
+
 test('runtime topology, timing, apply identity and pin reject drift', () => {
   const h = harness(), spec = getScenario('oci-holdout-10');
   assertConfiguration(h.f, spec, h.ctx.env);

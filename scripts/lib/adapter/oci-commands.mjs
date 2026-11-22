@@ -69,7 +69,8 @@ export function launchCommand(fields, identity) {
     // written only after compression. A controller disconnect cannot kill it.
     `python3 - <<'PY'\nimport json, datetime\nx=${JSON.stringify(marker)}\nx["startedAt"]=datetime.datetime.now(datetime.timezone.utc).isoformat()\nopen("identity.json","w").write(json.dumps(x))\nPY`,
     'set +e',
-    '/usr/local/bin/k6 run --out json=k6.json --summary-export=summary.json /opt/cwm-source/load/oci-holdout.js >k6.log 2>&1',
+    // The frozen load script's handleSummary already writes summary.json.
+    '/usr/local/bin/k6 run --out json=k6.json /opt/cwm-source/load/oci-holdout.js >k6.log 2>&1',
     'code=$?', 'set -e', 'gzip -f k6.json',
     `python3 - "$code" <<'PY'\nimport json, datetime, sys, os\nx=json.load(open("identity.json"))\nx.update(exitCode=int(sys.argv[1]), endedAt=datetime.datetime.now(datetime.timezone.utc).isoformat())\nopen("complete.tmp","w").write(json.dumps(x))\nos.rename("complete.tmp","complete.json")\nPY`,
   ].join('\n');
