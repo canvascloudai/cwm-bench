@@ -11,6 +11,8 @@ import { decodeTerraformOutput } from './terraform.mjs';
 import { collectCommand, fault, launchCommand, ociJson, quote, runDirectory, safeOci, ssh } from './oci-commands.mjs';
 import { monitoring, costReports } from './oci-evidence.mjs';
 
+export const OCI_ARCHIVE_BEFORE_PARSE = true;
+
 export async function ociOutputs(ctx) {
   if (typeof ctx.deps.runOciTerraform !== 'function') throw fault('OCI_TERRAFORM_UNAVAILABLE');
   const r = await ctx.deps.runOciTerraform(['output', '-json', 'oci']);
@@ -160,6 +162,11 @@ export async function runOciScenario(ctx, spec) {
           break;
         }
         await (ctx.deps.wait || ((ms) => new Promise((r) => setTimeout(r, ms))))(15_000);
+      }
+      // A campaign controller may retain the immutable artifacts before the
+      // parser is allowed to reject them. Also retain a failed k6 exit.
+      if (marker && ctx.deps.archiveOciRung) {
+        await ctx.deps.archiveOciRung({ identity, fields: f, marker });
       }
       if (!marker || marker.exitCode !== 0) throw fault('OCI_GENERATOR_FAILED');
       assertEvidenceIdentity(marker, identity, f);

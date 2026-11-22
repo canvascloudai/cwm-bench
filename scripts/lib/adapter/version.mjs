@@ -1,5 +1,11 @@
 /**
  * Worker adapter contract version. Capability-checked by the Admin Benchmarks worker.
+ * 1.9.6 parses OCI raw evidence on Python 3.6 (no fromisoformat), compares
+ * measurement windows in integer nanoseconds, and emits a specific reason
+ * after OCI_RAW_EVIDENCE_INVALID. Both k6 summary shapes are accepted; the
+ * launch command uses the frozen handleSummary only. A controller may
+ * archive raw artifacts before the parser runs. Load scripts, preregistration,
+ * Terraform, predictions, and scoring formulas are unchanged.
  * 1.9.5 checks OCI Load Balancer's live shape-name response field. Compute
  * shape checks, topology, workload, timing, predictions and scoring are unchanged.
  * 1.9.4 corrects OCI MySQL's live data-storage-size-in-gbs response field and
@@ -87,7 +93,7 @@
  * 1.5.0. 1.4.0 added the typical stability holdouts; those artifacts stay
  * at 1.4.0. Campaign typical-v1-20260927c was collected on 1.3.0.
  */
-export const ADAPTER_VERSION = '1.9.5';
+export const ADAPTER_VERSION = '1.9.6';
 
 /** Cleanup revision the application worker uses to destroy already-provisioned campaigns. */
 export const PINNED_CLEANUP_REVISION = 'e95c5319b5c7b9cbd934735241b355df4144cab0';
