@@ -1,10 +1,10 @@
 # oci-holdout-v2
 
-This directory is the second **measured** OCI check and the first test of an OCI **calibration**. It reruns the oci-holdout-v1 harness, topology and ladder unchanged on **new days** and scores it against predictions frozen **before any apply** from the engine's `oci-fit-v1` calibration.
+This directory is the second **measured** OCI check and the first test of an OCI **calibration**. It reruns the oci-holdout-v1 harness, topology and ladder unchanged on **a later day than oci-holdout-v1** and scores it against predictions frozen **before any apply** from the engine's `oci-fit-v1` calibration.
 
 **r1 and r2 of oci-holdout-v1 are fit data.** `oci-fit-v1` was fit to them: the per-rung mean of the two reps, piecewise-linear in log10(RPS) between rungs. They are used here only as in-sample evidence (`freeze/insample_check.py`), never as holdout results. This campaign does no fitting. Do not pool it with oci-holdout-v1 or with any AWS or GCP fit or holdout.
 
-The **one factor that changes from oci-holdout-v1** is fresh applies on new calendar days. The topology, ladder, timings, load script, parser, collect, cleanup, scoring weights and 95 floor are unchanged. Five **absolute tolerances** are declared below, **before any v2 data exists**: latency, app CPU, loss, throughput, and report-only DB extras. Composites under the unchanged v1 rule are reported alongside every v2 score. The runner soft cap is raised to $100, pause-to-ask.
+The **one factor that changes from oci-holdout-v1** is fresh applies on a later day than oci-holdout-v1 (both v2 reps may run the same day, back to back). The topology, ladder, timings, load script, parser, collect, cleanup, scoring weights and 95 floor are unchanged. Five **absolute tolerances** are declared below, **before any v2 data exists**: latency, app CPU, loss, throughput, and report-only DB extras. Composites under the unchanged v1 rule are reported alongside every v2 score. The runner soft cap is raised to $100, pause-to-ask.
 
 Authority for the runner is this file, run from the pinned merged commit given in **Measurement pin**. A branch name is not a pin. When to act and when to ask is the **Runner standing approvals and decision table**; ask Kevin only for the items listed there.
 
@@ -28,11 +28,20 @@ Tenancy, user, and compartment OCIDs, the API key, its fingerprint, and any othe
 
 ## Ladder
 
-One fresh apply per repetition. Two reps (`r1`, `r2`) on **different UTC days** and **different America/New_York days**, r2 at least 12 hours after r1 ends. Both reps run after this prereg's PIN.md follow-up merges, so neither falls on 2026-11-22 or 2026-11-23 ET (the fit days). On each apply the ladder is **10, then 100, then 500, then 1000** RPS (total, through the LB). Each rung is **300 s ramp/warmup + 900 s steady**. Do not change the order, the rates, or the durations. Each campaign (apply → destroy) is at most **3 hours**, and both campaigns together at most **6 resource-hours** of the scored stack plus generator.
+One fresh apply per repetition. Kevin approved this spacing:
+
+- **Same day, back to back.** The two reps (`r1`, `r2`) may run on the same day, one after the other. There is no 12-hour gap and no different-calendar-day requirement; those v1 rules do not apply to v2.
+- **Between the reps:** r1's stack must be fully destroyed and cleanup verified before r2's fresh apply starts. Verified means `terraform destroy` succeeded with empty state, and the immediate compartment sweep shows no billable resource from r1 (Cleanup steps 1–2).
+- **Fresh stack for r2:** r2 shares no resource, VM, LB or DB with r1.
+- **24-hour checks:** each apply still gets its own 24-hour sweep, backup check and cost check (Cleanup step 3). They do not delay r2.
+- **Later day than v1:** both reps run on a later day than oci-holdout-v1 (whose last steady window ended 2026-11-24T01:55Z = 2026-11-23 ET). Every v2 apply starts **at or after 2026-11-24T05:00:00Z (2026-11-24 00:00 ET)**, so it falls after 2026-11-23 in both ET and UTC.
+  - Adapter 1.9.7 rejects v2 apply ids stamped before `20261124`.
+  - Scoring rejects any v2 steady window that starts before 2026-11-24T05:00:00Z.
+- **After the pin:** both reps also run after this prereg's PIN.md follow-up merges. On each apply the ladder is **10, then 100, then 500, then 1000** RPS (total, through the LB). Each rung is **300 s ramp/warmup + 900 s steady**. Do not change the order, the rates, or the durations. Each campaign (apply → destroy) is at most **3 hours**, and both campaigns together at most **6 resource-hours** of the scored stack plus generator.
 
 Scenario keys are the oci-holdout-v1 keys, unchanged: `oci-holdout-10`, `oci-holdout-100`, `oci-holdout-500`, `oci-holdout-1000`. Each runs `load/oci-holdout.js` with `SCENARIO=<its own key>` (lean request function, byte-identical to `load/scenarios.js`; only the rate table `OCI_HOLDOUT_RPS` differs). The campaign is identified by the apply id, not the key. The key description string in `scripts/lib/adapter/scenarios.mjs` still says `oci-holdout-v1`; it is a label only and is deliberately not edited, so the harness stays byte-identical outside the apply-id rule.
 
-Apply id: `oci-holdout-v2-r{1|2}-ad{1|2|3}[a|b|c]-YYYYMMDD`, where `ad{n}` is the availability domain actually used and the optional letter marks a replacement apply on the same day. Adapter 1.9.7 accepts `oci-holdout-v1-…` and `oci-holdout-v2-…` ids and rejects every other form (`TEST_ID_MISMATCH`). terraform/oci tags resources `campaign = oci-holdout-v2` for v2 ids.
+Apply id: `oci-holdout-v2-r{1|2}-ad{1|2|3}[a|b|c]-YYYYMMDD`, where `YYYYMMDD` is the UTC date of the apply (as in v1), `ad{n}` is the availability domain actually used, and the optional letter marks a replacement apply on the same day. r1 and r2 on the same day are distinguished by `r1`/`r2`. Adapter 1.9.7 accepts `oci-holdout-v1-…` and `oci-holdout-v2-…` ids and rejects every other form (`TEST_ID_MISMATCH`). terraform/oci tags resources `campaign = oci-holdout-v2` for v2 ids.
 
 | Rung | Lean rate twin | Role |
 | --- | --- | --- |
@@ -41,7 +50,7 @@ Apply id: `oci-holdout-v2-r{1|2}-ad{1|2|3}[a|b|c]-YYYYMMDD`, where `ad{n}` is th
 | 500 | peak | Moderate load; fitted rung |
 | 1000 | burst | Heavy load; fitted rung. LB bandwidth utilization is recorded |
 
-All four rungs are fitted rungs, so this is a **replication** test of the calibration at the fitted loads on new days, not an interpolation or extrapolation test.
+All four rungs are fitted rungs, so this is a **replication** test of the calibration at the fitted loads on a later day, not an interpolation or extrapolation test.
 
 ## Frozen predictions
 
@@ -116,7 +125,7 @@ Why each tolerance, from oci-holdout-v1, where two healthy applies of the identi
   - P50 and P95 are verified to ±0.5 ms. That is ±16–22% of P50 and ±8–12% of P95.
   - App CPU is verified to ±1 pp. That is ±21% or more even at 1000 RPS, so **CPU is a weak test at every rung**.
   - Loss is verified to ±0.05 pp.
-- A pass means the calibrated engine reproduces this stack within those bands on new days. It does **not** show the engine resolves latency or CPU more finely than that.
+- A pass means the calibrated engine reproduces this stack within those bands on a later day. It does **not** show the engine resolves latency or CPU more finely than that.
 
 **Floor and verdict:**
 
@@ -153,7 +162,7 @@ The only cross-rep rung below 100 is **1000 RPS**. There the reps' P95 differed 
 
 ### Expected outcome (stated before any apply)
 
-**Expected result:** all eight v2-rule rungs pass if the stack behaves on the new days as it did on 2026-11-22/23 ET. Under the v1 rule, 10 and 100 RPS are expected to fail on app-CPU noise. They are reported anyway.
+**Expected result:** all eight v2-rule rungs pass if the stack behaves on the v2 day as it did on 2026-11-22/23 ET. Under the v1 rule, 10 and 100 RPS are expected to fail on app-CPU noise. They are reported anyway.
 
 **What would still fail a rung under the v2 rule.** Each item below assumes everything else on the rung is exact:
 
@@ -216,7 +225,7 @@ oci-holdout-v1 ran on `17376407cd8107732f35ba45785a9a06e10849a3` (PR #71 merge, 
 
 This pull request's merge commit (adapter **1.9.7**) is the measurement pin. Relative to `17376407` it changes only:
 
-- `OCI_HOLDOUT_TEST_ID_RE` and its error text in `scripts/lib/adapter/oci-catalog.mjs`, which accept `v1` or `v2`;
+- `OCI_HOLDOUT_TEST_ID_RE` and its error text in `scripts/lib/adapter/oci-catalog.mjs`, which accept `v1` or `v2`, plus a check that v2 apply-id stamps are `20261124` or later (v1 ids are unaffected);
 - the `test_id` validation regex in `terraform/oci/variables.tf`, and the `campaign` tag, now derived from the apply id;
 - `ADAPTER_VERSION`, tests, and documentation.
 
@@ -237,7 +246,7 @@ This section is the complete list of when the runner acts and when it asks Kevin
 
 ### Standing rules
 
-**1. One go covers the whole campaign.** Kevin's single paid-run approval, given after this prereg and its PIN.md follow-up merge, covers r1 and r2, every allowed replacement, and all cleanup. Once that go is given, do not ask again before r2. Run r2 automatically on a different calendar day (America/New_York), at least 12 hours after r1 ends. The Ladder section still requires the two reps to fall on different UTC days; wait until both that requirement and the 12-hour / ET-day rule are satisfied.
+**1. One go covers the whole campaign.** Kevin's single paid-run approval, given after this prereg and its PIN.md follow-up merge, covers r1 and r2, every allowed replacement, and all cleanup. Once that go is given, do not ask again before r2. Run r2 automatically **right after r1**, on the same day if possible. First destroy r1 and verify the immediate cleanup sweep is clean (no billable r1 resource left), then start r2 with a fresh apply. There is no 12-hour wait and no different-day requirement. r1's 24-hour sweep runs on its own schedule and does not block r2. Every v2 apply starts at or after 2026-11-24T05:00:00Z.
 
 **2. Transient errors are retried automatically with backoff.** This covers API throttling, 5xx responses, and read timeouts. Control-connection or SSH drops reconnect with backoff for up to about 10 minutes. Never stop k6: it runs independently on the generator. After reconnecting, wait for the completion marker. Stop only if the generator VM is gone or k6 exits nonzero. Record each reconnect in the evidence.
 
@@ -293,7 +302,7 @@ This section is the complete list of when the runner acts and when it asks Kevin
 | Situation | Action | Ask Kevin? |
 | --- | --- | --- |
 | Paid-run approval after this prereg and its PIN.md follow-up merge | This is the single go. It covers r1, r2, allowed replacements, and cleanup. Do not apply before it. | **Yes — this is the go** |
-| r2 scheduling after r1 ends | Run automatically on a different America/New_York calendar day, at least 12 hours later, and on a different UTC day as required by the Ladder section. | No |
+| r2 scheduling after r1 ends | Run automatically right after r1: destroy r1, verify the immediate sweep is clean, then do a fresh apply for r2 the same day. No 12-hour gap or different-day rule. If r1's cleanup is not verified, do not start r2; retry destroy-only cleanup per the cleanup row. | No |
 | API throttling, 5xx, or read timeout | Retry automatically with backoff. | No |
 | Control-connection or SSH drop | Reconnect with backoff for up to about 10 minutes. Never stop k6. After reconnecting, wait for the completion marker. Record the reconnect. | No |
 | Generator VM gone, or k6 exits nonzero | Stop that attempt. Treat it as a runner fault and follow the replacement rule. | No, unless it is a 4th replacement |

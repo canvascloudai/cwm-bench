@@ -4,7 +4,8 @@
  * in the adapter and terraform/oci, and derives the resource `campaign` tag
  * from the apply id (v1 ids still tag oci-holdout-v1). Scenario keys, ladder,
  * timings, load scripts, topology, parser, collect, cleanup and scoring are
- * unchanged from 1.9.6 (17376407).
+ * unchanged from 1.9.6 (17376407). v2 apply-id stamps must be 20261124 or
+ * later (v2 runs on a later day than v1); v1 ids are unaffected.
  * 1.9.6 parses OCI raw evidence on Python 3.6 (no fromisoformat), compares
  * measurement windows in integer nanoseconds, and emits a specific reason
  * after OCI_RAW_EVIDENCE_INVALID. Both k6 summary shapes are accepted; the
