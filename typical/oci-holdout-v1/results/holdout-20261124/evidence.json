@@ -1,0 +1,56 @@
+{
+  "campaign": "oci-holdout-v1",
+  "measurementPin": "17376407cd8107732f35ba45785a9a06e10849a3",
+  "adapterVersion": "1.9.6",
+  "archive": {
+    "name": "oci-holdout-v1-pr71-redacted.tar.gz (16 parts, concatenated in filename order)",
+    "sha256": "9988448848533153ea41cf7a245fd8b639a4c7b60668175bf8d0371c10b29f4e",
+    "partsFile": "ARCHIVE-PARTS.sha256",
+    "entries": 107,
+    "privacyDerivatives": "DERIVATIVES.json maps 105 files to original and redacted SHA-256 (87 unchanged, 18 privacy-only derivatives incl. all 9 k6.json.gz)"
+  },
+  "rawParserSha256": "a6e0c4721821a17d22c86234dd5e5acfde3d8492b3301f51b660423ebeda5b11",
+  "controllers": [
+    {"sha256": "fea4980ec9729cdeb51191c250b4b63ff9d18571ce41fdb40aaeda05c8fe7733", "role": "r1 plan only; paused at spend cap before apply", "applied": false},
+    {"sha256": "ce9cdb80c40d68b80dd69b34fd9c2d3c4ba43687ee5f573913452b92c3309a0b", "role": "r1 attempt ad1b-20261122", "applied": true, "outcome": "runner fault RUNG_ARCHIVE_REMOTE_HASH_FAILED after rung 10; invalid, replaced"},
+    {"sha256": "349ff7d9ae592d32fd6f4e97bf3e1d68eccbf8d680b833e98d931d74f2731e4d", "role": "r1 plan only; paused at spend cap before apply", "applied": false},
+    {"sha256": "450aa3d6c4a41e3a9acdb41cc746477d120445150900019fb860d1040771ad48", "role": "r1 attempt ad1c-20261122", "applied": true, "outcome": "runner-side controller fault after rung 10; invalid, replaced; not pooled"},
+    {"sha256": "03e2657e6c8ee25ed95623406239fd4b7fbd88c4fa98cc5585514c50a0ddb415", "role": "r1 measurement controller (attempt ad1-20261123)", "applied": true, "outcome": "full ladder, scored"},
+    {"sha256": "f78e5fa5aa2dde0cfe307659ad2ec7cc577669032ba7d46cb6c715fb31ef76ab", "role": "r1 cleanup resume (launcher-only) and r2 measurement controller (attempt ad1-20261124)", "applied": true, "outcome": "full ladder, scored"},
+    {"sha256": "ab21457b199c9faad76940ca00a9a9b9b9f221dfa3c15dc9d7bd6771dcb4abe8", "role": "r2 cleanup-only resume; cannot apply or dispatch a rung", "applied": false},
+    {"sha256": "ece81a9e415f07fd60f8d0a7d48af6e47b15a02d9e37a35a36e40922ff14a5cb", "role": "approved controller baseline named in both provenance records", "applied": null}
+  ],
+  "controllerManifestDiff_f78e5fa5_vs_ab21457b": ["campaign.ts", "launch.sh", "restart-state.mjs", "restart-state.test.mjs"],
+  "pinnedSourceFilesInManifestMatchPin": ["scripts/lib/adapter/oci-raw.py", "scripts/lib/adapter/oci-catalog.mjs", "scripts/lib/adapter/oci-host-identity.mjs", "scripts/oci-pin-ssh-hosts.mjs"],
+  "reps": {
+    "r1": {
+      "attempt": "oci-holdout-v1-r1-ad1-20261123", "availabilityDomain": "AD-1",
+      "applyBeginUtc": "2026-11-23T00:07:36Z", "lastRungCompleteUtc": "2026-11-23T02:07:23Z",
+      "destroyUtc": "2026-11-23T02:07:24Z",
+      "immediateSweep": {"atUtc": "2026-11-23T02:07:24Z", "destroyOk": true, "terraformStateEmpty": true, "ownedRemaining": 9},
+      "retrySweep": {"atUtc": "2026-11-23T04:07:25Z", "ownedRemaining": 0, "ownedResidualsListed": "3 TERMINATED instances only", "inventoryClean": true},
+      "sweep24h": {"atUtc": "2026-11-24T02:07:24Z", "ownedRemaining": 0, "inventoryClean": true, "mysqlBackups": 0, "stoppedChargesVerified": false}
+    },
+    "r2": {
+      "attempt": "oci-holdout-v1-r2-ad1-20261124", "availabilityDomain": "AD-1",
+      "applyBeginUtc": "2026-11-24T00:02:00Z", "lastRungCompleteUtc": "2026-11-24T02:01:40Z",
+      "destroyUtc": "2026-11-24T02:01:42Z",
+      "immediateSweep": {"atUtc": "2026-11-24T02:01:42Z", "destroyOk": true, "terraformStateEmpty": true, "ownedRemaining": 10},
+      "retrySweep": {"atUtc": "2026-11-24T04:01:43Z", "ownedRemaining": 0, "ownedResidualsListed": "3 TERMINATED instances only", "inventoryClean": true},
+      "sweep24h": {"atUtc": "2026-11-25T02:02:08Z", "ownedRemaining": 0, "inventoryClean": true, "mysqlBackups": 0, "stoppedChargesVerified": false}
+    }
+  },
+  "replacedAttempts": {
+    "oci-holdout-v1-r1-ad1b-20261122": {"immediateCleanOnRetry": true, "sweep24hClean": true, "mysqlBackups": 0},
+    "oci-holdout-v1-r1-ad1c-20261122": {"immediateCleanOnRetry": true, "sweep24hClean": true, "mysqlBackups": 0}
+  },
+  "scheduling": {
+    "r1DestroyToR2Apply": "21h54m",
+    "r1EtDay": "2026-11-22", "r2EtDay": "2026-11-23",
+    "r1UtcDay": "2026-11-23", "r2UtcDay": "2026-11-24"
+  },
+  "versions": {"k6": "v0.54.0", "node": "v20.20.2", "mysql": "8.4.13-cloud", "maxConnectionsReadback": 1000, "backendCount": 2},
+  "spend": {"runnerReportedUsd": 3.391270133200999, "source": "runner SPEND_CHECK (reportedUsd), not a cost report covering the rung windows"},
+  "resourceHours": 5.73,
+  "replacementsUsed": 2
+}

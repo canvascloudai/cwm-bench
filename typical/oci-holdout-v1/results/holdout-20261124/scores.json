@@ -1,0 +1,660 @@
+{
+ "campaign": "oci-holdout-v1",
+ "sets": {
+  "A": {
+   "rungs": {
+    "r1-10": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 99.89000000000001,
+      "err": 9.090909090909092
+     },
+     "composite": 17.658434343434344,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 7.232180416466008,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r1-100": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 99.71126141742783,
+      "err": 3.3898305084745766
+     },
+     "composite": 16.99519140384626,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 12.85370610417036,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r1-500": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 97.38999295403676,
+      "err": 0.38008361839604715
+     },
+     "composite": 16.273897005494575,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 34.91953226560676,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r1-1000": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 88.33870148752688,
+      "err": 0.08547739123001966
+     },
+     "composite": 14.732614402502257,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 64.06071128225022,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r2-10": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 99.89000000000001,
+      "err": 9.090909090909092
+     },
+     "composite": 17.658434343434344,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 6.612527638853745,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r2-100": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 99.71126141742783,
+      "err": 3.3898305084745766
+     },
+     "composite": 16.99519140384626,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 14.419366494176888,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r2-500": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 97.39259064973517,
+      "err": 0.38008361839604715
+     },
+     "composite": 16.274329954777645,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 38.491649831928896,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "r2-1000": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 88.34115646145074,
+      "err": 0.08547739123001966
+     },
+     "composite": 14.7330235648229,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 72.39915697237622,
+     "p95Band": "fail",
+     "saturated": false
+    }
+   },
+   "crossRepMean": {
+    "10": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 99.89000000000001,
+      "err": 9.090909090909092
+     },
+     "composite": 17.658434343434344,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 6.910237377625618,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "100": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 99.71126141742783,
+      "err": 3.3898305084745766
+     },
+     "composite": 16.99519140384626,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 13.59466689088722,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "500": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 97.39129178456402,
+      "err": 0.38008361839604715
+     },
+     "composite": 16.27411347724912,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 36.620988052549556,
+     "p95Band": "fail",
+     "saturated": false
+    },
+    "1000": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "cpu": 0.0,
+      "thr": 88.33992895743282,
+      "err": 0.08547739123001966
+     },
+     "composite": 14.732818980819914,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 67.97885171114582,
+     "p95Band": "fail",
+     "saturated": false
+    }
+   },
+   "passingRungs": 0,
+   "totalRungs": 8,
+   "verified": false
+  },
+  "B": {
+   "rungs": {
+    "r1-10": {
+     "scores": {
+      "p50": 41.468131923879334,
+      "p95": 89.48022191810878,
+      "cpu": 23.245684955665553,
+      "thr": 99.99992,
+      "err": 100.0
+     },
+     "composite": 67.01422983937353,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.10519778081891223,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 140,
+       "meas": 6.704554,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 1,
+       "meas": 26.17161904761905,
+       "rel": 3.8209328898625188
+      },
+      "dbConnections": {
+       "pred": 2,
+       "measAvg": 5.0,
+       "measMax": 5,
+       "rel": 40.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r1-100": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 96.61413355096747,
+      "cpu": 90.8581621593467,
+      "thr": 99.99842656177078,
+      "err": 100.0
+     },
+     "composite": 74.80547755986314,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.033858664490325284,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 237,
+       "meas": 6.014835,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 1,
+       "meas": 28.738595238095236,
+       "rel": 3.4796411992831935
+      },
+      "dbConnections": {
+       "pred": 20,
+       "measAvg": 6.595238095238095,
+       "measMax": 7,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r1-500": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 89.13724609380628,
+      "cpu": 86.42094456558844,
+      "thr": 99.81551578895895,
+      "err": 4.8543689320388355
+     },
+     "composite": 61.14029410901887,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.10862753906193713,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 773,
+       "meas": 6.573595,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 5.4,
+       "meas": 32.70066666666666,
+       "rel": 16.51342480275632
+      },
+      "dbConnections": {
+       "pred": 100,
+       "measAvg": 14.29761904761905,
+       "measMax": 15,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r1-1000": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 90.47018302651476,
+      "cpu": 21.987729359301824,
+      "thr": 99.21855373526869,
+      "err": 1.2135922330097089
+     },
+     "composite": 46.68803768008926,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.09529816973485236,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 1686,
+       "meas": 7.940296,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 14.3,
+       "meas": 39.44645238095239,
+       "rel": 36.25167571952574
+      },
+      "dbConnections": {
+       "pred": 200,
+       "measAvg": 29.535714285714285,
+       "measMax": 33,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r2-10": {
+     "scores": {
+      "p50": 43.74609365234131,
+      "p95": 82.74486563971462,
+      "cpu": 84.3530707259439,
+      "thr": 99.99992,
+      "err": 100.0
+     },
+     "composite": 79.22893031731743,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.17255134360285382,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 140,
+       "meas": 12.058282,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 1,
+       "meas": 29.439023809523807,
+       "rel": 3.396851765432828
+      },
+      "dbConnections": {
+       "pred": 2,
+       "measAvg": 5.0,
+       "measMax": 5,
+       "rel": 40.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r2-100": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 84.93010078972472,
+      "cpu": 53.26736979491959,
+      "thr": 99.99842656177078,
+      "err": 100.0
+     },
+     "composite": 63.20640348964524,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.15069899210275287,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 237,
+       "meas": 5.535086,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 1,
+       "meas": 28.889309523809523,
+       "rel": 3.461488060750767
+      },
+      "dbConnections": {
+       "pred": 20,
+       "measAvg": 10.071428571428571,
+       "measMax": 14,
+       "rel": 1.4184397163120508
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r2-500": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 78.11219187676267,
+      "cpu": 90.5687927055676,
+      "thr": 99.81817818093717,
+      "err": 4.8543689320388355
+     },
+     "composite": 58.99996681183183,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.21887808123237343,
+     "p95Band": "marginal",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 773,
+       "meas": 6.201662,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 5.4,
+       "meas": 34.08219047619048,
+       "rel": 15.844052053439441
+      },
+      "dbConnections": {
+       "pred": 100,
+       "measAvg": 16.857142857142858,
+       "measMax": 17,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "r2-1000": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 76.43239566940031,
+      "cpu": 23.066222102252823,
+      "thr": 99.22131106538653,
+      "err": 1.2135922330097089
+     },
+     "composite": 43.028776912121764,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.23567604330599684,
+     "p95Band": "marginal",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 1686,
+       "meas": 6.945727,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 14.3,
+       "meas": 38.27354761904762,
+       "rel": 37.36261958868769
+      },
+      "dbConnections": {
+       "pred": 200,
+       "measAvg": 24.488095238095237,
+       "measMax": 27,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    }
+   },
+   "crossRepMean": {
+    "10": {
+     "scores": {
+      "p50": 42.61535507549742,
+      "p95": 85.98084106114803,
+      "cpu": 36.447352847471834,
+      "thr": 99.99992,
+      "err": 100.0
+     },
+     "composite": 69.23082205542318,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.1401915893885197,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 140,
+       "meas": 9.381418,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 1,
+       "meas": 27.80532142857143,
+       "rel": 3.5964338789209194
+      },
+      "dbConnections": {
+       "pred": 2,
+       "measAvg": 5.0,
+       "measMax": 5.0,
+       "rel": 40.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "100": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 91.08457544114015,
+      "cpu": 67.16055451111106,
+      "thr": 99.99842656177078,
+      "err": 100.0
+     },
+     "composite": 68.00335416308097,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.0891542455885986,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 237,
+       "meas": 5.7749605,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 1,
+       "meas": 28.81395238095238,
+       "rel": 3.470540892061223
+      },
+      "dbConnections": {
+       "pred": 20,
+       "measAvg": 8.333333333333332,
+       "measMax": 10.5,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "500": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 83.88583934398285,
+      "cpu": 99.2228620477053,
+      "thr": 99.8168469671947,
+      "err": 4.8543689320388355
+     },
+     "composite": 62.52666242646651,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.16114160656017143,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 773,
+       "meas": 6.3876285,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 5.4,
+       "meas": 33.39142857142858,
+       "rel": 16.171814836998365
+      },
+      "dbConnections": {
+       "pred": 100,
+       "measAvg": 15.577380952380953,
+       "measMax": 16.0,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    },
+    "1000": {
+     "scores": {
+      "p50": 0.0,
+      "p95": 83.87398701827301,
+      "cpu": 22.528614214430547,
+      "thr": 99.21993238117099,
+      "err": 1.2135922330097089
+     },
+     "composite": 44.97618741992331,
+     "compositeLabel": "without cost (cost null; weights / 0.9)",
+     "passes": false,
+     "p95RelErr": 0.16126012981726986,
+     "p95Band": "pass",
+     "saturated": false,
+     "extras": {
+      "p99": {
+       "pred": 1686,
+       "meas": 7.4430115,
+       "rel": 0.0
+      },
+      "dbCpu": {
+       "pred": 14.3,
+       "meas": 38.86,
+       "rel": 36.79876479670613
+      },
+      "dbConnections": {
+       "pred": 200,
+       "measAvg": 27.01190476190476,
+       "measMax": 30.0,
+       "rel": 0.0
+      },
+      "hardErrors": {
+       "pred": 0,
+       "meas": 0.0,
+       "rel": 100.0
+      }
+     }
+    }
+   },
+   "passingRungs": 0,
+   "totalRungs": 8,
+   "verified": false
+  }
+ },
+ "mismatchesVsRunnerSummary": []
+}
