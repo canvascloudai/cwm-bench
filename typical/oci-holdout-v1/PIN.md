@@ -1,9 +1,15 @@
 # oci-holdout-v1 measurement pin
 
-The approved measurement pin is **`783896c3b229d76bcd594aad06fd6c9f5f70de74`**,
-the PR #68 merge commit on `canvascloudai/cwm-bench` main, adapter **1.9.4**.
-It supersedes **`6577427d4ad48bd02137824282592ccf8a50611e`** (PR #67,
-adapter 1.9.3). A branch name is not a pin.
+The measurement pin that every scored oci-holdout-v1 rung ran on is
+**`17376407cd8107732f35ba45785a9a06e10849a3`**, the PR #71 merge commit on
+`canvascloudai/cwm-bench` main, adapter **1.9.6** (OCI raw-evidence parser
+fix). Kevin explicitly approved this exact pin. It supersedes
+`35c9dc0e` (PR #70, adapter 1.9.5), `783896c3b229d76bcd594aad06fd6c9f5f70de74`
+(PR #68, adapter 1.9.4) and `6577427d4ad48bd02137824282592ccf8a50611e`
+(PR #67, adapter 1.9.3). The results in `results/holdout-20261124/` record
+`measurementSha` `17376407…` on every rung. A branch name is not a pin.
+
+The history below is kept as written for the 1.9.4 pin.
 
 The superseded attempts failed before workload dispatch. No measurements
 from them are accepted or pooled. Adapter 1.9.4 corrects the OCI MySQL
