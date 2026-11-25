@@ -4,7 +4,7 @@ This directory is the second **measured** OCI check and the first test of an OCI
 
 **r1 and r2 of oci-holdout-v1 are fit data.** `oci-fit-v1` was fit to them: the per-rung mean of the two reps, piecewise-linear in log10(RPS) between rungs. They are used here only as in-sample evidence (`freeze/insample_check.py`), never as holdout results. This campaign does no fitting. Do not pool it with oci-holdout-v1 or with any AWS or GCP fit or holdout.
 
-The **one factor that changes from oci-holdout-v1** is fresh applies on new calendar days. The topology, ladder, timings, load script, parser, collect, cleanup, scoring weights and 95 floor are unchanged. One scoring addition is declared below, **before any v2 data exists**: a 1 percentage-point absolute tolerance for app CPU.
+The **one factor that changes from oci-holdout-v1** is fresh applies on new calendar days. The topology, ladder, timings, load script, parser, collect, cleanup, scoring weights and 95 floor are unchanged. Five **absolute tolerances** are declared below, **before any v2 data exists**: latency, app CPU, loss, throughput, and report-only DB extras. Composites under the unchanged v1 rule are reported alongside every v2 score. The runner soft cap is raised to $100, pause-to-ask.
 
 Authority for the runner is this file, run from the pinned merged commit given in **Measurement pin**. A branch name is not a pin. When to act and when to ask is the **Runner standing approvals and decision table**; ask Kevin only for the items listed there.
 
@@ -86,50 +86,104 @@ Each rep and rung is scored separately. **Per-rep results are primary.** A cross
 - Errors: record both **total request loss** (any request that did not complete with a 2xx, including k6 timeouts and dropped iterations; this is the scored error %) and **hard errors** (`http_req_failed`). Report per-class counts (HTTP status, timeout, connection reset/refused, dropped iteration) and a **whole-run** value that includes the ramp, alongside the steady value.
 
 
-### Composite (the existing `/accuracy` formula, plus one declared CPU tolerance)
+### Composite (the existing `/accuracy` formula, plus declared absolute tolerances)
 
-Per rung: `rel(sim, ref) = max(0, 100 − |sim − ref| / |ref| × 100)` against the measured value. Error % scores 100 if `|sim − ref| ≤ 0.01` percentage points, else `max(100 × 0.01 / |sim − ref|, rel)`. Weights: P50 0.20, P95 0.25, CPU 0.20, throughput 0.15, error 0.10, cost 0.10 (`typical/score.py`). If measured cost is `null`, the composite is reported **without cost** (the other five weights renormalized by 1/0.9), and labeled as such. A measured value of 0 follows the oci-holdout-v1 results convention (error `rel` part is 0).
+**v1 rule (reported for every rung, unchanged):** `rel(sim, ref) = max(0, 100 − |sim − ref| / |ref| × 100)` against the measured value. Error % scores 100 if `|sim − ref| ≤ 0.01` percentage points, else `max(100 × 0.01 / |sim − ref|, rel)`. Weights: P50 0.20, P95 0.25, CPU 0.20, throughput 0.15, error 0.10, cost 0.10 (`typical/score.py`). If measured cost is `null`, the composite is reported **without cost** (the other five weights renormalized by 1/0.9), and labeled as such. A measured value of 0 follows the oci-holdout-v1 results convention (error `rel` part is 0).
 
-- **App CPU tolerance (new, declared before any v2 data):** the CPU component scores **100** when `|predicted − measured| ≤ 1.0` percentage point (app CPU %, mean of the two app nodes); otherwise the existing `rel` applies unchanged. Reason: measured app CPU on this stack is 0.2–4.8%, and two healthy applies of the identical stack differed by 0.61 pp at 10 RPS (0.84% vs 0.23%), which is 72–263% in relative terms. A relative score there measures OCI Monitoring noise, not the model. The tolerance applies to app CPU only. P50, P95, throughput, error and cost are unchanged. Both the v1-rule and v2-rule composites are reported for every rung; **the verdict uses the v2 rule.**
-- What the tolerance gives away: on this stack every rung's measured app CPU is under 6%, so a ±1 pp band is ±21% or more even at 1000 RPS. **CPU is therefore a weak test in this campaign at every rung**, not only at the low rungs. That is stated here so no result is read as CPU validation.
-- **Floor:** a rung **passes** when its composite is **≥ 95%**. OCI `oci-fit-v1` is reported as verified only if **every rung of both reps passes**. A partial pass is reported per rung and is not a verification.
-- **Secondary P95 bands** on `|predicted − measured| / measured`: **pass** ≤ 20%, **marginal** > 20% and ≤ 35%, **fail** > 35%. Reported for every rung; rungs with > 1% steady loss are flagged `saturated`.
-- Extras (P99, DB CPU, DB connections, hard errors) are reported as predicted vs measured with the same `rel`; they are not in the composite.
+**v2 rule (the verdict rule):** the v1 rule, except that a component scores **100** when the prediction is inside its absolute tolerance. Outside the tolerance, the v1 formula for that component applies unchanged. There is no partial credit, no taper, and no other change.
+
+| Component | Weight | Scores 100 when | Otherwise |
+| --- | --- | --- | --- |
+| P50 ms | 0.20 | `\|pred − meas\| ≤ 0.5 ms` | `rel` |
+| P95 ms | 0.25 | `\|pred − meas\| ≤ 0.5 ms` | `rel` |
+| App CPU % (mean of the 2 app nodes) | 0.20 | `\|pred − meas\| ≤ 1.0 pp` | `rel` |
+| Throughput RPS | 0.15 | `\|pred − meas\| / meas ≤ 0.5%` | `rel` |
+| Total loss % (scored error) | 0.10 | `\|pred − meas\| ≤ 0.05 pp` | v1 error rule |
+| Cost $/hr | 0.10 | no tolerance | `rel`; `null` → composite without cost |
+
+Report-only extras use the same pattern. They are **not in the composite**: P99 within 0.5 ms, DB CPU within 2.0 pp, DB connections (average) within 5 connections, and hard errors within 0.05 pp. Each extra is reported under both rules.
+
+Why each tolerance, from oci-holdout-v1, where two healthy applies of the identical stack were measured on consecutive days:
+
+- **Latency:** P95 differed between reps by 0.41–0.52 ms per rung, and P50 by up to 0.09 ms. At a 4–6 ms scale, the v1 relative rule turns sub-millisecond k6 and network jitter into 8–12% errors. 0.5 ms is about one tenth of the measured P95.
+- **App CPU:** the reps differed by 0.61–0.96 pp at 10–500 RPS on a 0.2–4.8% signal (72–263% relative at 10 RPS). That is OCI Monitoring and host noise, not model error.
+- **Loss:** 0.05 pp is 1 failed request in 2,000. With 9,000–900,000 steady requests per rung, a handful of transient non-2xx responses would otherwise score 1–20 on error under the v1 rule.
+- **Throughput:** sustained RPS was 99.95–100% of offered on every rung. 0.5% removes the 0.04–0.05-point rounding loss and nothing else; real shedding beyond 0.5% still scores `rel`.
+
+**What these tolerances give away, stated plainly:**
+
+- On this stack, **the composite becomes a band test.**
+  - P50 and P95 are verified to ±0.5 ms. That is ±16–22% of P50 and ±8–12% of P95.
+  - App CPU is verified to ±1 pp. That is ±21% or more even at 1000 RPS, so **CPU is a weak test at every rung**.
+  - Loss is verified to ±0.05 pp.
+- A pass means the calibrated engine reproduces this stack within those bands on new days. It does **not** show the engine resolves latency or CPU more finely than that.
+
+**Floor and verdict:**
+
+- A rung **passes** when its v2 composite is **≥ 95%**.
+- `oci-fit-v1` is reported as verified only if **every rung of both reps passes**. A partial pass is reported per rung and is not a verification.
+- No rung is dropped.
+
+**Other rules:**
+
+- **Secondary P95 bands** on `|predicted − measured| / measured`: **pass** ≤ 20%, **marginal** > 20% and ≤ 35%, **fail** > 35%. Reported for every rung. Rungs with > 1% steady loss are flagged `saturated`.
 - No fitting. No coefficient, weight, tolerance, or prediction changes after the first apply.
 
-### In-sample scores (fit data, not a result)
+### In-sample and cross-rep scores (fit data, not a result)
 
-`python3 typical/oci-holdout-v2/freeze/insample_check.py` scores the frozen predictions against oci-holdout-v1 r1/r2, without cost (`freeze/insample-scores.json`):
+`python3 typical/oci-holdout-v2/freeze/insample_check.py` writes `freeze/insample-scores.json`. Scores are composites without cost.
 
-| Rep | RPS | v1 rule | v2 rule (CPU ±1 pp) | \|ΔCPU\| pp | P95 error % |
+- **In-sample:** the frozen predictions scored against oci-holdout-v1 r1 and r2, which are the data they were fit to.
+- **Cross-rep:** one v1 rep's measurements used as the prediction for the other rep. This is the best available stand-in for "the same stack on another day".
+
+| Case | Rep | 10 | 100 | 500 | 1000 |
 | --- | --- | --- | --- | --- | --- |
-| r1 | 10 | 90.65 | 98.71 | 0.306 | 4.07 |
-| r1 | 100 | 90.35 | 98.19 | 0.369 | 5.08 |
-| r1 | 500 | 95.90 | 98.73 | 0.481 | 4.52 |
-| r1 | 1000 | 98.23 | 98.29 | 0.014 | 5.68 |
-| r2 | 10 | 76.57 | 98.80 | 0.305 | 3.76 |
-| r2 | 100 | 93.43 | 98.03 | 0.369 | 5.65 |
-| r2 | 500 | 96.36 | 98.61 | 0.482 | 4.97 |
-| r2 | 1000 | 98.03 | 98.10 | 0.015 | 6.40 |
+| In-sample, v1 rule | r1 | 90.65 | 90.35 | 95.90 | 98.23 |
+| In-sample, v1 rule | r2 | 76.57 | 93.43 | 96.36 | 98.03 |
+| In-sample, v2 rule | r1 | 100.00 | 100.00 | 100.00 | 100.00 |
+| In-sample, v2 rule | r2 | 100.00 | 100.00 | 100.00 | 100.00 |
+| Cross-rep, v1 rule (r2 predicts r1) | r1 | 81.32 | 80.71 | 91.82 | 96.47 |
+| Cross-rep, v1 rule (r1 predicts r2) | r2 | 75.37 | 86.85 | 92.71 | 96.07 |
+| Cross-rep, v2 rule (r2 predicts r1) | r1 | 100.00 | 100.00 | 100.00 | 96.84 |
+| Cross-rep, v2 rule (r1 predicts r2) | r2 | 100.00 | 100.00 | 100.00 | 96.44 |
 
-Leave-one-out on the same data (one rep's values used to predict the other) scores 75.4–96.5 under the v1 rule and **96.1–97.6** under the v2 rule.
+The in-sample v2 scores are 100 by construction: the frozen predictions are the two-rep means, so they sit inside every band.
+
+The only cross-rep rung below 100 is **1000 RPS**. There the reps' P95 differed by 0.519 ms, just outside the 0.5 ms band, so P95 falls back to `rel` (87–89) and the composite is **96.4–96.8**. That is the closest any case comes to the floor.
 
 ### Expected outcome (stated before any apply)
 
-- **Under the v2 rule, all eight rungs are expected to pass** if the stack behaves on the new days as it did on 2026-11-22/23 ET. In-sample margins are 3.0–3.8 points above the floor, and leave-one-out margins are 1.1–2.6 points.
-- **Under the v1 rule, 10 and 100 RPS are expected to fail** on app-CPU noise alone, even with a perfect fit. That is why the tolerance exists. The v1-rule composites are reported anyway.
-- **What would fail the v2 rule:**
-  - any steady loss above 0.01 pp: at 0.05% loss the error score is 20, which costs about 8.9 points;
-  - a day-to-day P95 or P50 shift beyond about 15–17% with everything else exact;
-  - app CPU leaving the ±1 pp band (for example, above 5.8% at 1000 RPS).
-- **If billed cost becomes available,** the composite includes cost. The modeled $0.19–0.23/hr against about $0.25/hr billed would score about 76–92 on cost, which lowers composites by about 0.6–2.3 points. Rungs near 96–97 could then fall below 95. Cost is not adjusted for this.
-- **A pass verifies only this topology at 10–1000 RPS in us-ashburn-1**, for P50, P95, throughput and loss. CPU is verified only within ±1 pp. P99, DB CPU, DB connections and cost are reported, not verified.
+**Expected result:** all eight v2-rule rungs pass if the stack behaves on the new days as it did on 2026-11-22/23 ET. Under the v1 rule, 10 and 100 RPS are expected to fail on app-CPU noise. They are reported anyway.
+
+**What would still fail a rung under the v2 rule.** Each item below assumes everything else on the rung is exact:
+
+- **Loss:** any steady total loss more than **0.05 pp** away from the predicted 0. At 0.06 pp the error score is 16.7, which drops the composite by about 9.3 points: a fail. This is the **largest single risk**. oci-holdout-v1 measured 0 on all 8 rungs, but a short LB or DB hiccup inside a steady window would fail that rung. It is a result, not a replacement (see Replacement).
+- **P50** more than about 22.5% off, which fails the rung on its own. That is about 0.50 ms at 500–1000 RPS and 0.72 ms at 10 RPS. At 500–1000 RPS the 0.5 ms band and the fail point nearly coincide. P50 was stable in v1, with rep-to-rep gaps of 0.002–0.09 ms.
+- **P95** more than about 18% off. That is roughly 0.78 ms at 1000 RPS and 1.0 ms at 10 RPS. Between 0.5 ms and that point the rung still passes.
+- **App CPU** more than 1 pp off.
+  - At 10 and 100 RPS, any excursion past 1 pp scores near 0 and fails the rung.
+  - At 1000 RPS, a reading just above the band (about 5.8%) scores about 83 and passes. A reading just below it (about 3.8%) scores about 74 and fails.
+- **Two components just outside their bands on the same rung,** for example P95 at 0.6 ms and CPU at 1.1 pp. That can fail a rung that neither would fail alone.
+- **Cost, if billed cost becomes available.** The modeled $0.19–0.23/hr against about $0.25/hr billed scores 76–92 on cost, which lowers composites by about 0.4–2.4 points. Applied to the cases above, every in-sample and cross-rep composite stays at or above 96.0. It does narrow the margin for any other miss. Cost has no tolerance.
+
+**Scope of a pass:** it verifies this topology at 10–1000 RPS in us-ashburn-1 within the stated bands. P99, DB CPU, DB connections and cost are reported, not verified.
 
 ## Replacement
 
 A **runner fault** (terraform apply error, lost generator, control-plane failure, a collect that cannot read raw samples) replaces the **whole apply**. Do not re-run a single rung on that stack. Do not pool rungs across applies. At most **3** replacement applies per rep. A fourth fault **pauses and asks**.
 
-Workload errors, saturation, and slow rungs are **results**. They do not authorize a replacement.
+A rep with a runner-side or infrastructure fault is an **invalid rep**, not a failed result. It is replaced automatically, up to **3** replacement applies per rep, and a fourth fault **pauses and asks**. Invalid-rep causes are limited to faults that can be shown **without looking at the scored metrics**:
+
+- a Terraform apply or destroy error, or a control-plane or API failure;
+- a stockout;
+- the generator VM lost, or k6 exiting nonzero;
+- raw k6 samples that cannot be collected;
+- a steady window with fewer than 14 OCI Monitoring points for app CPU, which makes that metric unmeasurable;
+- an OCI service incident for us-ashburn-1 Compute, Load Balancing, MySQL or Networking that OCI's public status or a support ticket confirms overlaps the steady window.
+
+The runner records the cause and the evidence, and replaces the **whole apply**.
+
+Workload errors, saturation, latency and slow rungs on a healthy apply are **results**. They do not authorize a replacement, even when they fail the rung. A rep is never replaced because of its scores.
 
 ### Stockouts and availability domains
 
@@ -145,8 +199,8 @@ SSH / control-connection drops are transient. The controller reconnects with bac
 
 ## Spend
 
-- Soft cap **$25** total for the campaign. At the cap, **pause and ask**. It never auto-stops, never destroys-and-continues, and never marks the campaign failed on its own.
-- An **OCI Budget** on the `cwm-bench-oci` compartment with **alert-only** rules at **$15** and **$25**. The budget takes no action.
+- Soft cap **$100** total for the campaign. At the cap, **pause and ask**. It never auto-stops, never destroys-and-continues, and never marks the campaign failed on its own.
+- An **OCI Budget** on the `cwm-bench-oci` compartment with **alert-only** rules at **$15** and **$25** (unchanged Terraform). The budget takes no action, and these alerts are informational only. They are not the cap.
 - Expected spend is about $2 (see price-list cross-check); the cap is a guard, not a forecast.
 
 ## Cleanup
@@ -202,9 +256,9 @@ This section is the complete list of when the runner acts and when it asks Kevin
 
 **7. Version drift outside the prereg's pins** (OCI MySQL patch version, OS image patch, OCI provider patch): accept it if the major and minor versions match the prereg (MySQL 8.x, Node 20, k6 v0.54.0 exact), and record the exact versions. Anything else is a stop-and-ask.
 
-**8. Faults and replacements.** A pre-rung or runner-side fault means destroying the stack and replacing the whole apply, up to 3 per rep. A 4th pauses and asks. Workload errors and saturation are results, not faults: never retry a rung because of its results.
+**8. Faults and replacements.** A pre-rung, runner-side, or infrastructure fault (the invalid-rep causes listed under Replacement) means destroying the stack and replacing the whole apply automatically, up to 3 per rep. It is an invalid rep, not a failed result. A 4th pauses and asks. Workload errors and saturation are results, not faults: never retry a rung because of its results.
 
-**9. Spend.** The $25 soft cap pauses and asks; it never auto-stops or destroys mid-rung. The budget alerts are informational only.
+**9. Spend.** The $100 soft cap pauses and asks; it never auto-stops or destroys mid-rung. The budget alerts are informational only.
 
 **10. Cleanup is fully autonomous.**
 
@@ -252,7 +306,7 @@ This section is the complete list of when the runner acts and when it asks Kevin
 | Version drift beyond those pins | Stop and report. | **Yes** |
 | Pre-rung or runner-side fault | Destroy the stack and replace the whole apply, up to 3 per rep. | No for the 1st–3rd; **Yes** for a 4th |
 | Workload errors, saturation, or a slow rung | Record as results. Never retry a rung because of its results. | No |
-| $25 soft cap reached | Pause. Do not auto-stop or destroy mid-rung. Budget alerts are informational only. | **Yes** |
+| $100 soft cap reached | Pause. Do not auto-stop or destroy mid-rung. Budget alerts are informational only. | **Yes** |
 | Cleanup after each campaign | Destroy, sweep, sweep again 24 hours later, and check backups. Retry destroy-only cleanup every 2 hours until clean. Delete CWM simulations the runner created. | No, unless a resource still cannot be deleted after 24 hours (**Yes**) |
 | Evidence and patches | Archives split into parts under 25 MB, each with sha256. Code changes as patch files. Redact OCIDs, the key, the fingerprint, and account IDs to the last 6 characters. Never contact GitHub. | No |
 | Situation not covered here | Follow this preregistration first, then the gcp-holdout-v2 precedent. Record the deviation and the reasoning, and continue. | No, unless it is one of the stop-and-ask items |
