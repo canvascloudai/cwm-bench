@@ -16,11 +16,12 @@ export const OCI_HOLDOUT_MAX_REPLACEMENTS = 3;
 /** Stockout order for the single availability domain used by an apply. */
 export const OCI_HOLDOUT_AD_ORDER = Object.freeze(['AD-1', 'AD-2', 'AD-3']);
 /**
- * Apply id: oci-holdout-v1-r{1|2}-ad{1|2|3}[a-c]?-YYYYMMDD.
- * The ad digit is the availability domain the apply used; the optional
+ * Apply id: oci-holdout-v{1|2}-r{1|2}-ad{1|2|3}[a-c]?-YYYYMMDD.
+ * v1 is the first OCI holdout; v2 (adapter 1.9.7) reruns the identical
+ * harness and ladder under typical/oci-holdout-v2. The ad digit is the availability domain the apply used; the optional
  * letter counts whole-apply replacements within that AD (a = first).
  */
-export const OCI_HOLDOUT_TEST_ID_RE = /^oci-holdout-v1-r[12]-ad[123][a-c]?-\d{8}$/;
+export const OCI_HOLDOUT_TEST_ID_RE = /^oci-holdout-v[12]-r[12]-ad[123][a-c]?-\d{8}$/;
 
 /** Lean load/scenarios.js rung that carries each OCI key's request mix and rate. */
 export const OCI_HOLDOUT_LEAN_RUNG = Object.freeze({
@@ -38,7 +39,7 @@ export function assertOciHoldoutTestId(spec, testId) {
   const validDate = Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10).replaceAll('-', '') === stamp;
   if (!OCI_HOLDOUT_TEST_ID_RE.test(text) || !validDate) {
     const err = new Error(
-      `scenario ${spec.key} requires test id oci-holdout-v1-r{1|2}-ad{1|2|3}[a-c]?-YYYYMMDD; got ${testId || 'unset'}`,
+      `scenario ${spec.key} requires test id oci-holdout-v{1|2}-r{1|2}-ad{1|2|3}[a-c]?-YYYYMMDD; got ${testId || 'unset'}`,
     );
     err.code = 'TEST_ID_MISMATCH';
     throw err;

@@ -55,12 +55,12 @@ test('oci-holdout-v1 ladder accepts only 10 -> 100 -> 500 -> 1000 in order', () 
   });
 });
 
-test('oci-holdout-v1 apply ids', () => {
-  for (const ok of ['oci-holdout-v1-r1-ad1-20261120', 'oci-holdout-v1-r2-ad3b-20261121']) {
+test('oci-holdout-v1 and v2 apply ids', () => {
+  for (const ok of ['oci-holdout-v1-r1-ad1-20261120', 'oci-holdout-v1-r2-ad3b-20261121', 'oci-holdout-v2-r1-ad1-20261201', 'oci-holdout-v2-r2-ad2a-20261202']) {
     assert.match(ok, OCI_HOLDOUT_TEST_ID_RE);
     assertOciHoldoutTestId(getScenario('oci-holdout-10'), ok);
   }
-  for (const bad of ['oci-holdout-v1-r3-ad1-20261120', 'oci-holdout-v1-r1-ad4-20261120', 'oci-holdout-v1-r1-20261120', 'gcp-holdout-v2-r1-20261120']) {
+  for (const bad of ['oci-holdout-v1-r3-ad1-20261120', 'oci-holdout-v1-r1-ad4-20261120', 'oci-holdout-v1-r1-20261120', 'gcp-holdout-v2-r1-20261120', 'oci-holdout-v3-r1-ad1-20261201', 'oci-holdout-v2-r3-ad1-20261201', 'oci-holdout-v2-r1-ad1-20261231x']) {
     assert.throws(() => assertOciHoldoutTestId(getScenario('oci-holdout-10'), bad), { code: 'TEST_ID_MISMATCH' });
   }
 });

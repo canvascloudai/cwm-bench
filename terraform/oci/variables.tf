@@ -32,7 +32,7 @@ variable "budget_recipients" {
 variable "test_id" {
   type = string
   validation {
-    condition     = can(regex("^oci-holdout-v1-r[12]-ad[123][a-c]?-[0-9]{8}$", var.test_id))
+    condition     = can(regex("^oci-holdout-v[12]-r[12]-ad[123][a-c]?-[0-9]{8}$", var.test_id))
     error_message = "Use the frozen OCI apply-id format."
   }
 }
@@ -56,5 +56,5 @@ data "oci_identity_compartment" "target" {
 }
 
 locals {
-  tags = { test_id = var.test_id, campaign = "oci-holdout-v1" }
+  tags = { test_id = var.test_id, campaign = regex("^(oci-holdout-v[12])-", var.test_id)[0] }
 }

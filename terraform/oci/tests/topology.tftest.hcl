@@ -106,3 +106,30 @@ run "host_identity_bootstrap" {
     error_message = "Private output must pair the public identity with the actual instance."
   }
 }
+
+run "campaign_tag_v1" {
+  command = plan
+  assert {
+    condition     = oci_mysql_mysql_db_system.main.freeform_tags["campaign"] == "oci-holdout-v1" && oci_core_instance.app[0].freeform_tags["campaign"] == "oci-holdout-v1"
+    error_message = "v1 apply ids keep the oci-holdout-v1 campaign tag."
+  }
+}
+
+run "campaign_tag_v2" {
+  command = plan
+  variables {
+    test_id = "oci-holdout-v2-r1-ad1-20261201"
+  }
+  assert {
+    condition     = oci_mysql_mysql_db_system.main.freeform_tags["campaign"] == "oci-holdout-v2" && oci_core_instance.generator.freeform_tags["campaign"] == "oci-holdout-v2" && oci_mysql_mysql_db_system.main.freeform_tags["test_id"] == "oci-holdout-v2-r1-ad1-20261201"
+    error_message = "v2 apply ids tag oci-holdout-v2."
+  }
+}
+
+run "reject_v3_apply_id" {
+  command = plan
+  variables {
+    test_id = "oci-holdout-v3-r1-ad1-20261201"
+  }
+  expect_failures = [var.test_id]
+}
