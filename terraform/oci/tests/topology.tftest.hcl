@@ -86,6 +86,30 @@ run "host_identity_bootstrap" {
   # All providers are mocked: no OCI calls, key generation or paid resources.
   command = apply
   assert {
+    condition = alltrue([for vm in concat(oci_core_instance.app, [oci_core_instance.generator]) :
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "OCI_YUM_DNS_TIMEOUT") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "SECONDS + 300") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "getent ahostsv4 yum.us-ashburn-1.oci.oraclecloud.com") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "/usr/bin/dnf --disablerepo='*ksplice*'") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "for attempt in 1 2 3") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "timeout -k 5 180 /usr/bin/dnf") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "export PATH=/var/lib/cwm-bootstrap/bin:$PATH") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "exec >/var/log/cwm-bootstrap.log 2>&1\nset -x")
+    ])
+    error_message = "Both roles require bounded DNS admission, inherited Ksplice-free three-attempt dnf, and private xtrace."
+  }
+  assert {
+    condition = alltrue([for vm in oci_core_instance.app :
+      !can(regex("(^|[[:space:]])firewall-cmd([[:space:]]|$)", yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2])) &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "timeout -k 5 60 firewall-offline-cmd --add-port=8080/tcp") &&
+      strcontains(yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2], "if \"$firewall_was_active\"; then\n    timeout -k 5 60 systemctl restart firewalld || true") &&
+      alltrue([for line in split("\n", yamldecode(base64decode(vm.metadata.user_data)).runcmd[0][2]) :
+        !strcontains(line, "systemctl ") || can(regex("timeout -k 5 (10|60) systemctl ", line))
+      ])
+    ])
+    error_message = "Use offline firewall configuration and bounded systemctl only; never live firewall-cmd."
+  }
+  assert {
     condition     = length(tls_private_key.app_host) == 2 && tls_private_key.app_host[0].algorithm == "ED25519" && tls_private_key.generator_host.algorithm == "ED25519"
     error_message = "Every instance must have its own Terraform-generated Ed25519 identity."
   }

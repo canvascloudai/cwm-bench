@@ -2,6 +2,46 @@
 set -euo pipefail
 umask 077
 exec >/var/log/cwm-bootstrap.log 2>&1
+set -x
+# Bound regional repository DNS admission before any package transaction.
+wait_for_oci_yum() {
+  local deadline=$((SECONDS + 300)) delay=5 remaining lookup_seconds
+  while true; do
+    remaining=$((deadline - SECONDS))
+    if ((remaining <= 0)); then
+      echo "OCI_YUM_DNS_TIMEOUT: yum.us-ashburn-1.oci.oraclecloud.com unresolved after 300 seconds" >&2
+      return 1
+    fi
+    lookup_seconds=$((remaining < 10 ? remaining : 10))
+    if timeout -k 1 "$lookup_seconds" getent ahostsv4 yum.us-ashburn-1.oci.oraclecloud.com >/dev/null; then
+      return 0
+    fi
+    remaining=$((deadline - SECONDS))
+    if ((remaining > 0)); then
+      sleep "$((delay < remaining ? delay : remaining))"
+    fi
+    if ((delay < 30)); then delay=$((delay * 2)); fi
+  done
+}
+wait_for_oci_yum
+install -d -m 0700 /var/lib/cwm-bootstrap/bin
+cat >/var/lib/cwm-bootstrap/bin/dnf <<'CWM_DNF'
+#!/bin/bash
+set -euo pipefail
+set -x
+for attempt in 1 2 3; do
+  if timeout -k 5 180 /usr/bin/dnf --disablerepo='*ksplice*' --setopt=timeout=15 --setopt=retries=1 "$@"; then
+    exit 0
+  else
+    code=$?
+  fi
+  if ((attempt < 3)); then sleep "$((attempt * 5))"; fi
+done
+echo "DNF_FAILED: three bounded attempts exhausted (exit $code)" >&2
+exit "$code"
+CWM_DNF
+chmod 0700 /var/lib/cwm-bootstrap/bin/dnf
+export PATH=/var/lib/cwm-bootstrap/bin:$PATH
 dnf install -y git tar gzip python3
 curl -fsSL https://github.com/grafana/k6/releases/download/v0.54.0/k6-v0.54.0-linux-amd64.tar.gz -o /tmp/k6.tgz
 tar -xzf /tmp/k6.tgz -C /tmp

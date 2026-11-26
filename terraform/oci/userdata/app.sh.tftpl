@@ -2,6 +2,47 @@
 set -euo pipefail
 umask 077
 exec >/var/log/cwm-bootstrap.log 2>&1
+set -x
+# Bound regional repository DNS admission before any package transaction.
+wait_for_oci_yum() {
+  local deadline=$((SECONDS + 300)) delay=5 remaining lookup_seconds
+  while true; do
+    remaining=$((deadline - SECONDS))
+    if ((remaining <= 0)); then
+      echo "OCI_YUM_DNS_TIMEOUT: yum.us-ashburn-1.oci.oraclecloud.com unresolved after 300 seconds" >&2
+      return 1
+    fi
+    lookup_seconds=$((remaining < 10 ? remaining : 10))
+    if timeout -k 1 "$lookup_seconds" getent ahostsv4 yum.us-ashburn-1.oci.oraclecloud.com >/dev/null; then
+      return 0
+    fi
+    remaining=$((deadline - SECONDS))
+    if ((remaining > 0)); then
+      sleep "$((delay < remaining ? delay : remaining))"
+    fi
+    if ((delay < 30)); then delay=$((delay * 2)); fi
+  done
+}
+wait_for_oci_yum
+# PATH inheritance also covers dnf invoked by the NodeSource setup child.
+install -d -m 0700 /var/lib/cwm-bootstrap/bin
+cat >/var/lib/cwm-bootstrap/bin/dnf <<'CWM_DNF'
+#!/bin/bash
+set -euo pipefail
+set -x
+for attempt in 1 2 3; do
+  if timeout -k 5 180 /usr/bin/dnf --disablerepo='*ksplice*' --setopt=timeout=15 --setopt=retries=1 "$@"; then
+    exit 0
+  else
+    code=$?
+  fi
+  if ((attempt < 3)); then sleep "$((attempt * 5))"; fi
+done
+echo "DNF_FAILED: three bounded attempts exhausted (exit $code)" >&2
+exit "$code"
+CWM_DNF
+chmod 0700 /var/lib/cwm-bootstrap/bin/dnf
+export PATH=/var/lib/cwm-bootstrap/bin:$PATH
 dnf install -y git mariadb
 curl -fsSL https://rpm.nodesource.com/setup_20.x -o /tmp/node-setup.sh
 bash /tmp/node-setup.sh
@@ -12,7 +53,10 @@ git -C /opt/cwm-source checkout --detach '${measurement_sha}'
 test "$(git -C /opt/cwm-source rev-parse HEAD)" = '${measurement_sha}'
 cd /opt/cwm-source/app
 npm ci --omit=dev --ignore-scripts
+# Keep the password out of xtrace even though this log is private.
+set +x
 export MYSQL_PWD='${db_password}'
+set -x
 for i in $(seq 1 90); do
   mysqladmin -h '${mysql_host}' -u cwmbench ping --silent && break
   sleep 10
@@ -48,9 +92,23 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 # Oracle Linux's host firewall is distinct from the VCN security lists.
-if systemctl is-active --quiet firewalld; then
-  firewall-cmd --permanent --add-port=8080/tcp
-  firewall-cmd --reload
+if command -v firewall-offline-cmd >/dev/null; then
+  firewall_was_active=false
+  if timeout -k 5 10 systemctl is-active --quiet firewalld; then
+    firewall_was_active=true
+    # Offline configuration requires a stopped daemon.
+    timeout -k 5 60 systemctl stop firewalld
+  else
+    status=$?
+    if ((status == 124 || status == 137)); then
+      echo "FIREWALL_STATUS_TIMEOUT" >&2
+      exit 1
+    fi
+  fi
+  timeout -k 5 60 firewall-offline-cmd --add-port=8080/tcp
+  if "$firewall_was_active"; then
+    timeout -k 5 60 systemctl restart firewalld || true
+  fi
 fi
-systemctl daemon-reload
-systemctl enable --now cwm-app
+timeout -k 5 60 systemctl daemon-reload
+timeout -k 5 60 systemctl enable --now cwm-app
